@@ -1,0 +1,12 @@
+{
+  "name": "@mono/theme",
+  "module": "index.css",
+  "type": "module",
+  "private": true,
+  "exports": {
+    ".": "./index.css"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  }
+}

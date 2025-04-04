@@ -1,0 +1,41 @@
+{
+  "name": "@mono/web",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@mono/api": "workspace:*",
+    "@mono/theme": "workspace:*",
+    "@mono/ui": "workspace:*",
+    "@tailwindcss/vite": "^4.0.9",
+    "@tanstack/react-form": "^1.0.5",
+    "@tanstack/react-query": "^5.67.1",
+    "@tanstack/react-router": "^1.114.17",
+    "better-auth": "1.2.2",
+    "hono": "^4.7.2",
+    "immer": "^10.1.1",
+    "lucide-react": "^0.479.0",
+    "motion": "^12.5.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scan": "^0.3.3",
+    "recharts": "^2.15.1",
+    "tailwindcss": "^4.0.9",
+    "ua-parser-js": "^2.0.3",
+    "zod": "^3.24.2",
+    "zustand": "^5.0.3"
+  },
+  "devDependencies": {
+    "@tanstack/router-devtools": "^1.114.17",
+    "@tanstack/router-plugin": "^1.114.17",
+    "@types/react": "^18.2.66",
+    "@types/react-dom": "^18.2.22",
+    "typescript": "^5.2.2",
+    "vite": "^5.2.0"
+  }
+}

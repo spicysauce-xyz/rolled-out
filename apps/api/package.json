@@ -1,0 +1,21 @@
+{
+  "name": "@mono/api",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "dev": "bun run --hot --no-clear-screen src/index.ts"
+  },
+  "dependencies": {
+    "better-auth": "1.2.2",
+    "drizzle-orm": "^0.40.0",
+    "hono": "^4.7.2",
+    "pg": "^8.13.3"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/pg": "^8.11.11",
+    "drizzle-kit": "^0.30.5"
+  }
+}

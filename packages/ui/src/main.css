@@ -1,0 +1,10 @@
+@layer theme, base, components, utilities;
+
+@import "@mono/theme" layer(theme);
+@import "tailwindcss/preflight" layer(base);
+@import "tailwindcss/utilities" layer(utilities);
+@import "./plugins.css";
+
+body {
+  overscroll-behavior-y: none;
+}

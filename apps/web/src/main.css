@@ -1,0 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,100..900&display=swap');
+
+@layer theme, base, components, utilities;
+
+@import "@mono/theme" layer(theme);
+@import "@mono/ui/plugins";
+
+@import "tailwindcss/preflight" layer(base);
+@import "tailwindcss/utilities" layer(utilities);
+
+@source "../../../packages/ui/**/*.{ts,tsx}";
+
+html {
+  font-size: 16px;
+}
+
+body {
+  overscroll-behavior-y: none;
+  font-family: "Inter", sans-serif;
+  @apply selection:bg-neutral-200;
+}
