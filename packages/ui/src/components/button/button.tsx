@@ -81,11 +81,11 @@ export const buttonVariants = tv({
       variant: "filled",
       class: {
         root: [
-          "bg-neutral-800 text-white border-neutral-800",
+          "bg-neutral-900 text-white border-neutral-900",
           // hover
-          "hover:bg-neutral-900 hover:border-neutral-900",
+          "hover:bg-neutral-950 hover:border-neutral-950",
           // focus
-          "focus-visible:ring-neutral-900 focus-visible:bg-neutral-900 focus-visible:border-neutral-900",
+          "focus-visible:ring-neutral-950 focus-visible:bg-neutral-950 focus-visible:border-neutral-950",
         ],
         icon: [
           "text-neutral-100",

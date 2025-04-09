@@ -4,7 +4,9 @@ import React from "react";
 
 const pageVariants = tv({
   slots: {
-    root: "flex flex-1 flex-col overflow-hidden bg-white border-neutral-100",
+    root: "h-svh w-full flex items-start",
+    wrapper:
+      "flex flex-1 h-full flex-col overflow-hidden bg-white border-neutral-100",
     header: "p-4 px-6 flex justify-between gap-4 border-b border-neutral-100",
     content: "h-full px-6 py-6 gap-8 grid",
   },
@@ -17,6 +19,16 @@ const PageRoot = React.forwardRef<HTMLDivElement, PageRootProps>(
     const { root } = pageVariants();
 
     return <div ref={ref} className={root({ className })} {...props} />;
+  },
+);
+
+type PageWrapperProps = React.HTMLAttributes<HTMLDivElement>;
+
+const PageWrapper = React.forwardRef<HTMLDivElement, PageWrapperProps>(
+  ({ className, ...props }, ref) => {
+    const { wrapper } = pageVariants();
+
+    return <div ref={ref} className={wrapper({ className })} {...props} />;
   },
 );
 
@@ -49,4 +61,9 @@ const PageContent = React.forwardRef<HTMLDivElement, PageContentProps>(
   },
 );
 
-export { PageRoot as Root, PageHeader as Header, PageContent as Content };
+export {
+  PageRoot as Root,
+  PageWrapper as Wrapper,
+  PageHeader as Header,
+  PageContent as Content,
+};

@@ -1,6 +1,7 @@
 import { Avatar, DropdownMenu, Text, Toaster } from "@mono/ui";
 import { Link } from "@tanstack/react-router";
 import {
+  BellIcon,
   ChartNoAxesColumnIcon,
   EllipsisVerticalIcon,
   HelpCircleIcon,
@@ -11,9 +12,9 @@ import {
   SmileIcon,
   User2Icon,
 } from "lucide-react";
-import * as Sidebar from "../../../components/sidebar";
-import { useLogout } from "../../../hooks/useLogout";
-import { useSession } from "../../../hooks/useSession";
+import { useLogout } from "../../hooks/useLogout";
+import { useSession } from "../../hooks/useSession";
+import * as Sidebar from "./sidebar";
 
 export const Navigation = () => {
   const { data: sessionData } = useSession();
@@ -31,7 +32,7 @@ export const Navigation = () => {
   };
 
   return (
-    <Sidebar.Root className="hidden sm:flex">
+    <Sidebar.Root className="hidden w-64 sm:flex">
       <Sidebar.Header>
         <div className="flex items-center gap-2">
           <SmileIcon className="size-4 stroke-2 stroke-neutral-900" />
@@ -49,8 +50,14 @@ export const Navigation = () => {
         <Sidebar.Group>
           <Sidebar.NavLink
             to="/"
-            label="Dashboard"
+            label="Analytics"
             icon={ChartNoAxesColumnIcon}
+          />
+          <Sidebar.NavLink to="/updates" label="Updates" icon={BellIcon} />
+          <Sidebar.NavLink
+            to="/settings"
+            label="Settings"
+            icon={SettingsIcon}
           />
         </Sidebar.Group>
         <Sidebar.Fill />

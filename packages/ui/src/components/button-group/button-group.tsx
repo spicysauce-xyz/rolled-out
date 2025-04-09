@@ -57,6 +57,32 @@ export const buttonGroupVariants = tv({
         icon: ["size-4"],
       },
     },
+    active: {
+      true: {
+        item: ["bg-neutral-50 text-neutral-900"],
+        icon: [
+          // base
+          "text-neutral-900",
+          // hover
+          "group-hover/button-root:text-neutral-900",
+          // focus
+          "group-focus-visible/button-root:text-neutral-900",
+        ],
+      },
+    },
+    disabled: {
+      true: {
+        item: ["cursor-not-allowed text-neutral-400 hover:bg-white"],
+        icon: [
+          // base
+          "text-neutral-400",
+          // hover
+          "group-hover/button-root:text-neutral-400",
+          // focus
+          "group-focus-visible/button-root:text-neutral-400",
+        ],
+      },
+    },
   },
   defaultVariants: {
     size: "md",
@@ -93,34 +119,57 @@ const ButtonGroupRoot = React.forwardRef<HTMLDivElement, ButtonGroupRootProps>(
   },
 );
 
-type ButtonGroupItemProps = React.ButtonHTMLAttributes<HTMLButtonElement> &
-  AsChildProp;
+const ButtonGroupItemContext = React.createContext<{
+  isActive?: boolean;
+  isDisabled?: boolean;
+}>({});
+
+const useButtonGroupItemContext = () =>
+  React.useContext(ButtonGroupItemContext);
+
+type ButtonGroupItemProps = Omit<
+  React.ButtonHTMLAttributes<HTMLButtonElement>,
+  "disabled"
+> &
+  AsChildProp & {
+    isActive?: boolean;
+    isDisabled?: boolean;
+  };
 
 const ButtonGroupItem = React.forwardRef<
   HTMLButtonElement,
   ButtonGroupItemProps
->(({ children, asChild, className, disabled, ...rest }, forwardedRef) => {
-  const Component = asChild ? Slot : "button";
-  const { size } = useButtonGroupContext();
-  const { item } = buttonGroupVariants({
-    size,
-  });
+>(
+  (
+    { children, asChild, className, isActive, isDisabled, ...rest },
+    forwardedRef,
+  ) => {
+    const Component = asChild ? Slot : "button";
+    const { size } = useButtonGroupContext();
+    const { item } = buttonGroupVariants({
+      size,
+      active: isActive,
+      disabled: isDisabled,
+    });
 
-  return (
-    <Component
-      ref={forwardedRef}
-      {...rest}
-      disabled={disabled}
-      onClick={(...args) => {
-        if (disabled) return;
-        rest.onClick?.(...args);
-      }}
-      className={item({ class: className })}
-    >
-      {children}
-    </Component>
-  );
-});
+    return (
+      <ButtonGroupItemContext.Provider value={{ isActive, isDisabled }}>
+        <Component
+          ref={forwardedRef}
+          {...rest}
+          disabled={isDisabled}
+          onClick={(...args) => {
+            if (isDisabled) return;
+            rest.onClick?.(...args);
+          }}
+          className={item({ class: className })}
+        >
+          {children}
+        </Component>
+      </ButtonGroupItemContext.Provider>
+    );
+  },
+);
 
 type ButtonIconProps = React.HTMLAttributes<HTMLDivElement> & AsChildProp;
 
@@ -128,8 +177,11 @@ const ButtonGroupItemIcon = React.forwardRef<HTMLDivElement, ButtonIconProps>(
   ({ children, className, asChild, ...rest }, forwardedRef) => {
     const Component = asChild ? Slot : "div";
     const { size } = useButtonGroupContext();
+    const { isActive, isDisabled } = useButtonGroupItemContext();
     const { icon } = buttonGroupVariants({
       size,
+      active: isActive,
+      disabled: isDisabled,
     });
 
     return (

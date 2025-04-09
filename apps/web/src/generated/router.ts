@@ -13,7 +13,9 @@
 import { Route as rootRoute } from './../routes/__root'
 import { Route as AppRouteImport } from './../routes/_app/route'
 import { Route as AppIndexImport } from './../routes/_app/index'
+import { Route as AppUpdatesImport } from './../routes/_app/updates'
 import { Route as AppSettingsImport } from './../routes/_app/settings'
+import { Route as AppNewImport } from './../routes/_app/new'
 import { Route as authSignupImport } from './../routes/(auth)/signup'
 import { Route as authLoginImport } from './../routes/(auth)/login'
 
@@ -30,9 +32,21 @@ const AppIndexRoute = AppIndexImport.update({
   getParentRoute: () => AppRouteRoute,
 } as any)
 
+const AppUpdatesRoute = AppUpdatesImport.update({
+  id: '/updates',
+  path: '/updates',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+
 const AppSettingsRoute = AppSettingsImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+
+const AppNewRoute = AppNewImport.update({
+  id: '/new',
+  path: '/new',
   getParentRoute: () => AppRouteRoute,
 } as any)
 
@@ -73,11 +87,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authSignupImport
       parentRoute: typeof rootRoute
     }
+    '/_app/new': {
+      id: '/_app/new'
+      path: '/new'
+      fullPath: '/new'
+      preLoaderRoute: typeof AppNewImport
+      parentRoute: typeof AppRouteImport
+    }
     '/_app/settings': {
       id: '/_app/settings'
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof AppSettingsImport
+      parentRoute: typeof AppRouteImport
+    }
+    '/_app/updates': {
+      id: '/_app/updates'
+      path: '/updates'
+      fullPath: '/updates'
+      preLoaderRoute: typeof AppUpdatesImport
       parentRoute: typeof AppRouteImport
     }
     '/_app/': {
@@ -93,12 +121,16 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 interface AppRouteRouteChildren {
+  AppNewRoute: typeof AppNewRoute
   AppSettingsRoute: typeof AppSettingsRoute
+  AppUpdatesRoute: typeof AppUpdatesRoute
   AppIndexRoute: typeof AppIndexRoute
 }
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
+  AppNewRoute: AppNewRoute,
   AppSettingsRoute: AppSettingsRoute,
+  AppUpdatesRoute: AppUpdatesRoute,
   AppIndexRoute: AppIndexRoute,
 }
 
@@ -110,14 +142,18 @@ export interface FileRoutesByFullPath {
   '': typeof AppRouteRouteWithChildren
   '/login': typeof authLoginRoute
   '/signup': typeof authSignupRoute
+  '/new': typeof AppNewRoute
   '/settings': typeof AppSettingsRoute
+  '/updates': typeof AppUpdatesRoute
   '/': typeof AppIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/login': typeof authLoginRoute
   '/signup': typeof authSignupRoute
+  '/new': typeof AppNewRoute
   '/settings': typeof AppSettingsRoute
+  '/updates': typeof AppUpdatesRoute
   '/': typeof AppIndexRoute
 }
 
@@ -126,21 +162,25 @@ export interface FileRoutesById {
   '/_app': typeof AppRouteRouteWithChildren
   '/(auth)/login': typeof authLoginRoute
   '/(auth)/signup': typeof authSignupRoute
+  '/_app/new': typeof AppNewRoute
   '/_app/settings': typeof AppSettingsRoute
+  '/_app/updates': typeof AppUpdatesRoute
   '/_app/': typeof AppIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '' | '/login' | '/signup' | '/settings' | '/'
+  fullPaths: '' | '/login' | '/signup' | '/new' | '/settings' | '/updates' | '/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/signup' | '/settings' | '/'
+  to: '/login' | '/signup' | '/new' | '/settings' | '/updates' | '/'
   id:
     | '__root__'
     | '/_app'
     | '/(auth)/login'
     | '/(auth)/signup'
+    | '/_app/new'
     | '/_app/settings'
+    | '/_app/updates'
     | '/_app/'
   fileRoutesById: FileRoutesById
 }
@@ -175,7 +215,9 @@ export const routeTree = rootRoute
     "/_app": {
       "filePath": "_app/route.tsx",
       "children": [
+        "/_app/new",
         "/_app/settings",
+        "/_app/updates",
         "/_app/"
       ]
     },
@@ -185,8 +227,16 @@ export const routeTree = rootRoute
     "/(auth)/signup": {
       "filePath": "(auth)/signup.tsx"
     },
+    "/_app/new": {
+      "filePath": "_app/new.tsx",
+      "parent": "/_app"
+    },
     "/_app/settings": {
       "filePath": "_app/settings.tsx",
+      "parent": "/_app"
+    },
+    "/_app/updates": {
+      "filePath": "_app/updates.tsx",
       "parent": "/_app"
     },
     "/_app/": {

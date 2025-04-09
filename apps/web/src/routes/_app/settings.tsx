@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import { z } from "zod";
 import * as Card from "../../components/card";
-import * as Page from "../../components/page";
+import * as Page from "../../components/layout/page";
 import { useSession } from "../../hooks/useSession";
 import { authClient } from "../../lib/auth";
 import useAppForm from "../../lib/form";

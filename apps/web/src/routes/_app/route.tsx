@@ -1,9 +1,8 @@
 import { Outlet, createFileRoute, redirect } from "@tanstack/react-router";
-import { Navigation } from "./-components/navigation";
 
 export const Route = createFileRoute("/_app")({
-  component: AppLayout,
-  beforeLoad: async ({ location, context }) => {
+  component: Outlet,
+  beforeLoad: ({ location, context }) => {
     if (!context.auth?.session) {
       throw redirect({
         to: "/login",
@@ -14,12 +13,3 @@ export const Route = createFileRoute("/_app")({
     }
   },
 });
-
-function AppLayout() {
-  return (
-    <div className="grid h-svh bg-neutral-50 sm:grid-cols-[calc(var(--spacing)*64)_1fr]">
-      <Navigation />
-      <Outlet />
-    </div>
-  );
-}

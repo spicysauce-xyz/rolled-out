@@ -57,7 +57,7 @@ export const linkButtonVariants = tv({
           // hover
           "hover:text-neutral-900",
           // focus
-          "focus-visible:text-neutral-600 focus-visible:ring-neutral-300",
+          "focus-visible:text-neutral-900 focus-visible:ring-neutral-300",
         ],
         icon: [
           "text-neutral-400",

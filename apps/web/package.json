@@ -16,6 +16,15 @@
     "@tanstack/react-form": "^1.0.5",
     "@tanstack/react-query": "^5.67.1",
     "@tanstack/react-router": "^1.114.17",
+    "@tiptap/extension-image": "^2.11.7",
+    "@tiptap/extension-link": "^2.11.7",
+    "@tiptap/extension-paragraph": "^2.11.7",
+    "@tiptap/extension-placeholder": "^2.11.7",
+    "@tiptap/extension-strike": "^2.11.7",
+    "@tiptap/extension-text": "^2.11.7",
+    "@tiptap/extension-underline": "^2.11.7",
+    "@tiptap/pm": "^2.11.7",
+    "@tiptap/react": "^2.11.7",
     "better-auth": "1.2.2",
     "hono": "^4.7.2",
     "immer": "^10.1.1",
@@ -31,6 +40,7 @@
     "zustand": "^5.0.3"
   },
   "devDependencies": {
+    "@tailwindcss/typography": "^0.5.16",
     "@tanstack/router-devtools": "^1.114.17",
     "@tanstack/router-plugin": "^1.114.17",
     "@types/react": "^18.2.66",

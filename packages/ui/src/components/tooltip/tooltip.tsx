@@ -19,7 +19,7 @@ const TooltipContent = React.forwardRef<
     <TooltipPrimitives.Content
       ref={ref}
       className={cn(
-        "z-10 flex max-w-80 flex-col gap-0.5 rounded-md bg-neutral-800 px-3 py-2 shadow-lg",
+        "z-10 flex max-w-80 flex-col gap-0.5 rounded-md bg-neutral-900 px-3 py-2 shadow-lg",
         // transition
         "transition-all",
         // animation
@@ -41,7 +41,7 @@ const TooltipContent = React.forwardRef<
       {...rest}
     >
       {children}
-      <TooltipPrimitives.Arrow className="fill-neutral-800" />
+      <TooltipPrimitives.Arrow className="fill-neutral-900" />
     </TooltipPrimitives.Content>
   );
 });

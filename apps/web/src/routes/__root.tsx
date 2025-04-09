@@ -1,10 +1,13 @@
 import {
   Outlet,
   createRootRouteWithContext,
+  useRouter,
   useRouterState,
 } from "@tanstack/react-router";
 import type { Session, User } from "better-auth";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, delay, motion } from "motion/react";
+import React from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 interface RootContext {
   auth?: {
@@ -25,21 +28,30 @@ const animation = {
 };
 
 function Root() {
+  const initializedRef = useRef(false);
+  const [showApp, setShowApp] = useState(false);
   const route = useRouterState();
 
+  useEffect(() => {
+    if (route.status === "idle" && !initializedRef.current) {
+      console.log("idle", Date.now());
+      initializedRef.current = true;
+      setShowApp(true);
+    }
+  }, [route.status]);
+
   return (
-    <AnimatePresence mode="popLayout" initial={false}>
-      {route.status === "idle" ? (
-        <motion.div key="app" {...animation}>
-          <Outlet />
-        </motion.div>
-      ) : (
-        <motion.div
-          key="loader"
-          {...animation}
-          className="h-svh w-screen bg-white"
-        />
-      )}
-    </AnimatePresence>
+    <>
+      <AnimatePresence initial={false}>
+        {!showApp && (
+          <motion.div
+            key="loader"
+            {...animation}
+            className="fixed inset-0 z-50 h-svh w-screen bg-white"
+          />
+        )}
+      </AnimatePresence>
+      <Outlet />
+    </>
   );
 }
