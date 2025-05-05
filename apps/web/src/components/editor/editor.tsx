@@ -118,7 +118,7 @@ const extensions = [
     },
   }),
   Link.configure({
-    openOnClick: false,
+    openOnClick: "whenNotEditable",
     autolink: true,
   }),
 ];
@@ -135,12 +135,6 @@ export const Editor: React.FC<EditorProps> = ({ content, onUpdate }) => {
     onUpdate: ({ editor }) => {
       onUpdate?.(editor.getJSON());
     },
-    // onSelectionUpdate: ({ editor }) => {
-    //   const { view, state } = editor;
-    //   const { from, to } = state.selection;
-
-    //   const selectionRect = posToDOMRect(view, from, to);
-    // },
   });
 
   const handleClickOutside = useCallback(() => {
@@ -181,6 +175,7 @@ export const Editor: React.FC<EditorProps> = ({ content, onUpdate }) => {
           )
         }
         editor={editor}
+        tippyOptions={{ duration: 150 }}
       >
         <ButtonGroup.Root
           size="sm"
