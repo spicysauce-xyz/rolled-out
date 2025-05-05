@@ -17,7 +17,6 @@ import { Route as authLoginImport } from './../routes/(auth)/login'
 import { Route as AppDashboardRouteImport } from './../routes/_app/_dashboard/route'
 import { Route as AppDashboardIndexImport } from './../routes/_app/_dashboard/index'
 import { Route as AppEditorIdImport } from './../routes/_app/editor/$id'
-import { Route as AppDashboardUpdatesImport } from './../routes/_app/_dashboard/updates'
 import { Route as AppDashboardSettingsImport } from './../routes/_app/_dashboard/settings'
 import { Route as AppDashboardAccountImport } from './../routes/_app/_dashboard/account'
 
@@ -55,12 +54,6 @@ const AppEditorIdRoute = AppEditorIdImport.update({
   id: '/editor/$id',
   path: '/editor/$id',
   getParentRoute: () => AppRouteRoute,
-} as any)
-
-const AppDashboardUpdatesRoute = AppDashboardUpdatesImport.update({
-  id: '/updates',
-  path: '/updates',
-  getParentRoute: () => AppDashboardRouteRoute,
 } as any)
 
 const AppDashboardSettingsRoute = AppDashboardSettingsImport.update({
@@ -121,13 +114,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDashboardSettingsImport
       parentRoute: typeof AppDashboardRouteImport
     }
-    '/_app/_dashboard/updates': {
-      id: '/_app/_dashboard/updates'
-      path: '/updates'
-      fullPath: '/updates'
-      preLoaderRoute: typeof AppDashboardUpdatesImport
-      parentRoute: typeof AppDashboardRouteImport
-    }
     '/_app/editor/$id': {
       id: '/_app/editor/$id'
       path: '/editor/$id'
@@ -150,14 +136,12 @@ declare module '@tanstack/react-router' {
 interface AppDashboardRouteRouteChildren {
   AppDashboardAccountRoute: typeof AppDashboardAccountRoute
   AppDashboardSettingsRoute: typeof AppDashboardSettingsRoute
-  AppDashboardUpdatesRoute: typeof AppDashboardUpdatesRoute
   AppDashboardIndexRoute: typeof AppDashboardIndexRoute
 }
 
 const AppDashboardRouteRouteChildren: AppDashboardRouteRouteChildren = {
   AppDashboardAccountRoute: AppDashboardAccountRoute,
   AppDashboardSettingsRoute: AppDashboardSettingsRoute,
-  AppDashboardUpdatesRoute: AppDashboardUpdatesRoute,
   AppDashboardIndexRoute: AppDashboardIndexRoute,
 }
 
@@ -184,7 +168,6 @@ export interface FileRoutesByFullPath {
   '/signup': typeof authSignupRoute
   '/account': typeof AppDashboardAccountRoute
   '/settings': typeof AppDashboardSettingsRoute
-  '/updates': typeof AppDashboardUpdatesRoute
   '/editor/$id': typeof AppEditorIdRoute
   '/': typeof AppDashboardIndexRoute
 }
@@ -195,7 +178,6 @@ export interface FileRoutesByTo {
   '/signup': typeof authSignupRoute
   '/account': typeof AppDashboardAccountRoute
   '/settings': typeof AppDashboardSettingsRoute
-  '/updates': typeof AppDashboardUpdatesRoute
   '/editor/$id': typeof AppEditorIdRoute
   '/': typeof AppDashboardIndexRoute
 }
@@ -208,7 +190,6 @@ export interface FileRoutesById {
   '/(auth)/signup': typeof authSignupRoute
   '/_app/_dashboard/account': typeof AppDashboardAccountRoute
   '/_app/_dashboard/settings': typeof AppDashboardSettingsRoute
-  '/_app/_dashboard/updates': typeof AppDashboardUpdatesRoute
   '/_app/editor/$id': typeof AppEditorIdRoute
   '/_app/_dashboard/': typeof AppDashboardIndexRoute
 }
@@ -221,19 +202,10 @@ export interface FileRouteTypes {
     | '/signup'
     | '/account'
     | '/settings'
-    | '/updates'
     | '/editor/$id'
     | '/'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | ''
-    | '/login'
-    | '/signup'
-    | '/account'
-    | '/settings'
-    | '/updates'
-    | '/editor/$id'
-    | '/'
+  to: '' | '/login' | '/signup' | '/account' | '/settings' | '/editor/$id' | '/'
   id:
     | '__root__'
     | '/_app'
@@ -242,7 +214,6 @@ export interface FileRouteTypes {
     | '/(auth)/signup'
     | '/_app/_dashboard/account'
     | '/_app/_dashboard/settings'
-    | '/_app/_dashboard/updates'
     | '/_app/editor/$id'
     | '/_app/_dashboard/'
   fileRoutesById: FileRoutesById
@@ -288,7 +259,6 @@ export const routeTree = rootRoute
       "children": [
         "/_app/_dashboard/account",
         "/_app/_dashboard/settings",
-        "/_app/_dashboard/updates",
         "/_app/_dashboard/"
       ]
     },
@@ -304,10 +274,6 @@ export const routeTree = rootRoute
     },
     "/_app/_dashboard/settings": {
       "filePath": "_app/_dashboard/settings.tsx",
-      "parent": "/_app/_dashboard"
-    },
-    "/_app/_dashboard/updates": {
-      "filePath": "_app/_dashboard/updates.tsx",
       "parent": "/_app/_dashboard"
     },
     "/_app/editor/$id": {

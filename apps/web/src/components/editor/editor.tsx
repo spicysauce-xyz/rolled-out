@@ -1,4 +1,3 @@
-import { ButtonGroup } from "@mono/ui";
 import { cn } from "@mono/ui/utils";
 import { Bold } from "@tiptap/extension-bold";
 import { Code } from "@tiptap/extension-code";
@@ -12,108 +11,107 @@ import { Strike } from "@tiptap/extension-strike";
 import { Text } from "@tiptap/extension-text";
 import { Underline } from "@tiptap/extension-underline";
 import {
-  BubbleMenu,
   EditorContent,
   type JSONContent,
+  type Editor as TiptapEditor,
   useEditor,
 } from "@tiptap/react";
-import {
-  BoldIcon,
-  CodeIcon,
-  ItalicIcon,
-  LinkIcon,
-  StrikethroughIcon,
-  UnderlineIcon,
-} from "lucide-react";
 import { useCallback } from "react";
+import { BubbleMenu } from "./bubble-menu";
 
 const CustomDocument = Document.extend({
-  content: "heading block*",
+  content: "title block*",
 });
+
+const Title = Heading.extend({
+  name: "title",
+  group: "block",
+  content: "text*",
+  defining: true,
+  addInputRules() {
+    return [];
+  },
+  parseHTML() {
+    return [{ tag: "h1:first-child" }];
+  },
+  renderHTML({ HTMLAttributes }) {
+    return ["h1", HTMLAttributes, 0];
+  },
+});
+
+const onlyInAllowedNodesForMarks = (
+  editor: TiptapEditor,
+  action: () => boolean,
+) => {
+  const { $from } = editor.state.selection;
+  const parentNode = $from.node($from.depth);
+
+  if (["heading", "title"].includes(parentNode.type.name)) {
+    return true;
+  }
+
+  return action();
+};
 
 const extensions = [
   CustomDocument,
-  Heading.configure({ levels: [1, 2, 3] }),
+  Title.configure({ levels: [1] }),
+  Heading.configure({ levels: [2, 3] }),
   Paragraph,
   Text,
   Image,
   Bold.extend({
     addKeyboardShortcuts() {
       return {
-        "Mod-b": () => {
-          const { $from } = this.editor.state.selection;
-          const parentNode = $from.node($from.depth);
-
-          if (parentNode.type.name.includes("heading")) {
-            return true;
-          }
-
-          return this.editor.commands.toggleBold();
-        },
+        "Mod-b": () =>
+          onlyInAllowedNodesForMarks(
+            this.editor,
+            this.editor.commands.toggleBold,
+          ),
       };
     },
   }),
   Italic.extend({
     addKeyboardShortcuts() {
       return {
-        "Mod-i": () => {
-          const { $from } = this.editor.state.selection;
-          const parentNode = $from.node($from.depth);
-
-          if (parentNode.type.name.includes("heading")) {
-            return true;
-          }
-
-          return this.editor.commands.toggleItalic();
-        },
+        "Mod-i": () =>
+          onlyInAllowedNodesForMarks(
+            this.editor,
+            this.editor.commands.toggleItalic,
+          ),
       };
     },
   }),
   Strike.extend({
     addKeyboardShortcuts() {
       return {
-        "Mod-s": () => {
-          const { $from } = this.editor.state.selection;
-          const parentNode = $from.node($from.depth);
-
-          if (parentNode.type.name.includes("heading")) {
-            return true;
-          }
-
-          return this.editor.commands.toggleStrike();
-        },
+        "Mod-s": () =>
+          onlyInAllowedNodesForMarks(
+            this.editor,
+            this.editor.commands.toggleStrike,
+          ),
       };
     },
   }),
   Underline.extend({
     addKeyboardShortcuts() {
       return {
-        "Mod-u": () => {
-          const { $from } = this.editor.state.selection;
-          const parentNode = $from.node($from.depth);
-
-          if (parentNode.type.name.includes("heading")) {
-            return true;
-          }
-
-          return this.editor.commands.toggleUnderline();
-        },
+        "Mod-u": () =>
+          onlyInAllowedNodesForMarks(
+            this.editor,
+            this.editor.commands.toggleUnderline,
+          ),
       };
     },
   }),
   Code.extend({
     addKeyboardShortcuts() {
       return {
-        "Mod-e": () => {
-          const { $from } = this.editor.state.selection;
-          const parentNode = $from.node($from.depth);
-
-          if (parentNode.type.name.includes("heading")) {
-            return true;
-          }
-
-          return this.editor.commands.toggleCode();
-        },
+        "Mod-e": () =>
+          onlyInAllowedNodesForMarks(
+            this.editor,
+            this.editor.commands.toggleCode,
+          ),
       };
     },
   }),
@@ -168,89 +166,7 @@ export const Editor: React.FC<EditorProps> = ({ content, onUpdate }) => {
         editor={editor}
         onClick={(e) => e.stopPropagation()}
       />
-      <BubbleMenu
-        shouldShow={() =>
-          Boolean(
-            !editor?.state.selection.empty && editor?.isActive("paragraph"),
-          )
-        }
-        editor={editor}
-        tippyOptions={{ duration: 150 }}
-      >
-        <ButtonGroup.Root
-          size="sm"
-          className="shadow-xl"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <ButtonGroup.Item
-            isActive={editor?.isActive("bold")}
-            isDisabled={!editor?.can().chain().focus().toggleBold().run()}
-            onClick={() => editor?.chain().focus().toggleBold().run()}
-          >
-            <ButtonGroup.Icon>
-              <BoldIcon />
-            </ButtonGroup.Icon>
-          </ButtonGroup.Item>
-          <ButtonGroup.Item
-            isActive={editor?.isActive("italic")}
-            isDisabled={!editor?.can().chain().focus().toggleItalic().run()}
-            onClick={() => editor?.chain().focus().toggleItalic().run()}
-          >
-            <ButtonGroup.Icon>
-              <ItalicIcon />
-            </ButtonGroup.Icon>
-          </ButtonGroup.Item>
-          <ButtonGroup.Item
-            isActive={editor?.isActive("strike")}
-            isDisabled={!editor?.can().chain().focus().toggleStrike().run()}
-            onClick={() => editor?.chain().focus().toggleStrike().run()}
-          >
-            <ButtonGroup.Icon>
-              <StrikethroughIcon />
-            </ButtonGroup.Icon>
-          </ButtonGroup.Item>
-          <ButtonGroup.Item
-            isActive={editor?.isActive("underline")}
-            isDisabled={!editor?.can().chain().focus().toggleUnderline().run()}
-            onClick={() => editor?.chain().focus().toggleUnderline().run()}
-          >
-            <ButtonGroup.Icon>
-              <UnderlineIcon />
-            </ButtonGroup.Icon>
-          </ButtonGroup.Item>
-          <ButtonGroup.Item
-            isActive={editor?.isActive("code")}
-            isDisabled={!editor?.can().chain().focus().toggleCode().run()}
-            onClick={() => editor?.chain().focus().toggleCode().run()}
-          >
-            <ButtonGroup.Icon>
-              <CodeIcon />
-            </ButtonGroup.Icon>
-          </ButtonGroup.Item>
-          <ButtonGroup.Item
-            isActive={editor?.isActive("link")}
-            isDisabled={
-              !editor
-                ?.can()
-                .chain()
-                .focus()
-                .toggleLink({ href: "https://google.com/" })
-                .run()
-            }
-            onClick={() =>
-              editor
-                ?.chain()
-                .focus()
-                .toggleLink({ href: "https://google.com/" })
-                .run()
-            }
-          >
-            <ButtonGroup.Icon>
-              <LinkIcon />
-            </ButtonGroup.Icon>
-          </ButtonGroup.Item>
-        </ButtonGroup.Root>
-      </BubbleMenu>
+      <BubbleMenu editor={editor} />
     </div>
   );
 };

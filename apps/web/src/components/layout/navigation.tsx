@@ -100,7 +100,7 @@ export const Navigation = () => {
       </Sidebar.Header>
       <Sidebar.ScrollArea>
         <Sidebar.Group>
-          <Sidebar.NavLink to="/updates" label="Updates" icon={BellIcon} />
+          <Sidebar.NavLink to="/" label="Updates" icon={BellIcon} />
           <Sidebar.NavLink
             to="/settings"
             label="Settings"
