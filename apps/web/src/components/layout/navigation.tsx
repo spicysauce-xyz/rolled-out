@@ -1,26 +1,78 @@
+import { confirm } from "@components/feedback/confirmer";
 import { Avatar, DropdownMenu, Text, Toaster } from "@mono/ui";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import {
   BellIcon,
-  ChartNoAxesColumnIcon,
+  BuildingIcon,
   EllipsisVerticalIcon,
   HelpCircleIcon,
   ListIcon,
   LogOutIcon,
   MessageCircleIcon,
+  PlusCircleIcon,
   SettingsIcon,
   SmileIcon,
   User2Icon,
 } from "lucide-react";
 import { useLogout } from "../../hooks/useLogout";
 import { useSession } from "../../hooks/useSession";
+import { api } from "../../lib/api";
 import * as Sidebar from "./sidebar";
 
 export const Navigation = () => {
+  const queryClient = useQueryClient();
   const { data: sessionData } = useSession();
   const logout = useLogout();
 
+  const { data: organizations } = useQuery({
+    queryKey: ["organizations"],
+    queryFn: async () => {
+      const response = await api.organizations.$get();
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch organizations");
+      }
+
+      return response.json();
+    },
+  });
+
+  const updateSession = useMutation({
+    mutationFn: api.users.session[":id"].$patch,
+  });
+
+  const handleUpdateActiveOrganization = async (organizationId: string) => {
+    if (!sessionData?.data?.session?.id) {
+      return;
+    }
+
+    const toastId = Toaster.loading("Updating active organization...");
+
+    try {
+      await updateSession.mutateAsync({
+        param: { id: sessionData?.data?.session?.id },
+        json: { activeOrganizationId: organizationId },
+      });
+
+      await queryClient.invalidateQueries({ queryKey: ["session"] });
+
+      Toaster.success("Active organization updated!", {
+        id: toastId,
+      });
+    } catch {
+      Toaster.error("Failed to update active organization", { id: toastId });
+    }
+  };
+
   const handleLogout = async () => {
+    const confirmed = await confirm({
+      title: "Logout",
+      description: "Are you sure you want to logout?",
+    });
+
+    if (!confirmed) return;
+
     const toastId = Toaster.loading("Logging out...");
 
     try {
@@ -32,7 +84,7 @@ export const Navigation = () => {
   };
 
   return (
-    <Sidebar.Root className="hidden w-64 sm:flex">
+    <Sidebar.Root className="hidden w-64 bg-neutral-50 sm:flex">
       <Sidebar.Header>
         <div className="flex items-center gap-2">
           <SmileIcon className="size-4 stroke-2 stroke-neutral-900" />
@@ -48,11 +100,6 @@ export const Navigation = () => {
       </Sidebar.Header>
       <Sidebar.ScrollArea>
         <Sidebar.Group>
-          <Sidebar.NavLink
-            to="/"
-            label="Analytics"
-            icon={ChartNoAxesColumnIcon}
-          />
           <Sidebar.NavLink to="/updates" label="Updates" icon={BellIcon} />
           <Sidebar.NavLink
             to="/settings"
@@ -72,7 +119,7 @@ export const Navigation = () => {
           <DropdownMenu.Trigger asChild>
             <button
               type="button"
-              className="group flex w-full items-center gap-2 rounded-md p-2 transition-colors hover:bg-neutral-100"
+              className="group flex w-full items-center gap-2 rounded-md p-2 outline-0 transition-colors hover:bg-neutral-100 focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2"
             >
               <User2Icon className="size-4" />
               <div className="flex flex-col items-start">
@@ -101,7 +148,31 @@ export const Navigation = () => {
               </div>
             </div>
             <DropdownMenu.Separator />
-            <Link to="/settings">
+            <DropdownMenu.RadioGroup
+              value={sessionData?.data?.session?.activeOrganizationId || ""}
+              onValueChange={(value) => handleUpdateActiveOrganization(value)}
+            >
+              {organizations?.data?.map((organization) => (
+                <DropdownMenu.RadioItem
+                  key={organization.id}
+                  value={organization.id}
+                >
+                  <DropdownMenu.ItemIcon>
+                    <BuildingIcon />
+                  </DropdownMenu.ItemIcon>
+                  {organization.name}
+                </DropdownMenu.RadioItem>
+              ))}
+            </DropdownMenu.RadioGroup>
+            <DropdownMenu.Item>
+              <DropdownMenu.ItemIcon>
+                <PlusCircleIcon />
+              </DropdownMenu.ItemIcon>
+              New Organization
+            </DropdownMenu.Item>
+            <DropdownMenu.Separator />
+
+            <Link to="/account">
               <DropdownMenu.Item>
                 <DropdownMenu.ItemIcon>
                   <SettingsIcon />

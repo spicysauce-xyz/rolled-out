@@ -1,24 +1,45 @@
-import { createFactory } from "hono/factory";
+import { createAccessForUser } from "@access";
+import { notOk } from "@api";
+import { createMiddleware } from "hono/factory";
 import { auth } from "./auth.client";
 
-const factory = createFactory<{
-  Variables: {
-    user: typeof auth.$Infer.Session.user | null;
-    session: typeof auth.$Infer.Session.session | null;
-  };
-}>();
+type AuthMiddleware<R extends boolean> = {
+  Variables: R extends true
+    ? {
+        user: typeof auth.$Infer.Session.user;
+        session: typeof auth.$Infer.Session.session;
+        access: ReturnType<typeof createAccessForUser>;
+      }
+    : {
+        user: typeof auth.$Infer.Session.user | null;
+        session: typeof auth.$Infer.Session.session | null;
+        access: null;
+      };
+};
 
-export const authMiddleware = factory.createMiddleware(async (c, next) => {
-  const session = await auth.api.getSession({ headers: c.req.raw.headers });
+type AuthMiddlewareParams<R extends boolean> = {
+  required: R;
+};
 
-  if (!session) {
-    c.set("user", null);
-    c.set("session", null);
+export const authMiddleware = <R extends boolean>(params: AuthMiddlewareParams<R>) => {
+  return createMiddleware<AuthMiddleware<R>>(async (c, next) => {
+    const session = await auth.api.getSession({ headers: c.req.raw.headers });
+
+    if (!session) {
+      if (params.required) {
+        return notOk(c, { message: "Unauthorized", code: "UNAUTHORIZED" }, 401);
+      }
+
+      c.set("user", null);
+      c.set("session", null);
+      c.set("access", null);
+      return next();
+    }
+
+    c.set("user", session.user);
+    c.set("session", session.session);
+    c.set("access", createAccessForUser(session.user, session.session));
+
     return next();
-  }
-
-  c.set("user", session.user);
-  c.set("session", session.session);
-
-  return next();
-});
+  });
+};

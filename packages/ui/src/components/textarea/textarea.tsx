@@ -13,7 +13,7 @@ const textareaVariants = tv({
       // hover
       "hover:border-neutral-300",
       // focus
-      "has-[textarea:focus]:border-neutral-500 has-[textarea:focus]:ring-2 has-[textarea:focus]:ring-neutral-300",
+      "has-[textarea:focus]:border-accent-500 has-[textarea:focus]:ring-2 has-[textarea:focus]:ring-accent-100",
     ],
     wrapper: [
       // base

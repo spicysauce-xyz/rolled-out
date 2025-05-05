@@ -13,7 +13,7 @@ export const buttonVariants = tv({
       // hover
       "transition-[background-color,border-color]",
       // focus
-      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ring-transparent",
+      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ring-transparent focus-visible:ring-accent-500",
       // active
       "active:shadow-none active:inset-shadow-transparent",
     ],
@@ -85,14 +85,14 @@ export const buttonVariants = tv({
           // hover
           "hover:bg-neutral-950 hover:border-neutral-950",
           // focus
-          "focus-visible:ring-neutral-950 focus-visible:bg-neutral-950 focus-visible:border-neutral-950",
+          "focus-visible:bg-neutral-950 focus-visible:border-neutral-950",
         ],
         icon: [
-          "text-neutral-100",
+          "text-neutral-200",
           // hover
-          "group-hover/button-root:text-neutral-200",
+          "group-hover/button-root:text-neutral-100",
           // focus
-          "group-focus-visible/button-root:text-neutral-200",
+          "group-focus-visible/button-root:text-neutral-100",
         ],
       },
     },
@@ -105,14 +105,14 @@ export const buttonVariants = tv({
           // hover
           "hover:bg-accent-600 hover:border-accent-600",
           // focus
-          "focus-visible:ring-accent-500 focus-visible:bg-accent-600 focus-visible:border-accent-600",
+          "focus-visible:border-accent-600 focus-visible:bg-accent-600",
         ],
         icon: [
-          "text-accent-100",
+          "text-accent-200",
           // hover
-          "group-hover/button-root:text-accent-200",
+          "group-hover/button-root:text-accent-100",
           // focus
-          "group-focus-visible/button-root:text-accent-200",
+          "group-focus-visible/button-root:text-accent-100",
         ],
       },
     },
@@ -125,14 +125,14 @@ export const buttonVariants = tv({
           // hover
           "hover:bg-danger-600 hover:border-danger-600",
           // focus
-          "focus-visible:ring-danger-500 focus-visible:bg-danger-600 focus-visible:border-danger-600",
+          "focus-visible:bg-danger-600 focus-visible:border-danger-600",
         ],
         icon: [
-          "text-danger-100",
+          "text-danger-200",
           // hover
-          "group-hover/button-root:text-danger-200",
+          "group-hover/button-root:text-danger-100",
           // focus
-          "group-focus-visible/button-root:text-danger-200",
+          "group-focus-visible/button-root:text-danger-100",
         ],
       },
     },
@@ -145,14 +145,14 @@ export const buttonVariants = tv({
           // hover
           "hover:bg-warning-600 hover:border-warning-600",
           // focus
-          "focus-visible:ring-warning-500 focus-visible:bg-warning-600 focus-visible:border-warning-600",
+          "focus-visible:bg-warning-600 focus-visible:border-warning-600",
         ],
         icon: [
-          "text-warning-100",
+          "text-warning-200",
           // hover
-          "group-hover/button-root:text-warning-200",
+          "group-hover/button-root:text-warning-100",
           // focus
-          "group-focus-visible/button-root:text-warning-200",
+          "group-focus-visible/button-root:text-warning-100",
         ],
       },
     },
@@ -165,14 +165,14 @@ export const buttonVariants = tv({
           // hover
           "hover:bg-success-600 hover:border-success-600",
           // focus
-          "focus-visible:ring-success-500 focus-visible:bg-success-600 focus-visible:border-success-600",
+          "focus-visible:bg-success-600 focus-visible:border-success-600",
         ],
         icon: [
-          "text-success-100",
+          "text-success-200",
           // hover
-          "group-hover/button-root:text-success-200",
+          "group-hover/button-root:text-success-100",
           // focus
-          "group-focus-visible/button-root:text-success-200",
+          "group-focus-visible/button-root:text-success-100",
         ],
       },
     },
@@ -185,7 +185,7 @@ export const buttonVariants = tv({
           // hover
           "hover:bg-neutral-50 hover:text-neutral-600 hover:border-neutral-300",
           // focus
-          "focus-visible:ring-neutral-300 focus-visible:bg-neutral-50 focus-visible:text-neutral-600 focus-visible:border-neutral-200",
+          "focus-visible:bg-neutral-50 focus-visible:text-neutral-600 focus-visible:border-neutral-200",
         ],
         icon: [
           "text-neutral-400",
@@ -205,7 +205,7 @@ export const buttonVariants = tv({
           // hover
           "hover:bg-accent-50 hover:text-accent-600 hover:border-accent-300",
           // focus
-          "focus-visible:ring-accent-300 focus-visible:bg-accent-50 focus-visible:text-accent-600 focus-visible:border-accent-300",
+          "focus-visible:bg-accent-50 focus-visible:text-accent-600 focus-visible:border-accent-300",
         ],
         icon: [
           "text-accent-400",
@@ -225,7 +225,7 @@ export const buttonVariants = tv({
           // hover
           "hover:bg-danger-50 hover:text-danger-600 hover:border-danger-300",
           // focus
-          "focus-visible:ring-danger-300 focus-visible:bg-danger-50 focus-visible:text-danger-600 focus-visible:border-danger-300",
+          "focus-visible:bg-danger-50 focus-visible:text-danger-600 focus-visible:border-danger-300",
         ],
         icon: [
           "text-danger-400",
@@ -245,7 +245,7 @@ export const buttonVariants = tv({
           // hover
           "hover:bg-warning-50 hover:text-warning-600 hover:border-warning-300",
           // focus
-          "focus-visible:ring-warning-300 focus-visible:bg-warning-50 focus-visible:text-warning-600 focus-visible:border-warning-300",
+          "focus-visible:bg-warning-50 focus-visible:text-warning-600 focus-visible:border-warning-300",
         ],
         icon: [
           "text-warning-400",
@@ -265,7 +265,7 @@ export const buttonVariants = tv({
           // hover
           "hover:bg-success-50 hover:text-success-600 hover:border-success-300",
           // focus
-          "focus-visible:ring-success-300 focus-visible:bg-success-50 focus-visible:text-success-600 focus-visible:border-success-300",
+          "focus-visible:bg-success-50 focus-visible:text-success-600 focus-visible:border-success-300",
         ],
         icon: [
           "text-success-400",
@@ -282,11 +282,11 @@ export const buttonVariants = tv({
       variant: "tertiary",
       class: {
         root: [
-          "text-neutral-500 hover:text-neutral-600",
+          "text-neutral-500",
           // hover
-          "hover:bg-neutral-50 hover:border-neutral-50",
+          "hover:bg-neutral-50 hover:border-neutral-50 hover:text-neutral-600",
           // focus
-          "focus-visible:bg-neutral-50 focus-visible:border-neutral-50 focus-visible:ring-neutral-300",
+          "focus-visible:bg-neutral-50 focus-visible:border-neutral-50 focus-visible:text-neutral-600",
         ],
         icon: [
           "text-neutral-400",
@@ -302,11 +302,11 @@ export const buttonVariants = tv({
       variant: "tertiary",
       class: {
         root: [
-          "text-accent-500 hover:text-accent-600",
+          "text-accent-500",
           // hover
-          "hover:bg-accent-50 hover:border-accent-50",
+          "hover:bg-accent-50 hover:border-accent-50 hover:text-accent-600",
           // focus
-          "focus-visible:bg-accent-50 focus-visible:border-accent-50 focus-visible:ring-accent-300",
+          "focus-visible:bg-accent-50 focus-visible:border-accent-50 focus-visible:text-accent-600",
         ],
         icon: [
           "text-accent-400",
@@ -322,11 +322,11 @@ export const buttonVariants = tv({
       variant: "tertiary",
       class: {
         root: [
-          "text-danger-500 hover:text-danger-600",
+          "text-danger-500",
           // hover
-          "hover:bg-danger-50 hover:border-danger-50",
+          "hover:bg-danger-50 hover:border-danger-50 hover:text-danger-600",
           // focus
-          "focus-visible:bg-danger-50 focus-visible:border-danger-50 focus-visible:ring-danger-300",
+          "focus-visible:bg-danger-50 focus-visible:border-danger-50 focus-visible:text-danger-600",
         ],
         icon: [
           "text-danger-400",
@@ -342,11 +342,11 @@ export const buttonVariants = tv({
       variant: "tertiary",
       class: {
         root: [
-          "text-warning-500 hover:text-warning-600",
+          "text-warning-500",
           // hover
-          "hover:bg-warning-50 hover:border-warning-50",
+          "hover:bg-warning-50 hover:border-warning-50 hover:text-warning-600",
           // focus
-          "focus-visible:bg-warning-50 focus-visible:border-warning-50 focus-visible:ring-warning-300",
+          "focus-visible:bg-warning-50 focus-visible:border-warning-50 focus-visible:text-warning-600",
         ],
         icon: [
           "text-warning-400",
@@ -362,11 +362,11 @@ export const buttonVariants = tv({
       variant: "tertiary",
       class: {
         root: [
-          "text-success-500 hover:text-success-600",
+          "text-success-500",
           // hover
-          "hover:bg-success-50 hover:border-success-50",
+          "hover:bg-success-50 hover:border-success-50 hover:text-success-600",
           // focus
-          "focus-visible:bg-success-50 focus-visible:border-success-50 focus-visible:ring-success-300",
+          "focus-visible:bg-success-50 focus-visible:border-success-50 focus-visible:text-success-600",
         ],
         icon: [
           "text-success-400",

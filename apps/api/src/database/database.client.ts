@@ -1,13 +1,22 @@
-import { drizzle } from "drizzle-orm/node-postgres";
-import * as schema from "./database.schema";
+import { Config } from "@config";
+import type { ExtractTablesWithRelations } from "drizzle-orm";
+import { type NodePgQueryResultHKT, drizzle } from "drizzle-orm/node-postgres";
+import type { PgTransaction } from "drizzle-orm/pg-core";
+import * as schema from "./schema";
 
-export const database = drizzle({
+export const Database = drizzle({
   connection: {
-    host: process.env.DATABASE_HOST,
-    port: process.env.DATABASE_PORT,
-    user: process.env.DATABASE_USERNAME,
-    password: process.env.DATABASE_PASSWORD,
-    database: process.env.DATABASE_NAME,
+    host: Config.database.host,
+    port: Config.database.port,
+    user: Config.database.username,
+    password: Config.database.password,
+    database: Config.database.name,
   },
   schema,
 });
+
+export type DatabaseTransaction = PgTransaction<
+  NodePgQueryResultHKT,
+  typeof schema,
+  ExtractTablesWithRelations<typeof schema>
+>;

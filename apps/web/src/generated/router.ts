@@ -12,42 +12,20 @@
 
 import { Route as rootRoute } from './../routes/__root'
 import { Route as AppRouteImport } from './../routes/_app/route'
-import { Route as AppIndexImport } from './../routes/_app/index'
-import { Route as AppUpdatesImport } from './../routes/_app/updates'
-import { Route as AppSettingsImport } from './../routes/_app/settings'
-import { Route as AppNewImport } from './../routes/_app/new'
 import { Route as authSignupImport } from './../routes/(auth)/signup'
 import { Route as authLoginImport } from './../routes/(auth)/login'
+import { Route as AppDashboardRouteImport } from './../routes/_app/_dashboard/route'
+import { Route as AppDashboardIndexImport } from './../routes/_app/_dashboard/index'
+import { Route as AppEditorIdImport } from './../routes/_app/editor/$id'
+import { Route as AppDashboardUpdatesImport } from './../routes/_app/_dashboard/updates'
+import { Route as AppDashboardSettingsImport } from './../routes/_app/_dashboard/settings'
+import { Route as AppDashboardAccountImport } from './../routes/_app/_dashboard/account'
 
 // Create/Update Routes
 
 const AppRouteRoute = AppRouteImport.update({
   id: '/_app',
   getParentRoute: () => rootRoute,
-} as any)
-
-const AppIndexRoute = AppIndexImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AppRouteRoute,
-} as any)
-
-const AppUpdatesRoute = AppUpdatesImport.update({
-  id: '/updates',
-  path: '/updates',
-  getParentRoute: () => AppRouteRoute,
-} as any)
-
-const AppSettingsRoute = AppSettingsImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => AppRouteRoute,
-} as any)
-
-const AppNewRoute = AppNewImport.update({
-  id: '/new',
-  path: '/new',
-  getParentRoute: () => AppRouteRoute,
 } as any)
 
 const authSignupRoute = authSignupImport.update({
@@ -62,6 +40,41 @@ const authLoginRoute = authLoginImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const AppDashboardRouteRoute = AppDashboardRouteImport.update({
+  id: '/_dashboard',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+
+const AppDashboardIndexRoute = AppDashboardIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppDashboardRouteRoute,
+} as any)
+
+const AppEditorIdRoute = AppEditorIdImport.update({
+  id: '/editor/$id',
+  path: '/editor/$id',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+
+const AppDashboardUpdatesRoute = AppDashboardUpdatesImport.update({
+  id: '/updates',
+  path: '/updates',
+  getParentRoute: () => AppDashboardRouteRoute,
+} as any)
+
+const AppDashboardSettingsRoute = AppDashboardSettingsImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppDashboardRouteRoute,
+} as any)
+
+const AppDashboardAccountRoute = AppDashboardAccountImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => AppDashboardRouteRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -72,6 +85,13 @@ declare module '@tanstack/react-router' {
       fullPath: ''
       preLoaderRoute: typeof AppRouteImport
       parentRoute: typeof rootRoute
+    }
+    '/_app/_dashboard': {
+      id: '/_app/_dashboard'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRouteImport
     }
     '/(auth)/login': {
       id: '/(auth)/login'
@@ -87,51 +107,71 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authSignupImport
       parentRoute: typeof rootRoute
     }
-    '/_app/new': {
-      id: '/_app/new'
-      path: '/new'
-      fullPath: '/new'
-      preLoaderRoute: typeof AppNewImport
-      parentRoute: typeof AppRouteImport
+    '/_app/_dashboard/account': {
+      id: '/_app/_dashboard/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AppDashboardAccountImport
+      parentRoute: typeof AppDashboardRouteImport
     }
-    '/_app/settings': {
-      id: '/_app/settings'
+    '/_app/_dashboard/settings': {
+      id: '/_app/_dashboard/settings'
       path: '/settings'
       fullPath: '/settings'
-      preLoaderRoute: typeof AppSettingsImport
-      parentRoute: typeof AppRouteImport
+      preLoaderRoute: typeof AppDashboardSettingsImport
+      parentRoute: typeof AppDashboardRouteImport
     }
-    '/_app/updates': {
-      id: '/_app/updates'
+    '/_app/_dashboard/updates': {
+      id: '/_app/_dashboard/updates'
       path: '/updates'
       fullPath: '/updates'
-      preLoaderRoute: typeof AppUpdatesImport
+      preLoaderRoute: typeof AppDashboardUpdatesImport
+      parentRoute: typeof AppDashboardRouteImport
+    }
+    '/_app/editor/$id': {
+      id: '/_app/editor/$id'
+      path: '/editor/$id'
+      fullPath: '/editor/$id'
+      preLoaderRoute: typeof AppEditorIdImport
       parentRoute: typeof AppRouteImport
     }
-    '/_app/': {
-      id: '/_app/'
+    '/_app/_dashboard/': {
+      id: '/_app/_dashboard/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof AppIndexImport
-      parentRoute: typeof AppRouteImport
+      preLoaderRoute: typeof AppDashboardIndexImport
+      parentRoute: typeof AppDashboardRouteImport
     }
   }
 }
 
 // Create and export the route tree
 
+interface AppDashboardRouteRouteChildren {
+  AppDashboardAccountRoute: typeof AppDashboardAccountRoute
+  AppDashboardSettingsRoute: typeof AppDashboardSettingsRoute
+  AppDashboardUpdatesRoute: typeof AppDashboardUpdatesRoute
+  AppDashboardIndexRoute: typeof AppDashboardIndexRoute
+}
+
+const AppDashboardRouteRouteChildren: AppDashboardRouteRouteChildren = {
+  AppDashboardAccountRoute: AppDashboardAccountRoute,
+  AppDashboardSettingsRoute: AppDashboardSettingsRoute,
+  AppDashboardUpdatesRoute: AppDashboardUpdatesRoute,
+  AppDashboardIndexRoute: AppDashboardIndexRoute,
+}
+
+const AppDashboardRouteRouteWithChildren =
+  AppDashboardRouteRoute._addFileChildren(AppDashboardRouteRouteChildren)
+
 interface AppRouteRouteChildren {
-  AppNewRoute: typeof AppNewRoute
-  AppSettingsRoute: typeof AppSettingsRoute
-  AppUpdatesRoute: typeof AppUpdatesRoute
-  AppIndexRoute: typeof AppIndexRoute
+  AppDashboardRouteRoute: typeof AppDashboardRouteRouteWithChildren
+  AppEditorIdRoute: typeof AppEditorIdRoute
 }
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
-  AppNewRoute: AppNewRoute,
-  AppSettingsRoute: AppSettingsRoute,
-  AppUpdatesRoute: AppUpdatesRoute,
-  AppIndexRoute: AppIndexRoute,
+  AppDashboardRouteRoute: AppDashboardRouteRouteWithChildren,
+  AppEditorIdRoute: AppEditorIdRoute,
 }
 
 const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
@@ -139,49 +179,72 @@ const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
 )
 
 export interface FileRoutesByFullPath {
-  '': typeof AppRouteRouteWithChildren
+  '': typeof AppDashboardRouteRouteWithChildren
   '/login': typeof authLoginRoute
   '/signup': typeof authSignupRoute
-  '/new': typeof AppNewRoute
-  '/settings': typeof AppSettingsRoute
-  '/updates': typeof AppUpdatesRoute
-  '/': typeof AppIndexRoute
+  '/account': typeof AppDashboardAccountRoute
+  '/settings': typeof AppDashboardSettingsRoute
+  '/updates': typeof AppDashboardUpdatesRoute
+  '/editor/$id': typeof AppEditorIdRoute
+  '/': typeof AppDashboardIndexRoute
 }
 
 export interface FileRoutesByTo {
+  '': typeof AppRouteRouteWithChildren
   '/login': typeof authLoginRoute
   '/signup': typeof authSignupRoute
-  '/new': typeof AppNewRoute
-  '/settings': typeof AppSettingsRoute
-  '/updates': typeof AppUpdatesRoute
-  '/': typeof AppIndexRoute
+  '/account': typeof AppDashboardAccountRoute
+  '/settings': typeof AppDashboardSettingsRoute
+  '/updates': typeof AppDashboardUpdatesRoute
+  '/editor/$id': typeof AppEditorIdRoute
+  '/': typeof AppDashboardIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/_app': typeof AppRouteRouteWithChildren
+  '/_app/_dashboard': typeof AppDashboardRouteRouteWithChildren
   '/(auth)/login': typeof authLoginRoute
   '/(auth)/signup': typeof authSignupRoute
-  '/_app/new': typeof AppNewRoute
-  '/_app/settings': typeof AppSettingsRoute
-  '/_app/updates': typeof AppUpdatesRoute
-  '/_app/': typeof AppIndexRoute
+  '/_app/_dashboard/account': typeof AppDashboardAccountRoute
+  '/_app/_dashboard/settings': typeof AppDashboardSettingsRoute
+  '/_app/_dashboard/updates': typeof AppDashboardUpdatesRoute
+  '/_app/editor/$id': typeof AppEditorIdRoute
+  '/_app/_dashboard/': typeof AppDashboardIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '' | '/login' | '/signup' | '/new' | '/settings' | '/updates' | '/'
+  fullPaths:
+    | ''
+    | '/login'
+    | '/signup'
+    | '/account'
+    | '/settings'
+    | '/updates'
+    | '/editor/$id'
+    | '/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/signup' | '/new' | '/settings' | '/updates' | '/'
+  to:
+    | ''
+    | '/login'
+    | '/signup'
+    | '/account'
+    | '/settings'
+    | '/updates'
+    | '/editor/$id'
+    | '/'
   id:
     | '__root__'
     | '/_app'
+    | '/_app/_dashboard'
     | '/(auth)/login'
     | '/(auth)/signup'
-    | '/_app/new'
-    | '/_app/settings'
-    | '/_app/updates'
-    | '/_app/'
+    | '/_app/_dashboard/account'
+    | '/_app/_dashboard/settings'
+    | '/_app/_dashboard/updates'
+    | '/_app/editor/$id'
+    | '/_app/_dashboard/'
   fileRoutesById: FileRoutesById
 }
 
@@ -215,10 +278,18 @@ export const routeTree = rootRoute
     "/_app": {
       "filePath": "_app/route.tsx",
       "children": [
-        "/_app/new",
-        "/_app/settings",
-        "/_app/updates",
-        "/_app/"
+        "/_app/_dashboard",
+        "/_app/editor/$id"
+      ]
+    },
+    "/_app/_dashboard": {
+      "filePath": "_app/_dashboard/route.tsx",
+      "parent": "/_app",
+      "children": [
+        "/_app/_dashboard/account",
+        "/_app/_dashboard/settings",
+        "/_app/_dashboard/updates",
+        "/_app/_dashboard/"
       ]
     },
     "/(auth)/login": {
@@ -227,21 +298,25 @@ export const routeTree = rootRoute
     "/(auth)/signup": {
       "filePath": "(auth)/signup.tsx"
     },
-    "/_app/new": {
-      "filePath": "_app/new.tsx",
+    "/_app/_dashboard/account": {
+      "filePath": "_app/_dashboard/account.tsx",
+      "parent": "/_app/_dashboard"
+    },
+    "/_app/_dashboard/settings": {
+      "filePath": "_app/_dashboard/settings.tsx",
+      "parent": "/_app/_dashboard"
+    },
+    "/_app/_dashboard/updates": {
+      "filePath": "_app/_dashboard/updates.tsx",
+      "parent": "/_app/_dashboard"
+    },
+    "/_app/editor/$id": {
+      "filePath": "_app/editor/$id.tsx",
       "parent": "/_app"
     },
-    "/_app/settings": {
-      "filePath": "_app/settings.tsx",
-      "parent": "/_app"
-    },
-    "/_app/updates": {
-      "filePath": "_app/updates.tsx",
-      "parent": "/_app"
-    },
-    "/_app/": {
-      "filePath": "_app/index.tsx",
-      "parent": "/_app"
+    "/_app/_dashboard/": {
+      "filePath": "_app/_dashboard/index.tsx",
+      "parent": "/_app/_dashboard"
     }
   }
 }

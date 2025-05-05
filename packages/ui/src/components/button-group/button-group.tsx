@@ -14,7 +14,7 @@ export const buttonGroupVariants = tv({
       // hover
       "hover:border-neutral-300 hover:divide-neutral-300",
       // focus
-      "has-focus-visible:ring-2 has-focus-visible:ring-offset-2 has-focus-visible:ring-neutral-300 has-focus-visible:border-neutral-300 has-focus-visible:divide-neutral-300",
+      "has-focus-visible:ring-2 has-focus-visible:ring-offset-2 has-focus-visible:ring-accent-500 has-focus-visible:border-neutral-300 has-focus-visible:divide-neutral-300",
     ],
     item: [
       // base

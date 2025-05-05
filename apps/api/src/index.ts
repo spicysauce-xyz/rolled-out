@@ -1,23 +1,20 @@
+import { Auth } from "@auth";
+import { Posts } from "@domain/posts";
+import { Organization } from "@meta/organization";
+import { User } from "@meta/user";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
-import type { auth } from "./auth/auth.client";
-import { Auth } from "./auth/auth.handler";
-import { Test } from "./test/test.handler";
+import { logger } from "hono/logger";
 
-const app = new Hono<{
-  Variables: {
-    user: typeof auth.$Infer.Session.user | null;
-    session: typeof auth.$Infer.Session.session | null;
-  };
-}>()
-  .use("*", cors({ origin: ["http://localhost:5173", "http://localhost:4173"], credentials: true }))
-  .basePath("/api")
+export const app = new Hono()
+  .use(logger())
+  .use(cors({ origin: ["http://localhost:5173", "http://localhost:4173"], credentials: true }))
   .route("/auth", Auth)
-  .route("/test", Test);
+  .route("/users", User)
+  .route("/organizations", Organization)
+  .route("/posts", Posts);
 
 export default {
   port: 3000,
   fetch: app.fetch,
 };
-
-export type Api = typeof app;

@@ -1,16 +1,18 @@
-import type { Api } from "@mono/api";
+import type { Api, ApiError } from "@mono/api";
 import { QueryClient } from "@tanstack/react-query";
 import { hc } from "hono/client";
+import "@tanstack/react-query";
 
 export const queryClient = new QueryClient();
 
 export const api = hc<Api>("http://localhost:3000", {
-  fetch: (
-    req: string | URL | globalThis.Request,
-    init: RequestInit | undefined,
-  ) =>
-    fetch(req, {
-      ...(init ?? {}),
-      credentials: "include",
-    }),
+  init: {
+    credentials: "include",
+  },
 });
+
+declare module "@tanstack/react-query" {
+  interface Register {
+    defaultError: ApiError;
+  }
+}

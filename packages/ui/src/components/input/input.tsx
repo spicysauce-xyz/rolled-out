@@ -14,7 +14,7 @@ const inputVariants = tv({
       // hover
       "hover:border-neutral-300",
       // focus
-      "has-[input:focus]:border-neutral-500 has-[input:focus]:ring-2 has-[input:focus]:ring-neutral-300",
+      "has-[input:focus]:border-accent-500 has-[input:focus]:ring-2 has-[input:focus]:ring-accent-100",
     ],
     wrapper: [
       // base

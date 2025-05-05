@@ -17,7 +17,7 @@ const SwitchRoot = React.forwardRef<
       // focus
       "ring-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
       // focus unchecked
-      "data-[state=unchecked]:focus-visible:border-neutral-300 data-[state=unchecked]:focus-visible:ring-neutral-300",
+      "data-[state=unchecked]:focus-visible:border-neutral-300 data-[state=unchecked]:focus-visible:ring-accent-500",
       // focus checked
       "data-[state=checked]:focus-visible:border-accent-600 data-[state=checked]:focus-visible:bg-accent-600 data-[state=checked]:focus-visible:ring-accent-500",
       // checked

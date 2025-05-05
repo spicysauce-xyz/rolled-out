@@ -10,11 +10,11 @@ export const linkButtonVariants = tv({
       // base
       "group/link-button-root inline-flex relative overflow-hidden select-none font-weight-500",
       // hover
-      "transition-all",
+      "transition-[color]",
       // focus
-      "focus-visible:outline-none ring-2 ring-transparent",
+      "focus-visible:outline-none ring-2 focus-visible:ring-offset-1 rounded-xs ring-transparent focus-visible:ring-accent-500",
     ],
-    content: ["flex flex-1 gap-2 items-center whitespace-nowrap"],
+    content: ["flex flex-1 gap-1 items-center whitespace-nowrap"],
     icon: [
       // base
       "flex size-4 shrink-0 items-center justify-center [&>svg]:w-full [&>svg]:h-full",
@@ -53,11 +53,11 @@ export const linkButtonVariants = tv({
       color: "neutral",
       class: {
         root: [
-          "text-neutral-800",
+          "text-neutral-900",
           // hover
-          "hover:text-neutral-900",
+          "hover:text-neutral-950",
           // focus
-          "focus-visible:text-neutral-900 focus-visible:ring-neutral-300",
+          "focus-visible:text-neutral-950",
         ],
         icon: [
           "text-neutral-400",
@@ -76,7 +76,7 @@ export const linkButtonVariants = tv({
           // hover
           "hover:text-accent-600",
           // focus
-          "focus-visible:text-accent-600 focus-visible:ring-accent-300",
+          "focus-visible:text-accent-600",
         ],
         icon: [
           "text-accent-400",
@@ -95,7 +95,7 @@ export const linkButtonVariants = tv({
           // hover
           "hover:text-neutral-600",
           // focus
-          "focus-visible:text-neutral-600 focus-visible:ring-neutral-300",
+          "focus-visible:text-neutral-600",
         ],
         icon: [
           "text-neutral-400",
@@ -114,7 +114,7 @@ export const linkButtonVariants = tv({
           // hover
           "hover:text-danger-600",
           // focus
-          "focus-visible:text-danger-600 focus-visible:ring-danger-300",
+          "focus-visible:text-danger-600",
         ],
         icon: [
           "text-danger-400",
@@ -133,7 +133,7 @@ export const linkButtonVariants = tv({
           // hover
           "hover:text-warning-600",
           // focus
-          "focus-visible:text-warning-600 focus-visible:ring-warning-300",
+          "focus-visible:text-warning-600",
         ],
         icon: [
           "text-warning-400",
@@ -152,7 +152,7 @@ export const linkButtonVariants = tv({
           // hover
           "hover:text-success-600",
           // focus
-          "focus-visible:text-success-600 focus-visible:ring-success-300",
+          "focus-visible:text-success-600",
         ],
         icon: [
           "text-success-400",

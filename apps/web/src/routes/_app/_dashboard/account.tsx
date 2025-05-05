@@ -9,13 +9,13 @@ import {
   UserIcon,
 } from "lucide-react";
 import { z } from "zod";
-import * as Card from "../../components/card";
-import * as Page from "../../components/layout/page";
-import { useSession } from "../../hooks/useSession";
-import { authClient } from "../../lib/auth";
-import useAppForm from "../../lib/form";
+import * as Card from "../../../components/card";
+import * as Page from "../../../components/layout/page";
+import { useSession } from "../../../hooks/useSession";
+import { authClient } from "../../../lib/auth";
+import useAppForm from "../../../lib/form";
 
-export const Route = createFileRoute("/_app/settings")({
+export const Route = createFileRoute("/_app/_dashboard/account")({
   component: RouteComponent,
 });
 
@@ -45,9 +45,7 @@ function RouteComponent() {
 
             formApi.reset();
 
-            Toaster.success("Account updated", {
-              description: "Your account has been updated successfully",
-            });
+            Toaster.success("Account updated successfully!");
           },
         },
       );
@@ -55,13 +53,13 @@ function RouteComponent() {
   });
 
   return (
-    <Page.Root>
-      <Page.Header className="items-center">
+    <Page.Wrapper>
+      <Page.Header>
         <div className="flex items-center gap-2">
           <HomeIcon className="size-4 text-neutral-500" />
           <ChevronRight className="size-4 text-neutral-500" />
           <Text.Root size="sm" weight="medium">
-            Settings
+            Account
           </Text.Root>
         </div>
       </Page.Header>
@@ -166,6 +164,6 @@ function RouteComponent() {
           </form>
         </Card.Root>
       </Page.Content>
-    </Page.Root>
+    </Page.Wrapper>
   );
 }

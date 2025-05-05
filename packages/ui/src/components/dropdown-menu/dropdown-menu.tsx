@@ -1,5 +1,5 @@
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
-import { Check, ChevronRight, Circle } from "lucide-react";
+import { Check, ChevronRight } from "lucide-react";
 import * as React from "react";
 import { cn } from "../../utils";
 import { Text } from "../text";
@@ -188,21 +188,32 @@ const DropdownMenuRadioItem = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.RadioItem>,
   React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.RadioItem>
 >(({ className, children, ...props }, ref) => (
-  <DropdownMenuPrimitive.RadioItem
-    ref={ref}
-    className={cn(
-      "relative flex cursor-default select-none items-center rounded-sm py-1.5 pr-2 pl-8 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
-      className,
-    )}
-    {...props}
-  >
-    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
-      <DropdownMenuPrimitive.ItemIndicator>
-        <Circle className="h-2 w-2 fill-current" />
-      </DropdownMenuPrimitive.ItemIndicator>
-    </span>
-    {children}
-  </DropdownMenuPrimitive.RadioItem>
+  <Text.Root weight="medium" size="sm" asChild>
+    <DropdownMenuPrimitive.RadioItem
+      ref={ref}
+      className={cn(
+        // base
+        "group/dropdown-radio-item relative mx-2 flex h-9 cursor-default select-none items-center gap-2 rounded-sm p-2 pr-10 outline-none",
+        // transition
+        "transition-colors",
+        // hover
+        "hover:bg-neutral-50",
+        // focus
+        "focus:bg-neutral-50",
+        // disabled
+        "disabled:pointer-events-none disabled:opacity-50",
+        className,
+      )}
+      {...props}
+    >
+      <span className="absolute right-2 flex size-4 items-center justify-center rounded-full border border-neutral-200 transition-all group-hover/dropdown-radio-item:border-neutral-300 has-[[data-state=checked]]:border-accent-500 data-[state=checked]:border-accent-500">
+        <DropdownMenuPrimitive.ItemIndicator asChild>
+          <div className="size-2 rounded-full bg-accent-500" />
+        </DropdownMenuPrimitive.ItemIndicator>
+      </span>
+      {children}
+    </DropdownMenuPrimitive.RadioItem>
+  </Text.Root>
 ));
 
 const DropdownMenuSeparator = React.forwardRef<

@@ -1,13 +1,11 @@
 import {
   Outlet,
   createRootRouteWithContext,
-  useRouter,
   useRouterState,
 } from "@tanstack/react-router";
 import type { Session, User } from "better-auth";
-import { AnimatePresence, delay, motion } from "motion/react";
-import React from "react";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
+import { useEffect, useRef, useState } from "react";
 
 interface RootContext {
   auth?: {
@@ -34,7 +32,6 @@ function Root() {
 
   useEffect(() => {
     if (route.status === "idle" && !initializedRef.current) {
-      console.log("idle", Date.now());
       initializedRef.current = true;
       setShowApp(true);
     }

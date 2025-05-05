@@ -1,10 +1,11 @@
-import { betterAuth } from "better-auth";
+import { Database } from "@database";
+import { type BetterAuthOptions, betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { organization } from "better-auth/plugins";
-import { database } from "../database/database.client";
+import { customSession, magicLink } from "better-auth/plugins";
 
-export const auth = betterAuth({
-  database: drizzleAdapter(database, {
+const options = {
+  basePath: "/auth",
+  database: drizzleAdapter(Database, {
     provider: "pg",
   }),
   account: {
@@ -12,9 +13,39 @@ export const auth = betterAuth({
       enabled: true,
     },
   },
+  session: {
+    additionalFields: {
+      activeOrganizationId: {
+        type: "string",
+        required: false,
+      },
+    },
+  },
   emailAndPassword: {
     enabled: true,
   },
-  plugins: [organization()],
   trustedOrigins: ["http://localhost:5173", "http://localhost:4173"],
+  advanced: {
+    generateId: false,
+  },
+  plugins: [
+    magicLink({
+      sendMagicLink: async ({ email, token, url }) => {
+        console.log({ email, token, url });
+      },
+    }),
+  ],
+} satisfies BetterAuthOptions;
+
+export const auth = betterAuth({
+  ...(options || {}),
+  plugins: [
+    ...options.plugins,
+    customSession(async ({ user, session }) => {
+      return {
+        user,
+        session,
+      };
+    }, options),
+  ],
 });

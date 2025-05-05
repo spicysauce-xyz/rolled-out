@@ -15,7 +15,6 @@ import {
   BubbleMenu,
   EditorContent,
   type JSONContent,
-  posToDOMRect,
   useEditor,
 } from "@tiptap/react";
 import {
@@ -124,33 +123,24 @@ const extensions = [
   }),
 ];
 
-const content = `
-  <h1>Reminders on projects, initiatives, and documents⁠</h1><p>Set reminders on issues, projects, initiatives, or documents so you can revisit them at a later date. Schedule reminders from the contextual menu of each page or use the keyboard shortcut H. You'll receive reminder notifications in your Linear Inbox. Pending reminders are labeled at the top of their respective page, and they can be modified or canceled from there.</p><img src="https://webassets.linear.app/images/ornj730p/production/3ccca2695502526d26441c828bf1e26f4e1ae7c9-3600x1800.png?q=95&amp;auto=format&amp;dpr=2"><h2>View and manage work across multiple teams</h2><p>Create views at the parent team level to see projects and issues from every sub-team. Members of any sub-team automatically have access to their parent team, enabling cross-team visibility. With shared workflows, cycles, and labels, teams can collaborate more effectively, understand dependencies, and coordinate timelines—all while maintaining their individual focus areas.</p><p>Sub-teams is available on Business and Enterprise plans. Go to <em>Team settings &gt; Team hierarchy</em> to set up parent and sub-team relationships and learn more in the docs.</p><h2>Improved Billing Settings</h2><p>We’ve updated the billing page to give you more visibility into your Linear subscription. See scheduled plan renewals, active discounts and trials (with their expiry dates), and a complete invoice history.</p>
-`;
-
 type EditorProps = {
-  onCreate?: (json: JSONContent) => void;
+  content: JSONContent;
   onUpdate?: (json: JSONContent) => void;
 };
 
-export const Editor: React.FC<EditorProps> = ({ onCreate, onUpdate }) => {
+export const Editor: React.FC<EditorProps> = ({ content, onUpdate }) => {
   const editor = useEditor({
     extensions,
     content,
-    onCreate(props) {
-      onCreate?.(props.editor.getJSON());
-    },
     onUpdate: ({ editor }) => {
       onUpdate?.(editor.getJSON());
     },
-    onSelectionUpdate: ({ editor }) => {
-      console.log(editor.state.selection);
-      const { view, state } = editor;
-      const { from, to } = state.selection;
+    // onSelectionUpdate: ({ editor }) => {
+    //   const { view, state } = editor;
+    //   const { from, to } = state.selection;
 
-      const selectionRect = posToDOMRect(view, from, to);
-      console.log(selectionRect);
-    },
+    //   const selectionRect = posToDOMRect(view, from, to);
+    // },
   });
 
   const handleClickOutside = useCallback(() => {

@@ -67,7 +67,7 @@ const SidebarNavLink = React.forwardRef<HTMLAnchorElement, SidebarNavLinkProps>(
           // hover
           "hover:bg-neutral-100",
           // focus
-          "focus-visible:bg-neutral-100 focus-visible:outline-none",
+          "focus-visible:bg-neutral-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2",
           className,
         )}
         {...props}
@@ -99,7 +99,7 @@ const SidebarLink = React.forwardRef<HTMLAnchorElement, SidebarLinkProps>(
         className={cn(
           "group/link relative flex h-9 items-center gap-2 rounded-md px-2",
           // focus
-          "focus-visible:outline-none",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2",
           className,
         )}
         {...props}

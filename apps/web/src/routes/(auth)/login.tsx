@@ -1,7 +1,7 @@
-import { Button, Input, Label, Text, Toaster } from "@mono/ui";
+import { Button, Input, Label, LinkButton, Text, Toaster } from "@mono/ui";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link, createFileRoute, redirect } from "@tanstack/react-router";
-import { LockIcon, MailIcon } from "lucide-react";
+import { ExternalLinkIcon, LockIcon, MailIcon } from "lucide-react";
 import { z } from "zod";
 import { authClient } from "../../lib/auth";
 import useAppForm from "../../lib/form";
@@ -140,6 +140,7 @@ function Login() {
               <Button.Root
                 type="submit"
                 className="w-full"
+                color="accent"
                 isLoading={isSubmitting}
                 isDisabled={!isFieldsValid}
               >
@@ -151,14 +152,7 @@ function Login() {
         <Text.Root size="sm" color="muted">
           Don't have an account?{" "}
           <Link to="/signup" search={{ redirect: search.redirect }}>
-            <Text.Root
-              size="sm"
-              weight="medium"
-              asChild
-              className="hover:underline"
-            >
-              <span>Sign up</span>
-            </Text.Root>
+            <LinkButton.Root color="accent">Sign up</LinkButton.Root>
           </Link>
         </Text.Root>
       </div>

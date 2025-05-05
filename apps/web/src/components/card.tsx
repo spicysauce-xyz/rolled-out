@@ -8,7 +8,7 @@ const cardVariants = tv({
     header: "border-b border-neutral-100 pb-4 flex justify-between gap-4",
     headerCopy: "flex flex-col gap-0.5",
     content: "pt-4 pb-2 flex flex-col",
-    footer: "",
+    footer: "pt-4 border-t border-neutral-100 flex gap-4",
   },
 });
 
@@ -47,13 +47,7 @@ const CardHeaderTitle = React.forwardRef<
   React.ComponentProps<typeof Text.Root>
 >(({ className, ...props }, ref) => {
   return (
-    <Text.Root
-      ref={ref}
-      size="sm"
-      weight="medium"
-      className={className}
-      {...props}
-    />
+    <Text.Root ref={ref} weight="medium" className={className} {...props} />
   );
 });
 
@@ -64,7 +58,7 @@ const CardHeaderDescription = React.forwardRef<
   return (
     <Text.Root
       ref={ref}
-      size="xs"
+      size="sm"
       color="muted"
       className={className}
       {...props}

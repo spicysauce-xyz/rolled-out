@@ -7,7 +7,7 @@ const pageVariants = tv({
     root: "h-svh w-full flex items-start",
     wrapper:
       "flex flex-1 h-full flex-col overflow-hidden bg-white border-neutral-100",
-    header: "p-4 px-6 flex justify-between gap-4 border-b border-neutral-100",
+    header: "p-4 px-6 flex justify-between gap-6 border-b border-neutral-100",
     content: "h-full px-6 py-6 gap-8 grid",
   },
 });
