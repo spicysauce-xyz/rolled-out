@@ -1,5 +1,5 @@
 import { confirm } from "@components/feedback/confirmer";
-import { Avatar, DropdownMenu, Text, Toaster } from "@mono/ui";
+import { Avatar, Clickable, DropdownMenu, Text, Toaster } from "@mono/ui";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import {
@@ -117,18 +117,20 @@ export const Navigation = () => {
       <Sidebar.Footer className="p-2">
         <DropdownMenu.Root>
           <DropdownMenu.Trigger asChild>
-            <button
-              type="button"
-              className="group flex w-full items-center gap-2 rounded-md p-2 outline-0 transition-colors hover:bg-neutral-100 focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2"
+            <Clickable.Root
+              className="flex h-9 w-full items-center px-2 hover:bg-neutral-100"
+              variant="tertiary"
             >
-              <User2Icon className="size-4" />
-              <div className="flex flex-col items-start">
+              <div className="flex items-center gap-2">
+                <User2Icon className="size-4 stroke-neutral-900" />
                 <Text.Root weight="medium" size="sm">
                   {sessionData?.data?.user?.name || ""}
                 </Text.Root>
               </div>
-              <EllipsisVerticalIcon className="ml-auto size-4 text-neutral-400 transition-colors group-hover:text-neutral-500" />
-            </button>
+              <Clickable.Icon className="ml-auto">
+                <EllipsisVerticalIcon />
+              </Clickable.Icon>
+            </Clickable.Root>
           </DropdownMenu.Trigger>
           <DropdownMenu.Content side="right" align="end">
             <div className="flex items-center gap-2 px-4 py-2">
