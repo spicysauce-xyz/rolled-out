@@ -5,8 +5,13 @@ export const useSession = () => {
   return useQuery({
     queryKey: ["session"],
     queryFn: async () => {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      return authClient.getSession();
+      const response = await authClient.getSession();
+
+      if (response.error) {
+        throw response.error;
+      }
+
+      return response;
     },
   });
 };
