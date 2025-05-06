@@ -1,4 +1,4 @@
-import { ScrollArea, Text } from "@mono/ui";
+import { Clickable, ScrollArea, Text } from "@mono/ui";
 import { cn } from "@mono/ui/utils";
 import { Link, type LinkComponentProps } from "@tanstack/react-router";
 import { CircleIcon, ExternalLinkIcon, type LucideIcon } from "lucide-react";
@@ -58,30 +58,25 @@ const SidebarNavLink = React.forwardRef<HTMLAnchorElement, SidebarNavLinkProps>(
     const Icon = icon ?? CircleIcon;
 
     return (
-      <Link
-        ref={ref}
-        className={cn(
-          "group/nav-link relative flex h-9 items-center gap-2 rounded-md px-2",
-          // transition
-          "transition-colors",
-          // hover
-          "hover:bg-neutral-100",
-          // focus
-          "focus-visible:bg-neutral-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2",
-          className,
-        )}
-        {...props}
+      <Clickable.Root
+        asChild
+        variant="tertiary"
+        className="flex h-9 items-center px-2 hover:bg-neutral-100 focus-visible:bg-neutral-100"
       >
-        <Icon className="size-4 shrink-0 text-neutral-400 transition-colors group-hover/nav-link:text-neutral-500 group-focus-visible/nav-link:text-neutral-500 group-data-[status=active]/nav-link:text-neutral-900" />
-        <Text.Root
-          weight="medium"
-          size="sm"
-          className="text-neutral-500 transition-colors group-hover/nav-link:text-neutral-600 group-focus-visible/nav-link:text-neutral-600 group-data-[status=active]/nav-link:text-neutral-900"
-        >
-          {label}
-        </Text.Root>
-        {children}
-      </Link>
+        <Link ref={ref} {...props}>
+          <Clickable.Icon className="mr-2 group-data-[status=active]/clickable-root:text-neutral-900">
+            <Icon />
+          </Clickable.Icon>
+          <Text.Root
+            weight="medium"
+            size="sm"
+            className="text-inherit transition-colors group-data-[status=active]/clickable-root:text-neutral-900"
+          >
+            {label}
+          </Text.Root>
+          {children}
+        </Link>
+      </Clickable.Root>
     );
   },
 );
@@ -94,27 +89,28 @@ const SidebarLink = React.forwardRef<HTMLAnchorElement, SidebarLinkProps>(
     const Icon = icon ?? CircleIcon;
 
     return (
-      <a
-        ref={ref}
-        className={cn(
-          "group/link relative flex h-9 items-center gap-2 rounded-md px-2",
-          // focus
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2",
-          className,
-        )}
-        {...props}
+      <Clickable.Root
+        asChild
+        variant="tertiary"
+        className="flex h-9 items-center px-2"
       >
-        <Icon className="size-4 shrink-0 text-neutral-400 transition-colors group-hover/link:text-neutral-500 group-focus-visible/link:text-neutral-500" />
-        <Text.Root
-          weight="medium"
-          size="sm"
-          className="text-neutral-500 transition-colors group-hover/link:text-neutral-600 group-focus-visible/link:text-neutral-600"
-        >
-          {label}
-        </Text.Root>
-        {children}
-        <ExternalLinkIcon className="ml-auto size-4 text-neutral-400 transition-colors group-hover/link:text-neutral-500 group-focus-visible/link:text-neutral-500" />
-      </a>
+        <a ref={ref} {...props}>
+          <Clickable.Icon className="mr-2">
+            <Icon />
+          </Clickable.Icon>
+          <Text.Root
+            weight="medium"
+            size="sm"
+            className="text-inherit transition-colors"
+          >
+            {label}
+          </Text.Root>
+          {children}
+          <Clickable.Icon className="ml-auto">
+            <ExternalLinkIcon />
+          </Clickable.Icon>
+        </a>
+      </Clickable.Root>
     );
   },
 );
