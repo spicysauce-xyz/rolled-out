@@ -1,3 +1,4 @@
+import * as Editor from "@components/editor/editor";
 import { TimeSince } from "@components/editor/time-since";
 import { api } from "@lib/api";
 import { Button, IconButton, Text } from "@mono/ui";
@@ -7,7 +8,6 @@ import type { JSONContent } from "@tiptap/react";
 import { debounce } from "lodash";
 import { ArrowLeftIcon, ClockIcon, SendIcon } from "lucide-react";
 import { useCallback, useMemo } from "react";
-import { Editor } from "../../../components/editor/editor";
 import * as Page from "../../../components/layout/page";
 
 export const Route = createFileRoute("/_app/editor/$id")({
@@ -129,7 +129,11 @@ function RouteComponent() {
           </div>
         </Page.Header>
         <Page.Content className="mx-auto flex w-full max-w-180 flex-1 flex-col">
-          {content && <Editor content={content} onUpdate={handleUpdate} />}
+          {content && (
+            <Editor.Root content={content} onUpdate={handleUpdate}>
+              <Editor.Content />
+            </Editor.Root>
+          )}
         </Page.Content>
       </Page.Wrapper>
     </Page.Root>
