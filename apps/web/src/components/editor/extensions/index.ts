@@ -1,3 +1,4 @@
+import Blockquote from "@tiptap/extension-blockquote";
 import Bold from "@tiptap/extension-bold";
 import Code from "@tiptap/extension-code";
 import Document from "@tiptap/extension-document";
@@ -24,13 +25,18 @@ export const extensions = [
         return "Brief title for your update...";
       }
 
-      return "Write something or try / for heading, list, etc.";
+      if (node.type.name === "blockquote") {
+        return "Empty quote...";
+      }
+
+      return "Write something or try / for heading, list, etc...";
     },
   }),
   Title.configure({ levels: [1] }),
   Heading.configure({ levels: [2, 3] }),
   Paragraph,
   Text,
+  Blockquote,
   Image,
   Bold.extend({
     addKeyboardShortcuts() {

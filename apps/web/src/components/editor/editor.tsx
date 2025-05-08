@@ -1,7 +1,6 @@
 import { cn } from "@mono/ui/utils";
 import {
   EditorContext,
-  EditorProvider,
   type JSONContent,
   EditorContent as TiptapEditorContent,
   useCurrentEditor,
@@ -68,6 +67,8 @@ export const EditorContent: React.FC = () => {
         "prose-img:rounded-xl",
         // code
         "prose-code:rounded-xs prose-code:bg-neutral-100 prose-code:px-1 prose-code:font-mono prose-code:font-weight-400 prose-code:text-md prose-code:before:content-none prose-code:after:content-none",
+        // blockquote
+        "prose-blockquote:border-neutral-200 prose-blockquote:border-l-4 prose-blockquote:pl-4 prose-blockquote:[&>p]:text-neutral-900 prose-blockquote:[&>p]:not-italic prose-blockquote:[&>p]:before:content-none",
       )}
       editor={editor}
       onClick={(e) => e.stopPropagation()}

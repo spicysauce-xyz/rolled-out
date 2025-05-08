@@ -7,7 +7,12 @@ import {
   ReactRenderer,
 } from "@tiptap/react";
 import Suggestion from "@tiptap/suggestion";
-import { Heading2Icon, Heading3Icon, type LucideIcon } from "lucide-react";
+import {
+  Heading2Icon,
+  Heading3Icon,
+  type LucideIcon,
+  QuoteIcon,
+} from "lucide-react";
 import { forwardRef, useImperativeHandle, useState } from "react";
 import tippy, {
   type Props,
@@ -65,7 +70,7 @@ const SlashCommandMenu = forwardRef<
           variant="tertiary"
           onMouseEnter={() => setSelectedIndex(index)}
           className={cn(
-            "items-center gap-2 p-2",
+            "w-full items-center gap-2 p-2",
             selectedIndex === index && "bg-neutral-50 text-neutral-600",
           )}
         >
@@ -126,6 +131,19 @@ export const Slash = Extension.create({
                 .focus()
                 .deleteRange(range)
                 .setNode("heading", { level: 3 })
+                .run();
+            },
+          },
+          {
+            icon: QuoteIcon,
+            title: "Quote",
+            command: ({ editor, range }: { editor: Editor; range: Range }) => {
+              editor
+                .chain()
+                .focus()
+                .deleteRange(range)
+                .toggleNode("paragraph", "paragraph")
+                .toggleBlockquote()
                 .run();
             },
           },
