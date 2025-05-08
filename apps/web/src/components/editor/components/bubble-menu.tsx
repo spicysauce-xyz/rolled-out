@@ -1,5 +1,8 @@
 import { ButtonGroup } from "@mono/ui";
-import { BubbleMenu as BubbleMenuTiptap, type Editor } from "@tiptap/react";
+import {
+  BubbleMenu as BubbleMenuTiptap,
+  useCurrentEditor,
+} from "@tiptap/react";
 import {
   BoldIcon,
   CodeIcon,
@@ -9,11 +12,9 @@ import {
   UnderlineIcon,
 } from "lucide-react";
 
-interface BubbleMenuProps {
-  editor: Editor | null;
-}
+export const BubbleMenu: React.FC = () => {
+  const { editor } = useCurrentEditor();
 
-export const BubbleMenu = ({ editor }: BubbleMenuProps) => {
   return (
     <BubbleMenuTiptap
       shouldShow={() =>

@@ -10,6 +10,8 @@ import Suggestion from "@tiptap/suggestion";
 import {
   Heading2Icon,
   Heading3Icon,
+  ListIcon,
+  ListOrderedIcon,
   type LucideIcon,
   QuoteIcon,
 } from "lucide-react";
@@ -76,13 +78,13 @@ const SlashCommandMenu = forwardRef<
         >
           <Clickable.Icon
             className={cn(
-              "size-6",
+              "size-5",
               selectedIndex === index && "text-neutral-500",
             )}
           >
             <item.icon />
           </Clickable.Icon>
-          <Text.Root weight="medium" className="text-inherit">
+          <Text.Root size="sm" weight="medium" className="text-inherit">
             {item.title}
           </Text.Root>
         </Clickable.Root>
@@ -131,6 +133,30 @@ export const Slash = Extension.create({
                 .focus()
                 .deleteRange(range)
                 .setNode("heading", { level: 3 })
+                .run();
+            },
+          },
+          {
+            icon: ListIcon,
+            title: "Bullet List",
+            command: ({ editor, range }: { editor: Editor; range: Range }) => {
+              editor
+                .chain()
+                .focus()
+                .deleteRange(range)
+                .toggleBulletList()
+                .run();
+            },
+          },
+          {
+            icon: ListOrderedIcon,
+            title: "Ordered List",
+            command: ({ editor, range }: { editor: Editor; range: Range }) => {
+              editor
+                .chain()
+                .focus()
+                .deleteRange(range)
+                .toggleOrderedList()
                 .run();
             },
           },

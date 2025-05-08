@@ -132,6 +132,7 @@ function RouteComponent() {
           {content && (
             <Editor.Root content={content} onUpdate={handleUpdate}>
               <Editor.Content />
+              <Editor.BubbleMenu />
             </Editor.Root>
           )}
         </Page.Content>

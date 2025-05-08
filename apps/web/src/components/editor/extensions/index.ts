@@ -1,11 +1,15 @@
 import Blockquote from "@tiptap/extension-blockquote";
 import Bold from "@tiptap/extension-bold";
+import BulletList from "@tiptap/extension-bullet-list";
 import Code from "@tiptap/extension-code";
 import Document from "@tiptap/extension-document";
+import HardBreak from "@tiptap/extension-hard-break";
 import Heading from "@tiptap/extension-heading";
 import Image from "@tiptap/extension-image";
 import Italic from "@tiptap/extension-italic";
 import Link from "@tiptap/extension-link";
+import ListItem from "@tiptap/extension-list-item";
+import OrderedList from "@tiptap/extension-ordered-list";
 import Paragraph from "@tiptap/extension-paragraph";
 import Placeholder from "@tiptap/extension-placeholder";
 import Strike from "@tiptap/extension-strike";
@@ -21,6 +25,10 @@ export const extensions = [
   }),
   Placeholder.configure({
     placeholder: ({ node }) => {
+      if (["listItem", "orderedList", "bulletList"].includes(node.type.name)) {
+        return "";
+      }
+
       if (node.type.name === "title") {
         return "Brief title for your update...";
       }
@@ -36,6 +44,7 @@ export const extensions = [
   Heading.configure({ levels: [2, 3] }),
   Paragraph,
   Text,
+  HardBreak,
   Blockquote,
   Image,
   Bold.extend({
@@ -98,4 +107,7 @@ export const extensions = [
     autolink: true,
   }),
   Slash,
+  BulletList,
+  OrderedList,
+  ListItem,
 ];
