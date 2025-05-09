@@ -14,6 +14,12 @@ export const Route = createFileRoute("/_app/editor/$id")({
   component: RouteComponent,
 });
 
+const getTitleFromContent = (content: JSONContent | undefined) => {
+  const text = content?.content?.[0]?.content?.[0]?.text?.trim();
+
+  return text ?? "Untitled Update";
+};
+
 function RouteComponent() {
   const queryClient = useQueryClient();
   const { id } = useParams({ from: "/_app/editor/$id" });
@@ -36,15 +42,13 @@ function RouteComponent() {
     return data?.content as JSONContent | undefined;
   }, [data]);
 
-  const title = useMemo(() => {
-    const text = content?.content?.[0]?.content?.[0]?.text;
-
-    return text ?? "Untitled Update";
-  }, [content]);
-
   const updatePost = useMutation({
-    mutationFn: (content: JSONContent) =>
-      api.posts[":id"].$put({ param: { id }, json: { title: "", content } }),
+    mutationFn: (content: JSONContent) => {
+      return api.posts[":id"].$put({
+        param: { id },
+        json: { title: getTitleFromContent(content), content },
+      });
+    },
     onSuccess: async (data) => {
       const json = await data.json();
 
@@ -73,6 +77,7 @@ function RouteComponent() {
 
         return {
           ...old,
+          title: getTitleFromContent(json),
           content: json,
         };
       });
@@ -96,7 +101,7 @@ function RouteComponent() {
             </IconButton.Root>
             <div className="flex flex-col gap-0.5">
               <Text.Root size="sm" weight="medium">
-                {title}
+                {data.title}
               </Text.Root>
               {updatePost.isPending ? (
                 <Text.Root size="xs" color="muted">

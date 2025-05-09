@@ -34,7 +34,7 @@ export const Posts = new Hono()
 
       const post = await PostsService.createPost({
         organizationId,
-        title: title ?? "Untitled",
+        title: title ?? "Untitled Update",
         content: content ?? {},
       });
 
