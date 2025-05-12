@@ -1,4 +1,4 @@
-import { Clickable, Text } from "@mono/ui";
+import { Clickable, Text, Toaster } from "@mono/ui";
 import { cn } from "@mono/ui/utils";
 import {
   type Editor,
@@ -10,12 +10,12 @@ import Suggestion from "@tiptap/suggestion";
 import {
   Heading2Icon,
   Heading3Icon,
+  ImageIcon,
   ListIcon,
   ListOrderedIcon,
-  type LucideIcon,
   QuoteIcon,
 } from "lucide-react";
-import { forwardRef, useImperativeHandle, useState } from "react";
+import { forwardRef, useImperativeHandle, useMemo, useState } from "react";
 import tippy, {
   type Props,
   type Instance,
@@ -31,14 +31,71 @@ const SlashCommandMenu = forwardRef<
   {
     editor: Editor;
     range: Range;
-    items: {
-      icon: LucideIcon;
-      title: string;
-      command: (props: { editor: Editor; range: Range }) => void;
-    }[];
   }
->(({ items, editor, range }, ref) => {
+>(({ editor, range }, ref) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const items = useMemo(
+    () => [
+      {
+        icon: Heading2Icon,
+        title: "Heading 2",
+        command: () => {
+          editor
+            .chain()
+            .focus()
+            .deleteRange(range)
+            .setNode("heading", { level: 2 })
+            .run();
+        },
+      },
+      {
+        icon: Heading3Icon,
+        title: "Heading 3",
+        command: () => {
+          editor
+            .chain()
+            .focus()
+            .deleteRange(range)
+            .setNode("heading", { level: 3 })
+            .run();
+        },
+      },
+      {
+        icon: ListIcon,
+        title: "Bullet List",
+        command: () => {
+          editor.chain().focus().deleteRange(range).toggleBulletList().run();
+        },
+      },
+      {
+        icon: ListOrderedIcon,
+        title: "Ordered List",
+        command: () => {
+          editor.chain().focus().deleteRange(range).toggleOrderedList().run();
+        },
+      },
+      {
+        icon: QuoteIcon,
+        title: "Quote",
+        command: () => {
+          editor
+            .chain()
+            .focus()
+            .deleteRange(range)
+            .toggleNode("paragraph", "paragraph")
+            .toggleBlockquote()
+            .run();
+        },
+      },
+      {
+        icon: ImageIcon,
+        title: "Image",
+        command: () => openFileUpload(),
+      },
+    ],
+    [editor, range],
+  );
 
   useImperativeHandle(ref, () => ({
     onKeyDown: ({ event }: { event: KeyboardEvent }) => {
@@ -54,7 +111,7 @@ const SlashCommandMenu = forwardRef<
         }
 
         if (event.key === "Enter") {
-          items[selectedIndex].command({ editor, range });
+          items[selectedIndex].command();
         }
 
         return true;
@@ -64,6 +121,50 @@ const SlashCommandMenu = forwardRef<
     },
   }));
 
+  const uploadImage = async (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const toastId = Toaster.loading("Uploading image...");
+
+    editor
+      .chain()
+      .focus()
+      .deleteRange(range)
+      .setImage({ src: URL.createObjectURL(file) })
+      .run();
+
+    const from = editor.state.selection.$from.pos;
+
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+
+      Toaster.success("Image uploaded successfully", { id: toastId });
+
+      editor
+        .chain()
+        .setNodeSelection(from)
+        .setImage({ src: "https://placehold.co/800x400" })
+        .run();
+    } catch {
+      Toaster.error("Failed to upload image", { id: toastId });
+    }
+  };
+
+  const openFileUpload = async () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.click();
+
+    input.onchange = async (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (!file) return;
+
+      await uploadImage(file);
+    };
+  };
+
   return (
     <div className="flex-col gap-px rounded-xl border border-neutral-100 bg-white p-2 shadow-xl">
       {items.map((item, index) => (
@@ -71,6 +172,7 @@ const SlashCommandMenu = forwardRef<
           key={item.title}
           variant="tertiary"
           onMouseEnter={() => setSelectedIndex(index)}
+          onClick={() => item.command()}
           className={cn(
             "w-full items-center gap-2 p-2",
             selectedIndex === index && "bg-neutral-50 text-neutral-600",
@@ -111,69 +213,6 @@ export const Slash = Extension.create({
         }) => {
           props.command({ editor, range });
         },
-        items: () => [
-          {
-            icon: Heading2Icon,
-            title: "Heading 2",
-            command: ({ editor, range }: { editor: Editor; range: Range }) => {
-              editor
-                .chain()
-                .focus()
-                .deleteRange(range)
-                .setNode("heading", { level: 2 })
-                .run();
-            },
-          },
-          {
-            icon: Heading3Icon,
-            title: "Heading 3",
-            command: ({ editor, range }: { editor: Editor; range: Range }) => {
-              editor
-                .chain()
-                .focus()
-                .deleteRange(range)
-                .setNode("heading", { level: 3 })
-                .run();
-            },
-          },
-          {
-            icon: ListIcon,
-            title: "Bullet List",
-            command: ({ editor, range }: { editor: Editor; range: Range }) => {
-              editor
-                .chain()
-                .focus()
-                .deleteRange(range)
-                .toggleBulletList()
-                .run();
-            },
-          },
-          {
-            icon: ListOrderedIcon,
-            title: "Ordered List",
-            command: ({ editor, range }: { editor: Editor; range: Range }) => {
-              editor
-                .chain()
-                .focus()
-                .deleteRange(range)
-                .toggleOrderedList()
-                .run();
-            },
-          },
-          {
-            icon: QuoteIcon,
-            title: "Quote",
-            command: ({ editor, range }: { editor: Editor; range: Range }) => {
-              editor
-                .chain()
-                .focus()
-                .deleteRange(range)
-                .toggleNode("paragraph", "paragraph")
-                .toggleBlockquote()
-                .run();
-            },
-          },
-        ],
         render: () => {
           let component: ReactRenderer | null = null;
           let popup: Instance<Props>[] | null = null;

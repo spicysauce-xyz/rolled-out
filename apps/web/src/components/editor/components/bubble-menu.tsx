@@ -10,6 +10,7 @@ import {
   ItalicIcon,
   LinkIcon,
   StrikethroughIcon,
+  Trash2Icon,
   UnderlineIcon,
 } from "lucide-react";
 
@@ -27,6 +28,13 @@ export const BubbleMenu: React.FC = () => {
     if (!args.editor) return false;
     if (args.editor.state.selection.empty) return false;
     if (args.editor.isActive("link")) return true;
+    return false;
+  };
+
+  const shouldShowImageMenu = (args: { editor: Editor }) => {
+    if (!args.editor) return false;
+    if (args.editor.state.selection.empty) return false;
+    if (args.editor.isActive("image")) return true;
     return false;
   };
 
@@ -117,7 +125,6 @@ export const BubbleMenu: React.FC = () => {
         pluginKey="link-menu"
         shouldShow={shouldShowLinkMenu}
         editor={editor}
-        className="bg-red-500"
         tippyOptions={{ duration: 150, placement: "bottom" }}
       >
         {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
@@ -145,6 +152,25 @@ export const BubbleMenu: React.FC = () => {
             Add a link to the selected text.
           </p>
         </div>
+      </BubbleMenuTiptap>
+      {/* TODO: do not show if the image is not uploaded */}
+      <BubbleMenuTiptap
+        pluginKey="image-menu"
+        shouldShow={shouldShowImageMenu}
+        editor={editor}
+        tippyOptions={{ duration: 150, placement: "top-end" }}
+      >
+        <ButtonGroup.Root
+          size="sm"
+          className="shadow-xl"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <ButtonGroup.Item onClick={() => editor?.commands.deleteSelection()}>
+            <ButtonGroup.Icon>
+              <Trash2Icon />
+            </ButtonGroup.Icon>
+          </ButtonGroup.Item>
+        </ButtonGroup.Root>
       </BubbleMenuTiptap>
     </>
   );

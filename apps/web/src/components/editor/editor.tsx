@@ -6,7 +6,6 @@ import {
   useCurrentEditor,
   useEditor,
 } from "@tiptap/react";
-import { useCallback } from "react";
 import { BubbleMenu } from "./components/bubble-menu";
 import { extensions } from "./extensions";
 
@@ -26,18 +25,16 @@ export const EditorRoot: React.FC<React.PropsWithChildren<EditorProps>> = ({
     onUpdate: ({ editor }) => {
       onUpdate?.(editor.getJSON());
     },
+    editorProps: {
+      attributes: {
+        class: "flex-1 h-full",
+      },
+    },
   });
-
-  const handleClickOutside = useCallback(() => {
-    editor?.commands.focus("end");
-  }, [editor]);
 
   return (
     <EditorContext.Provider value={{ editor }}>
-      {/* biome-ignore lint/a11y/useKeyWithClickEvents: no need to focus on the editor on key press */}
-      <div className="flex-1" onClick={handleClickOutside}>
-        {children}
-      </div>
+      <div className="flex flex-1">{children}</div>
     </EditorContext.Provider>
   );
 };
@@ -49,7 +46,7 @@ export const EditorContent: React.FC = () => {
     <TiptapEditorContent
       className={cn(
         // base
-        "prose min-w-full prose-headings:font-weight-500 [&>div]:outline-none",
+        "prose min-h-full min-w-full prose-headings:font-weight-500 [&>div]:outline-none",
         // placeholder
         "[&>div>*]:before:pointer-events-none [&>div>*]:before:absolute [&>div>*]:before:text-neutral-500 [&>div>*]:before:content-[attr(data-placeholder)]",
         // paragraph
@@ -74,7 +71,6 @@ export const EditorContent: React.FC = () => {
         "prose-li:pl-0 prose-ol:prose-li:marker:text-neutral-900 prose-ol:prose-li:marker:text-sm prose-ul:prose-li:marker:text-neutral-200",
       )}
       editor={editor}
-      onClick={(e) => e.stopPropagation()}
     />
   );
 };
