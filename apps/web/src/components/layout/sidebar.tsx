@@ -161,7 +161,7 @@ const SidebarVersion = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof Text.Root>
 >(({ children, className, ...props }, ref) => {
   return (
-    <Text.Root ref={ref} size="xs" color="muted" className="ml-auto" {...props}>
+    <Text.Root ref={ref} size="xs" color="muted" {...props}>
       v0.0.1 · h1a2sh3
     </Text.Root>
   );

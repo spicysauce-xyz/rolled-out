@@ -84,7 +84,12 @@ export const UserMenu: React.FC<UserMenuProps> = ({ organizationSlug }) => {
           <Avatar.Root className="size-10 rounded-md border border-neutral-100">
             <Avatar.Image src={sessionData?.data?.user?.image || ""} />
             <Avatar.Fallback>
-              {sessionData?.data?.user?.name?.slice(0, 2).toUpperCase()}
+              {sessionData?.data?.user?.name
+                ?.split(" ")
+                .map((name) => name[0])
+                .slice(0, 2)
+                .join("")
+                .toUpperCase()}
             </Avatar.Fallback>
           </Avatar.Root>
           <div className="flex flex-col items-start gap-0.5">

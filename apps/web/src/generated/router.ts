@@ -12,6 +12,7 @@
 
 import { Route as rootRoute } from './../routes/__root'
 import { Route as AppRouteImport } from './../routes/_app/route'
+import { Route as AppIndexImport } from './../routes/_app/index'
 import { Route as authSignupImport } from './../routes/(auth)/signup'
 import { Route as authLoginImport } from './../routes/(auth)/login'
 import { Route as AppOrganizationSlugRouteImport } from './../routes/_app/$organizationSlug/route'
@@ -28,6 +29,12 @@ import { Route as AppOrganizationSlugEditorIdImport } from './../routes/_app/$or
 const AppRouteRoute = AppRouteImport.update({
   id: '/_app',
   getParentRoute: () => rootRoute,
+} as any)
+
+const AppIndexRoute = AppIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRouteRoute,
 } as any)
 
 const authSignupRoute = authSignupImport.update({
@@ -129,6 +136,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authSignupImport
       parentRoute: typeof rootRoute
     }
+    '/_app/': {
+      id: '/_app/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof AppIndexImport
+      parentRoute: typeof AppRouteImport
+    }
     '/_app/$organizationSlug_/settings': {
       id: '/_app/$organizationSlug_/settings'
       path: '/$organizationSlug/settings'
@@ -221,12 +235,14 @@ const AppOrganizationSlugSettingsRouteRouteWithChildren =
 
 interface AppRouteRouteChildren {
   AppOrganizationSlugRouteRoute: typeof AppOrganizationSlugRouteRouteWithChildren
+  AppIndexRoute: typeof AppIndexRoute
   AppOrganizationSlugSettingsRouteRoute: typeof AppOrganizationSlugSettingsRouteRouteWithChildren
   AppOrganizationSlugEditorIdRoute: typeof AppOrganizationSlugEditorIdRoute
 }
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppOrganizationSlugRouteRoute: AppOrganizationSlugRouteRouteWithChildren,
+  AppIndexRoute: AppIndexRoute,
   AppOrganizationSlugSettingsRouteRoute:
     AppOrganizationSlugSettingsRouteRouteWithChildren,
   AppOrganizationSlugEditorIdRoute: AppOrganizationSlugEditorIdRoute,
@@ -241,6 +257,7 @@ export interface FileRoutesByFullPath {
   '/$organizationSlug': typeof AppOrganizationSlugRouteRouteWithChildren
   '/login': typeof authLoginRoute
   '/signup': typeof authSignupRoute
+  '/': typeof AppIndexRoute
   '/$organizationSlug/settings': typeof AppOrganizationSlugSettingsRouteRouteWithChildren
   '/$organizationSlug/contacts': typeof AppOrganizationSlugContactsRoute
   '/$organizationSlug/updates': typeof AppOrganizationSlugUpdatesRoute
@@ -251,9 +268,9 @@ export interface FileRoutesByFullPath {
 }
 
 export interface FileRoutesByTo {
-  '': typeof AppRouteRouteWithChildren
   '/login': typeof authLoginRoute
   '/signup': typeof authSignupRoute
+  '/': typeof AppIndexRoute
   '/$organizationSlug/settings': typeof AppOrganizationSlugSettingsRouteRouteWithChildren
   '/$organizationSlug/contacts': typeof AppOrganizationSlugContactsRoute
   '/$organizationSlug/updates': typeof AppOrganizationSlugUpdatesRoute
@@ -269,6 +286,7 @@ export interface FileRoutesById {
   '/_app/$organizationSlug': typeof AppOrganizationSlugRouteRouteWithChildren
   '/(auth)/login': typeof authLoginRoute
   '/(auth)/signup': typeof authSignupRoute
+  '/_app/': typeof AppIndexRoute
   '/_app/$organizationSlug_/settings': typeof AppOrganizationSlugSettingsRouteRouteWithChildren
   '/_app/$organizationSlug/contacts': typeof AppOrganizationSlugContactsRoute
   '/_app/$organizationSlug/updates': typeof AppOrganizationSlugUpdatesRoute
@@ -285,6 +303,7 @@ export interface FileRouteTypes {
     | '/$organizationSlug'
     | '/login'
     | '/signup'
+    | '/'
     | '/$organizationSlug/settings'
     | '/$organizationSlug/contacts'
     | '/$organizationSlug/updates'
@@ -294,9 +313,9 @@ export interface FileRouteTypes {
     | '/$organizationSlug/settings/account'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | ''
     | '/login'
     | '/signup'
+    | '/'
     | '/$organizationSlug/settings'
     | '/$organizationSlug/contacts'
     | '/$organizationSlug/updates'
@@ -310,6 +329,7 @@ export interface FileRouteTypes {
     | '/_app/$organizationSlug'
     | '/(auth)/login'
     | '/(auth)/signup'
+    | '/_app/'
     | '/_app/$organizationSlug_/settings'
     | '/_app/$organizationSlug/contacts'
     | '/_app/$organizationSlug/updates'
@@ -351,6 +371,7 @@ export const routeTree = rootRoute
       "filePath": "_app/route.tsx",
       "children": [
         "/_app/$organizationSlug",
+        "/_app/",
         "/_app/$organizationSlug_/settings",
         "/_app/$organizationSlug_/editor/$id"
       ]
@@ -369,6 +390,10 @@ export const routeTree = rootRoute
     },
     "/(auth)/signup": {
       "filePath": "(auth)/signup.tsx"
+    },
+    "/_app/": {
+      "filePath": "_app/index.tsx",
+      "parent": "/_app"
     },
     "/_app/$organizationSlug_/settings": {
       "filePath": "_app/$organizationSlug_/settings/route.tsx",
