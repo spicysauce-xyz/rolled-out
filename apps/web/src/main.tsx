@@ -5,7 +5,7 @@ import { RouterProvider, createRouter } from "@tanstack/react-router";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { scan } from "react-scan";
-import { Confirmer } from "./components/feedback/confirmer";
+import * as Confirmer from "./components/feedback/confirmer";
 import { routeTree } from "./generated/router";
 import { useSession } from "./hooks/useSession";
 import { queryClient } from "./lib/api";
@@ -45,7 +45,7 @@ const Root = () => {
         router={router}
         context={{ auth: data?.data ?? undefined }}
       />
-      <Confirmer />
+      <Confirmer.Root />
       <Toaster.Root />
     </>
   );

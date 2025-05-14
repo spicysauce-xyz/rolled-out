@@ -1,9 +1,9 @@
 import { Database } from "@database";
-import { type BetterAuthOptions, betterAuth } from "better-auth";
+import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { customSession, magicLink } from "better-auth/plugins";
+import { organization } from "better-auth/plugins";
 
-const options = {
+export const auth: ReturnType<typeof betterAuth> = betterAuth({
   basePath: "/auth",
   database: drizzleAdapter(Database, {
     provider: "pg",
@@ -28,24 +28,5 @@ const options = {
   advanced: {
     generateId: false,
   },
-  plugins: [
-    magicLink({
-      sendMagicLink: async ({ email, token, url }) => {
-        console.log({ email, token, url });
-      },
-    }),
-  ],
-} satisfies BetterAuthOptions;
-
-export const auth = betterAuth({
-  ...(options || {}),
-  plugins: [
-    ...options.plugins,
-    customSession(async ({ user, session }) => {
-      return {
-        user,
-        session,
-      };
-    }, options),
-  ],
+  plugins: [organization()],
 });

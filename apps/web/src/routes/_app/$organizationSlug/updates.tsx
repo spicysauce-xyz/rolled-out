@@ -5,7 +5,7 @@ import { ChevronRight, HomeIcon, PlusIcon } from "lucide-react";
 import * as Page from "../../../components/layout/page";
 import { api } from "../../../lib/api";
 
-export const Route = createFileRoute("/_app/_dashboard/")({
+export const Route = createFileRoute("/_app/$organizationSlug/updates")({
   component: RouteComponent,
 });
 
@@ -35,7 +35,10 @@ function RouteComponent() {
       }
 
       const post = json.data;
-      navigate({ to: "/editor/$id", params: { id: post.id } });
+      navigate({
+        to: "/$organizationSlug/editor/$id",
+        params: { id: post.id, organizationSlug: "asdf" },
+      });
 
       Toaster.success("Successfully created new draft", { id });
     } catch {

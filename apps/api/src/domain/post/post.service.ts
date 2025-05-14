@@ -1,6 +1,6 @@
 import { Database, schema } from "@database";
 import { eq } from "drizzle-orm";
-import { PostsRepository } from "./posts.repository";
+import { PostsRepository } from "./post.repository";
 
 export const PostsService = {
   createPost: async (data: typeof schema.post.$inferInsert) => {

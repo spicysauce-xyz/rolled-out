@@ -28,9 +28,7 @@ const confirmStore = create<ConfirmState>(() => ({
   confirms: [],
 }));
 
-export const confirm = (
-  payload: Omit<Confirm, "id" | "resolve" | "dismissed">,
-) => {
+const confirm = (payload: Omit<Confirm, "id" | "resolve" | "dismissed">) => {
   const id = Math.random().toString(36).substring(2, 15);
 
   const promise = new Promise<boolean>((resolve) => {
@@ -53,7 +51,7 @@ export const confirm = (
   return promise;
 };
 
-const Confirm: React.FC<Confirm> = ({
+const ConfirmAlert: React.FC<Confirm> = ({
   id,
   title,
   description,
@@ -212,8 +210,12 @@ const Confirm: React.FC<Confirm> = ({
   );
 };
 
-export const Confirmer = () => {
+const ConfirmerRoot = () => {
   const { confirms } = confirmStore();
 
-  return confirms.map((payload) => <Confirm key={payload.id} {...payload} />);
+  return confirms.map((payload) => (
+    <ConfirmAlert key={payload.id} {...payload} />
+  ));
 };
+
+export { ConfirmerRoot as Root, confirm };

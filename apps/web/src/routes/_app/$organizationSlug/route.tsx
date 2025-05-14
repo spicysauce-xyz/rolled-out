@@ -1,15 +1,15 @@
-import { Navigation } from "@components/layout/navigation";
 import * as Page from "@components/layout/page";
 import { Outlet, createFileRoute } from "@tanstack/react-router";
+import { DashboardNavigation } from "./-components/dashboard-navigation";
 
-export const Route = createFileRoute("/_app/_dashboard")({
+export const Route = createFileRoute("/_app/$organizationSlug")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
   return (
     <Page.Root>
-      <Navigation />
+      <DashboardNavigation />
       <Outlet />
     </Page.Root>
   );

@@ -17,8 +17,7 @@
     "better-auth": "1.2.2",
     "drizzle-orm": "^0.40.0",
     "hono": "^4.7.2",
-    "pg": "^8.13.3",
-    "zod": "^3.24.2"
+    "pg": "^8.13.3"
   },
   "devDependencies": {
     "@total-typescript/tsconfig": "^1.0.4",

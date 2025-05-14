@@ -8,9 +8,9 @@ import type { JSONContent } from "@tiptap/react";
 import { debounce } from "lodash";
 import { ArrowLeftIcon, ClockIcon, SendIcon } from "lucide-react";
 import { useCallback, useMemo } from "react";
-import * as Page from "../../../components/layout/page";
+import * as Page from "../../../../components/layout/page";
 
-export const Route = createFileRoute("/_app/editor/$id")({
+export const Route = createFileRoute("/_app/$organizationSlug_/editor/$id")({
   component: RouteComponent,
 });
 
@@ -22,7 +22,7 @@ const getTitleFromContent = (content: JSONContent | undefined) => {
 
 function RouteComponent() {
   const queryClient = useQueryClient();
-  const { id } = useParams({ from: "/_app/editor/$id" });
+  const { id } = useParams({ from: "/_app/$organizationSlug/editor/$id" });
 
   const { data } = useQuery({
     queryKey: ["posts", id],

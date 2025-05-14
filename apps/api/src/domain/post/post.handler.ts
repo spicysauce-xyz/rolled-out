@@ -1,14 +1,13 @@
-import { notOk, ok } from "@api";
-import { authMiddleware } from "@auth";
 import { zValidator } from "@hono/zod-validator";
+import { notOk, ok } from "@utils/network";
 import { Hono } from "hono";
 import { z } from "zod";
-import { PostsService } from "./posts.service";
+import { authMiddleware } from "../auth";
+import { PostsService } from "./post.service";
 
-export const Posts = new Hono()
+export const PostHandler = new Hono()
   .get("/", authMiddleware({ required: true }), async (c) => {
     const session = c.get("session");
-    const organizationId = session.activeOrganizationId;
 
     if (!organizationId) {
       return notOk(c, { message: "Organization not found" }, 404);
@@ -24,7 +23,6 @@ export const Posts = new Hono()
     authMiddleware({ required: true }),
     async (c) => {
       const session = c.get("session");
-      const organizationId = session.activeOrganizationId;
 
       if (!organizationId) {
         return notOk(c, { message: "Organization not found" }, 404);
@@ -56,7 +54,7 @@ export const Posts = new Hono()
 
     return ok(c, post);
   })
-  .put(
+  .patch(
     "/:id",
     zValidator("json", z.object({ title: z.string(), content: z.record(z.any()) })),
     authMiddleware({ required: true }),

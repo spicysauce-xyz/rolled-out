@@ -1,5 +1,4 @@
-import { createAccessForUser } from "@access";
-import { notOk } from "@api";
+import { notOk } from "@utils/network";
 import { createMiddleware } from "hono/factory";
 import { auth } from "./auth.client";
 
@@ -8,12 +7,10 @@ type AuthMiddleware<R extends boolean> = {
     ? {
         user: typeof auth.$Infer.Session.user;
         session: typeof auth.$Infer.Session.session;
-        access: ReturnType<typeof createAccessForUser>;
       }
     : {
         user: typeof auth.$Infer.Session.user | null;
         session: typeof auth.$Infer.Session.session | null;
-        access: null;
       };
 };
 
@@ -32,14 +29,11 @@ export const authMiddleware = <R extends boolean>(params: AuthMiddlewareParams<R
 
       c.set("user", null);
       c.set("session", null);
-      c.set("access", null);
       return next();
     }
 
     c.set("user", session.user);
     c.set("session", session.session);
-    c.set("access", createAccessForUser(session.user, session.session));
-
     return next();
   });
 };

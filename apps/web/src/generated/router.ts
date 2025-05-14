@@ -14,11 +14,14 @@ import { Route as rootRoute } from './../routes/__root'
 import { Route as AppRouteImport } from './../routes/_app/route'
 import { Route as authSignupImport } from './../routes/(auth)/signup'
 import { Route as authLoginImport } from './../routes/(auth)/login'
-import { Route as AppDashboardRouteImport } from './../routes/_app/_dashboard/route'
-import { Route as AppDashboardIndexImport } from './../routes/_app/_dashboard/index'
-import { Route as AppEditorIdImport } from './../routes/_app/editor/$id'
-import { Route as AppDashboardSettingsImport } from './../routes/_app/_dashboard/settings'
-import { Route as AppDashboardAccountImport } from './../routes/_app/_dashboard/account'
+import { Route as AppOrganizationSlugRouteImport } from './../routes/_app/$organizationSlug/route'
+import { Route as AppOrganizationSlugIndexImport } from './../routes/_app/$organizationSlug/index'
+import { Route as AppOrganizationSlugUpdatesImport } from './../routes/_app/$organizationSlug/updates'
+import { Route as AppOrganizationSlugContactsImport } from './../routes/_app/$organizationSlug/contacts'
+import { Route as AppOrganizationSlugSettingsRouteImport } from './../routes/_app/$organizationSlug_/settings/route'
+import { Route as AppOrganizationSlugSettingsAccountImport } from './../routes/_app/$organizationSlug_/settings/account'
+import { Route as AppOrganizationSlugSettingsSplatImport } from './../routes/_app/$organizationSlug_/settings/$'
+import { Route as AppOrganizationSlugEditorIdImport } from './../routes/_app/$organizationSlug_/editor/$id'
 
 // Create/Update Routes
 
@@ -39,34 +42,60 @@ const authLoginRoute = authLoginImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const AppDashboardRouteRoute = AppDashboardRouteImport.update({
-  id: '/_dashboard',
+const AppOrganizationSlugRouteRoute = AppOrganizationSlugRouteImport.update({
+  id: '/$organizationSlug',
+  path: '/$organizationSlug',
   getParentRoute: () => AppRouteRoute,
 } as any)
 
-const AppDashboardIndexRoute = AppDashboardIndexImport.update({
+const AppOrganizationSlugIndexRoute = AppOrganizationSlugIndexImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => AppDashboardRouteRoute,
+  getParentRoute: () => AppOrganizationSlugRouteRoute,
 } as any)
 
-const AppEditorIdRoute = AppEditorIdImport.update({
-  id: '/editor/$id',
-  path: '/editor/$id',
-  getParentRoute: () => AppRouteRoute,
-} as any)
+const AppOrganizationSlugUpdatesRoute = AppOrganizationSlugUpdatesImport.update(
+  {
+    id: '/updates',
+    path: '/updates',
+    getParentRoute: () => AppOrganizationSlugRouteRoute,
+  } as any,
+)
 
-const AppDashboardSettingsRoute = AppDashboardSettingsImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => AppDashboardRouteRoute,
-} as any)
+const AppOrganizationSlugContactsRoute =
+  AppOrganizationSlugContactsImport.update({
+    id: '/contacts',
+    path: '/contacts',
+    getParentRoute: () => AppOrganizationSlugRouteRoute,
+  } as any)
 
-const AppDashboardAccountRoute = AppDashboardAccountImport.update({
-  id: '/account',
-  path: '/account',
-  getParentRoute: () => AppDashboardRouteRoute,
-} as any)
+const AppOrganizationSlugSettingsRouteRoute =
+  AppOrganizationSlugSettingsRouteImport.update({
+    id: '/$organizationSlug_/settings',
+    path: '/$organizationSlug/settings',
+    getParentRoute: () => AppRouteRoute,
+  } as any)
+
+const AppOrganizationSlugSettingsAccountRoute =
+  AppOrganizationSlugSettingsAccountImport.update({
+    id: '/account',
+    path: '/account',
+    getParentRoute: () => AppOrganizationSlugSettingsRouteRoute,
+  } as any)
+
+const AppOrganizationSlugSettingsSplatRoute =
+  AppOrganizationSlugSettingsSplatImport.update({
+    id: '/$',
+    path: '/$',
+    getParentRoute: () => AppOrganizationSlugSettingsRouteRoute,
+  } as any)
+
+const AppOrganizationSlugEditorIdRoute =
+  AppOrganizationSlugEditorIdImport.update({
+    id: '/$organizationSlug_/editor/$id',
+    path: '/$organizationSlug/editor/$id',
+    getParentRoute: () => AppRouteRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -79,11 +108,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppRouteImport
       parentRoute: typeof rootRoute
     }
-    '/_app/_dashboard': {
-      id: '/_app/_dashboard'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof AppDashboardRouteImport
+    '/_app/$organizationSlug': {
+      id: '/_app/$organizationSlug'
+      path: '/$organizationSlug'
+      fullPath: '/$organizationSlug'
+      preLoaderRoute: typeof AppOrganizationSlugRouteImport
       parentRoute: typeof AppRouteImport
     }
     '/(auth)/login': {
@@ -100,62 +129,107 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authSignupImport
       parentRoute: typeof rootRoute
     }
-    '/_app/_dashboard/account': {
-      id: '/_app/_dashboard/account'
-      path: '/account'
-      fullPath: '/account'
-      preLoaderRoute: typeof AppDashboardAccountImport
-      parentRoute: typeof AppDashboardRouteImport
-    }
-    '/_app/_dashboard/settings': {
-      id: '/_app/_dashboard/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof AppDashboardSettingsImport
-      parentRoute: typeof AppDashboardRouteImport
-    }
-    '/_app/editor/$id': {
-      id: '/_app/editor/$id'
-      path: '/editor/$id'
-      fullPath: '/editor/$id'
-      preLoaderRoute: typeof AppEditorIdImport
+    '/_app/$organizationSlug_/settings': {
+      id: '/_app/$organizationSlug_/settings'
+      path: '/$organizationSlug/settings'
+      fullPath: '/$organizationSlug/settings'
+      preLoaderRoute: typeof AppOrganizationSlugSettingsRouteImport
       parentRoute: typeof AppRouteImport
     }
-    '/_app/_dashboard/': {
-      id: '/_app/_dashboard/'
+    '/_app/$organizationSlug/contacts': {
+      id: '/_app/$organizationSlug/contacts'
+      path: '/contacts'
+      fullPath: '/$organizationSlug/contacts'
+      preLoaderRoute: typeof AppOrganizationSlugContactsImport
+      parentRoute: typeof AppOrganizationSlugRouteImport
+    }
+    '/_app/$organizationSlug/updates': {
+      id: '/_app/$organizationSlug/updates'
+      path: '/updates'
+      fullPath: '/$organizationSlug/updates'
+      preLoaderRoute: typeof AppOrganizationSlugUpdatesImport
+      parentRoute: typeof AppOrganizationSlugRouteImport
+    }
+    '/_app/$organizationSlug/': {
+      id: '/_app/$organizationSlug/'
       path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof AppDashboardIndexImport
-      parentRoute: typeof AppDashboardRouteImport
+      fullPath: '/$organizationSlug/'
+      preLoaderRoute: typeof AppOrganizationSlugIndexImport
+      parentRoute: typeof AppOrganizationSlugRouteImport
+    }
+    '/_app/$organizationSlug_/editor/$id': {
+      id: '/_app/$organizationSlug_/editor/$id'
+      path: '/$organizationSlug/editor/$id'
+      fullPath: '/$organizationSlug/editor/$id'
+      preLoaderRoute: typeof AppOrganizationSlugEditorIdImport
+      parentRoute: typeof AppRouteImport
+    }
+    '/_app/$organizationSlug_/settings/$': {
+      id: '/_app/$organizationSlug_/settings/$'
+      path: '/$'
+      fullPath: '/$organizationSlug/settings/$'
+      preLoaderRoute: typeof AppOrganizationSlugSettingsSplatImport
+      parentRoute: typeof AppOrganizationSlugSettingsRouteImport
+    }
+    '/_app/$organizationSlug_/settings/account': {
+      id: '/_app/$organizationSlug_/settings/account'
+      path: '/account'
+      fullPath: '/$organizationSlug/settings/account'
+      preLoaderRoute: typeof AppOrganizationSlugSettingsAccountImport
+      parentRoute: typeof AppOrganizationSlugSettingsRouteImport
     }
   }
 }
 
 // Create and export the route tree
 
-interface AppDashboardRouteRouteChildren {
-  AppDashboardAccountRoute: typeof AppDashboardAccountRoute
-  AppDashboardSettingsRoute: typeof AppDashboardSettingsRoute
-  AppDashboardIndexRoute: typeof AppDashboardIndexRoute
+interface AppOrganizationSlugRouteRouteChildren {
+  AppOrganizationSlugContactsRoute: typeof AppOrganizationSlugContactsRoute
+  AppOrganizationSlugUpdatesRoute: typeof AppOrganizationSlugUpdatesRoute
+  AppOrganizationSlugIndexRoute: typeof AppOrganizationSlugIndexRoute
 }
 
-const AppDashboardRouteRouteChildren: AppDashboardRouteRouteChildren = {
-  AppDashboardAccountRoute: AppDashboardAccountRoute,
-  AppDashboardSettingsRoute: AppDashboardSettingsRoute,
-  AppDashboardIndexRoute: AppDashboardIndexRoute,
+const AppOrganizationSlugRouteRouteChildren: AppOrganizationSlugRouteRouteChildren =
+  {
+    AppOrganizationSlugContactsRoute: AppOrganizationSlugContactsRoute,
+    AppOrganizationSlugUpdatesRoute: AppOrganizationSlugUpdatesRoute,
+    AppOrganizationSlugIndexRoute: AppOrganizationSlugIndexRoute,
+  }
+
+const AppOrganizationSlugRouteRouteWithChildren =
+  AppOrganizationSlugRouteRoute._addFileChildren(
+    AppOrganizationSlugRouteRouteChildren,
+  )
+
+interface AppOrganizationSlugSettingsRouteRouteChildren {
+  AppOrganizationSlugSettingsSplatRoute: typeof AppOrganizationSlugSettingsSplatRoute
+  AppOrganizationSlugSettingsAccountRoute: typeof AppOrganizationSlugSettingsAccountRoute
 }
 
-const AppDashboardRouteRouteWithChildren =
-  AppDashboardRouteRoute._addFileChildren(AppDashboardRouteRouteChildren)
+const AppOrganizationSlugSettingsRouteRouteChildren: AppOrganizationSlugSettingsRouteRouteChildren =
+  {
+    AppOrganizationSlugSettingsSplatRoute:
+      AppOrganizationSlugSettingsSplatRoute,
+    AppOrganizationSlugSettingsAccountRoute:
+      AppOrganizationSlugSettingsAccountRoute,
+  }
+
+const AppOrganizationSlugSettingsRouteRouteWithChildren =
+  AppOrganizationSlugSettingsRouteRoute._addFileChildren(
+    AppOrganizationSlugSettingsRouteRouteChildren,
+  )
 
 interface AppRouteRouteChildren {
-  AppDashboardRouteRoute: typeof AppDashboardRouteRouteWithChildren
-  AppEditorIdRoute: typeof AppEditorIdRoute
+  AppOrganizationSlugRouteRoute: typeof AppOrganizationSlugRouteRouteWithChildren
+  AppOrganizationSlugSettingsRouteRoute: typeof AppOrganizationSlugSettingsRouteRouteWithChildren
+  AppOrganizationSlugEditorIdRoute: typeof AppOrganizationSlugEditorIdRoute
 }
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
-  AppDashboardRouteRoute: AppDashboardRouteRouteWithChildren,
-  AppEditorIdRoute: AppEditorIdRoute,
+  AppOrganizationSlugRouteRoute: AppOrganizationSlugRouteRouteWithChildren,
+  AppOrganizationSlugSettingsRouteRoute:
+    AppOrganizationSlugSettingsRouteRouteWithChildren,
+  AppOrganizationSlugEditorIdRoute: AppOrganizationSlugEditorIdRoute,
 }
 
 const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
@@ -163,59 +237,86 @@ const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
 )
 
 export interface FileRoutesByFullPath {
-  '': typeof AppDashboardRouteRouteWithChildren
+  '': typeof AppRouteRouteWithChildren
+  '/$organizationSlug': typeof AppOrganizationSlugRouteRouteWithChildren
   '/login': typeof authLoginRoute
   '/signup': typeof authSignupRoute
-  '/account': typeof AppDashboardAccountRoute
-  '/settings': typeof AppDashboardSettingsRoute
-  '/editor/$id': typeof AppEditorIdRoute
-  '/': typeof AppDashboardIndexRoute
+  '/$organizationSlug/settings': typeof AppOrganizationSlugSettingsRouteRouteWithChildren
+  '/$organizationSlug/contacts': typeof AppOrganizationSlugContactsRoute
+  '/$organizationSlug/updates': typeof AppOrganizationSlugUpdatesRoute
+  '/$organizationSlug/': typeof AppOrganizationSlugIndexRoute
+  '/$organizationSlug/editor/$id': typeof AppOrganizationSlugEditorIdRoute
+  '/$organizationSlug/settings/$': typeof AppOrganizationSlugSettingsSplatRoute
+  '/$organizationSlug/settings/account': typeof AppOrganizationSlugSettingsAccountRoute
 }
 
 export interface FileRoutesByTo {
   '': typeof AppRouteRouteWithChildren
   '/login': typeof authLoginRoute
   '/signup': typeof authSignupRoute
-  '/account': typeof AppDashboardAccountRoute
-  '/settings': typeof AppDashboardSettingsRoute
-  '/editor/$id': typeof AppEditorIdRoute
-  '/': typeof AppDashboardIndexRoute
+  '/$organizationSlug/settings': typeof AppOrganizationSlugSettingsRouteRouteWithChildren
+  '/$organizationSlug/contacts': typeof AppOrganizationSlugContactsRoute
+  '/$organizationSlug/updates': typeof AppOrganizationSlugUpdatesRoute
+  '/$organizationSlug': typeof AppOrganizationSlugIndexRoute
+  '/$organizationSlug/editor/$id': typeof AppOrganizationSlugEditorIdRoute
+  '/$organizationSlug/settings/$': typeof AppOrganizationSlugSettingsSplatRoute
+  '/$organizationSlug/settings/account': typeof AppOrganizationSlugSettingsAccountRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/_app': typeof AppRouteRouteWithChildren
-  '/_app/_dashboard': typeof AppDashboardRouteRouteWithChildren
+  '/_app/$organizationSlug': typeof AppOrganizationSlugRouteRouteWithChildren
   '/(auth)/login': typeof authLoginRoute
   '/(auth)/signup': typeof authSignupRoute
-  '/_app/_dashboard/account': typeof AppDashboardAccountRoute
-  '/_app/_dashboard/settings': typeof AppDashboardSettingsRoute
-  '/_app/editor/$id': typeof AppEditorIdRoute
-  '/_app/_dashboard/': typeof AppDashboardIndexRoute
+  '/_app/$organizationSlug_/settings': typeof AppOrganizationSlugSettingsRouteRouteWithChildren
+  '/_app/$organizationSlug/contacts': typeof AppOrganizationSlugContactsRoute
+  '/_app/$organizationSlug/updates': typeof AppOrganizationSlugUpdatesRoute
+  '/_app/$organizationSlug/': typeof AppOrganizationSlugIndexRoute
+  '/_app/$organizationSlug_/editor/$id': typeof AppOrganizationSlugEditorIdRoute
+  '/_app/$organizationSlug_/settings/$': typeof AppOrganizationSlugSettingsSplatRoute
+  '/_app/$organizationSlug_/settings/account': typeof AppOrganizationSlugSettingsAccountRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | ''
+    | '/$organizationSlug'
     | '/login'
     | '/signup'
-    | '/account'
-    | '/settings'
-    | '/editor/$id'
-    | '/'
+    | '/$organizationSlug/settings'
+    | '/$organizationSlug/contacts'
+    | '/$organizationSlug/updates'
+    | '/$organizationSlug/'
+    | '/$organizationSlug/editor/$id'
+    | '/$organizationSlug/settings/$'
+    | '/$organizationSlug/settings/account'
   fileRoutesByTo: FileRoutesByTo
-  to: '' | '/login' | '/signup' | '/account' | '/settings' | '/editor/$id' | '/'
+  to:
+    | ''
+    | '/login'
+    | '/signup'
+    | '/$organizationSlug/settings'
+    | '/$organizationSlug/contacts'
+    | '/$organizationSlug/updates'
+    | '/$organizationSlug'
+    | '/$organizationSlug/editor/$id'
+    | '/$organizationSlug/settings/$'
+    | '/$organizationSlug/settings/account'
   id:
     | '__root__'
     | '/_app'
-    | '/_app/_dashboard'
+    | '/_app/$organizationSlug'
     | '/(auth)/login'
     | '/(auth)/signup'
-    | '/_app/_dashboard/account'
-    | '/_app/_dashboard/settings'
-    | '/_app/editor/$id'
-    | '/_app/_dashboard/'
+    | '/_app/$organizationSlug_/settings'
+    | '/_app/$organizationSlug/contacts'
+    | '/_app/$organizationSlug/updates'
+    | '/_app/$organizationSlug/'
+    | '/_app/$organizationSlug_/editor/$id'
+    | '/_app/$organizationSlug_/settings/$'
+    | '/_app/$organizationSlug_/settings/account'
   fileRoutesById: FileRoutesById
 }
 
@@ -249,17 +350,18 @@ export const routeTree = rootRoute
     "/_app": {
       "filePath": "_app/route.tsx",
       "children": [
-        "/_app/_dashboard",
-        "/_app/editor/$id"
+        "/_app/$organizationSlug",
+        "/_app/$organizationSlug_/settings",
+        "/_app/$organizationSlug_/editor/$id"
       ]
     },
-    "/_app/_dashboard": {
-      "filePath": "_app/_dashboard/route.tsx",
+    "/_app/$organizationSlug": {
+      "filePath": "_app/$organizationSlug/route.tsx",
       "parent": "/_app",
       "children": [
-        "/_app/_dashboard/account",
-        "/_app/_dashboard/settings",
-        "/_app/_dashboard/"
+        "/_app/$organizationSlug/contacts",
+        "/_app/$organizationSlug/updates",
+        "/_app/$organizationSlug/"
       ]
     },
     "/(auth)/login": {
@@ -268,21 +370,37 @@ export const routeTree = rootRoute
     "/(auth)/signup": {
       "filePath": "(auth)/signup.tsx"
     },
-    "/_app/_dashboard/account": {
-      "filePath": "_app/_dashboard/account.tsx",
-      "parent": "/_app/_dashboard"
+    "/_app/$organizationSlug_/settings": {
+      "filePath": "_app/$organizationSlug_/settings/route.tsx",
+      "parent": "/_app",
+      "children": [
+        "/_app/$organizationSlug_/settings/$",
+        "/_app/$organizationSlug_/settings/account"
+      ]
     },
-    "/_app/_dashboard/settings": {
-      "filePath": "_app/_dashboard/settings.tsx",
-      "parent": "/_app/_dashboard"
+    "/_app/$organizationSlug/contacts": {
+      "filePath": "_app/$organizationSlug/contacts.tsx",
+      "parent": "/_app/$organizationSlug"
     },
-    "/_app/editor/$id": {
-      "filePath": "_app/editor/$id.tsx",
+    "/_app/$organizationSlug/updates": {
+      "filePath": "_app/$organizationSlug/updates.tsx",
+      "parent": "/_app/$organizationSlug"
+    },
+    "/_app/$organizationSlug/": {
+      "filePath": "_app/$organizationSlug/index.tsx",
+      "parent": "/_app/$organizationSlug"
+    },
+    "/_app/$organizationSlug_/editor/$id": {
+      "filePath": "_app/$organizationSlug_/editor/$id.tsx",
       "parent": "/_app"
     },
-    "/_app/_dashboard/": {
-      "filePath": "_app/_dashboard/index.tsx",
-      "parent": "/_app/_dashboard"
+    "/_app/$organizationSlug_/settings/$": {
+      "filePath": "_app/$organizationSlug_/settings/$.tsx",
+      "parent": "/_app/$organizationSlug_/settings"
+    },
+    "/_app/$organizationSlug_/settings/account": {
+      "filePath": "_app/$organizationSlug_/settings/account.tsx",
+      "parent": "/_app/$organizationSlug_/settings"
     }
   }
 }

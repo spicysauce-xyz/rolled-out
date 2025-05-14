@@ -1,7 +1,12 @@
 import { Clickable, ScrollArea, Text } from "@mono/ui";
 import { cn } from "@mono/ui/utils";
 import { Link, type LinkComponentProps } from "@tanstack/react-router";
-import { CircleIcon, ExternalLinkIcon, type LucideIcon } from "lucide-react";
+import {
+  CircleIcon,
+  ExternalLinkIcon,
+  FlameIcon,
+  type LucideIcon,
+} from "lucide-react";
 import React from "react";
 
 type SidebarProps = React.HTMLAttributes<HTMLDivElement>;
@@ -61,7 +66,7 @@ const SidebarNavLink = React.forwardRef<HTMLAnchorElement, SidebarNavLinkProps>(
       <Clickable.Root
         asChild
         variant="tertiary"
-        className="flex h-9 items-center px-2 hover:bg-neutral-100 focus-visible:bg-neutral-100"
+        className="flex h-9 items-center border-0 px-2 hover:bg-neutral-100 focus-visible:bg-neutral-100"
       >
         <Link ref={ref} {...props}>
           <Clickable.Icon className="mr-2 group-data-[status=active]/clickable-root:text-neutral-900">
@@ -92,7 +97,7 @@ const SidebarLink = React.forwardRef<HTMLAnchorElement, SidebarLinkProps>(
       <Clickable.Root
         asChild
         variant="tertiary"
-        className="flex h-9 items-center px-2"
+        className="flex h-9 items-center border-0 px-2"
       >
         <a ref={ref} {...props}>
           <Clickable.Icon className="mr-2">
@@ -122,11 +127,43 @@ const SidebarHeader = React.forwardRef<
   return (
     <div
       ref={ref}
-      className={cn("border-neutral-100 border-b p-4", className)}
+      className={cn(
+        "flex items-center justify-between gap-2 border-neutral-100 border-b p-4",
+        className,
+      )}
       {...props}
     >
       {children}
     </div>
+  );
+});
+
+const SidebarLogo = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ children, className, ...props }, ref) => {
+  return (
+    <div
+      ref={ref}
+      className={cn("flex items-center gap-2", className)}
+      {...props}
+    >
+      <FlameIcon className="size-4 stroke-2 stroke-neutral-900" />
+      <Text.Root size="sm" weight="medium">
+        Spicy
+      </Text.Root>
+    </div>
+  );
+});
+
+const SidebarVersion = React.forwardRef<
+  React.ComponentRef<typeof Text.Root>,
+  React.ComponentPropsWithoutRef<typeof Text.Root>
+>(({ children, className, ...props }, ref) => {
+  return (
+    <Text.Root ref={ref} size="xs" color="muted" className="ml-auto" {...props}>
+      v0.0.1 · h1a2sh3
+    </Text.Root>
   );
 });
 
@@ -163,6 +200,8 @@ export {
   SidebarNavLink as NavLink,
   SidebarLink as Link,
   SidebarHeader as Header,
+  SidebarLogo as Logo,
+  SidebarVersion as Version,
   SidebarFooter as Footer,
   SidebarScrollArea as ScrollArea,
 };

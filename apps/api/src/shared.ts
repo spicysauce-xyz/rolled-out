@@ -1,8 +1,6 @@
-import type { ApiErrorPayload } from "./api/api.utils";
-import type { auth } from "./auth/auth.client";
 import type { app } from "./index";
+import type { ApiErrorPayload } from "./utils/network";
 
 export type Api = typeof app;
-export type Auth = typeof auth;
 
 export type ApiError = ApiErrorPayload;
