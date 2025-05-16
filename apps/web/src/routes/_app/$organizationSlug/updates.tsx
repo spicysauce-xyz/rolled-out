@@ -37,11 +37,8 @@ function RouteComponent() {
         throw json.error;
       }
 
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
       return json.data;
     },
-    enabled: !!organizationSlug,
   });
 
   const createPost = useMutation({
