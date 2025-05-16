@@ -1,5 +1,5 @@
 import { Database, schema } from "@database";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { PostsRepository } from "./post.repository";
 
 export const PostsService = {
@@ -14,7 +14,21 @@ export const PostsService = {
     return post;
   },
   getPostsByOrganizationId: async (organizationId: string) => {
-    const posts = await PostsRepository.getByOrganizationId(organizationId);
+    const posts = await Database.select()
+      .from(schema.post)
+      .where(eq(schema.post.organizationId, organizationId))
+      .orderBy(
+        sql`CASE
+          WHEN ${schema.post.status} = 'draft' THEN 1
+          WHEN ${schema.post.status} = 'scheduled' THEN 2
+          WHEN ${schema.post.status} = 'published' THEN 3
+        END`,
+        sql`CASE
+          WHEN ${schema.post.status} = 'draft' THEN ${schema.post.createdAt}
+          WHEN ${schema.post.status} = 'scheduled' THEN ${schema.post.updatedAt}
+          WHEN ${schema.post.status} = 'published' THEN ${schema.post.updatedAt}
+        END DESC`,
+      );
 
     return posts;
   },

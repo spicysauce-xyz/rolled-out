@@ -4,7 +4,8 @@ import { useSession } from "@hooks/useSession";
 import { authClient } from "@lib/auth";
 import { Avatar, Clickable, DropdownMenu, Text, Toaster } from "@mono/ui";
 import { useQuery } from "@tanstack/react-query";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate, useRouter } from "@tanstack/react-router";
+import { last } from "lodash";
 import {
   BuildingIcon,
   EllipsisVerticalIcon,
@@ -21,6 +22,7 @@ interface UserMenuProps {
 export const UserMenu: React.FC<UserMenuProps> = ({ organizationSlug }) => {
   const navigate = useNavigate();
   const logout = useLogout();
+  const router = useRouter();
   const { data: sessionData } = useSession();
 
   const { data: organizations } = useQuery({
@@ -37,9 +39,15 @@ export const UserMenu: React.FC<UserMenuProps> = ({ organizationSlug }) => {
   });
 
   const handleUpdateActiveOrganization = async (organizationId: string) => {
+    const lastMatch = last(router.state.matches);
+
+    if (!lastMatch) {
+      return;
+    }
+
     navigate({
-      to: "/$organizationSlug",
-      params: { organizationSlug: organizationId },
+      to: ".",
+      params: { ...lastMatch.params, organizationSlug: organizationId },
     });
   };
 

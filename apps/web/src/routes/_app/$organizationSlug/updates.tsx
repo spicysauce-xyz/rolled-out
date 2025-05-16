@@ -1,9 +1,16 @@
+import * as Page from "@components/layout/page";
+import * as Transition from "@components/transition";
+import { api } from "@lib/api";
 import { LinkButton, Text, Toaster } from "@mono/ui";
-import { useMutation } from "@tanstack/react-query";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  createFileRoute,
+  useNavigate,
+  useParams,
+} from "@tanstack/react-router";
 import { ChevronRight, HomeIcon, PlusIcon } from "lucide-react";
-import * as Page from "../../../components/layout/page";
-import { api } from "../../../lib/api";
+import { P, match } from "ts-pattern";
+import { UpdatesList } from "./-components/updates-list";
 
 export const Route = createFileRoute("/_app/$organizationSlug/updates")({
   component: RouteComponent,
@@ -11,6 +18,31 @@ export const Route = createFileRoute("/_app/$organizationSlug/updates")({
 
 function RouteComponent() {
   const navigate = useNavigate();
+  const { organizationSlug } = useParams({
+    from: "/_app/$organizationSlug/updates",
+  });
+
+  const postsQuery = useQuery({
+    queryKey: ["posts", organizationSlug],
+    queryFn: async ({ queryKey }) => {
+      const response = await api.posts.$get({
+        query: {
+          organizationId: queryKey[1],
+        },
+      });
+
+      const json = await response.json();
+
+      if (!json.success) {
+        throw json.error;
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      return json.data;
+    },
+    enabled: !!organizationSlug,
+  });
 
   const createPost = useMutation({
     mutationFn: api.posts.$post,
@@ -66,7 +98,32 @@ function RouteComponent() {
           New Update
         </LinkButton.Root>
       </Page.Header>
-      <Page.Content>Updates</Page.Content>
+      <Page.Content className="gap-0 p-0">
+        <Transition.Root>
+          {match(postsQuery)
+            .with({ isPending: true }, () => (
+              <Transition.Item key="skeleton">
+                <UpdatesList.Skeleton />
+              </Transition.Item>
+            ))
+            .with({ isError: true }, ({ error }) => (
+              <Transition.Item key="error">
+                <Text.Root size="sm" weight="medium">
+                  Failed to load updates: {error.message}
+                </Text.Root>
+              </Transition.Item>
+            ))
+            .with(
+              { isSuccess: true, data: P.when((posts) => posts.length === 0) },
+              () => <Transition.Item key="empty">empty</Transition.Item>,
+            )
+            .otherwise(({ data }) => (
+              <Transition.Item key="list">
+                <UpdatesList data={data || []} />
+              </Transition.Item>
+            ))}
+        </Transition.Root>
+      </Page.Content>
     </Page.Wrapper>
   );
 }

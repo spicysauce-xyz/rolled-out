@@ -1,28 +1,41 @@
+import { Database, schema } from "@database";
 import { zValidator } from "@hono/zod-validator";
 import { notOk, ok } from "@utils/network";
+import { and, eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { z } from "zod";
 import { authMiddleware } from "../auth";
 import { PostsService } from "./post.service";
 
 export const PostHandler = new Hono()
-  .get("/", authMiddleware({ required: true }), async (c) => {
-    const session = c.get("session");
+  .get(
+    "/",
+    zValidator("query", z.object({ organizationId: z.string() })),
+    authMiddleware({ required: true }),
+    async (c) => {
+      const user = c.get("user");
+      const { organizationId } = c.req.valid("query");
 
-    if (!organizationId) {
-      return notOk(c, { message: "Organization not found" }, 404);
-    }
+      const member = await Database.query.member.findFirst({
+        where: and(eq(schema.member.userId, user.id), eq(schema.member.organizationId, organizationId)),
+      });
 
-    const posts = await PostsService.getPostsByOrganizationId(organizationId);
+      if (!member) {
+        return notOk(c, { message: "Forbidden" }, 403);
+      }
 
-    return ok(c, posts);
-  })
+      const posts = await PostsService.getPostsByOrganizationId(organizationId);
+
+      return ok(c, posts);
+    },
+  )
   .post(
     "/",
     zValidator("json", z.object({ title: z.string().optional(), content: z.object({}).optional() })),
     authMiddleware({ required: true }),
     async (c) => {
       const session = c.get("session");
+      const organizationId = "";
 
       if (!organizationId) {
         return notOk(c, { message: "Organization not found" }, 404);

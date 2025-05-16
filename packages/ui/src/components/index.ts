@@ -16,3 +16,4 @@ export * from "./switch";
 export * from "./select";
 export * from "./toast";
 export * from "./link-button";
+export * from "./skeleton";
