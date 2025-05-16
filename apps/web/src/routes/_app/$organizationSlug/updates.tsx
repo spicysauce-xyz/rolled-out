@@ -25,8 +25,8 @@ function RouteComponent() {
   const postsQuery = useQuery({
     queryKey: ["posts", organizationSlug],
     queryFn: async ({ queryKey }) => {
-      const response = await api.posts.$get({
-        query: {
+      const response = await api.organization[":organizationId"].posts.$get({
+        param: {
           organizationId: queryKey[1],
         },
       });
@@ -45,7 +45,7 @@ function RouteComponent() {
   });
 
   const createPost = useMutation({
-    mutationFn: api.posts.$post,
+    mutationFn: api.organization[":organizationId"].posts.$post,
   });
 
   const handleCreateNewUpdate = async () => {
@@ -54,6 +54,9 @@ function RouteComponent() {
     try {
       const response = await createPost.mutateAsync({
         json: {},
+        param: {
+          organizationId: organizationSlug,
+        },
       });
 
       if (!response.ok) {
@@ -69,7 +72,7 @@ function RouteComponent() {
       const post = json.data;
       navigate({
         to: "/$organizationSlug/editor/$id",
-        params: { id: post.id, organizationSlug: "asdf" },
+        params: { id: post.id, organizationSlug },
       });
 
       Toaster.success("Successfully created new draft", { id });

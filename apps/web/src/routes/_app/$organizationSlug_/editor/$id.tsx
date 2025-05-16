@@ -22,12 +22,16 @@ const getTitleFromContent = (content: JSONContent | undefined) => {
 
 function RouteComponent() {
   const queryClient = useQueryClient();
-  const { id } = useParams({ from: "/_app/$organizationSlug/editor/$id" });
+  const { id, organizationSlug } = useParams({
+    from: "/_app/$organizationSlug_/editor/$id",
+  });
 
   const { data } = useQuery({
     queryKey: ["posts", id],
     queryFn: async () => {
-      const response = await api.posts[":id"].$get({ param: { id } });
+      const response = await api.organization[":organizationId"].posts[
+        ":id"
+      ].$get({ param: { id, organizationId: organizationSlug } });
       const json = await response.json();
 
       if (!json.success) {
@@ -44,8 +48,8 @@ function RouteComponent() {
 
   const updatePost = useMutation({
     mutationFn: (content: JSONContent) => {
-      return api.posts[":id"].$put({
-        param: { id },
+      return api.organization[":organizationId"].posts[":id"].$patch({
+        param: { id, organizationId: organizationSlug },
         json: { title: getTitleFromContent(content), content },
       });
     },

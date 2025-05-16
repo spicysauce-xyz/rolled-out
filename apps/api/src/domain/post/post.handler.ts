@@ -8,34 +8,29 @@ import { authMiddleware } from "../auth";
 import { PostsService } from "./post.service";
 
 export const PostHandler = new Hono()
-  .get(
-    "/",
-    zValidator("query", z.object({ organizationId: z.string() })),
-    authMiddleware({ required: true }),
-    async (c) => {
-      const user = c.get("user");
-      const { organizationId } = c.req.valid("query");
+  .basePath("/organization/:organizationId/posts")
+  .get("/", authMiddleware({ required: true }), async (c) => {
+    const user = c.get("user");
+    const organizationId = c.req.param("organizationId");
 
-      const member = await Database.query.member.findFirst({
-        where: and(eq(schema.member.userId, user.id), eq(schema.member.organizationId, organizationId)),
-      });
+    const member = await Database.query.member.findFirst({
+      where: and(eq(schema.member.userId, user.id), eq(schema.member.organizationId, organizationId)),
+    });
 
-      if (!member) {
-        return notOk(c, { message: "Forbidden" }, 403);
-      }
+    if (!member) {
+      return notOk(c, { message: "Forbidden" }, 403);
+    }
 
-      const posts = await PostsService.getPostsByOrganizationId(organizationId);
+    const posts = await PostsService.getPostsByOrganizationId(organizationId);
 
-      return ok(c, posts);
-    },
-  )
+    return ok(c, posts);
+  })
   .post(
     "/",
     zValidator("json", z.object({ title: z.string().optional(), content: z.object({}).optional() })),
     authMiddleware({ required: true }),
     async (c) => {
-      const session = c.get("session");
-      const organizationId = "";
+      const organizationId = c.req.param("organizationId");
 
       if (!organizationId) {
         return notOk(c, { message: "Organization not found" }, 404);
@@ -56,6 +51,7 @@ export const PostHandler = new Hono()
       return ok(c, post);
     },
   )
+  // not secure
   .get("/:id", authMiddleware({ required: true }), async (c) => {
     const { id } = c.req.param();
 
@@ -67,12 +63,12 @@ export const PostHandler = new Hono()
 
     return ok(c, post);
   })
+  // not secure
   .patch(
     "/:id",
     zValidator("json", z.object({ title: z.string(), content: z.record(z.any()) })),
     authMiddleware({ required: true }),
     async (c) => {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
       const { id } = c.req.param();
       const { title, content } = c.req.valid("json");
 

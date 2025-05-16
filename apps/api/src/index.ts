@@ -7,8 +7,8 @@ import { PostHandler } from "./domain/post";
 export const app = new Hono()
   .use(logger())
   .use(cors({ origin: ["http://localhost:5173", "http://localhost:4173"], credentials: true }))
-  .route("/auth", AuthHandler)
-  .route("/posts", PostHandler);
+  .route("/", AuthHandler)
+  .route("/", PostHandler);
 
 export default {
   port: 3000,
