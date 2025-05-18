@@ -5,10 +5,10 @@ import React from "react";
 const cardVariants = tv({
   slots: {
     root: "",
-    header: "border-b border-neutral-100 pb-4 flex justify-between gap-4",
+    header: "border-b mb-4 border-neutral-100 pb-4 flex justify-between gap-4",
     headerCopy: "flex flex-col gap-0.5",
-    content: "pt-4 pb-2 flex flex-col",
-    footer: "pt-4 border-t border-neutral-100 flex gap-4",
+    content: "flex flex-col",
+    footer: "pt-4 mt-4 border-t border-neutral-100 flex gap-4",
   },
 });
 

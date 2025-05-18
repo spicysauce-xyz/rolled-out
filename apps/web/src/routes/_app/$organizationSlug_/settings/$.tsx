@@ -4,7 +4,7 @@ export const Route = createFileRoute("/_app/$organizationSlug_/settings/$")({
   component: Outlet,
   beforeLoad: ({ params }) => {
     throw redirect({
-      to: "/$organizationSlug/settings/account",
+      to: "/$organizationSlug/settings/profile",
       params: { organizationSlug: params.organizationSlug },
     });
   },

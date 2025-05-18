@@ -28,16 +28,25 @@ const SidebarRoot = React.forwardRef<HTMLDivElement, SidebarProps>(
   },
 );
 
-type SidebarGroupProps = React.HTMLAttributes<HTMLDivElement>;
+type SidebarGroupProps = React.HTMLAttributes<HTMLDivElement> & {
+  label?: string;
+};
 
 const SidebarGroup = React.forwardRef<HTMLDivElement, SidebarGroupProps>(
-  ({ children, className, ...props }, ref) => {
+  ({ children, className, label, ...props }, ref) => {
     return (
       <div
         ref={ref}
         className={cn("flex flex-col gap-1 px-2", className)}
         {...props}
       >
+        {label && (
+          <div className="flex h-9 items-center px-2">
+            <Text.Root size="sm" weight="medium" color="muted">
+              {label}
+            </Text.Root>
+          </div>
+        )}
         {children}
       </div>
     );

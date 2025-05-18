@@ -9,7 +9,7 @@ import { create } from "zustand";
 interface Confirm {
   id: string;
   title: string;
-  description: string;
+  description: React.ReactNode;
   phrase?: string;
   action?: {
     icon?: LucideIcon;

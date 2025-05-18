@@ -20,7 +20,8 @@ import { Route as AppOrganizationSlugIndexImport } from './../routes/_app/$organ
 import { Route as AppOrganizationSlugUpdatesImport } from './../routes/_app/$organizationSlug/updates'
 import { Route as AppOrganizationSlugContactsImport } from './../routes/_app/$organizationSlug/contacts'
 import { Route as AppOrganizationSlugSettingsRouteImport } from './../routes/_app/$organizationSlug_/settings/route'
-import { Route as AppOrganizationSlugSettingsAccountImport } from './../routes/_app/$organizationSlug_/settings/account'
+import { Route as AppOrganizationSlugSettingsSessionsImport } from './../routes/_app/$organizationSlug_/settings/sessions'
+import { Route as AppOrganizationSlugSettingsProfileImport } from './../routes/_app/$organizationSlug_/settings/profile'
 import { Route as AppOrganizationSlugSettingsSplatImport } from './../routes/_app/$organizationSlug_/settings/$'
 import { Route as AppOrganizationSlugEditorIdImport } from './../routes/_app/$organizationSlug_/editor/$id'
 
@@ -83,10 +84,17 @@ const AppOrganizationSlugSettingsRouteRoute =
     getParentRoute: () => AppRouteRoute,
   } as any)
 
-const AppOrganizationSlugSettingsAccountRoute =
-  AppOrganizationSlugSettingsAccountImport.update({
-    id: '/account',
-    path: '/account',
+const AppOrganizationSlugSettingsSessionsRoute =
+  AppOrganizationSlugSettingsSessionsImport.update({
+    id: '/sessions',
+    path: '/sessions',
+    getParentRoute: () => AppOrganizationSlugSettingsRouteRoute,
+  } as any)
+
+const AppOrganizationSlugSettingsProfileRoute =
+  AppOrganizationSlugSettingsProfileImport.update({
+    id: '/profile',
+    path: '/profile',
     getParentRoute: () => AppOrganizationSlugSettingsRouteRoute,
   } as any)
 
@@ -185,11 +193,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppOrganizationSlugSettingsSplatImport
       parentRoute: typeof AppOrganizationSlugSettingsRouteImport
     }
-    '/_app/$organizationSlug_/settings/account': {
-      id: '/_app/$organizationSlug_/settings/account'
-      path: '/account'
-      fullPath: '/$organizationSlug/settings/account'
-      preLoaderRoute: typeof AppOrganizationSlugSettingsAccountImport
+    '/_app/$organizationSlug_/settings/profile': {
+      id: '/_app/$organizationSlug_/settings/profile'
+      path: '/profile'
+      fullPath: '/$organizationSlug/settings/profile'
+      preLoaderRoute: typeof AppOrganizationSlugSettingsProfileImport
+      parentRoute: typeof AppOrganizationSlugSettingsRouteImport
+    }
+    '/_app/$organizationSlug_/settings/sessions': {
+      id: '/_app/$organizationSlug_/settings/sessions'
+      path: '/sessions'
+      fullPath: '/$organizationSlug/settings/sessions'
+      preLoaderRoute: typeof AppOrganizationSlugSettingsSessionsImport
       parentRoute: typeof AppOrganizationSlugSettingsRouteImport
     }
   }
@@ -217,15 +232,18 @@ const AppOrganizationSlugRouteRouteWithChildren =
 
 interface AppOrganizationSlugSettingsRouteRouteChildren {
   AppOrganizationSlugSettingsSplatRoute: typeof AppOrganizationSlugSettingsSplatRoute
-  AppOrganizationSlugSettingsAccountRoute: typeof AppOrganizationSlugSettingsAccountRoute
+  AppOrganizationSlugSettingsProfileRoute: typeof AppOrganizationSlugSettingsProfileRoute
+  AppOrganizationSlugSettingsSessionsRoute: typeof AppOrganizationSlugSettingsSessionsRoute
 }
 
 const AppOrganizationSlugSettingsRouteRouteChildren: AppOrganizationSlugSettingsRouteRouteChildren =
   {
     AppOrganizationSlugSettingsSplatRoute:
       AppOrganizationSlugSettingsSplatRoute,
-    AppOrganizationSlugSettingsAccountRoute:
-      AppOrganizationSlugSettingsAccountRoute,
+    AppOrganizationSlugSettingsProfileRoute:
+      AppOrganizationSlugSettingsProfileRoute,
+    AppOrganizationSlugSettingsSessionsRoute:
+      AppOrganizationSlugSettingsSessionsRoute,
   }
 
 const AppOrganizationSlugSettingsRouteRouteWithChildren =
@@ -264,7 +282,8 @@ export interface FileRoutesByFullPath {
   '/$organizationSlug/': typeof AppOrganizationSlugIndexRoute
   '/$organizationSlug/editor/$id': typeof AppOrganizationSlugEditorIdRoute
   '/$organizationSlug/settings/$': typeof AppOrganizationSlugSettingsSplatRoute
-  '/$organizationSlug/settings/account': typeof AppOrganizationSlugSettingsAccountRoute
+  '/$organizationSlug/settings/profile': typeof AppOrganizationSlugSettingsProfileRoute
+  '/$organizationSlug/settings/sessions': typeof AppOrganizationSlugSettingsSessionsRoute
 }
 
 export interface FileRoutesByTo {
@@ -277,7 +296,8 @@ export interface FileRoutesByTo {
   '/$organizationSlug': typeof AppOrganizationSlugIndexRoute
   '/$organizationSlug/editor/$id': typeof AppOrganizationSlugEditorIdRoute
   '/$organizationSlug/settings/$': typeof AppOrganizationSlugSettingsSplatRoute
-  '/$organizationSlug/settings/account': typeof AppOrganizationSlugSettingsAccountRoute
+  '/$organizationSlug/settings/profile': typeof AppOrganizationSlugSettingsProfileRoute
+  '/$organizationSlug/settings/sessions': typeof AppOrganizationSlugSettingsSessionsRoute
 }
 
 export interface FileRoutesById {
@@ -293,7 +313,8 @@ export interface FileRoutesById {
   '/_app/$organizationSlug/': typeof AppOrganizationSlugIndexRoute
   '/_app/$organizationSlug_/editor/$id': typeof AppOrganizationSlugEditorIdRoute
   '/_app/$organizationSlug_/settings/$': typeof AppOrganizationSlugSettingsSplatRoute
-  '/_app/$organizationSlug_/settings/account': typeof AppOrganizationSlugSettingsAccountRoute
+  '/_app/$organizationSlug_/settings/profile': typeof AppOrganizationSlugSettingsProfileRoute
+  '/_app/$organizationSlug_/settings/sessions': typeof AppOrganizationSlugSettingsSessionsRoute
 }
 
 export interface FileRouteTypes {
@@ -310,7 +331,8 @@ export interface FileRouteTypes {
     | '/$organizationSlug/'
     | '/$organizationSlug/editor/$id'
     | '/$organizationSlug/settings/$'
-    | '/$organizationSlug/settings/account'
+    | '/$organizationSlug/settings/profile'
+    | '/$organizationSlug/settings/sessions'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
@@ -322,7 +344,8 @@ export interface FileRouteTypes {
     | '/$organizationSlug'
     | '/$organizationSlug/editor/$id'
     | '/$organizationSlug/settings/$'
-    | '/$organizationSlug/settings/account'
+    | '/$organizationSlug/settings/profile'
+    | '/$organizationSlug/settings/sessions'
   id:
     | '__root__'
     | '/_app'
@@ -336,7 +359,8 @@ export interface FileRouteTypes {
     | '/_app/$organizationSlug/'
     | '/_app/$organizationSlug_/editor/$id'
     | '/_app/$organizationSlug_/settings/$'
-    | '/_app/$organizationSlug_/settings/account'
+    | '/_app/$organizationSlug_/settings/profile'
+    | '/_app/$organizationSlug_/settings/sessions'
   fileRoutesById: FileRoutesById
 }
 
@@ -400,7 +424,8 @@ export const routeTree = rootRoute
       "parent": "/_app",
       "children": [
         "/_app/$organizationSlug_/settings/$",
-        "/_app/$organizationSlug_/settings/account"
+        "/_app/$organizationSlug_/settings/profile",
+        "/_app/$organizationSlug_/settings/sessions"
       ]
     },
     "/_app/$organizationSlug/contacts": {
@@ -423,8 +448,12 @@ export const routeTree = rootRoute
       "filePath": "_app/$organizationSlug_/settings/$.tsx",
       "parent": "/_app/$organizationSlug_/settings"
     },
-    "/_app/$organizationSlug_/settings/account": {
-      "filePath": "_app/$organizationSlug_/settings/account.tsx",
+    "/_app/$organizationSlug_/settings/profile": {
+      "filePath": "_app/$organizationSlug_/settings/profile.tsx",
+      "parent": "/_app/$organizationSlug_/settings"
+    },
+    "/_app/$organizationSlug_/settings/sessions": {
+      "filePath": "_app/$organizationSlug_/settings/sessions.tsx",
       "parent": "/_app/$organizationSlug_/settings"
     }
   }

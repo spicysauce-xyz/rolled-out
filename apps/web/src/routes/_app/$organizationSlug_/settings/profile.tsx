@@ -9,7 +9,7 @@ import { authClient } from "../../../../lib/auth";
 import useAppForm from "../../../../lib/form";
 
 export const Route = createFileRoute(
-  "/_app/$organizationSlug_/settings/account",
+  "/_app/$organizationSlug_/settings/profile",
 )({
   component: RouteComponent,
 });
@@ -51,7 +51,7 @@ function RouteComponent() {
     <Card.Root>
       <Card.Header>
         <Card.HeaderCopy>
-          <Card.HeaderTitle>Account</Card.HeaderTitle>
+          <Card.HeaderTitle>Profile</Card.HeaderTitle>
           <Card.HeaderDescription>
             Just a few details to help us identify you
           </Card.HeaderDescription>
