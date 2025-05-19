@@ -37,7 +37,7 @@ export const DashboardNavigation = () => {
             <Sidebar.NavLink
               to="/$organizationSlug/contacts"
               params={{ organizationSlug }}
-              label="Contacts"
+              label="Subscribers"
               icon={MailIcon}
             />
             <Sidebar.NavLink

@@ -1,10 +1,10 @@
+import { authClient } from "@lib/auth";
+import useAppForm from "@lib/form";
 import { Button, Input, Label, LinkButton, Text, Toaster } from "@mono/ui";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link, createFileRoute, redirect } from "@tanstack/react-router";
 import { LockIcon, MailIcon } from "lucide-react";
 import { z } from "zod";
-import { authClient } from "../../lib/auth";
-import useAppForm from "../../lib/form";
 
 export const Route = createFileRoute("/login")({
   component: Login,

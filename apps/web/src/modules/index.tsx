@@ -109,22 +109,5 @@ function RouteComponent() {
         Want to log out?
       </LinkButton.Root>
     </div>
-    // <Page.Root className="flex-col">
-    //   <ScrollArea.Root type="scroll">
-    //     <ScrollArea.Scrollbar orientation="vertical">
-    //       <ScrollArea.Thumb />
-    //     </ScrollArea.Scrollbar>
-    //     <ScrollArea.Viewport className="flex-1">
-    //       <div className="flex flex-col gap-4">
-    //         <LinkButton.Root onClick={handleLogout} color="muted">
-    //           Want to log out?
-    //           <LinkButton.Icon>
-    //             <DoorOpenIcon />
-    //           </LinkButton.Icon>
-    //         </LinkButton.Root>
-    //       </div>
-    //     </ScrollArea.Viewport>
-    //   </ScrollArea.Root>
-    // </Page.Root>
   );
 }

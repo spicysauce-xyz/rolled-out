@@ -13,17 +13,17 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './../modules/root'
-import { Route as authSignupImport } from './../modules/auth/signup'
-import { Route as authLoginImport } from './../modules/auth/login'
-import { Route as authAuthorizedImport } from './../modules/auth/authorized'
-import { Route as dashboardLayoutImport } from './../modules/dashboard/layout'
+import { Route as authPagesSignupImport } from './../modules/auth/pages/signup'
+import { Route as authPagesLoginImport } from './../modules/auth/pages/login'
+import { Route as sharedLayoutsAuthorizedImport } from './../modules/shared/layouts/authorized'
+import { Route as dashboardDashboardlayoutImport } from './../modules/dashboard/Dashboard.layout'
+import { Route as dashboardPagesUpdatesIndexImport } from './../modules/dashboard/pages/updates/index'
 import { Route as dashboardPagesIndexImport } from './../modules/dashboard/pages/index'
-import { Route as settingsLayoutImport } from './../modules/settings/layout'
-import { Route as dashboardPagesUpdatesUpdatesImport } from './../modules/dashboard/pages/updates/updates'
+import { Route as settingsSettingslayoutImport } from './../modules/settings/Settings.layout'
 import { Route as dashboardPagesContactsImport } from './../modules/dashboard/pages/contacts'
 import { Route as settingsPagesSessionsImport } from './../modules/settings/pages/sessions'
 import { Route as settingsPagesProfileImport } from './../modules/settings/pages/profile'
-import { Route as settingsSplatImport } from './../modules/settings/splat'
+import { Route as settingsPagesSplatImport } from './../modules/settings/pages/splat'
 import { Route as editorPagesIdImport } from './../modules/editor/pages/$id'
 
 // Create Virtual Routes
@@ -37,19 +37,19 @@ const AuthorizedOrganizationSlugEditorImport = createFileRoute(
 
 // Create/Update Routes
 
-const authSignupRoute = authSignupImport.update({
+const authPagesSignupRoute = authPagesSignupImport.update({
   id: '/signup',
   path: '/signup',
   getParentRoute: () => rootRoute,
 } as any)
 
-const authLoginRoute = authLoginImport.update({
+const authPagesLoginRoute = authPagesLoginImport.update({
   id: '/login',
   path: '/login',
   getParentRoute: () => rootRoute,
 } as any)
 
-const authAuthorizedRoute = authAuthorizedImport.update({
+const sharedLayoutsAuthorizedRoute = sharedLayoutsAuthorizedImport.update({
   id: '/_authorized',
   getParentRoute: () => rootRoute,
 } as any)
@@ -58,23 +58,31 @@ const AuthorizedOrganizationSlugRoute = AuthorizedOrganizationSlugImport.update(
   {
     id: '/$organizationSlug_',
     path: '/$organizationSlug',
-    getParentRoute: () => authAuthorizedRoute,
+    getParentRoute: () => sharedLayoutsAuthorizedRoute,
   } as any,
 )
 
-const dashboardLayoutRoute = dashboardLayoutImport.update({
+const dashboardDashboardlayoutRoute = dashboardDashboardlayoutImport.update({
   id: '/$organizationSlug',
   path: '/$organizationSlug',
-  getParentRoute: () => authAuthorizedRoute,
+  getParentRoute: () => sharedLayoutsAuthorizedRoute,
 } as any)
+
+const dashboardPagesUpdatesIndexRoute = dashboardPagesUpdatesIndexImport.update(
+  {
+    id: '/updates',
+    path: '/updates',
+    getParentRoute: () => dashboardDashboardlayoutRoute,
+  } as any,
+)
 
 const dashboardPagesIndexRoute = dashboardPagesIndexImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => dashboardLayoutRoute,
+  getParentRoute: () => dashboardDashboardlayoutRoute,
 } as any)
 
-const settingsLayoutRoute = settingsLayoutImport.update({
+const settingsSettingslayoutRoute = settingsSettingslayoutImport.update({
   id: '/settings',
   path: '/settings',
   getParentRoute: () => AuthorizedOrganizationSlugRoute,
@@ -87,35 +95,28 @@ const AuthorizedOrganizationSlugEditorRoute =
     getParentRoute: () => AuthorizedOrganizationSlugRoute,
   } as any)
 
-const dashboardPagesUpdatesUpdatesRoute =
-  dashboardPagesUpdatesUpdatesImport.update({
-    id: '/updates',
-    path: '/updates',
-    getParentRoute: () => dashboardLayoutRoute,
-  } as any)
-
 const dashboardPagesContactsRoute = dashboardPagesContactsImport.update({
   id: '/contacts',
   path: '/contacts',
-  getParentRoute: () => dashboardLayoutRoute,
+  getParentRoute: () => dashboardDashboardlayoutRoute,
 } as any)
 
 const settingsPagesSessionsRoute = settingsPagesSessionsImport.update({
   id: '/sessions',
   path: '/sessions',
-  getParentRoute: () => settingsLayoutRoute,
+  getParentRoute: () => settingsSettingslayoutRoute,
 } as any)
 
 const settingsPagesProfileRoute = settingsPagesProfileImport.update({
   id: '/profile',
   path: '/profile',
-  getParentRoute: () => settingsLayoutRoute,
+  getParentRoute: () => settingsSettingslayoutRoute,
 } as any)
 
-const settingsSplatRoute = settingsSplatImport.update({
+const settingsPagesSplatRoute = settingsPagesSplatImport.update({
   id: '/$',
   path: '/$',
-  getParentRoute: () => settingsLayoutRoute,
+  getParentRoute: () => settingsSettingslayoutRoute,
 } as any)
 
 const editorPagesIdRoute = editorPagesIdImport.update({
@@ -132,50 +133,43 @@ declare module '@tanstack/react-router' {
       id: '/_authorized'
       path: ''
       fullPath: ''
-      preLoaderRoute: typeof authAuthorizedImport
+      preLoaderRoute: typeof sharedLayoutsAuthorizedImport
       parentRoute: typeof rootRoute
     }
     '/login': {
       id: '/login'
       path: '/login'
       fullPath: '/login'
-      preLoaderRoute: typeof authLoginImport
+      preLoaderRoute: typeof authPagesLoginImport
       parentRoute: typeof rootRoute
     }
     '/signup': {
       id: '/signup'
       path: '/signup'
       fullPath: '/signup'
-      preLoaderRoute: typeof authSignupImport
+      preLoaderRoute: typeof authPagesSignupImport
       parentRoute: typeof rootRoute
     }
     '/_authorized/$organizationSlug': {
       id: '/_authorized/$organizationSlug'
       path: '/$organizationSlug'
       fullPath: '/$organizationSlug'
-      preLoaderRoute: typeof dashboardLayoutImport
-      parentRoute: typeof authAuthorizedImport
+      preLoaderRoute: typeof dashboardDashboardlayoutImport
+      parentRoute: typeof sharedLayoutsAuthorizedImport
     }
     '/_authorized/$organizationSlug_': {
       id: '/_authorized/$organizationSlug_'
       path: '/$organizationSlug'
       fullPath: '/$organizationSlug'
       preLoaderRoute: typeof AuthorizedOrganizationSlugImport
-      parentRoute: typeof authAuthorizedImport
+      parentRoute: typeof sharedLayoutsAuthorizedImport
     }
     '/_authorized/$organizationSlug/contacts': {
       id: '/_authorized/$organizationSlug/contacts'
       path: '/contacts'
       fullPath: '/$organizationSlug/contacts'
       preLoaderRoute: typeof dashboardPagesContactsImport
-      parentRoute: typeof dashboardLayoutImport
-    }
-    '/_authorized/$organizationSlug/updates': {
-      id: '/_authorized/$organizationSlug/updates'
-      path: '/updates'
-      fullPath: '/$organizationSlug/updates'
-      preLoaderRoute: typeof dashboardPagesUpdatesUpdatesImport
-      parentRoute: typeof dashboardLayoutImport
+      parentRoute: typeof dashboardDashboardlayoutImport
     }
     '/_authorized/$organizationSlug_/editor': {
       id: '/_authorized/$organizationSlug_/editor'
@@ -188,7 +182,7 @@ declare module '@tanstack/react-router' {
       id: '/_authorized/$organizationSlug_/settings'
       path: '/settings'
       fullPath: '/$organizationSlug/settings'
-      preLoaderRoute: typeof settingsLayoutImport
+      preLoaderRoute: typeof settingsSettingslayoutImport
       parentRoute: typeof AuthorizedOrganizationSlugImport
     }
     '/_authorized/$organizationSlug/': {
@@ -196,7 +190,14 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/$organizationSlug/'
       preLoaderRoute: typeof dashboardPagesIndexImport
-      parentRoute: typeof dashboardLayoutImport
+      parentRoute: typeof dashboardDashboardlayoutImport
+    }
+    '/_authorized/$organizationSlug/updates': {
+      id: '/_authorized/$organizationSlug/updates'
+      path: '/updates'
+      fullPath: '/$organizationSlug/updates'
+      preLoaderRoute: typeof dashboardPagesUpdatesIndexImport
+      parentRoute: typeof dashboardDashboardlayoutImport
     }
     '/_authorized/$organizationSlug_/editor/$id': {
       id: '/_authorized/$organizationSlug_/editor/$id'
@@ -209,43 +210,45 @@ declare module '@tanstack/react-router' {
       id: '/_authorized/$organizationSlug_/settings/$'
       path: '/$'
       fullPath: '/$organizationSlug/settings/$'
-      preLoaderRoute: typeof settingsSplatImport
-      parentRoute: typeof settingsLayoutImport
+      preLoaderRoute: typeof settingsPagesSplatImport
+      parentRoute: typeof settingsSettingslayoutImport
     }
     '/_authorized/$organizationSlug_/settings/profile': {
       id: '/_authorized/$organizationSlug_/settings/profile'
       path: '/profile'
       fullPath: '/$organizationSlug/settings/profile'
       preLoaderRoute: typeof settingsPagesProfileImport
-      parentRoute: typeof settingsLayoutImport
+      parentRoute: typeof settingsSettingslayoutImport
     }
     '/_authorized/$organizationSlug_/settings/sessions': {
       id: '/_authorized/$organizationSlug_/settings/sessions'
       path: '/sessions'
       fullPath: '/$organizationSlug/settings/sessions'
       preLoaderRoute: typeof settingsPagesSessionsImport
-      parentRoute: typeof settingsLayoutImport
+      parentRoute: typeof settingsSettingslayoutImport
     }
   }
 }
 
 // Create and export the route tree
 
-interface dashboardLayoutRouteChildren {
+interface dashboardDashboardlayoutRouteChildren {
   dashboardPagesContactsRoute: typeof dashboardPagesContactsRoute
-  dashboardPagesUpdatesUpdatesRoute: typeof dashboardPagesUpdatesUpdatesRoute
   dashboardPagesIndexRoute: typeof dashboardPagesIndexRoute
+  dashboardPagesUpdatesIndexRoute: typeof dashboardPagesUpdatesIndexRoute
 }
 
-const dashboardLayoutRouteChildren: dashboardLayoutRouteChildren = {
-  dashboardPagesContactsRoute: dashboardPagesContactsRoute,
-  dashboardPagesUpdatesUpdatesRoute: dashboardPagesUpdatesUpdatesRoute,
-  dashboardPagesIndexRoute: dashboardPagesIndexRoute,
-}
+const dashboardDashboardlayoutRouteChildren: dashboardDashboardlayoutRouteChildren =
+  {
+    dashboardPagesContactsRoute: dashboardPagesContactsRoute,
+    dashboardPagesIndexRoute: dashboardPagesIndexRoute,
+    dashboardPagesUpdatesIndexRoute: dashboardPagesUpdatesIndexRoute,
+  }
 
-const dashboardLayoutRouteWithChildren = dashboardLayoutRoute._addFileChildren(
-  dashboardLayoutRouteChildren,
-)
+const dashboardDashboardlayoutRouteWithChildren =
+  dashboardDashboardlayoutRoute._addFileChildren(
+    dashboardDashboardlayoutRouteChildren,
+  )
 
 interface AuthorizedOrganizationSlugEditorRouteChildren {
   editorPagesIdRoute: typeof editorPagesIdRoute
@@ -261,32 +264,34 @@ const AuthorizedOrganizationSlugEditorRouteWithChildren =
     AuthorizedOrganizationSlugEditorRouteChildren,
   )
 
-interface settingsLayoutRouteChildren {
-  settingsSplatRoute: typeof settingsSplatRoute
+interface settingsSettingslayoutRouteChildren {
+  settingsPagesSplatRoute: typeof settingsPagesSplatRoute
   settingsPagesProfileRoute: typeof settingsPagesProfileRoute
   settingsPagesSessionsRoute: typeof settingsPagesSessionsRoute
 }
 
-const settingsLayoutRouteChildren: settingsLayoutRouteChildren = {
-  settingsSplatRoute: settingsSplatRoute,
-  settingsPagesProfileRoute: settingsPagesProfileRoute,
-  settingsPagesSessionsRoute: settingsPagesSessionsRoute,
-}
+const settingsSettingslayoutRouteChildren: settingsSettingslayoutRouteChildren =
+  {
+    settingsPagesSplatRoute: settingsPagesSplatRoute,
+    settingsPagesProfileRoute: settingsPagesProfileRoute,
+    settingsPagesSessionsRoute: settingsPagesSessionsRoute,
+  }
 
-const settingsLayoutRouteWithChildren = settingsLayoutRoute._addFileChildren(
-  settingsLayoutRouteChildren,
-)
+const settingsSettingslayoutRouteWithChildren =
+  settingsSettingslayoutRoute._addFileChildren(
+    settingsSettingslayoutRouteChildren,
+  )
 
 interface AuthorizedOrganizationSlugRouteChildren {
   AuthorizedOrganizationSlugEditorRoute: typeof AuthorizedOrganizationSlugEditorRouteWithChildren
-  settingsLayoutRoute: typeof settingsLayoutRouteWithChildren
+  settingsSettingslayoutRoute: typeof settingsSettingslayoutRouteWithChildren
 }
 
 const AuthorizedOrganizationSlugRouteChildren: AuthorizedOrganizationSlugRouteChildren =
   {
     AuthorizedOrganizationSlugEditorRoute:
       AuthorizedOrganizationSlugEditorRouteWithChildren,
-    settingsLayoutRoute: settingsLayoutRouteWithChildren,
+    settingsSettingslayoutRoute: settingsSettingslayoutRouteWithChildren,
   }
 
 const AuthorizedOrganizationSlugRouteWithChildren =
@@ -294,65 +299,68 @@ const AuthorizedOrganizationSlugRouteWithChildren =
     AuthorizedOrganizationSlugRouteChildren,
   )
 
-interface authAuthorizedRouteChildren {
-  dashboardLayoutRoute: typeof dashboardLayoutRouteWithChildren
+interface sharedLayoutsAuthorizedRouteChildren {
+  dashboardDashboardlayoutRoute: typeof dashboardDashboardlayoutRouteWithChildren
   AuthorizedOrganizationSlugRoute: typeof AuthorizedOrganizationSlugRouteWithChildren
 }
 
-const authAuthorizedRouteChildren: authAuthorizedRouteChildren = {
-  dashboardLayoutRoute: dashboardLayoutRouteWithChildren,
-  AuthorizedOrganizationSlugRoute: AuthorizedOrganizationSlugRouteWithChildren,
-}
+const sharedLayoutsAuthorizedRouteChildren: sharedLayoutsAuthorizedRouteChildren =
+  {
+    dashboardDashboardlayoutRoute: dashboardDashboardlayoutRouteWithChildren,
+    AuthorizedOrganizationSlugRoute:
+      AuthorizedOrganizationSlugRouteWithChildren,
+  }
 
-const authAuthorizedRouteWithChildren = authAuthorizedRoute._addFileChildren(
-  authAuthorizedRouteChildren,
-)
+const sharedLayoutsAuthorizedRouteWithChildren =
+  sharedLayoutsAuthorizedRoute._addFileChildren(
+    sharedLayoutsAuthorizedRouteChildren,
+  )
 
 export interface FileRoutesByFullPath {
-  '': typeof authAuthorizedRouteWithChildren
-  '/login': typeof authLoginRoute
-  '/signup': typeof authSignupRoute
+  '': typeof sharedLayoutsAuthorizedRouteWithChildren
+  '/login': typeof authPagesLoginRoute
+  '/signup': typeof authPagesSignupRoute
   '/$organizationSlug': typeof AuthorizedOrganizationSlugRouteWithChildren
   '/$organizationSlug/contacts': typeof dashboardPagesContactsRoute
-  '/$organizationSlug/updates': typeof dashboardPagesUpdatesUpdatesRoute
   '/$organizationSlug/editor': typeof AuthorizedOrganizationSlugEditorRouteWithChildren
-  '/$organizationSlug/settings': typeof settingsLayoutRouteWithChildren
+  '/$organizationSlug/settings': typeof settingsSettingslayoutRouteWithChildren
   '/$organizationSlug/': typeof dashboardPagesIndexRoute
+  '/$organizationSlug/updates': typeof dashboardPagesUpdatesIndexRoute
   '/$organizationSlug/editor/$id': typeof editorPagesIdRoute
-  '/$organizationSlug/settings/$': typeof settingsSplatRoute
+  '/$organizationSlug/settings/$': typeof settingsPagesSplatRoute
   '/$organizationSlug/settings/profile': typeof settingsPagesProfileRoute
   '/$organizationSlug/settings/sessions': typeof settingsPagesSessionsRoute
 }
 
 export interface FileRoutesByTo {
-  '': typeof authAuthorizedRouteWithChildren
-  '/login': typeof authLoginRoute
-  '/signup': typeof authSignupRoute
+  '': typeof sharedLayoutsAuthorizedRouteWithChildren
+  '/login': typeof authPagesLoginRoute
+  '/signup': typeof authPagesSignupRoute
   '/$organizationSlug': typeof dashboardPagesIndexRoute
   '/$organizationSlug/contacts': typeof dashboardPagesContactsRoute
-  '/$organizationSlug/updates': typeof dashboardPagesUpdatesUpdatesRoute
   '/$organizationSlug/editor': typeof AuthorizedOrganizationSlugEditorRouteWithChildren
-  '/$organizationSlug/settings': typeof settingsLayoutRouteWithChildren
+  '/$organizationSlug/settings': typeof settingsSettingslayoutRouteWithChildren
+  '/$organizationSlug/updates': typeof dashboardPagesUpdatesIndexRoute
   '/$organizationSlug/editor/$id': typeof editorPagesIdRoute
-  '/$organizationSlug/settings/$': typeof settingsSplatRoute
+  '/$organizationSlug/settings/$': typeof settingsPagesSplatRoute
   '/$organizationSlug/settings/profile': typeof settingsPagesProfileRoute
   '/$organizationSlug/settings/sessions': typeof settingsPagesSessionsRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
-  '/_authorized': typeof authAuthorizedRouteWithChildren
-  '/login': typeof authLoginRoute
-  '/signup': typeof authSignupRoute
-  '/_authorized/$organizationSlug': typeof dashboardLayoutRouteWithChildren
+  '/_authorized': typeof sharedLayoutsAuthorizedRouteWithChildren
+  '/login': typeof authPagesLoginRoute
+  '/signup': typeof authPagesSignupRoute
+  '/_authorized/$organizationSlug': typeof dashboardDashboardlayoutRouteWithChildren
   '/_authorized/$organizationSlug_': typeof AuthorizedOrganizationSlugRouteWithChildren
   '/_authorized/$organizationSlug/contacts': typeof dashboardPagesContactsRoute
-  '/_authorized/$organizationSlug/updates': typeof dashboardPagesUpdatesUpdatesRoute
   '/_authorized/$organizationSlug_/editor': typeof AuthorizedOrganizationSlugEditorRouteWithChildren
-  '/_authorized/$organizationSlug_/settings': typeof settingsLayoutRouteWithChildren
+  '/_authorized/$organizationSlug_/settings': typeof settingsSettingslayoutRouteWithChildren
   '/_authorized/$organizationSlug/': typeof dashboardPagesIndexRoute
+  '/_authorized/$organizationSlug/updates': typeof dashboardPagesUpdatesIndexRoute
   '/_authorized/$organizationSlug_/editor/$id': typeof editorPagesIdRoute
-  '/_authorized/$organizationSlug_/settings/$': typeof settingsSplatRoute
+  '/_authorized/$organizationSlug_/settings/$': typeof settingsPagesSplatRoute
   '/_authorized/$organizationSlug_/settings/profile': typeof settingsPagesProfileRoute
   '/_authorized/$organizationSlug_/settings/sessions': typeof settingsPagesSessionsRoute
 }
@@ -365,10 +373,10 @@ export interface FileRouteTypes {
     | '/signup'
     | '/$organizationSlug'
     | '/$organizationSlug/contacts'
-    | '/$organizationSlug/updates'
     | '/$organizationSlug/editor'
     | '/$organizationSlug/settings'
     | '/$organizationSlug/'
+    | '/$organizationSlug/updates'
     | '/$organizationSlug/editor/$id'
     | '/$organizationSlug/settings/$'
     | '/$organizationSlug/settings/profile'
@@ -380,9 +388,9 @@ export interface FileRouteTypes {
     | '/signup'
     | '/$organizationSlug'
     | '/$organizationSlug/contacts'
-    | '/$organizationSlug/updates'
     | '/$organizationSlug/editor'
     | '/$organizationSlug/settings'
+    | '/$organizationSlug/updates'
     | '/$organizationSlug/editor/$id'
     | '/$organizationSlug/settings/$'
     | '/$organizationSlug/settings/profile'
@@ -395,10 +403,10 @@ export interface FileRouteTypes {
     | '/_authorized/$organizationSlug'
     | '/_authorized/$organizationSlug_'
     | '/_authorized/$organizationSlug/contacts'
-    | '/_authorized/$organizationSlug/updates'
     | '/_authorized/$organizationSlug_/editor'
     | '/_authorized/$organizationSlug_/settings'
     | '/_authorized/$organizationSlug/'
+    | '/_authorized/$organizationSlug/updates'
     | '/_authorized/$organizationSlug_/editor/$id'
     | '/_authorized/$organizationSlug_/settings/$'
     | '/_authorized/$organizationSlug_/settings/profile'
@@ -407,15 +415,15 @@ export interface FileRouteTypes {
 }
 
 export interface RootRouteChildren {
-  authAuthorizedRoute: typeof authAuthorizedRouteWithChildren
-  authLoginRoute: typeof authLoginRoute
-  authSignupRoute: typeof authSignupRoute
+  sharedLayoutsAuthorizedRoute: typeof sharedLayoutsAuthorizedRouteWithChildren
+  authPagesLoginRoute: typeof authPagesLoginRoute
+  authPagesSignupRoute: typeof authPagesSignupRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  authAuthorizedRoute: authAuthorizedRouteWithChildren,
-  authLoginRoute: authLoginRoute,
-  authSignupRoute: authSignupRoute,
+  sharedLayoutsAuthorizedRoute: sharedLayoutsAuthorizedRouteWithChildren,
+  authPagesLoginRoute: authPagesLoginRoute,
+  authPagesSignupRoute: authPagesSignupRoute,
 }
 
 export const routeTree = rootRoute
@@ -434,25 +442,25 @@ export const routeTree = rootRoute
       ]
     },
     "/_authorized": {
-      "filePath": "auth/authorized.tsx",
+      "filePath": "shared/layouts/authorized.tsx",
       "children": [
         "/_authorized/$organizationSlug",
         "/_authorized/$organizationSlug_"
       ]
     },
     "/login": {
-      "filePath": "auth/login.tsx"
+      "filePath": "auth/pages/login.tsx"
     },
     "/signup": {
-      "filePath": "auth/signup.tsx"
+      "filePath": "auth/pages/signup.tsx"
     },
     "/_authorized/$organizationSlug": {
-      "filePath": "dashboard/layout.tsx",
+      "filePath": "dashboard/Dashboard.layout.tsx",
       "parent": "/_authorized",
       "children": [
         "/_authorized/$organizationSlug/contacts",
-        "/_authorized/$organizationSlug/updates",
-        "/_authorized/$organizationSlug/"
+        "/_authorized/$organizationSlug/",
+        "/_authorized/$organizationSlug/updates"
       ]
     },
     "/_authorized/$organizationSlug_": {
@@ -467,10 +475,6 @@ export const routeTree = rootRoute
       "filePath": "dashboard/pages/contacts.tsx",
       "parent": "/_authorized/$organizationSlug"
     },
-    "/_authorized/$organizationSlug/updates": {
-      "filePath": "dashboard/pages/updates/updates.tsx",
-      "parent": "/_authorized/$organizationSlug"
-    },
     "/_authorized/$organizationSlug_/editor": {
       "filePath": "",
       "parent": "/_authorized/$organizationSlug_",
@@ -479,7 +483,7 @@ export const routeTree = rootRoute
       ]
     },
     "/_authorized/$organizationSlug_/settings": {
-      "filePath": "settings/layout.tsx",
+      "filePath": "settings/Settings.layout.tsx",
       "parent": "/_authorized/$organizationSlug_",
       "children": [
         "/_authorized/$organizationSlug_/settings/$",
@@ -491,12 +495,16 @@ export const routeTree = rootRoute
       "filePath": "dashboard/pages/index.tsx",
       "parent": "/_authorized/$organizationSlug"
     },
+    "/_authorized/$organizationSlug/updates": {
+      "filePath": "dashboard/pages/updates/index.tsx",
+      "parent": "/_authorized/$organizationSlug"
+    },
     "/_authorized/$organizationSlug_/editor/$id": {
       "filePath": "editor/pages/$id.tsx",
       "parent": "/_authorized/$organizationSlug_/editor"
     },
     "/_authorized/$organizationSlug_/settings/$": {
-      "filePath": "settings/splat.tsx",
+      "filePath": "settings/pages/splat.tsx",
       "parent": "/_authorized/$organizationSlug_/settings"
     },
     "/_authorized/$organizationSlug_/settings/profile": {
