@@ -8,326 +8,366 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
+import { createFileRoute } from '@tanstack/react-router'
+
 // Import Routes
 
-import { Route as rootRoute } from './../routes/__root'
-import { Route as AppRouteImport } from './../routes/_app/route'
-import { Route as AppIndexImport } from './../routes/_app/index'
-import { Route as authSignupImport } from './../routes/(auth)/signup'
-import { Route as authLoginImport } from './../routes/(auth)/login'
-import { Route as AppOrganizationSlugRouteImport } from './../routes/_app/$organizationSlug/route'
-import { Route as AppOrganizationSlugIndexImport } from './../routes/_app/$organizationSlug/index'
-import { Route as AppOrganizationSlugUpdatesImport } from './../routes/_app/$organizationSlug/updates'
-import { Route as AppOrganizationSlugContactsImport } from './../routes/_app/$organizationSlug/contacts'
-import { Route as AppOrganizationSlugSettingsRouteImport } from './../routes/_app/$organizationSlug_/settings/route'
-import { Route as AppOrganizationSlugSettingsSessionsImport } from './../routes/_app/$organizationSlug_/settings/sessions'
-import { Route as AppOrganizationSlugSettingsProfileImport } from './../routes/_app/$organizationSlug_/settings/profile'
-import { Route as AppOrganizationSlugSettingsSplatImport } from './../routes/_app/$organizationSlug_/settings/$'
-import { Route as AppOrganizationSlugEditorIdImport } from './../routes/_app/$organizationSlug_/editor/$id'
+import { Route as rootRoute } from './../modules/root'
+import { Route as authSignupImport } from './../modules/auth/signup'
+import { Route as authLoginImport } from './../modules/auth/login'
+import { Route as authAuthorizedImport } from './../modules/auth/authorized'
+import { Route as dashboardLayoutImport } from './../modules/dashboard/layout'
+import { Route as dashboardPagesIndexImport } from './../modules/dashboard/pages/index'
+import { Route as settingsLayoutImport } from './../modules/settings/layout'
+import { Route as dashboardPagesUpdatesUpdatesImport } from './../modules/dashboard/pages/updates/updates'
+import { Route as dashboardPagesContactsImport } from './../modules/dashboard/pages/contacts'
+import { Route as settingsPagesSessionsImport } from './../modules/settings/pages/sessions'
+import { Route as settingsPagesProfileImport } from './../modules/settings/pages/profile'
+import { Route as settingsSplatImport } from './../modules/settings/splat'
+import { Route as editorPagesIdImport } from './../modules/editor/pages/$id'
+
+// Create Virtual Routes
+
+const AuthorizedOrganizationSlugImport = createFileRoute(
+  '/_authorized/$organizationSlug_',
+)()
+const AuthorizedOrganizationSlugEditorImport = createFileRoute(
+  '/_authorized/$organizationSlug_/editor',
+)()
 
 // Create/Update Routes
 
-const AppRouteRoute = AppRouteImport.update({
-  id: '/_app',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const AppIndexRoute = AppIndexImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AppRouteRoute,
-} as any)
-
 const authSignupRoute = authSignupImport.update({
-  id: '/(auth)/signup',
+  id: '/signup',
   path: '/signup',
   getParentRoute: () => rootRoute,
 } as any)
 
 const authLoginRoute = authLoginImport.update({
-  id: '/(auth)/login',
+  id: '/login',
   path: '/login',
   getParentRoute: () => rootRoute,
 } as any)
 
-const AppOrganizationSlugRouteRoute = AppOrganizationSlugRouteImport.update({
-  id: '/$organizationSlug',
-  path: '/$organizationSlug',
-  getParentRoute: () => AppRouteRoute,
+const authAuthorizedRoute = authAuthorizedImport.update({
+  id: '/_authorized',
+  getParentRoute: () => rootRoute,
 } as any)
 
-const AppOrganizationSlugIndexRoute = AppOrganizationSlugIndexImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AppOrganizationSlugRouteRoute,
-} as any)
-
-const AppOrganizationSlugUpdatesRoute = AppOrganizationSlugUpdatesImport.update(
+const AuthorizedOrganizationSlugRoute = AuthorizedOrganizationSlugImport.update(
   {
-    id: '/updates',
-    path: '/updates',
-    getParentRoute: () => AppOrganizationSlugRouteRoute,
+    id: '/$organizationSlug_',
+    path: '/$organizationSlug',
+    getParentRoute: () => authAuthorizedRoute,
   } as any,
 )
 
-const AppOrganizationSlugContactsRoute =
-  AppOrganizationSlugContactsImport.update({
-    id: '/contacts',
-    path: '/contacts',
-    getParentRoute: () => AppOrganizationSlugRouteRoute,
+const dashboardLayoutRoute = dashboardLayoutImport.update({
+  id: '/$organizationSlug',
+  path: '/$organizationSlug',
+  getParentRoute: () => authAuthorizedRoute,
+} as any)
+
+const dashboardPagesIndexRoute = dashboardPagesIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => dashboardLayoutRoute,
+} as any)
+
+const settingsLayoutRoute = settingsLayoutImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AuthorizedOrganizationSlugRoute,
+} as any)
+
+const AuthorizedOrganizationSlugEditorRoute =
+  AuthorizedOrganizationSlugEditorImport.update({
+    id: '/editor',
+    path: '/editor',
+    getParentRoute: () => AuthorizedOrganizationSlugRoute,
   } as any)
 
-const AppOrganizationSlugSettingsRouteRoute =
-  AppOrganizationSlugSettingsRouteImport.update({
-    id: '/$organizationSlug_/settings',
-    path: '/$organizationSlug/settings',
-    getParentRoute: () => AppRouteRoute,
+const dashboardPagesUpdatesUpdatesRoute =
+  dashboardPagesUpdatesUpdatesImport.update({
+    id: '/updates',
+    path: '/updates',
+    getParentRoute: () => dashboardLayoutRoute,
   } as any)
 
-const AppOrganizationSlugSettingsSessionsRoute =
-  AppOrganizationSlugSettingsSessionsImport.update({
-    id: '/sessions',
-    path: '/sessions',
-    getParentRoute: () => AppOrganizationSlugSettingsRouteRoute,
-  } as any)
+const dashboardPagesContactsRoute = dashboardPagesContactsImport.update({
+  id: '/contacts',
+  path: '/contacts',
+  getParentRoute: () => dashboardLayoutRoute,
+} as any)
 
-const AppOrganizationSlugSettingsProfileRoute =
-  AppOrganizationSlugSettingsProfileImport.update({
-    id: '/profile',
-    path: '/profile',
-    getParentRoute: () => AppOrganizationSlugSettingsRouteRoute,
-  } as any)
+const settingsPagesSessionsRoute = settingsPagesSessionsImport.update({
+  id: '/sessions',
+  path: '/sessions',
+  getParentRoute: () => settingsLayoutRoute,
+} as any)
 
-const AppOrganizationSlugSettingsSplatRoute =
-  AppOrganizationSlugSettingsSplatImport.update({
-    id: '/$',
-    path: '/$',
-    getParentRoute: () => AppOrganizationSlugSettingsRouteRoute,
-  } as any)
+const settingsPagesProfileRoute = settingsPagesProfileImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => settingsLayoutRoute,
+} as any)
 
-const AppOrganizationSlugEditorIdRoute =
-  AppOrganizationSlugEditorIdImport.update({
-    id: '/$organizationSlug_/editor/$id',
-    path: '/$organizationSlug/editor/$id',
-    getParentRoute: () => AppRouteRoute,
-  } as any)
+const settingsSplatRoute = settingsSplatImport.update({
+  id: '/$',
+  path: '/$',
+  getParentRoute: () => settingsLayoutRoute,
+} as any)
+
+const editorPagesIdRoute = editorPagesIdImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AuthorizedOrganizationSlugEditorRoute,
+} as any)
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/_app': {
-      id: '/_app'
+    '/_authorized': {
+      id: '/_authorized'
       path: ''
       fullPath: ''
-      preLoaderRoute: typeof AppRouteImport
+      preLoaderRoute: typeof authAuthorizedImport
       parentRoute: typeof rootRoute
     }
-    '/_app/$organizationSlug': {
-      id: '/_app/$organizationSlug'
-      path: '/$organizationSlug'
-      fullPath: '/$organizationSlug'
-      preLoaderRoute: typeof AppOrganizationSlugRouteImport
-      parentRoute: typeof AppRouteImport
-    }
-    '/(auth)/login': {
-      id: '/(auth)/login'
+    '/login': {
+      id: '/login'
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof authLoginImport
       parentRoute: typeof rootRoute
     }
-    '/(auth)/signup': {
-      id: '/(auth)/signup'
+    '/signup': {
+      id: '/signup'
       path: '/signup'
       fullPath: '/signup'
       preLoaderRoute: typeof authSignupImport
       parentRoute: typeof rootRoute
     }
-    '/_app/': {
-      id: '/_app/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof AppIndexImport
-      parentRoute: typeof AppRouteImport
+    '/_authorized/$organizationSlug': {
+      id: '/_authorized/$organizationSlug'
+      path: '/$organizationSlug'
+      fullPath: '/$organizationSlug'
+      preLoaderRoute: typeof dashboardLayoutImport
+      parentRoute: typeof authAuthorizedImport
     }
-    '/_app/$organizationSlug_/settings': {
-      id: '/_app/$organizationSlug_/settings'
-      path: '/$organizationSlug/settings'
-      fullPath: '/$organizationSlug/settings'
-      preLoaderRoute: typeof AppOrganizationSlugSettingsRouteImport
-      parentRoute: typeof AppRouteImport
+    '/_authorized/$organizationSlug_': {
+      id: '/_authorized/$organizationSlug_'
+      path: '/$organizationSlug'
+      fullPath: '/$organizationSlug'
+      preLoaderRoute: typeof AuthorizedOrganizationSlugImport
+      parentRoute: typeof authAuthorizedImport
     }
-    '/_app/$organizationSlug/contacts': {
-      id: '/_app/$organizationSlug/contacts'
+    '/_authorized/$organizationSlug/contacts': {
+      id: '/_authorized/$organizationSlug/contacts'
       path: '/contacts'
       fullPath: '/$organizationSlug/contacts'
-      preLoaderRoute: typeof AppOrganizationSlugContactsImport
-      parentRoute: typeof AppOrganizationSlugRouteImport
+      preLoaderRoute: typeof dashboardPagesContactsImport
+      parentRoute: typeof dashboardLayoutImport
     }
-    '/_app/$organizationSlug/updates': {
-      id: '/_app/$organizationSlug/updates'
+    '/_authorized/$organizationSlug/updates': {
+      id: '/_authorized/$organizationSlug/updates'
       path: '/updates'
       fullPath: '/$organizationSlug/updates'
-      preLoaderRoute: typeof AppOrganizationSlugUpdatesImport
-      parentRoute: typeof AppOrganizationSlugRouteImport
+      preLoaderRoute: typeof dashboardPagesUpdatesUpdatesImport
+      parentRoute: typeof dashboardLayoutImport
     }
-    '/_app/$organizationSlug/': {
-      id: '/_app/$organizationSlug/'
+    '/_authorized/$organizationSlug_/editor': {
+      id: '/_authorized/$organizationSlug_/editor'
+      path: '/editor'
+      fullPath: '/$organizationSlug/editor'
+      preLoaderRoute: typeof AuthorizedOrganizationSlugEditorImport
+      parentRoute: typeof AuthorizedOrganizationSlugImport
+    }
+    '/_authorized/$organizationSlug_/settings': {
+      id: '/_authorized/$organizationSlug_/settings'
+      path: '/settings'
+      fullPath: '/$organizationSlug/settings'
+      preLoaderRoute: typeof settingsLayoutImport
+      parentRoute: typeof AuthorizedOrganizationSlugImport
+    }
+    '/_authorized/$organizationSlug/': {
+      id: '/_authorized/$organizationSlug/'
       path: '/'
       fullPath: '/$organizationSlug/'
-      preLoaderRoute: typeof AppOrganizationSlugIndexImport
-      parentRoute: typeof AppOrganizationSlugRouteImport
+      preLoaderRoute: typeof dashboardPagesIndexImport
+      parentRoute: typeof dashboardLayoutImport
     }
-    '/_app/$organizationSlug_/editor/$id': {
-      id: '/_app/$organizationSlug_/editor/$id'
-      path: '/$organizationSlug/editor/$id'
+    '/_authorized/$organizationSlug_/editor/$id': {
+      id: '/_authorized/$organizationSlug_/editor/$id'
+      path: '/$id'
       fullPath: '/$organizationSlug/editor/$id'
-      preLoaderRoute: typeof AppOrganizationSlugEditorIdImport
-      parentRoute: typeof AppRouteImport
+      preLoaderRoute: typeof editorPagesIdImport
+      parentRoute: typeof AuthorizedOrganizationSlugEditorImport
     }
-    '/_app/$organizationSlug_/settings/$': {
-      id: '/_app/$organizationSlug_/settings/$'
+    '/_authorized/$organizationSlug_/settings/$': {
+      id: '/_authorized/$organizationSlug_/settings/$'
       path: '/$'
       fullPath: '/$organizationSlug/settings/$'
-      preLoaderRoute: typeof AppOrganizationSlugSettingsSplatImport
-      parentRoute: typeof AppOrganizationSlugSettingsRouteImport
+      preLoaderRoute: typeof settingsSplatImport
+      parentRoute: typeof settingsLayoutImport
     }
-    '/_app/$organizationSlug_/settings/profile': {
-      id: '/_app/$organizationSlug_/settings/profile'
+    '/_authorized/$organizationSlug_/settings/profile': {
+      id: '/_authorized/$organizationSlug_/settings/profile'
       path: '/profile'
       fullPath: '/$organizationSlug/settings/profile'
-      preLoaderRoute: typeof AppOrganizationSlugSettingsProfileImport
-      parentRoute: typeof AppOrganizationSlugSettingsRouteImport
+      preLoaderRoute: typeof settingsPagesProfileImport
+      parentRoute: typeof settingsLayoutImport
     }
-    '/_app/$organizationSlug_/settings/sessions': {
-      id: '/_app/$organizationSlug_/settings/sessions'
+    '/_authorized/$organizationSlug_/settings/sessions': {
+      id: '/_authorized/$organizationSlug_/settings/sessions'
       path: '/sessions'
       fullPath: '/$organizationSlug/settings/sessions'
-      preLoaderRoute: typeof AppOrganizationSlugSettingsSessionsImport
-      parentRoute: typeof AppOrganizationSlugSettingsRouteImport
+      preLoaderRoute: typeof settingsPagesSessionsImport
+      parentRoute: typeof settingsLayoutImport
     }
   }
 }
 
 // Create and export the route tree
 
-interface AppOrganizationSlugRouteRouteChildren {
-  AppOrganizationSlugContactsRoute: typeof AppOrganizationSlugContactsRoute
-  AppOrganizationSlugUpdatesRoute: typeof AppOrganizationSlugUpdatesRoute
-  AppOrganizationSlugIndexRoute: typeof AppOrganizationSlugIndexRoute
+interface dashboardLayoutRouteChildren {
+  dashboardPagesContactsRoute: typeof dashboardPagesContactsRoute
+  dashboardPagesUpdatesUpdatesRoute: typeof dashboardPagesUpdatesUpdatesRoute
+  dashboardPagesIndexRoute: typeof dashboardPagesIndexRoute
 }
 
-const AppOrganizationSlugRouteRouteChildren: AppOrganizationSlugRouteRouteChildren =
+const dashboardLayoutRouteChildren: dashboardLayoutRouteChildren = {
+  dashboardPagesContactsRoute: dashboardPagesContactsRoute,
+  dashboardPagesUpdatesUpdatesRoute: dashboardPagesUpdatesUpdatesRoute,
+  dashboardPagesIndexRoute: dashboardPagesIndexRoute,
+}
+
+const dashboardLayoutRouteWithChildren = dashboardLayoutRoute._addFileChildren(
+  dashboardLayoutRouteChildren,
+)
+
+interface AuthorizedOrganizationSlugEditorRouteChildren {
+  editorPagesIdRoute: typeof editorPagesIdRoute
+}
+
+const AuthorizedOrganizationSlugEditorRouteChildren: AuthorizedOrganizationSlugEditorRouteChildren =
   {
-    AppOrganizationSlugContactsRoute: AppOrganizationSlugContactsRoute,
-    AppOrganizationSlugUpdatesRoute: AppOrganizationSlugUpdatesRoute,
-    AppOrganizationSlugIndexRoute: AppOrganizationSlugIndexRoute,
+    editorPagesIdRoute: editorPagesIdRoute,
   }
 
-const AppOrganizationSlugRouteRouteWithChildren =
-  AppOrganizationSlugRouteRoute._addFileChildren(
-    AppOrganizationSlugRouteRouteChildren,
+const AuthorizedOrganizationSlugEditorRouteWithChildren =
+  AuthorizedOrganizationSlugEditorRoute._addFileChildren(
+    AuthorizedOrganizationSlugEditorRouteChildren,
   )
 
-interface AppOrganizationSlugSettingsRouteRouteChildren {
-  AppOrganizationSlugSettingsSplatRoute: typeof AppOrganizationSlugSettingsSplatRoute
-  AppOrganizationSlugSettingsProfileRoute: typeof AppOrganizationSlugSettingsProfileRoute
-  AppOrganizationSlugSettingsSessionsRoute: typeof AppOrganizationSlugSettingsSessionsRoute
+interface settingsLayoutRouteChildren {
+  settingsSplatRoute: typeof settingsSplatRoute
+  settingsPagesProfileRoute: typeof settingsPagesProfileRoute
+  settingsPagesSessionsRoute: typeof settingsPagesSessionsRoute
 }
 
-const AppOrganizationSlugSettingsRouteRouteChildren: AppOrganizationSlugSettingsRouteRouteChildren =
+const settingsLayoutRouteChildren: settingsLayoutRouteChildren = {
+  settingsSplatRoute: settingsSplatRoute,
+  settingsPagesProfileRoute: settingsPagesProfileRoute,
+  settingsPagesSessionsRoute: settingsPagesSessionsRoute,
+}
+
+const settingsLayoutRouteWithChildren = settingsLayoutRoute._addFileChildren(
+  settingsLayoutRouteChildren,
+)
+
+interface AuthorizedOrganizationSlugRouteChildren {
+  AuthorizedOrganizationSlugEditorRoute: typeof AuthorizedOrganizationSlugEditorRouteWithChildren
+  settingsLayoutRoute: typeof settingsLayoutRouteWithChildren
+}
+
+const AuthorizedOrganizationSlugRouteChildren: AuthorizedOrganizationSlugRouteChildren =
   {
-    AppOrganizationSlugSettingsSplatRoute:
-      AppOrganizationSlugSettingsSplatRoute,
-    AppOrganizationSlugSettingsProfileRoute:
-      AppOrganizationSlugSettingsProfileRoute,
-    AppOrganizationSlugSettingsSessionsRoute:
-      AppOrganizationSlugSettingsSessionsRoute,
+    AuthorizedOrganizationSlugEditorRoute:
+      AuthorizedOrganizationSlugEditorRouteWithChildren,
+    settingsLayoutRoute: settingsLayoutRouteWithChildren,
   }
 
-const AppOrganizationSlugSettingsRouteRouteWithChildren =
-  AppOrganizationSlugSettingsRouteRoute._addFileChildren(
-    AppOrganizationSlugSettingsRouteRouteChildren,
+const AuthorizedOrganizationSlugRouteWithChildren =
+  AuthorizedOrganizationSlugRoute._addFileChildren(
+    AuthorizedOrganizationSlugRouteChildren,
   )
 
-interface AppRouteRouteChildren {
-  AppOrganizationSlugRouteRoute: typeof AppOrganizationSlugRouteRouteWithChildren
-  AppIndexRoute: typeof AppIndexRoute
-  AppOrganizationSlugSettingsRouteRoute: typeof AppOrganizationSlugSettingsRouteRouteWithChildren
-  AppOrganizationSlugEditorIdRoute: typeof AppOrganizationSlugEditorIdRoute
+interface authAuthorizedRouteChildren {
+  dashboardLayoutRoute: typeof dashboardLayoutRouteWithChildren
+  AuthorizedOrganizationSlugRoute: typeof AuthorizedOrganizationSlugRouteWithChildren
 }
 
-const AppRouteRouteChildren: AppRouteRouteChildren = {
-  AppOrganizationSlugRouteRoute: AppOrganizationSlugRouteRouteWithChildren,
-  AppIndexRoute: AppIndexRoute,
-  AppOrganizationSlugSettingsRouteRoute:
-    AppOrganizationSlugSettingsRouteRouteWithChildren,
-  AppOrganizationSlugEditorIdRoute: AppOrganizationSlugEditorIdRoute,
+const authAuthorizedRouteChildren: authAuthorizedRouteChildren = {
+  dashboardLayoutRoute: dashboardLayoutRouteWithChildren,
+  AuthorizedOrganizationSlugRoute: AuthorizedOrganizationSlugRouteWithChildren,
 }
 
-const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
-  AppRouteRouteChildren,
+const authAuthorizedRouteWithChildren = authAuthorizedRoute._addFileChildren(
+  authAuthorizedRouteChildren,
 )
 
 export interface FileRoutesByFullPath {
-  '': typeof AppRouteRouteWithChildren
-  '/$organizationSlug': typeof AppOrganizationSlugRouteRouteWithChildren
+  '': typeof authAuthorizedRouteWithChildren
   '/login': typeof authLoginRoute
   '/signup': typeof authSignupRoute
-  '/': typeof AppIndexRoute
-  '/$organizationSlug/settings': typeof AppOrganizationSlugSettingsRouteRouteWithChildren
-  '/$organizationSlug/contacts': typeof AppOrganizationSlugContactsRoute
-  '/$organizationSlug/updates': typeof AppOrganizationSlugUpdatesRoute
-  '/$organizationSlug/': typeof AppOrganizationSlugIndexRoute
-  '/$organizationSlug/editor/$id': typeof AppOrganizationSlugEditorIdRoute
-  '/$organizationSlug/settings/$': typeof AppOrganizationSlugSettingsSplatRoute
-  '/$organizationSlug/settings/profile': typeof AppOrganizationSlugSettingsProfileRoute
-  '/$organizationSlug/settings/sessions': typeof AppOrganizationSlugSettingsSessionsRoute
+  '/$organizationSlug': typeof AuthorizedOrganizationSlugRouteWithChildren
+  '/$organizationSlug/contacts': typeof dashboardPagesContactsRoute
+  '/$organizationSlug/updates': typeof dashboardPagesUpdatesUpdatesRoute
+  '/$organizationSlug/editor': typeof AuthorizedOrganizationSlugEditorRouteWithChildren
+  '/$organizationSlug/settings': typeof settingsLayoutRouteWithChildren
+  '/$organizationSlug/': typeof dashboardPagesIndexRoute
+  '/$organizationSlug/editor/$id': typeof editorPagesIdRoute
+  '/$organizationSlug/settings/$': typeof settingsSplatRoute
+  '/$organizationSlug/settings/profile': typeof settingsPagesProfileRoute
+  '/$organizationSlug/settings/sessions': typeof settingsPagesSessionsRoute
 }
 
 export interface FileRoutesByTo {
+  '': typeof authAuthorizedRouteWithChildren
   '/login': typeof authLoginRoute
   '/signup': typeof authSignupRoute
-  '/': typeof AppIndexRoute
-  '/$organizationSlug/settings': typeof AppOrganizationSlugSettingsRouteRouteWithChildren
-  '/$organizationSlug/contacts': typeof AppOrganizationSlugContactsRoute
-  '/$organizationSlug/updates': typeof AppOrganizationSlugUpdatesRoute
-  '/$organizationSlug': typeof AppOrganizationSlugIndexRoute
-  '/$organizationSlug/editor/$id': typeof AppOrganizationSlugEditorIdRoute
-  '/$organizationSlug/settings/$': typeof AppOrganizationSlugSettingsSplatRoute
-  '/$organizationSlug/settings/profile': typeof AppOrganizationSlugSettingsProfileRoute
-  '/$organizationSlug/settings/sessions': typeof AppOrganizationSlugSettingsSessionsRoute
+  '/$organizationSlug': typeof dashboardPagesIndexRoute
+  '/$organizationSlug/contacts': typeof dashboardPagesContactsRoute
+  '/$organizationSlug/updates': typeof dashboardPagesUpdatesUpdatesRoute
+  '/$organizationSlug/editor': typeof AuthorizedOrganizationSlugEditorRouteWithChildren
+  '/$organizationSlug/settings': typeof settingsLayoutRouteWithChildren
+  '/$organizationSlug/editor/$id': typeof editorPagesIdRoute
+  '/$organizationSlug/settings/$': typeof settingsSplatRoute
+  '/$organizationSlug/settings/profile': typeof settingsPagesProfileRoute
+  '/$organizationSlug/settings/sessions': typeof settingsPagesSessionsRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
-  '/_app': typeof AppRouteRouteWithChildren
-  '/_app/$organizationSlug': typeof AppOrganizationSlugRouteRouteWithChildren
-  '/(auth)/login': typeof authLoginRoute
-  '/(auth)/signup': typeof authSignupRoute
-  '/_app/': typeof AppIndexRoute
-  '/_app/$organizationSlug_/settings': typeof AppOrganizationSlugSettingsRouteRouteWithChildren
-  '/_app/$organizationSlug/contacts': typeof AppOrganizationSlugContactsRoute
-  '/_app/$organizationSlug/updates': typeof AppOrganizationSlugUpdatesRoute
-  '/_app/$organizationSlug/': typeof AppOrganizationSlugIndexRoute
-  '/_app/$organizationSlug_/editor/$id': typeof AppOrganizationSlugEditorIdRoute
-  '/_app/$organizationSlug_/settings/$': typeof AppOrganizationSlugSettingsSplatRoute
-  '/_app/$organizationSlug_/settings/profile': typeof AppOrganizationSlugSettingsProfileRoute
-  '/_app/$organizationSlug_/settings/sessions': typeof AppOrganizationSlugSettingsSessionsRoute
+  '/_authorized': typeof authAuthorizedRouteWithChildren
+  '/login': typeof authLoginRoute
+  '/signup': typeof authSignupRoute
+  '/_authorized/$organizationSlug': typeof dashboardLayoutRouteWithChildren
+  '/_authorized/$organizationSlug_': typeof AuthorizedOrganizationSlugRouteWithChildren
+  '/_authorized/$organizationSlug/contacts': typeof dashboardPagesContactsRoute
+  '/_authorized/$organizationSlug/updates': typeof dashboardPagesUpdatesUpdatesRoute
+  '/_authorized/$organizationSlug_/editor': typeof AuthorizedOrganizationSlugEditorRouteWithChildren
+  '/_authorized/$organizationSlug_/settings': typeof settingsLayoutRouteWithChildren
+  '/_authorized/$organizationSlug/': typeof dashboardPagesIndexRoute
+  '/_authorized/$organizationSlug_/editor/$id': typeof editorPagesIdRoute
+  '/_authorized/$organizationSlug_/settings/$': typeof settingsSplatRoute
+  '/_authorized/$organizationSlug_/settings/profile': typeof settingsPagesProfileRoute
+  '/_authorized/$organizationSlug_/settings/sessions': typeof settingsPagesSessionsRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | ''
-    | '/$organizationSlug'
     | '/login'
     | '/signup'
-    | '/'
-    | '/$organizationSlug/settings'
+    | '/$organizationSlug'
     | '/$organizationSlug/contacts'
     | '/$organizationSlug/updates'
+    | '/$organizationSlug/editor'
+    | '/$organizationSlug/settings'
     | '/$organizationSlug/'
     | '/$organizationSlug/editor/$id'
     | '/$organizationSlug/settings/$'
@@ -335,43 +375,45 @@ export interface FileRouteTypes {
     | '/$organizationSlug/settings/sessions'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | ''
     | '/login'
     | '/signup'
-    | '/'
-    | '/$organizationSlug/settings'
+    | '/$organizationSlug'
     | '/$organizationSlug/contacts'
     | '/$organizationSlug/updates'
-    | '/$organizationSlug'
+    | '/$organizationSlug/editor'
+    | '/$organizationSlug/settings'
     | '/$organizationSlug/editor/$id'
     | '/$organizationSlug/settings/$'
     | '/$organizationSlug/settings/profile'
     | '/$organizationSlug/settings/sessions'
   id:
     | '__root__'
-    | '/_app'
-    | '/_app/$organizationSlug'
-    | '/(auth)/login'
-    | '/(auth)/signup'
-    | '/_app/'
-    | '/_app/$organizationSlug_/settings'
-    | '/_app/$organizationSlug/contacts'
-    | '/_app/$organizationSlug/updates'
-    | '/_app/$organizationSlug/'
-    | '/_app/$organizationSlug_/editor/$id'
-    | '/_app/$organizationSlug_/settings/$'
-    | '/_app/$organizationSlug_/settings/profile'
-    | '/_app/$organizationSlug_/settings/sessions'
+    | '/_authorized'
+    | '/login'
+    | '/signup'
+    | '/_authorized/$organizationSlug'
+    | '/_authorized/$organizationSlug_'
+    | '/_authorized/$organizationSlug/contacts'
+    | '/_authorized/$organizationSlug/updates'
+    | '/_authorized/$organizationSlug_/editor'
+    | '/_authorized/$organizationSlug_/settings'
+    | '/_authorized/$organizationSlug/'
+    | '/_authorized/$organizationSlug_/editor/$id'
+    | '/_authorized/$organizationSlug_/settings/$'
+    | '/_authorized/$organizationSlug_/settings/profile'
+    | '/_authorized/$organizationSlug_/settings/sessions'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-  AppRouteRoute: typeof AppRouteRouteWithChildren
+  authAuthorizedRoute: typeof authAuthorizedRouteWithChildren
   authLoginRoute: typeof authLoginRoute
   authSignupRoute: typeof authSignupRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  AppRouteRoute: AppRouteRouteWithChildren,
+  authAuthorizedRoute: authAuthorizedRouteWithChildren,
   authLoginRoute: authLoginRoute,
   authSignupRoute: authSignupRoute,
 }
@@ -384,77 +426,86 @@ export const routeTree = rootRoute
 {
   "routes": {
     "__root__": {
-      "filePath": "__root.tsx",
+      "filePath": "root.tsx",
       "children": [
-        "/_app",
-        "/(auth)/login",
-        "/(auth)/signup"
+        "/_authorized",
+        "/login",
+        "/signup"
       ]
     },
-    "/_app": {
-      "filePath": "_app/route.tsx",
+    "/_authorized": {
+      "filePath": "auth/authorized.tsx",
       "children": [
-        "/_app/$organizationSlug",
-        "/_app/",
-        "/_app/$organizationSlug_/settings",
-        "/_app/$organizationSlug_/editor/$id"
+        "/_authorized/$organizationSlug",
+        "/_authorized/$organizationSlug_"
       ]
     },
-    "/_app/$organizationSlug": {
-      "filePath": "_app/$organizationSlug/route.tsx",
-      "parent": "/_app",
+    "/login": {
+      "filePath": "auth/login.tsx"
+    },
+    "/signup": {
+      "filePath": "auth/signup.tsx"
+    },
+    "/_authorized/$organizationSlug": {
+      "filePath": "dashboard/layout.tsx",
+      "parent": "/_authorized",
       "children": [
-        "/_app/$organizationSlug/contacts",
-        "/_app/$organizationSlug/updates",
-        "/_app/$organizationSlug/"
+        "/_authorized/$organizationSlug/contacts",
+        "/_authorized/$organizationSlug/updates",
+        "/_authorized/$organizationSlug/"
       ]
     },
-    "/(auth)/login": {
-      "filePath": "(auth)/login.tsx"
-    },
-    "/(auth)/signup": {
-      "filePath": "(auth)/signup.tsx"
-    },
-    "/_app/": {
-      "filePath": "_app/index.tsx",
-      "parent": "/_app"
-    },
-    "/_app/$organizationSlug_/settings": {
-      "filePath": "_app/$organizationSlug_/settings/route.tsx",
-      "parent": "/_app",
+    "/_authorized/$organizationSlug_": {
+      "filePath": "",
+      "parent": "/_authorized",
       "children": [
-        "/_app/$organizationSlug_/settings/$",
-        "/_app/$organizationSlug_/settings/profile",
-        "/_app/$organizationSlug_/settings/sessions"
+        "/_authorized/$organizationSlug_/editor",
+        "/_authorized/$organizationSlug_/settings"
       ]
     },
-    "/_app/$organizationSlug/contacts": {
-      "filePath": "_app/$organizationSlug/contacts.tsx",
-      "parent": "/_app/$organizationSlug"
+    "/_authorized/$organizationSlug/contacts": {
+      "filePath": "dashboard/pages/contacts.tsx",
+      "parent": "/_authorized/$organizationSlug"
     },
-    "/_app/$organizationSlug/updates": {
-      "filePath": "_app/$organizationSlug/updates.tsx",
-      "parent": "/_app/$organizationSlug"
+    "/_authorized/$organizationSlug/updates": {
+      "filePath": "dashboard/pages/updates/updates.tsx",
+      "parent": "/_authorized/$organizationSlug"
     },
-    "/_app/$organizationSlug/": {
-      "filePath": "_app/$organizationSlug/index.tsx",
-      "parent": "/_app/$organizationSlug"
+    "/_authorized/$organizationSlug_/editor": {
+      "filePath": "",
+      "parent": "/_authorized/$organizationSlug_",
+      "children": [
+        "/_authorized/$organizationSlug_/editor/$id"
+      ]
     },
-    "/_app/$organizationSlug_/editor/$id": {
-      "filePath": "_app/$organizationSlug_/editor/$id.tsx",
-      "parent": "/_app"
+    "/_authorized/$organizationSlug_/settings": {
+      "filePath": "settings/layout.tsx",
+      "parent": "/_authorized/$organizationSlug_",
+      "children": [
+        "/_authorized/$organizationSlug_/settings/$",
+        "/_authorized/$organizationSlug_/settings/profile",
+        "/_authorized/$organizationSlug_/settings/sessions"
+      ]
     },
-    "/_app/$organizationSlug_/settings/$": {
-      "filePath": "_app/$organizationSlug_/settings/$.tsx",
-      "parent": "/_app/$organizationSlug_/settings"
+    "/_authorized/$organizationSlug/": {
+      "filePath": "dashboard/pages/index.tsx",
+      "parent": "/_authorized/$organizationSlug"
     },
-    "/_app/$organizationSlug_/settings/profile": {
-      "filePath": "_app/$organizationSlug_/settings/profile.tsx",
-      "parent": "/_app/$organizationSlug_/settings"
+    "/_authorized/$organizationSlug_/editor/$id": {
+      "filePath": "editor/pages/$id.tsx",
+      "parent": "/_authorized/$organizationSlug_/editor"
     },
-    "/_app/$organizationSlug_/settings/sessions": {
-      "filePath": "_app/$organizationSlug_/settings/sessions.tsx",
-      "parent": "/_app/$organizationSlug_/settings"
+    "/_authorized/$organizationSlug_/settings/$": {
+      "filePath": "settings/splat.tsx",
+      "parent": "/_authorized/$organizationSlug_/settings"
+    },
+    "/_authorized/$organizationSlug_/settings/profile": {
+      "filePath": "settings/pages/profile.tsx",
+      "parent": "/_authorized/$organizationSlug_/settings"
+    },
+    "/_authorized/$organizationSlug_/settings/sessions": {
+      "filePath": "settings/pages/sessions.tsx",
+      "parent": "/_authorized/$organizationSlug_/settings"
     }
   }
 }

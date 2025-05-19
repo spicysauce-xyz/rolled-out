@@ -19,7 +19,11 @@ type SuccessResponse<
     | { success: false; error: unknown },
 > = T extends { success: true } ? T["data"] : never;
 
-type Update = SuccessResponse<InferResponseType<typeof api.posts.$get>>[number];
+type Update = SuccessResponse<
+  InferResponseType<
+    (typeof api.organization)[":organizationId"]["posts"]["$get"]
+  >
+>[number];
 
 const DraftUpdate: React.FC<Update> = ({ title }) => {
   return (

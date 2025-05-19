@@ -1,6 +1,6 @@
 import * as Sidebar from "@components/layout/sidebar";
+import { UserMenu } from "@modules/dashboard/components/user-menu";
 import { IconButton, Text } from "@mono/ui";
-import { UserMenu } from "@routes/_app/-components/user-menu";
 import { useParams } from "@tanstack/react-router";
 import {
   BellIcon,
@@ -16,7 +16,7 @@ import {
 
 export const DashboardNavigation = () => {
   const { organizationSlug } = useParams({
-    from: "/_app/$organizationSlug",
+    from: "/_authorized/$organizationSlug",
   });
 
   return (

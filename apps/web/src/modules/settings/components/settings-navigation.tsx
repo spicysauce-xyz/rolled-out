@@ -1,12 +1,12 @@
 import * as Sidebar from "@components/layout/sidebar";
+import { UserMenu } from "@modules/dashboard/components/user-menu";
 import { Clickable, Text } from "@mono/ui";
-import { UserMenu } from "@routes/_app/-components/user-menu";
 import { Link, useParams } from "@tanstack/react-router";
 import { ArrowLeftIcon, SmartphoneIcon, UserIcon } from "lucide-react";
 
 export const SettingsNavigation = () => {
   const { organizationSlug } = useParams({
-    from: "/_app/$organizationSlug_/settings",
+    from: "/_authorized/$organizationSlug_/settings",
   });
 
   return (

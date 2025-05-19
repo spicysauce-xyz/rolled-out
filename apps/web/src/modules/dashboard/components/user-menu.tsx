@@ -135,10 +135,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({ organizationSlug }) => {
         <DropdownMenu.Separator />
 
         <DropdownMenu.Item asChild>
-          <Link
-            to="/$organizationSlug/settings/account"
-            params={{ organizationSlug }}
-          >
+          <Link to="/$organizationSlug/settings" params={{ organizationSlug }}>
             <DropdownMenu.ItemIcon>
               <SettingsIcon />
             </DropdownMenu.ItemIcon>

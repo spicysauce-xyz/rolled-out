@@ -10,6 +10,8 @@ export default defineConfig({
       target: "react",
       autoCodeSplitting: true,
       generatedRouteTree: "./src/generated/router.ts",
+      virtualRouteConfig: "./src/routes.ts",
+      routesDirectory: "./src/modules",
     }),
     react(),
     tailwindcss(),

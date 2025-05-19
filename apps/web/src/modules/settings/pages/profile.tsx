@@ -1,15 +1,15 @@
+import * as Card from "@components/card";
+import { useSession } from "@hooks/useSession";
+import { authClient } from "@lib/auth";
+import useAppForm from "@lib/form";
 import { Button, Input, Label, Toaster } from "@mono/ui";
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { MailIcon, SaveIcon, UserIcon } from "lucide-react";
 import { z } from "zod";
-import * as Card from "../../../../components/card";
-import { useSession } from "../../../../hooks/useSession";
-import { authClient } from "../../../../lib/auth";
-import useAppForm from "../../../../lib/form";
 
 export const Route = createFileRoute(
-  "/_app/$organizationSlug_/settings/profile",
+  "/_authorized/$organizationSlug_/settings/profile",
 )({
   component: RouteComponent,
 });

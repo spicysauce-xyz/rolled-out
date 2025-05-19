@@ -3,7 +3,7 @@ import { Text } from "@mono/ui";
 import { createFileRoute } from "@tanstack/react-router";
 import { ChevronRight, HomeIcon } from "lucide-react";
 
-export const Route = createFileRoute("/_app/$organizationSlug/")({
+export const Route = createFileRoute("/_authorized/$organizationSlug/")({
   component: RouteComponent,
 });
 

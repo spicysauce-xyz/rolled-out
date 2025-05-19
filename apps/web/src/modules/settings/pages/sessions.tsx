@@ -1,6 +1,8 @@
+import * as Card from "@components/card";
 import * as Confirmer from "@components/feedback/confirmer";
 import * as Transition from "@components/transition";
 import { useSession } from "@hooks/useSession";
+import { authClient } from "@lib/auth";
 import { Button, Skeleton, Text, Toaster } from "@mono/ui";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
@@ -9,11 +11,9 @@ import { format } from "date-fns";
 import { BanIcon, MonitorIcon, SmartphoneIcon, TabletIcon } from "lucide-react";
 import { P, match } from "ts-pattern";
 import { UAParser } from "ua-parser-js";
-import * as Card from "../../../../components/card";
-import { authClient } from "../../../../lib/auth";
 
 export const Route = createFileRoute(
-  "/_app/$organizationSlug_/settings/sessions",
+  "/_authorized/$organizationSlug_/settings/sessions",
 )({
   component: RouteComponent,
 });

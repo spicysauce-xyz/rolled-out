@@ -10,16 +10,16 @@ import {
 } from "@tanstack/react-router";
 import { ChevronRight, HomeIcon, PlusIcon } from "lucide-react";
 import { P, match } from "ts-pattern";
-import { UpdatesList } from "./-components/updates-list";
+import { UpdatesList } from "./components/updates-list";
 
-export const Route = createFileRoute("/_app/$organizationSlug/updates")({
+export const Route = createFileRoute("/_authorized/$organizationSlug/updates")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
   const navigate = useNavigate();
   const { organizationSlug } = useParams({
-    from: "/_app/$organizationSlug/updates",
+    from: "/_authorized/$organizationSlug/updates",
   });
 
   const postsQuery = useQuery({

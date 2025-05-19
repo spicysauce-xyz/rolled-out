@@ -6,8 +6,7 @@
     "useIgnoreFile": false
   },
   "files": {
-    "ignoreUnknown": false,
-    "ignore": []
+    "ignoreUnknown": false
   },
   "formatter": {
     "enabled": true,
@@ -19,7 +18,7 @@
     "enabled": true
   },
   "linter": {
-    "ignore": ["**/node_modules/**", "**/*.gen.ts"],
+    "ignore": ["**/node_modules/**", "**/*.gen.ts", "**/generated/**"],
     "enabled": true,
     "rules": {
       "recommended": true,

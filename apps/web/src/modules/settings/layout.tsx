@@ -2,9 +2,11 @@ import * as Page from "@components/layout/page";
 import { Text } from "@mono/ui";
 import { Outlet, createFileRoute } from "@tanstack/react-router";
 import { ChevronRight, HomeIcon } from "lucide-react";
-import { SettingsNavigation } from "./-components/settings-navigation";
+import { SettingsNavigation } from "./components/settings-navigation";
 
-export const Route = createFileRoute("/_app/$organizationSlug_/settings")({
+export const Route = createFileRoute(
+  "/_authorized/$organizationSlug_/settings",
+)({
   component: RouteComponent,
 });
 

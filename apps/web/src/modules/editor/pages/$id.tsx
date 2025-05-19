@@ -1,5 +1,6 @@
 import * as Editor from "@components/editor/editor";
 import { TimeSince } from "@components/editor/time-since";
+import * as Page from "@components/layout/page";
 import { api } from "@lib/api";
 import { Button, IconButton, Text } from "@mono/ui";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -8,9 +9,10 @@ import type { JSONContent } from "@tiptap/react";
 import { debounce } from "lodash";
 import { ArrowLeftIcon, ClockIcon, SendIcon } from "lucide-react";
 import { useCallback, useMemo } from "react";
-import * as Page from "../../../../components/layout/page";
 
-export const Route = createFileRoute("/_app/$organizationSlug_/editor/$id")({
+export const Route = createFileRoute(
+  "/_authorized/$organizationSlug_/editor/$id",
+)({
   component: RouteComponent,
 });
 
@@ -23,7 +25,7 @@ const getTitleFromContent = (content: JSONContent | undefined) => {
 function RouteComponent() {
   const queryClient = useQueryClient();
   const { id, organizationSlug } = useParams({
-    from: "/_app/$organizationSlug_/editor/$id",
+    from: "/_authorized/$organizationSlug_/editor/$id",
   });
 
   const { data } = useQuery({
