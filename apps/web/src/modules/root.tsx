@@ -1,10 +1,10 @@
+import * as Transition from "@components/transition";
 import {
   Outlet,
   createRootRouteWithContext,
   useRouterState,
 } from "@tanstack/react-router";
 import type { Session, User } from "better-auth";
-import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 
 interface RootContext {
@@ -18,36 +18,31 @@ export const Route = createRootRouteWithContext<RootContext>()({
   component: Root,
 });
 
-const animation = {
-  initial: { opacity: 0 },
-  animate: { opacity: 1 },
-  exit: { opacity: 0 },
-  transition: { duration: 0.3 },
-};
-
 function Root() {
   const initializedRef = useRef(false);
-  const [showApp, setShowApp] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const route = useRouterState();
 
   useEffect(() => {
     if (route.status === "idle" && !initializedRef.current) {
       initializedRef.current = true;
-      setShowApp(true);
+      setIsLoading(false);
     }
   }, [route.status]);
 
   return (
     <>
-      <AnimatePresence initial={false}>
-        {!showApp && (
-          <motion.div
+      <Transition.Root>
+        {isLoading && (
+          <Transition.Item
             key="loader"
-            {...animation}
             className="fixed inset-0 z-50 h-svh w-screen bg-white"
+            transition={{
+              duration: 0.3,
+            }}
           />
         )}
-      </AnimatePresence>
+      </Transition.Root>
       <Outlet />
     </>
   );

@@ -41,8 +41,9 @@ const SelectContent = React.forwardRef<
   <SelectPrimitive.Portal>
     <SelectPrimitive.Content
       ref={ref}
+      position="popper"
       className={cn(
-        "relative z-50 max-h-[--radix-select-content-available-height] min-w-48 flex-col gap-px rounded-xl border border-neutral-200 bg-white py-2 shadow-xl",
+        "relative z-50 h-full max-h-[var(--radix-select-content-available-height)] min-w-[var(--radix-select-trigger-width)] flex-col gap-px rounded-xl border border-neutral-200 bg-white py-2 shadow-xl",
         // transition
         "transition-all",
         // animation

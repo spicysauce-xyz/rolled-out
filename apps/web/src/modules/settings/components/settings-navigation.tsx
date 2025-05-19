@@ -1,5 +1,5 @@
 import * as Sidebar from "@components/layout/sidebar";
-import { UserMenu } from "@modules/dashboard/components/user-menu";
+import { UserMenu } from "@modules/shared/components/user-menu";
 import { Clickable, Text } from "@mono/ui";
 import { Link, useParams } from "@tanstack/react-router";
 import { ArrowLeftIcon, SmartphoneIcon, UserIcon } from "lucide-react";

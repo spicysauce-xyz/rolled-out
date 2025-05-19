@@ -1,7 +1,6 @@
 import * as Page from "@components/layout/page";
-import { Text } from "@mono/ui";
-import { Outlet, createFileRoute } from "@tanstack/react-router";
-import { ChevronRight, HomeIcon } from "lucide-react";
+import { Breadcrumbs } from "@modules/shared/components/breadcrumbs";
+import { Outlet, createFileRoute, useParams } from "@tanstack/react-router";
 import { SettingsNavigation } from "./components/settings-navigation";
 
 export const Route = createFileRoute(
@@ -11,18 +10,16 @@ export const Route = createFileRoute(
 });
 
 function RouteComponent() {
+  const { organizationSlug } = useParams({
+    from: "/_authorized/$organizationSlug_/settings",
+  });
+
   return (
     <Page.Root>
       <SettingsNavigation />
       <Page.Wrapper>
         <Page.Header>
-          <div className="flex items-center gap-2">
-            <HomeIcon className="size-4 text-neutral-500" />
-            <ChevronRight className="size-4 text-neutral-500" />
-            <Text.Root size="sm" weight="medium">
-              Settings
-            </Text.Root>
-          </div>
+          <Breadcrumbs organizationSlug={organizationSlug} page="Settings" />
         </Page.Header>
         <Page.Content className="max-w-180">
           <Outlet />

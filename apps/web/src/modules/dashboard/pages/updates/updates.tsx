@@ -1,6 +1,7 @@
 import * as Page from "@components/layout/page";
 import * as Transition from "@components/transition";
 import { api } from "@lib/api";
+import { Breadcrumbs } from "@modules/shared/components/breadcrumbs";
 import { LinkButton, Text, Toaster } from "@mono/ui";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
@@ -8,7 +9,7 @@ import {
   useNavigate,
   useParams,
 } from "@tanstack/react-router";
-import { ChevronRight, HomeIcon, PlusIcon } from "lucide-react";
+import { PlusIcon } from "lucide-react";
 import { P, match } from "ts-pattern";
 import { UpdatesList } from "./components/updates-list";
 
@@ -81,13 +82,7 @@ function RouteComponent() {
   return (
     <Page.Wrapper>
       <Page.Header className="justify-between">
-        <div className="flex items-center gap-2">
-          <HomeIcon className="size-4 text-neutral-500" />
-          <ChevronRight className="size-4 text-neutral-500" />
-          <Text.Root size="sm" weight="medium">
-            Updates
-          </Text.Root>
-        </div>
+        <Breadcrumbs organizationSlug={organizationSlug} page="Updates" />
         <LinkButton.Root
           isDisabled={createPost.isPending}
           onClick={handleCreateNewUpdate}

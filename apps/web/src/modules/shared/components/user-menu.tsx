@@ -1,16 +1,11 @@
 import * as Confirmer from "@components/feedback/confirmer";
 import { useLogout } from "@hooks/useLogout";
 import { useSession } from "@hooks/useSession";
-import { authClient } from "@lib/auth";
 import { Avatar, Clickable, DropdownMenu, Text, Toaster } from "@mono/ui";
-import { useQuery } from "@tanstack/react-query";
-import { Link, useNavigate, useRouter } from "@tanstack/react-router";
-import { last } from "lodash";
+import { Link } from "@tanstack/react-router";
 import {
-  BuildingIcon,
   EllipsisVerticalIcon,
   LogOutIcon,
-  PlusCircleIcon,
   SettingsIcon,
   User2Icon,
 } from "lucide-react";
@@ -20,36 +15,8 @@ interface UserMenuProps {
 }
 
 export const UserMenu: React.FC<UserMenuProps> = ({ organizationSlug }) => {
-  const navigate = useNavigate();
   const logout = useLogout();
-  const router = useRouter();
   const { data: sessionData } = useSession();
-
-  const { data: organizations } = useQuery({
-    queryKey: ["organizations"],
-    queryFn: async () => {
-      const response = await authClient.organization.list();
-
-      if (response.error) {
-        throw response.error;
-      }
-
-      return response.data;
-    },
-  });
-
-  const handleUpdateActiveOrganization = async (organizationId: string) => {
-    const lastMatch = last(router.state.matches);
-
-    if (!lastMatch) {
-      return;
-    }
-
-    navigate({
-      to: ".",
-      params: { ...lastMatch.params, organizationSlug: organizationId },
-    });
-  };
 
   const handleLogout = async () => {
     const confirmed = await Confirmer.confirm({
@@ -110,30 +77,6 @@ export const UserMenu: React.FC<UserMenuProps> = ({ organizationSlug }) => {
           </div>
         </div>
         <DropdownMenu.Separator />
-        <DropdownMenu.RadioGroup
-          value={organizationSlug}
-          onValueChange={(value) => handleUpdateActiveOrganization(value)}
-        >
-          {organizations?.map((organization) => (
-            <DropdownMenu.RadioItem
-              key={organization.id}
-              value={organization.id}
-            >
-              <DropdownMenu.ItemIcon>
-                <BuildingIcon />
-              </DropdownMenu.ItemIcon>
-              {organization.name}
-            </DropdownMenu.RadioItem>
-          ))}
-        </DropdownMenu.RadioGroup>
-        <DropdownMenu.Item>
-          <DropdownMenu.ItemIcon>
-            <PlusCircleIcon />
-          </DropdownMenu.ItemIcon>
-          New Organization
-        </DropdownMenu.Item>
-        <DropdownMenu.Separator />
-
         <DropdownMenu.Item asChild>
           <Link to="/$organizationSlug/settings" params={{ organizationSlug }}>
             <DropdownMenu.ItemIcon>

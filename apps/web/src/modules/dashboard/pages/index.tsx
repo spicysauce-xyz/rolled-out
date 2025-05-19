@@ -1,23 +1,20 @@
 import * as Page from "@components/layout/page";
-import { Text } from "@mono/ui";
-import { createFileRoute } from "@tanstack/react-router";
-import { ChevronRight, HomeIcon } from "lucide-react";
+import { Breadcrumbs } from "@modules/shared/components/breadcrumbs";
+import { createFileRoute, useParams } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authorized/$organizationSlug/")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
+  const { organizationSlug } = useParams({
+    from: "/_authorized/$organizationSlug",
+  });
+
   return (
     <Page.Wrapper>
       <Page.Header className="justify-between">
-        <div className="flex items-center gap-2">
-          <HomeIcon className="size-4 text-neutral-500" />
-          <ChevronRight className="size-4 text-neutral-500" />
-          <Text.Root size="sm" weight="medium">
-            Analytics
-          </Text.Root>
-        </div>
+        <Breadcrumbs organizationSlug={organizationSlug} page="Dashboard" />
       </Page.Header>
       <Page.Content>Analytics</Page.Content>
     </Page.Wrapper>
