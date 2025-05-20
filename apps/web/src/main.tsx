@@ -1,4 +1,5 @@
 import "./main.css";
+import { useSession } from "@modules/auth/hooks/useSession";
 import { Toaster } from "@mono/ui";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
@@ -7,7 +8,6 @@ import ReactDOM from "react-dom/client";
 import { scan } from "react-scan";
 import * as Confirmer from "./components/feedback/confirmer";
 import { routeTree } from "./generated/router";
-import { useSession } from "./hooks/useSession";
 import { queryClient } from "./lib/api";
 
 scan({

@@ -1,7 +1,7 @@
 import * as Card from "@components/card";
-import { useSession } from "@hooks/useSession";
 import { authClient } from "@lib/auth";
 import useAppForm from "@lib/form";
+import { useSession } from "@modules/auth/hooks/useSession";
 import { Button, Input, Label, Toaster } from "@mono/ui";
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";

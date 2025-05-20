@@ -1,7 +1,6 @@
-import * as Confirmer from "@components/feedback/confirmer";
-import { useLogout } from "@hooks/useLogout";
-import { useSession } from "@hooks/useSession";
-import { Avatar, Clickable, DropdownMenu, Text, Toaster } from "@mono/ui";
+import { useLogout } from "@modules/auth/hooks/useLogout";
+import { useSession } from "@modules/auth/hooks/useSession";
+import { Avatar, Clickable, DropdownMenu, Text } from "@mono/ui";
 import { Link } from "@tanstack/react-router";
 import {
   EllipsisVerticalIcon,
@@ -17,24 +16,6 @@ interface UserMenuProps {
 export const UserMenu: React.FC<UserMenuProps> = ({ organizationSlug }) => {
   const logout = useLogout();
   const { data: sessionData } = useSession();
-
-  const handleLogout = async () => {
-    const confirmed = await Confirmer.confirm({
-      title: "Logout",
-      description: "Are you sure you want to logout?",
-    });
-
-    if (!confirmed) return;
-
-    const toastId = Toaster.loading("Logging out...");
-
-    try {
-      await logout();
-      Toaster.success("Logged out successfully", { id: toastId });
-    } catch {
-      Toaster.error("Failed to log out", { id: toastId });
-    }
-  };
 
   return (
     <DropdownMenu.Root>
@@ -85,7 +66,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({ organizationSlug }) => {
             Settings
           </Link>
         </DropdownMenu.Item>
-        <DropdownMenu.Item onClick={handleLogout}>
+        <DropdownMenu.Item onClick={logout}>
           <DropdownMenu.ItemIcon>
             <LogOutIcon />
           </DropdownMenu.ItemIcon>

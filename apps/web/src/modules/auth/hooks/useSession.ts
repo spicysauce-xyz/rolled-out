@@ -1,5 +1,5 @@
+import { authClient } from "@lib/auth";
 import { useQuery } from "@tanstack/react-query";
-import { authClient } from "../lib/auth";
 
 export const useSession = () => {
   return useQuery({

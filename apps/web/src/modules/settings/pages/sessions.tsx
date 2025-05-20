@@ -1,15 +1,22 @@
 import * as Card from "@components/card";
 import * as Confirmer from "@components/feedback/confirmer";
 import * as Transition from "@components/transition";
-import { useSession } from "@hooks/useSession";
 import { authClient } from "@lib/auth";
+import { useLogout } from "@modules/auth/hooks/useLogout";
+import { useSession } from "@modules/auth/hooks/useSession";
 import { Button, Skeleton, Text, Toaster } from "@mono/ui";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import type { Session } from "better-auth";
 import { format } from "date-fns";
-import { BanIcon, MonitorIcon, SmartphoneIcon, TabletIcon } from "lucide-react";
-import { P, match } from "ts-pattern";
+import {
+  BanIcon,
+  LogOutIcon,
+  MonitorIcon,
+  SmartphoneIcon,
+  TabletIcon,
+} from "lucide-react";
+import { match } from "ts-pattern";
 import { UAParser } from "ua-parser-js";
 
 export const Route = createFileRoute(
@@ -21,6 +28,7 @@ export const Route = createFileRoute(
 function RouteComponent() {
   const queryClient = useQueryClient();
   const { data: currentSessionData } = useSession();
+  const logout = useLogout();
 
   const sessionsQuery = useQuery({
     queryKey: ["sessions"],
@@ -35,7 +43,7 @@ function RouteComponent() {
     },
   });
 
-  const revokeSessionMutation = useMutation({
+  const terminateSessionMutation = useMutation({
     mutationFn: async (data: { sessionToken: string }) => {
       const response = await authClient.revokeSession({
         token: data.sessionToken,
@@ -52,16 +60,16 @@ function RouteComponent() {
     },
   });
 
-  const handleRevokeSession = async (session: Session) => {
+  const handleTerminateSession = async (session: Session) => {
     const parser = new UAParser(session.userAgent || "");
     const browser = parser.getBrowser();
     const os = parser.getOS();
 
     const confirmed = await Confirmer.confirm({
-      title: "Revoke Session",
+      title: "Terminate Session",
       description: (
         <>
-          Are you sure you want to revoke{" "}
+          Are you sure you want to terminate{" "}
           <Text.Root size="sm" weight="medium" asChild>
             <span>
               {browser.name} on {os.name} ({os.version})
@@ -72,24 +80,67 @@ function RouteComponent() {
       ),
       action: {
         icon: BanIcon,
-        label: "Revoke",
+        label: "Terminate",
         color: "danger",
       },
     });
 
     if (!confirmed) return;
 
-    const toastId = Toaster.loading("Revoking session...");
+    const toastId = Toaster.loading("Terminating session...");
 
     try {
-      await revokeSessionMutation.mutateAsync({
+      await terminateSessionMutation.mutateAsync({
         sessionToken: session.token,
       });
-      Toaster.success("Session revoked", {
+      Toaster.success("Session terminated", {
         id: toastId,
       });
     } catch {
-      Toaster.error("Failed to revoke session", {
+      Toaster.error("Failed to terminate session", {
+        id: toastId,
+      });
+    }
+  };
+
+  const terminateOtherSessionsMutation = useMutation({
+    mutationFn: async () => {
+      const response = await authClient.revokeOtherSessions();
+
+      if (response.error) {
+        throw response.error;
+      }
+
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["sessions"] });
+    },
+  });
+
+  const handleTerminateOtherSessions = async () => {
+    const confirmed = await Confirmer.confirm({
+      title: "Terminate Other Sessions",
+      description: "Are you sure you want to terminate all other sessions?",
+      phrase: "yes",
+      action: {
+        icon: BanIcon,
+        label: "Terminate",
+        color: "danger",
+      },
+    });
+
+    if (!confirmed) return;
+
+    const toastId = Toaster.loading("Terminating other sessions...");
+
+    try {
+      await terminateOtherSessionsMutation.mutateAsync();
+      Toaster.success("Other sessions terminated", {
+        id: toastId,
+      });
+    } catch {
+      Toaster.error("Failed to terminate other sessions", {
         id: toastId,
       });
     }
@@ -126,14 +177,6 @@ function RouteComponent() {
                 <div>Error</div>
               </Transition.Item>
             ))
-            .with(
-              { isSuccess: true, data: P.when((data) => data.length === 0) },
-              () => (
-                <Transition.Item key="empty">
-                  <div>No sessions</div>
-                </Transition.Item>
-              ),
-            )
             .otherwise(({ data }) => (
               <Transition.Item key="list" className="flex flex-col gap-4">
                 {data.map((session) => {
@@ -178,16 +221,27 @@ function RouteComponent() {
                           </Text.Root>
                         </div>
                       </div>
-                      {!isCurrentSession && (
+                      {isCurrentSession ? (
                         <Button.Root
-                          onClick={() => handleRevokeSession(session)}
+                          onClick={logout}
+                          className="opacity-0 transition-[background-color,border-color,opacity] group-hover:opacity-100"
+                          variant="tertiary"
+                        >
+                          <Button.Icon>
+                            <LogOutIcon />
+                          </Button.Icon>
+                          Logout
+                        </Button.Root>
+                      ) : (
+                        <Button.Root
+                          onClick={() => handleTerminateSession(session)}
                           className="opacity-0 transition-[background-color,border-color,opacity] group-hover:opacity-100"
                           variant="tertiary"
                         >
                           <Button.Icon>
                             <BanIcon />
                           </Button.Icon>
-                          Revoke Session
+                          Terminate
                         </Button.Root>
                       )}
                     </div>
@@ -199,11 +253,15 @@ function RouteComponent() {
       </Card.Content>
       {sessionsQuery.data && sessionsQuery.data.length > 1 && (
         <Card.Footer>
-          <Button.Root variant="secondary">
+          <Button.Root
+            variant="secondary"
+            color="danger"
+            onClick={handleTerminateOtherSessions}
+          >
             <Button.Icon>
               <BanIcon />
             </Button.Icon>
-            Revoke Other Sessions
+            Terminate Other Sessions
           </Button.Root>
         </Card.Footer>
       )}

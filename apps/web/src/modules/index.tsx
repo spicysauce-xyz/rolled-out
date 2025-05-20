@@ -1,7 +1,7 @@
 import * as Confirmer from "@components/feedback/confirmer";
 import * as Sidebar from "@components/layout/sidebar";
-import { useLogout } from "@hooks/useLogout";
 import { authClient } from "@lib/auth";
+import { useLogout } from "@modules/auth/hooks/useLogout";
 import { Avatar, Clickable, LinkButton, Text, Toaster } from "@mono/ui";
 import { useQuery } from "@tanstack/react-query";
 import { Link, createFileRoute } from "@tanstack/react-router";
