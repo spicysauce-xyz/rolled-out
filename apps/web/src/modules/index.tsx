@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { ChevronRightIcon, PlusIcon } from "lucide-react";
 
-export const Route = createFileRoute("/_authorized")({
+export const Route = createFileRoute("/_authorized/")({
   component: RouteComponent,
 });
 

@@ -17,6 +17,7 @@ import { Route as authPagesSignupImport } from './../modules/auth/pages/signup'
 import { Route as authPagesLoginImport } from './../modules/auth/pages/login'
 import { Route as sharedLayoutsAuthorizedImport } from './../modules/shared/layouts/authorized'
 import { Route as dashboardDashboardlayoutImport } from './../modules/dashboard/Dashboard.layout'
+import { Route as indexImport } from './../modules/index'
 import { Route as dashboardPagesUpdatesIndexImport } from './../modules/dashboard/pages/updates/index'
 import { Route as dashboardPagesIndexImport } from './../modules/dashboard/pages/index'
 import { Route as settingsSettingslayoutImport } from './../modules/settings/Settings.layout'
@@ -65,6 +66,12 @@ const AuthorizedOrganizationSlugRoute = AuthorizedOrganizationSlugImport.update(
 const dashboardDashboardlayoutRoute = dashboardDashboardlayoutImport.update({
   id: '/$organizationSlug',
   path: '/$organizationSlug',
+  getParentRoute: () => sharedLayoutsAuthorizedRoute,
+} as any)
+
+const indexRoute = indexImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => sharedLayoutsAuthorizedRoute,
 } as any)
 
@@ -149,6 +156,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/signup'
       preLoaderRoute: typeof authPagesSignupImport
       parentRoute: typeof rootRoute
+    }
+    '/_authorized/': {
+      id: '/_authorized/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof indexImport
+      parentRoute: typeof sharedLayoutsAuthorizedImport
     }
     '/_authorized/$organizationSlug': {
       id: '/_authorized/$organizationSlug'
@@ -300,12 +314,14 @@ const AuthorizedOrganizationSlugRouteWithChildren =
   )
 
 interface sharedLayoutsAuthorizedRouteChildren {
+  indexRoute: typeof indexRoute
   dashboardDashboardlayoutRoute: typeof dashboardDashboardlayoutRouteWithChildren
   AuthorizedOrganizationSlugRoute: typeof AuthorizedOrganizationSlugRouteWithChildren
 }
 
 const sharedLayoutsAuthorizedRouteChildren: sharedLayoutsAuthorizedRouteChildren =
   {
+    indexRoute: indexRoute,
     dashboardDashboardlayoutRoute: dashboardDashboardlayoutRouteWithChildren,
     AuthorizedOrganizationSlugRoute:
       AuthorizedOrganizationSlugRouteWithChildren,
@@ -320,6 +336,7 @@ export interface FileRoutesByFullPath {
   '': typeof sharedLayoutsAuthorizedRouteWithChildren
   '/login': typeof authPagesLoginRoute
   '/signup': typeof authPagesSignupRoute
+  '/': typeof indexRoute
   '/$organizationSlug': typeof AuthorizedOrganizationSlugRouteWithChildren
   '/$organizationSlug/contacts': typeof dashboardPagesContactsRoute
   '/$organizationSlug/editor': typeof AuthorizedOrganizationSlugEditorRouteWithChildren
@@ -333,9 +350,9 @@ export interface FileRoutesByFullPath {
 }
 
 export interface FileRoutesByTo {
-  '': typeof sharedLayoutsAuthorizedRouteWithChildren
   '/login': typeof authPagesLoginRoute
   '/signup': typeof authPagesSignupRoute
+  '/': typeof indexRoute
   '/$organizationSlug': typeof dashboardPagesIndexRoute
   '/$organizationSlug/contacts': typeof dashboardPagesContactsRoute
   '/$organizationSlug/editor': typeof AuthorizedOrganizationSlugEditorRouteWithChildren
@@ -352,6 +369,7 @@ export interface FileRoutesById {
   '/_authorized': typeof sharedLayoutsAuthorizedRouteWithChildren
   '/login': typeof authPagesLoginRoute
   '/signup': typeof authPagesSignupRoute
+  '/_authorized/': typeof indexRoute
   '/_authorized/$organizationSlug': typeof dashboardDashboardlayoutRouteWithChildren
   '/_authorized/$organizationSlug_': typeof AuthorizedOrganizationSlugRouteWithChildren
   '/_authorized/$organizationSlug/contacts': typeof dashboardPagesContactsRoute
@@ -371,6 +389,7 @@ export interface FileRouteTypes {
     | ''
     | '/login'
     | '/signup'
+    | '/'
     | '/$organizationSlug'
     | '/$organizationSlug/contacts'
     | '/$organizationSlug/editor'
@@ -383,9 +402,9 @@ export interface FileRouteTypes {
     | '/$organizationSlug/settings/sessions'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | ''
     | '/login'
     | '/signup'
+    | '/'
     | '/$organizationSlug'
     | '/$organizationSlug/contacts'
     | '/$organizationSlug/editor'
@@ -400,6 +419,7 @@ export interface FileRouteTypes {
     | '/_authorized'
     | '/login'
     | '/signup'
+    | '/_authorized/'
     | '/_authorized/$organizationSlug'
     | '/_authorized/$organizationSlug_'
     | '/_authorized/$organizationSlug/contacts'
@@ -444,6 +464,7 @@ export const routeTree = rootRoute
     "/_authorized": {
       "filePath": "shared/layouts/authorized.tsx",
       "children": [
+        "/_authorized/",
         "/_authorized/$organizationSlug",
         "/_authorized/$organizationSlug_"
       ]
@@ -453,6 +474,10 @@ export const routeTree = rootRoute
     },
     "/signup": {
       "filePath": "auth/pages/signup.tsx"
+    },
+    "/_authorized/": {
+      "filePath": "index.tsx",
+      "parent": "/_authorized"
     },
     "/_authorized/$organizationSlug": {
       "filePath": "dashboard/Dashboard.layout.tsx",
