@@ -1,7 +1,8 @@
 import { Database } from "@database";
+import { Email } from "@email";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { organization } from "better-auth/plugins";
+import { magicLink, organization } from "better-auth/plugins";
 
 export const auth: ReturnType<typeof betterAuth> = betterAuth({
   basePath: "/auth",
@@ -28,5 +29,29 @@ export const auth: ReturnType<typeof betterAuth> = betterAuth({
   advanced: {
     generateId: false,
   },
-  plugins: [organization()],
+  plugins: [
+    organization(),
+    magicLink({
+      sendMagicLink: async (data) => {
+        // TODO: Implement welcome email template
+        // TODO: Throw proper error (return error json) if email fails to send
+        return Email.send({
+          to: data.email,
+          subject: "",
+          html: "",
+        });
+      },
+    }),
+  ],
+  rateLimit: {
+    enabled: true,
+    max: 100,
+    window: 10,
+    customRules: {
+      "/sign-in/magic-link": {
+        max: 1,
+        window: 30,
+      },
+    },
+  },
 });

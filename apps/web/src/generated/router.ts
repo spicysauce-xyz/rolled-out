@@ -13,7 +13,6 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './../modules/root'
-import { Route as authPagesSignupImport } from './../modules/auth/pages/signup'
 import { Route as authPagesLoginImport } from './../modules/auth/pages/login'
 import { Route as sharedLayoutsAuthorizedImport } from './../modules/shared/layouts/authorized'
 import { Route as dashboardDashboardlayoutImport } from './../modules/dashboard/Dashboard.layout'
@@ -37,12 +36,6 @@ const AuthorizedOrganizationSlugEditorImport = createFileRoute(
 )()
 
 // Create/Update Routes
-
-const authPagesSignupRoute = authPagesSignupImport.update({
-  id: '/signup',
-  path: '/signup',
-  getParentRoute: () => rootRoute,
-} as any)
 
 const authPagesLoginRoute = authPagesLoginImport.update({
   id: '/login',
@@ -148,13 +141,6 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof authPagesLoginImport
-      parentRoute: typeof rootRoute
-    }
-    '/signup': {
-      id: '/signup'
-      path: '/signup'
-      fullPath: '/signup'
-      preLoaderRoute: typeof authPagesSignupImport
       parentRoute: typeof rootRoute
     }
     '/_authorized/': {
@@ -335,7 +321,6 @@ const sharedLayoutsAuthorizedRouteWithChildren =
 export interface FileRoutesByFullPath {
   '': typeof sharedLayoutsAuthorizedRouteWithChildren
   '/login': typeof authPagesLoginRoute
-  '/signup': typeof authPagesSignupRoute
   '/': typeof indexRoute
   '/$organizationSlug': typeof AuthorizedOrganizationSlugRouteWithChildren
   '/$organizationSlug/contacts': typeof dashboardPagesContactsRoute
@@ -351,7 +336,6 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/login': typeof authPagesLoginRoute
-  '/signup': typeof authPagesSignupRoute
   '/': typeof indexRoute
   '/$organizationSlug': typeof dashboardPagesIndexRoute
   '/$organizationSlug/contacts': typeof dashboardPagesContactsRoute
@@ -368,7 +352,6 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/_authorized': typeof sharedLayoutsAuthorizedRouteWithChildren
   '/login': typeof authPagesLoginRoute
-  '/signup': typeof authPagesSignupRoute
   '/_authorized/': typeof indexRoute
   '/_authorized/$organizationSlug': typeof dashboardDashboardlayoutRouteWithChildren
   '/_authorized/$organizationSlug_': typeof AuthorizedOrganizationSlugRouteWithChildren
@@ -388,7 +371,6 @@ export interface FileRouteTypes {
   fullPaths:
     | ''
     | '/login'
-    | '/signup'
     | '/'
     | '/$organizationSlug'
     | '/$organizationSlug/contacts'
@@ -403,7 +385,6 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
-    | '/signup'
     | '/'
     | '/$organizationSlug'
     | '/$organizationSlug/contacts'
@@ -418,7 +399,6 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_authorized'
     | '/login'
-    | '/signup'
     | '/_authorized/'
     | '/_authorized/$organizationSlug'
     | '/_authorized/$organizationSlug_'
@@ -437,13 +417,11 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   sharedLayoutsAuthorizedRoute: typeof sharedLayoutsAuthorizedRouteWithChildren
   authPagesLoginRoute: typeof authPagesLoginRoute
-  authPagesSignupRoute: typeof authPagesSignupRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   sharedLayoutsAuthorizedRoute: sharedLayoutsAuthorizedRouteWithChildren,
   authPagesLoginRoute: authPagesLoginRoute,
-  authPagesSignupRoute: authPagesSignupRoute,
 }
 
 export const routeTree = rootRoute
@@ -457,8 +435,7 @@ export const routeTree = rootRoute
       "filePath": "root.tsx",
       "children": [
         "/_authorized",
-        "/login",
-        "/signup"
+        "/login"
       ]
     },
     "/_authorized": {
@@ -471,9 +448,6 @@ export const routeTree = rootRoute
     },
     "/login": {
       "filePath": "auth/pages/login.tsx"
-    },
-    "/signup": {
-      "filePath": "auth/pages/signup.tsx"
     },
     "/_authorized/": {
       "filePath": "index.tsx",

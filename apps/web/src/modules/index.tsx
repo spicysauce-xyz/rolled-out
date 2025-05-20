@@ -1,8 +1,7 @@
-import * as Confirmer from "@components/feedback/confirmer";
 import * as Sidebar from "@components/layout/sidebar";
 import { authClient } from "@lib/auth";
 import { useLogout } from "@modules/auth/hooks/useLogout";
-import { Avatar, Clickable, LinkButton, Text, Toaster } from "@mono/ui";
+import { Avatar, Clickable, LinkButton, Text } from "@mono/ui";
 import { useQuery } from "@tanstack/react-query";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { ChevronRightIcon, PlusIcon } from "lucide-react";
@@ -13,24 +12,6 @@ export const Route = createFileRoute("/_authorized/")({
 
 function RouteComponent() {
   const logout = useLogout();
-
-  const handleLogout = async () => {
-    const confirmed = await Confirmer.confirm({
-      title: "Logout",
-      description: "Are you sure you want to logout?",
-    });
-
-    if (!confirmed) return;
-
-    const toastId = Toaster.loading("Logging out...");
-
-    try {
-      await logout();
-      Toaster.success("Logged out successfully", { id: toastId });
-    } catch {
-      Toaster.error("Failed to log out", { id: toastId });
-    }
-  };
 
   const { data: organizations } = useQuery({
     queryKey: ["organizations"],
@@ -105,7 +86,7 @@ function RouteComponent() {
           </div>
         </Clickable.Root>
       </div>
-      <LinkButton.Root onClick={handleLogout} color="muted">
+      <LinkButton.Root onClick={logout} color="muted">
         Want to log out?
       </LinkButton.Root>
     </div>

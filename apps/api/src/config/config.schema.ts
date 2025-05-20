@@ -6,6 +6,7 @@ export const configSchema = z.object({
   DATABASE_USERNAME: z.string(),
   DATABASE_PASSWORD: z.string(),
   DATABASE_NAME: z.string(),
+  RESEND_API_KEY: z.string(),
 });
 
 const formatConfig = () => {
@@ -18,6 +19,9 @@ const formatConfig = () => {
       username: config.DATABASE_USERNAME,
       password: config.DATABASE_PASSWORD,
       name: config.DATABASE_NAME,
+    },
+    resend: {
+      apiKey: config.RESEND_API_KEY,
     },
   };
 };
