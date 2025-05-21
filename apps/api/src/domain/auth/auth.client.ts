@@ -12,18 +12,18 @@ export const auth: ReturnType<typeof betterAuth> = betterAuth({
   account: {
     accountLinking: {
       enabled: true,
+      trustedProviders: ["google", "github"],
     },
   },
-  session: {
-    additionalFields: {
-      activeOrganizationId: {
-        type: "string",
-        required: false,
-      },
+  socialProviders: {
+    google: {
+      clientId: "100000000000000000000",
+      clientSecret: "100000000000000000000",
     },
-  },
-  emailAndPassword: {
-    enabled: true,
+    github: {
+      clientId: "100000000000000000000",
+      clientSecret: "100000000000000000000",
+    },
   },
   trustedOrigins: ["http://localhost:5173", "http://localhost:4173"],
   advanced: {
@@ -33,6 +33,7 @@ export const auth: ReturnType<typeof betterAuth> = betterAuth({
     organization(),
     magicLink({
       sendMagicLink: async (data) => {
+        console.log("Magic link sent to", data.email, data.url);
         // TODO: Implement welcome email template
         // TODO: Throw proper error (return error json) if email fails to send
         return Email.send({
