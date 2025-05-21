@@ -11,7 +11,7 @@ import { ArrowLeftIcon, ClockIcon, SendIcon } from "lucide-react";
 import { useCallback, useMemo } from "react";
 
 export const Route = createFileRoute(
-  "/_authorized/$organizationSlug_/editor/$id",
+  "/_authorized/$organizationSlug/editor/$id",
 )({
   component: RouteComponent,
 });
@@ -25,7 +25,7 @@ const getTitleFromContent = (content: JSONContent | undefined) => {
 function RouteComponent() {
   const queryClient = useQueryClient();
   const { id, organizationSlug } = useParams({
-    from: "/_authorized/$organizationSlug_/editor/$id",
+    from: "/_authorized/$organizationSlug/editor/$id",
   });
 
   const { data } = useQuery({

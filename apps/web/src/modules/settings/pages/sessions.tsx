@@ -20,7 +20,7 @@ import { match } from "ts-pattern";
 import { UAParser } from "ua-parser-js";
 
 export const Route = createFileRoute(
-  "/_authorized/$organizationSlug_/settings/sessions",
+  "/_authorized/$organizationSlug/settings/sessions",
 )({
   component: RouteComponent,
 });

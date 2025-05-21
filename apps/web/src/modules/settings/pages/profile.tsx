@@ -9,7 +9,7 @@ import { MailIcon, SaveIcon, UserIcon } from "lucide-react";
 import { z } from "zod";
 
 export const Route = createFileRoute(
-  "/_authorized/$organizationSlug_/settings/profile",
+  "/_authorized/$organizationSlug/settings/profile",
 )({
   component: RouteComponent,
 });

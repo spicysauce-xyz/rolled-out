@@ -8,12 +8,8 @@ export const routes = rootRoute("root.tsx", [
   ...authRoutes,
   layout("shared/layouts/authorized.tsx", [
     index("index.tsx"),
-    route(
-      "/$organizationSlug",
-      "dashboard/Dashboard.layout.tsx",
-      dashboardRoutes,
-    ),
-    route("/$organizationSlug_", [
+    route("/$organizationSlug", "shared/layouts/organization.tsx", [
+      layout("dashboard/Dashboard.layout.tsx", dashboardRoutes),
       route("/settings", "settings/Settings.layout.tsx", settingsRoutes),
       route("/editor", editorRoutes),
     ]),

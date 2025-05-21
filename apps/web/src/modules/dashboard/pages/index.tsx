@@ -2,7 +2,7 @@ import * as Page from "@components/layout/page";
 import { Breadcrumbs } from "@modules/shared/components/breadcrumbs";
 import { createFileRoute, useParams } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/_authorized/$organizationSlug/")({
+export const Route = createFileRoute("/_authorized/$organizationSlug/_Dashboard.layout/")({
   component: RouteComponent,
 });
 

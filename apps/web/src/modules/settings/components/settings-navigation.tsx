@@ -6,7 +6,7 @@ import { ArrowLeftIcon, SmartphoneIcon, UserIcon } from "lucide-react";
 
 export const SettingsNavigation = () => {
   const { organizationSlug } = useParams({
-    from: "/_authorized/$organizationSlug_/settings",
+    from: "/_authorized/$organizationSlug/settings",
   });
 
   return (

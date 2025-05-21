@@ -30,7 +30,7 @@
     "forceConsistentCasingInFileNames": true
   },
   "exclude": ["node_modules", "dist"],
-  "include": ["src", "src/routes/_app/$organizationSlug_/settings/profile.tsx"],
+  "include": ["src"],
   "references": [
     { "path": "./tsconfig.node.json" },
     { "path": "../api/tsconfig.json" }

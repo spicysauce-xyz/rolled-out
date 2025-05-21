@@ -2,15 +2,15 @@ import * as Page from "@components/layout/page";
 import { Breadcrumbs } from "@modules/shared/components/breadcrumbs";
 import { createFileRoute, useParams } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/_authorized/$organizationSlug/contacts")(
-  {
-    component: RouteComponent,
-  },
-);
+export const Route = createFileRoute(
+  "/_authorized/$organizationSlug/_Dashboard.layout/contacts",
+)({
+  component: RouteComponent,
+});
 
 function RouteComponent() {
   const { organizationSlug } = useParams({
-    from: "/_authorized/$organizationSlug/contacts",
+    from: "/_authorized/$organizationSlug/_Dashboard.layout/contacts",
   });
 
   return (

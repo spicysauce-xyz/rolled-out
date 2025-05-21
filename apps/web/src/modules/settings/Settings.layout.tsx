@@ -3,15 +3,15 @@ import { Breadcrumbs } from "@modules/shared/components/breadcrumbs";
 import { Outlet, createFileRoute, useParams } from "@tanstack/react-router";
 import { SettingsNavigation } from "./components/settings-navigation";
 
-export const Route = createFileRoute(
-  "/_authorized/$organizationSlug_/settings",
-)({
-  component: RouteComponent,
-});
+export const Route = createFileRoute("/_authorized/$organizationSlug/settings")(
+  {
+    component: RouteComponent,
+  },
+);
 
 function RouteComponent() {
   const { organizationSlug } = useParams({
-    from: "/_authorized/$organizationSlug_/settings",
+    from: "/_authorized/$organizationSlug/settings",
   });
 
   return (
