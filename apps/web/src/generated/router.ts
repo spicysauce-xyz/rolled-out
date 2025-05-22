@@ -19,6 +19,7 @@ import { Route as sharedLayoutsOrganizationImport } from './../modules/shared/la
 import { Route as indexImport } from './../modules/index'
 import { Route as settingsSettingslayoutImport } from './../modules/settings/Settings.layout'
 import { Route as dashboardDashboardlayoutImport } from './../modules/dashboard/Dashboard.layout'
+import { Route as settingsPagesMembersIndexImport } from './../modules/settings/pages/members/index'
 import { Route as dashboardPagesUpdatesIndexImport } from './../modules/dashboard/pages/updates/index'
 import { Route as dashboardPagesIndexImport } from './../modules/dashboard/pages/index'
 import { Route as settingsPagesSessionsImport } from './../modules/settings/pages/sessions'
@@ -74,6 +75,12 @@ const AuthorizedOrganizationSlugEditorRoute =
 const dashboardDashboardlayoutRoute = dashboardDashboardlayoutImport.update({
   id: '/_Dashboard.layout',
   getParentRoute: () => sharedLayoutsOrganizationRoute,
+} as any)
+
+const settingsPagesMembersIndexRoute = settingsPagesMembersIndexImport.update({
+  id: '/members',
+  path: '/members',
+  getParentRoute: () => settingsSettingslayoutRoute,
 } as any)
 
 const dashboardPagesUpdatesIndexRoute = dashboardPagesUpdatesIndexImport.update(
@@ -222,6 +229,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof dashboardPagesUpdatesIndexImport
       parentRoute: typeof dashboardDashboardlayoutImport
     }
+    '/_authorized/$organizationSlug/settings/members': {
+      id: '/_authorized/$organizationSlug/settings/members'
+      path: '/members'
+      fullPath: '/$organizationSlug/settings/members'
+      preLoaderRoute: typeof settingsPagesMembersIndexImport
+      parentRoute: typeof settingsSettingslayoutImport
+    }
   }
 }
 
@@ -263,6 +277,7 @@ interface settingsSettingslayoutRouteChildren {
   settingsPagesSplatRoute: typeof settingsPagesSplatRoute
   settingsPagesProfileRoute: typeof settingsPagesProfileRoute
   settingsPagesSessionsRoute: typeof settingsPagesSessionsRoute
+  settingsPagesMembersIndexRoute: typeof settingsPagesMembersIndexRoute
 }
 
 const settingsSettingslayoutRouteChildren: settingsSettingslayoutRouteChildren =
@@ -270,6 +285,7 @@ const settingsSettingslayoutRouteChildren: settingsSettingslayoutRouteChildren =
     settingsPagesSplatRoute: settingsPagesSplatRoute,
     settingsPagesProfileRoute: settingsPagesProfileRoute,
     settingsPagesSessionsRoute: settingsPagesSessionsRoute,
+    settingsPagesMembersIndexRoute: settingsPagesMembersIndexRoute,
   }
 
 const settingsSettingslayoutRouteWithChildren =
@@ -326,6 +342,7 @@ export interface FileRoutesByFullPath {
   '/$organizationSlug/settings/sessions': typeof settingsPagesSessionsRoute
   '/$organizationSlug/': typeof dashboardPagesIndexRoute
   '/$organizationSlug/updates': typeof dashboardPagesUpdatesIndexRoute
+  '/$organizationSlug/settings/members': typeof settingsPagesMembersIndexRoute
 }
 
 export interface FileRoutesByTo {
@@ -340,6 +357,7 @@ export interface FileRoutesByTo {
   '/$organizationSlug/settings/profile': typeof settingsPagesProfileRoute
   '/$organizationSlug/settings/sessions': typeof settingsPagesSessionsRoute
   '/$organizationSlug/updates': typeof dashboardPagesUpdatesIndexRoute
+  '/$organizationSlug/settings/members': typeof settingsPagesMembersIndexRoute
 }
 
 export interface FileRoutesById {
@@ -358,6 +376,7 @@ export interface FileRoutesById {
   '/_authorized/$organizationSlug/settings/sessions': typeof settingsPagesSessionsRoute
   '/_authorized/$organizationSlug/_Dashboard.layout/': typeof dashboardPagesIndexRoute
   '/_authorized/$organizationSlug/_Dashboard.layout/updates': typeof dashboardPagesUpdatesIndexRoute
+  '/_authorized/$organizationSlug/settings/members': typeof settingsPagesMembersIndexRoute
 }
 
 export interface FileRouteTypes {
@@ -376,6 +395,7 @@ export interface FileRouteTypes {
     | '/$organizationSlug/settings/sessions'
     | '/$organizationSlug/'
     | '/$organizationSlug/updates'
+    | '/$organizationSlug/settings/members'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
@@ -389,6 +409,7 @@ export interface FileRouteTypes {
     | '/$organizationSlug/settings/profile'
     | '/$organizationSlug/settings/sessions'
     | '/$organizationSlug/updates'
+    | '/$organizationSlug/settings/members'
   id:
     | '__root__'
     | '/_authorized'
@@ -405,6 +426,7 @@ export interface FileRouteTypes {
     | '/_authorized/$organizationSlug/settings/sessions'
     | '/_authorized/$organizationSlug/_Dashboard.layout/'
     | '/_authorized/$organizationSlug/_Dashboard.layout/updates'
+    | '/_authorized/$organizationSlug/settings/members'
   fileRoutesById: FileRoutesById
 }
 
@@ -477,7 +499,8 @@ export const routeTree = rootRoute
       "children": [
         "/_authorized/$organizationSlug/settings/$",
         "/_authorized/$organizationSlug/settings/profile",
-        "/_authorized/$organizationSlug/settings/sessions"
+        "/_authorized/$organizationSlug/settings/sessions",
+        "/_authorized/$organizationSlug/settings/members"
       ]
     },
     "/_authorized/$organizationSlug/_Dashboard.layout/contacts": {
@@ -507,6 +530,10 @@ export const routeTree = rootRoute
     "/_authorized/$organizationSlug/_Dashboard.layout/updates": {
       "filePath": "dashboard/pages/updates/index.tsx",
       "parent": "/_authorized/$organizationSlug/_Dashboard.layout"
+    },
+    "/_authorized/$organizationSlug/settings/members": {
+      "filePath": "settings/pages/members/index.tsx",
+      "parent": "/_authorized/$organizationSlug/settings"
     }
   }
 }

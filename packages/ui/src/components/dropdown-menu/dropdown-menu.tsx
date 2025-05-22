@@ -95,7 +95,7 @@ const DropdownMenuContent = React.forwardRef<
       collisionPadding={8}
       hideWhenDetached
       className={cn(
-        "z-50 flex max-h-[var(--radix-dropdown-menu-content-available-height)] min-w-48 flex-col gap-px rounded-xl border border-neutral-100 bg-white py-2 shadow-xl",
+        "z-50 flex max-h-[var(--radix-dropdown-menu-content-available-height)] flex-col gap-px rounded-xl border border-neutral-100 bg-white py-2 shadow-xl",
         // transition
         "transition-all",
         // animation

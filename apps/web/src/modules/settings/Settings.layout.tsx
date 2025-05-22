@@ -21,7 +21,7 @@ function RouteComponent() {
         <Page.Header>
           <Breadcrumbs organizationSlug={organizationSlug} page="Settings" />
         </Page.Header>
-        <Page.Content className="max-w-180">
+        <Page.Content className="mx-auto w-full max-w-180">
           <Outlet />
         </Page.Content>
       </Page.Wrapper>

@@ -2,7 +2,7 @@ import * as Sidebar from "@components/layout/sidebar";
 import { UserMenu } from "@modules/shared/components/user-menu";
 import { Clickable, Text } from "@mono/ui";
 import { Link, useParams } from "@tanstack/react-router";
-import { ArrowLeftIcon, SmartphoneIcon, UserIcon } from "lucide-react";
+import { ArrowLeftIcon, SmartphoneIcon, User2Icon, Users2 } from "lucide-react";
 
 export const SettingsNavigation = () => {
   const { organizationSlug } = useParams({
@@ -35,13 +35,21 @@ export const SettingsNavigation = () => {
               to="/$organizationSlug/settings/profile"
               params={{ organizationSlug }}
               label="Profile"
-              icon={UserIcon}
+              icon={User2Icon}
             />
             <Sidebar.NavLink
               to="/$organizationSlug/settings/sessions"
               params={{ organizationSlug }}
               label="Devices & Sessions"
               icon={SmartphoneIcon}
+            />
+          </Sidebar.Group>
+          <Sidebar.Group label="Organization">
+            <Sidebar.NavLink
+              to="/$organizationSlug/settings/members"
+              params={{ organizationSlug }}
+              label="Members"
+              icon={Users2}
             />
           </Sidebar.Group>
         </div>

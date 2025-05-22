@@ -1,6 +1,6 @@
 import { GroupBy } from "@components/group-by";
 import * as UpdateEntry from "@components/update-entry";
-import type { api } from "@lib/api";
+import type { SuccessResponse, api } from "@lib/api";
 import { IconButton, Skeleton, Text, Tooltip } from "@mono/ui";
 import type { InferResponseType } from "hono/client";
 import { CircleCheckIcon, CircleDashedIcon, ClockIcon } from "lucide-react";
@@ -11,13 +11,6 @@ import {
   MousePointer2,
 } from "lucide-react";
 import type React from "react";
-
-// TODO: Move to utils/types
-type SuccessResponse<
-  T extends
-    | { success: true; data: unknown }
-    | { success: false; error: unknown },
-> = T extends { success: true } ? T["data"] : never;
 
 type Update = SuccessResponse<
   InferResponseType<

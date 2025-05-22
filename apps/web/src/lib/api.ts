@@ -16,3 +16,9 @@ declare module "@tanstack/react-query" {
     defaultError: ApiError;
   }
 }
+
+export type SuccessResponse<
+  T extends
+    | { success: true; data: unknown }
+    | { success: false; error: unknown },
+> = T extends { success: true } ? T["data"] : never;

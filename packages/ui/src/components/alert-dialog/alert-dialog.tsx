@@ -104,15 +104,13 @@ const AlertDialogDescription = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof Text.Root>
 >(({ className, ...props }, ref) => (
   <AlertDialogPrimitive.Description asChild>
-    <AlertDialogPrimitive.Title asChild>
-      <Text.Root
-        ref={ref}
-        size="sm"
-        color="muted"
-        className={className}
-        {...props}
-      />
-    </AlertDialogPrimitive.Title>
+    <Text.Root
+      ref={ref}
+      size="sm"
+      color="muted"
+      className={className}
+      {...props}
+    />
   </AlertDialogPrimitive.Description>
 ));
 

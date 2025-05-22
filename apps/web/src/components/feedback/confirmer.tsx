@@ -89,7 +89,7 @@ const ConfirmAlert: React.FC<Confirm> = ({
 
   if (isMobileScreen) {
     return (
-      <Drawer.Root key={id} open={open} onOpenChange={handleOpenChange}>
+      <Drawer.Root open={open} onOpenChange={handleOpenChange}>
         <Drawer.Body className="top-auto">
           <Drawer.Header className={cn(!phrase && "border-b-0")}>
             <Drawer.Title>{title}</Drawer.Title>
@@ -153,7 +153,7 @@ const ConfirmAlert: React.FC<Confirm> = ({
   }
 
   return (
-    <AlertDialog.Root key={id} open={open} onOpenChange={handleOpenChange}>
+    <AlertDialog.Root open={open} onOpenChange={handleOpenChange}>
       <AlertDialog.Content>
         <AlertDialog.Header>
           <AlertDialog.Title>{title}</AlertDialog.Title>

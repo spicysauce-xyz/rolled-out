@@ -1,8 +1,17 @@
+import { cn } from "@mono/ui/utils";
 import { createFormHook, createFormHookContexts } from "@tanstack/react-form";
+import { forwardRef } from "react";
 
-const FieldContainer: React.FC<React.PropsWithChildren> = ({ children }) => {
-  return <div className="flex flex-col gap-2">{children}</div>;
-};
+const FieldContainer = forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ children, className, ...props }, ref) => {
+  return (
+    <div ref={ref} className={cn("flex flex-col gap-2", className)} {...props}>
+      {children}
+    </div>
+  );
+});
 
 export const { fieldContext, formContext, useFieldContext } =
   createFormHookContexts();

@@ -30,7 +30,18 @@ export const auth: ReturnType<typeof betterAuth> = betterAuth({
     generateId: false,
   },
   plugins: [
-    organization(),
+    organization({
+      sendInvitationEmail: async (data) => {
+        console.log("Invitation email sent to", data.invitation.email, data.invitation.role);
+        // TODO: Implement invitation email template
+        // TODO: Throw proper error (return error json) if email fails to send
+        return Email.send({
+          to: data.email,
+          subject: "",
+          html: "",
+        });
+      },
+    }),
     magicLink({
       sendMagicLink: async (data) => {
         console.log("Magic link sent to", data.email, data.url);
