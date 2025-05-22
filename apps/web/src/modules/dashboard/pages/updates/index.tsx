@@ -4,11 +4,7 @@ import { api } from "@lib/api";
 import { Breadcrumbs } from "@modules/shared/components/breadcrumbs";
 import { LinkButton, Text, Toaster } from "@mono/ui";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import {
-  createFileRoute,
-  useNavigate,
-  useParams,
-} from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { PlusIcon } from "lucide-react";
 import { P, match } from "ts-pattern";
 import { UpdatesList } from "./components/updates-list";
@@ -21,12 +17,11 @@ export const Route = createFileRoute(
 
 function RouteComponent() {
   const navigate = useNavigate();
-  const { organizationSlug } = useParams({
-    from: "/_authorized/$organizationSlug/_Dashboard.layout/updates",
-  });
+  const { organizationSlug } = Route.useParams();
+  const { organization } = Route.useRouteContext();
 
   const postsQuery = useQuery({
-    queryKey: ["posts", organizationSlug],
+    queryKey: ["posts", organization.id],
     queryFn: async ({ queryKey }) => {
       const response = await api.organization[":organizationId"].posts.$get({
         param: {
@@ -55,7 +50,7 @@ function RouteComponent() {
       const response = await createPost.mutateAsync({
         json: {},
         param: {
-          organizationId: organizationSlug,
+          organizationId: organization.id,
         },
       });
 
@@ -72,7 +67,7 @@ function RouteComponent() {
       const post = json.data;
       navigate({
         to: "/$organizationSlug/editor/$id",
-        params: { id: post.id, organizationSlug },
+        params: { id: post.id, organizationSlug: organizationSlug },
       });
 
       Toaster.success("Successfully created new draft", { id });
@@ -84,7 +79,7 @@ function RouteComponent() {
   return (
     <Page.Wrapper>
       <Page.Header className="justify-between">
-        <Breadcrumbs organizationSlug={organizationSlug} page="Updates" />
+        <Breadcrumbs organizationId={organization.id} page="Updates" />
         <LinkButton.Root
           isDisabled={createPost.isPending}
           onClick={handleCreateNewUpdate}

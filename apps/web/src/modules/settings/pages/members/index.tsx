@@ -1,12 +1,11 @@
 import * as Card from "@components/card";
 import * as Transition from "@components/transition";
 import { authClient } from "@lib/auth";
-import { useSession } from "@modules/auth/hooks/useSession";
 import { useHasPermission } from "@modules/shared/hooks/useHasPermission";
 import { Button } from "@mono/ui";
 import { useDisclosure } from "@mono/ui/hooks";
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute, useParams } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { UserPlus2Icon } from "lucide-react";
 import { match } from "ts-pattern";
 import { InviteMemberDialog } from "./components/invite-member-dialog";
@@ -19,13 +18,13 @@ export const Route = createFileRoute(
 });
 
 function RouteComponent() {
-  const { data: currentSessionData } = useSession();
-  const { organizationSlug } = useParams({
-    from: "/_authorized/$organizationSlug/settings/members",
-  });
+  const {
+    organization,
+    auth: { user },
+  } = Route.useRouteContext();
 
   const organizationQuery = useQuery({
-    queryKey: ["organization", organizationSlug],
+    queryKey: ["organization", organization.id],
     queryFn: async ({ queryKey }) => {
       const response = await authClient.organization.getFullOrganization({
         query: { organizationId: queryKey[1] },
@@ -41,7 +40,7 @@ function RouteComponent() {
 
   const inviteMemberDialog = useDisclosure();
   const inviteMemberPermission = useHasPermission({
-    organizationId: organizationSlug,
+    organizationId: organization.id,
     permission: {
       invitation: ["create"],
     },
@@ -74,7 +73,7 @@ function RouteComponent() {
               <Transition.Item key="list" className="flex flex-col gap-4">
                 <MembersList
                   members={[...data.members, ...data.invitations]}
-                  currentUserId={currentSessionData?.data.user.id}
+                  currentUserId={user.id}
                   organizationId={data.id}
                 />
               </Transition.Item>
@@ -94,7 +93,7 @@ function RouteComponent() {
             Invite Member
           </Button.Root>
           <InviteMemberDialog
-            organizationId={organizationSlug}
+            organizationId={organization.id}
             isOpen={inviteMemberDialog.isOpen}
             onOpenChange={inviteMemberDialog.setOpen}
           />

@@ -5,7 +5,7 @@ import { Outlet, createFileRoute, redirect } from "@tanstack/react-router";
 export const Route = createFileRoute("/_authorized/$organizationSlug")({
   component: Outlet,
   beforeLoad: async ({ params }) => {
-    const organizations = await queryClient.fetchQuery({
+    const organizations = await queryClient.ensureQueryData({
       queryKey: ["organizations"],
       queryFn: async () => {
         const response = await authClient.organization.list();
@@ -18,14 +18,18 @@ export const Route = createFileRoute("/_authorized/$organizationSlug")({
       },
     });
 
-    const currentOrganization = organizations?.find(
-      (organization) => organization.id === params.organizationSlug,
+    const organization = organizations?.find(
+      (organization) => organization.slug === params.organizationSlug,
     );
 
-    if (!currentOrganization) {
+    if (!organization) {
       throw redirect({
         to: "/",
       });
     }
+
+    return {
+      organization,
+    };
   },
 });

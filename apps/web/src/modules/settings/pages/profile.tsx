@@ -30,6 +30,7 @@ function RouteComponent() {
       }),
     },
     onSubmit: async ({ value, formApi }) => {
+      // TODO: Add error toast
       await authClient.updateUser(
         {
           name: value.name.trim(),

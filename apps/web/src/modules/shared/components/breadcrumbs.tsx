@@ -8,12 +8,12 @@ import { ChevronsUpDownIcon, HomeIcon, PlusIcon } from "lucide-react";
 import { match } from "ts-pattern";
 
 interface BreadcrumbsProps {
-  organizationSlug: string;
+  organizationId: string;
   page: string;
 }
 
 export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
-  organizationSlug,
+  organizationId,
   page,
 }) => {
   const navigate = useNavigate();
@@ -32,7 +32,7 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
     },
   });
 
-  const handleUpdateActiveOrganization = async (organizationId: string) => {
+  const handleUpdateActiveOrganization = async (organizationSlug: string) => {
     const lastMatch = last(router.state.matches);
 
     if (!lastMatch) {
@@ -41,7 +41,7 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
 
     navigate({
       to: ".",
-      params: { ...lastMatch.params, organizationSlug: organizationId },
+      params: { ...lastMatch.params, organizationSlug },
     });
   };
 
@@ -61,17 +61,21 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
               </Text.Root>
             </Transition.Item>
           ))
-          .with({ isSuccess: true }, ({ data }) => {
+          .otherwise(({ data }) => {
             const selectedOrganization = data.find(
-              (organization) => organization.id === organizationSlug,
+              (organization) => organization.id === organizationId,
             );
+
+            if (!selectedOrganization) {
+              return null;
+            }
 
             return (
               <Transition.Item key="dropdown" className="flex">
                 <DropdownMenu.Root>
                   <DropdownMenu.Trigger asChild>
                     <LinkButton.Root>
-                      {selectedOrganization?.name}
+                      {selectedOrganization.name}
                       <LinkButton.Icon>
                         <ChevronsUpDownIcon />
                       </LinkButton.Icon>
@@ -79,7 +83,7 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
                   </DropdownMenu.Trigger>
                   <DropdownMenu.Content align="start">
                     <DropdownMenu.RadioGroup
-                      value={selectedOrganization?.id}
+                      value={selectedOrganization.slug}
                       onValueChange={(value) =>
                         handleUpdateActiveOrganization(value)
                       }
@@ -87,7 +91,7 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
                       {data.map((organization) => (
                         <DropdownMenu.RadioItem
                           key={organization.id}
-                          value={organization.id}
+                          value={organization.slug}
                         >
                           <DropdownMenu.ItemIcon>
                             <HomeIcon />
@@ -107,8 +111,7 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
                 </DropdownMenu.Root>
               </Transition.Item>
             );
-          })
-          .otherwise(() => null)}
+          })}
       </Transition.Root>
       <div className="h-4 w-px bg-neutral-200" />
       <Text.Root size="sm" weight="medium">

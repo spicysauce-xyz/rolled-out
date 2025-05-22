@@ -15,10 +15,11 @@ export const Route = createFileRoute(
 
 function RouteComponent() {
   const queryClient = useQueryClient();
-  const { organizationSlug } = Route.useParams();
+  const { organization } = Route.useRouteContext();
+  const navigate = Route.useNavigate();
 
-  const { data: organizationData } = useQuery({
-    queryKey: ["organization", organizationSlug],
+  const organizationQuery = useQuery({
+    queryKey: ["organization", organization.id],
     queryFn: async ({ queryKey }) => {
       const response = await authClient.organization.getFullOrganization({
         query: { organizationId: queryKey[1] },
@@ -68,8 +69,8 @@ function RouteComponent() {
 
   const form = useAppForm({
     defaultValues: {
-      name: organizationData?.name || "",
-      slug: organizationData?.slug || "",
+      name: organizationQuery.data?.name ?? "",
+      slug: organizationQuery.data?.slug ?? "",
     },
     validators: {
       onSubmit: z.object({
@@ -82,19 +83,30 @@ function RouteComponent() {
         await updateOrganizationMutation.mutateAsync({
           name: value.name,
           slug: value.slug,
-          organizationId: organizationSlug,
+          organizationId: organization.id,
         });
 
         await queryClient.refetchQueries({
-          queryKey: ["organization", organizationSlug],
+          queryKey: ["organization", organization.id],
         });
 
         await queryClient.refetchQueries({
           queryKey: ["organizations"],
         });
 
-        Toaster.success("Organization updated successfully!");
+        if (value.slug !== organization.slug) {
+          navigate({
+            to: ".",
+            replace: true,
+            params: {
+              organizationSlug: value.slug,
+            },
+          });
+        }
+
         formApi.reset();
+
+        Toaster.success("Organization updated successfully!");
       } catch {
         Toaster.error("Failed to update organization");
       }
@@ -156,7 +168,7 @@ function RouteComponent() {
               onChangeAsync: async ({ value }) => {
                 let isSlugAvailable = false;
 
-                if (value === organizationData?.slug) {
+                if (value === organization.slug) {
                   return;
                 }
 

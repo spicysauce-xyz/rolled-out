@@ -42,7 +42,7 @@ function RouteComponent() {
           >
             <Link
               to="/$organizationSlug"
-              params={{ organizationSlug: organization.id }}
+              params={{ organizationSlug: organization.slug }}
             >
               <Avatar.Root className="size-10 rounded-md border border-neutral-100">
                 <Avatar.Image src={organization.image || ""} />

@@ -11,5 +11,9 @@ export const Route = createFileRoute("/_authorized")({
         },
       });
     }
+
+    return {
+      auth: context.auth,
+    };
   },
 });
