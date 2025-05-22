@@ -1,4 +1,5 @@
 import * as Sidebar from "@components/layout/sidebar";
+import { NotificationsList } from "@modules/shared/components/notifications-list";
 import { UserMenu } from "@modules/shared/components/user-menu";
 import { useParams } from "@tanstack/react-router";
 import {
@@ -75,8 +76,9 @@ export const DashboardNavigation = () => {
           <Sidebar.Link href="#" label="Support" icon={HelpCircleIcon} />
         </Sidebar.Group>
       </Sidebar.ScrollArea>
-      <Sidebar.Footer className="p-2">
+      <Sidebar.Footer className="flex gap-1 p-2">
         <UserMenu organizationSlug={organizationSlug} />
+        <NotificationsList />
       </Sidebar.Footer>
     </Sidebar.Root>
   );

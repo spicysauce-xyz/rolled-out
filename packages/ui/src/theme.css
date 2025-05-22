@@ -135,6 +135,8 @@
 
   --animate-spin: spin 1s linear infinite;
   --animate-pulse: pulse 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  --animate-shake: shake 1.5s linear infinite;
+
   @keyframes spin {
     to {
       transform: rotate(360deg);
@@ -144,6 +146,21 @@
   @keyframes pulse {
     50% {
       opacity: 0.5;
+    }
+  }
+
+  @keyframes shake {
+    0% {
+      transform: rotate(0);
+    }
+    10% {
+      transform: rotate(10deg);
+    }
+    20% {
+      transform: rotate(-10deg);
+    }
+    30% {
+      transform: rotate(0);
     }
   }
 

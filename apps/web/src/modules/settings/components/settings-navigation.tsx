@@ -1,8 +1,15 @@
 import * as Sidebar from "@components/layout/sidebar";
+import { NotificationsList } from "@modules/shared/components/notifications-list";
 import { UserMenu } from "@modules/shared/components/user-menu";
 import { Clickable, Text } from "@mono/ui";
 import { Link, useParams } from "@tanstack/react-router";
-import { ArrowLeftIcon, SmartphoneIcon, User2Icon, Users2 } from "lucide-react";
+import {
+  ArrowLeftIcon,
+  NotebookTextIcon,
+  SmartphoneIcon,
+  User2Icon,
+  Users2,
+} from "lucide-react";
 
 export const SettingsNavigation = () => {
   const { organizationSlug } = useParams({
@@ -46,6 +53,12 @@ export const SettingsNavigation = () => {
           </Sidebar.Group>
           <Sidebar.Group label="Organization">
             <Sidebar.NavLink
+              to="/$organizationSlug/settings/details"
+              params={{ organizationSlug }}
+              label="Details"
+              icon={NotebookTextIcon}
+            />
+            <Sidebar.NavLink
               to="/$organizationSlug/settings/members"
               params={{ organizationSlug }}
               label="Members"
@@ -54,8 +67,9 @@ export const SettingsNavigation = () => {
           </Sidebar.Group>
         </div>
       </Sidebar.ScrollArea>
-      <Sidebar.Footer className="p-2">
+      <Sidebar.Footer className="flex gap-1 p-2">
         <UserMenu organizationSlug={organizationSlug} />
+        <NotificationsList />
       </Sidebar.Footer>
     </Sidebar.Root>
   );
