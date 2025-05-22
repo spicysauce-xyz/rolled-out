@@ -213,18 +213,18 @@ function RouteComponent() {
         </Card.Content>
         <Card.Footer className="mt-4">
           <form.Subscribe
-            selector={({ isSubmitting, isDirty, isFieldsValid }) => ({
+            selector={({ isSubmitting, isDirty, canSubmit }) => ({
               isSubmitting,
               isDirty,
-              isFieldsValid,
+              canSubmit,
             })}
           >
-            {({ isSubmitting, isDirty, isFieldsValid }) => (
+            {({ isSubmitting, isDirty, canSubmit }) => (
               <div className="flex gap-2">
                 <Button.Root
                   type="submit"
                   isLoading={isSubmitting}
-                  isDisabled={!isDirty || !isFieldsValid}
+                  isDisabled={!canSubmit || !isDirty}
                 >
                   <Button.Icon>
                     <SaveIcon />
