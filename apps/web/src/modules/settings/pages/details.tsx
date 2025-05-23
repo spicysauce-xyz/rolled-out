@@ -2,8 +2,8 @@ import * as Card from "@components/card";
 import { authClient } from "@lib/auth";
 import useAppForm from "@lib/form";
 import { Button, Input, Label, Text, Toaster } from "@mono/ui";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { Loader2Icon, SaveIcon } from "lucide-react";
 import { z } from "zod";
 
@@ -17,21 +17,7 @@ function RouteComponent() {
   const queryClient = useQueryClient();
   const { organization } = Route.useRouteContext();
   const navigate = Route.useNavigate();
-
-  const organizationQuery = useQuery({
-    queryKey: ["organization", organization.id],
-    queryFn: async ({ queryKey }) => {
-      const response = await authClient.organization.getFullOrganization({
-        query: { organizationId: queryKey[1] },
-      });
-
-      if (response.error) {
-        throw response.error;
-      }
-
-      return response.data;
-    },
-  });
+  const router = useRouter();
 
   const updateOrganizationMutation = useMutation({
     mutationFn: async (data: {
@@ -69,8 +55,8 @@ function RouteComponent() {
 
   const form = useAppForm({
     defaultValues: {
-      name: organizationQuery.data?.name ?? "",
-      slug: organizationQuery.data?.slug ?? "",
+      name: organization.name,
+      slug: organization.slug,
     },
     validators: {
       onSubmit: z.object({
@@ -102,6 +88,8 @@ function RouteComponent() {
               organizationSlug: value.slug,
             },
           });
+        } else {
+          await router.invalidate();
         }
 
         formApi.reset();

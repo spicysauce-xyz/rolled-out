@@ -1,8 +1,9 @@
 import * as Sidebar from "@components/layout/sidebar";
+import type { authClient } from "@lib/auth";
 import { NotificationsList } from "@modules/shared/components/notifications-list";
 import { UserMenu } from "@modules/shared/components/user-menu";
 import { Clickable, Text } from "@mono/ui";
-import { Link, useParams } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import {
   ArrowLeftIcon,
   NotebookTextIcon,
@@ -11,11 +12,15 @@ import {
   Users2,
 } from "lucide-react";
 
-export const SettingsNavigation = () => {
-  const { organizationSlug } = useParams({
-    from: "/_authorized/$organizationSlug/settings",
-  });
+interface SettingsNavigationProps {
+  organizationSlug: string;
+  user: (typeof authClient.$Infer.Session)["user"];
+}
 
+export const SettingsNavigation: React.FC<SettingsNavigationProps> = ({
+  organizationSlug,
+  user,
+}) => {
   return (
     <Sidebar.Root className="hidden w-64 bg-neutral-50 sm:flex">
       <Sidebar.Header>
@@ -68,7 +73,7 @@ export const SettingsNavigation = () => {
         </div>
       </Sidebar.ScrollArea>
       <Sidebar.Footer className="flex gap-1 p-2">
-        <UserMenu organizationSlug={organizationSlug} />
+        <UserMenu user={user} organizationSlug={organizationSlug} />
         <NotificationsList />
       </Sidebar.Footer>
     </Sidebar.Root>

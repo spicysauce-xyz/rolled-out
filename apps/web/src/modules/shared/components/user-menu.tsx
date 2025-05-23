@@ -1,5 +1,5 @@
+import type { authClient } from "@lib/auth";
 import { useLogout } from "@modules/auth/hooks/useLogout";
-import { useSession } from "@modules/auth/hooks/useSession";
 import { Avatar, Clickable, DropdownMenu, Text } from "@mono/ui";
 import { Link } from "@tanstack/react-router";
 import {
@@ -11,11 +11,14 @@ import {
 
 interface UserMenuProps {
   organizationSlug: string;
+  user: (typeof authClient.$Infer.Session)["user"];
 }
 
-export const UserMenu: React.FC<UserMenuProps> = ({ organizationSlug }) => {
+export const UserMenu: React.FC<UserMenuProps> = ({
+  organizationSlug,
+  user,
+}) => {
   const logout = useLogout();
-  const { data: sessionData } = useSession();
 
   return (
     <DropdownMenu.Root>
@@ -27,7 +30,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({ organizationSlug }) => {
           <div className="flex items-center gap-2">
             <User2Icon className="size-4 stroke-neutral-900" />
             <Text.Root weight="medium" size="sm">
-              {sessionData?.data?.user?.name || ""}
+              {user.name}
             </Text.Root>
           </div>
           <Clickable.Icon className="ml-auto">
@@ -38,9 +41,9 @@ export const UserMenu: React.FC<UserMenuProps> = ({ organizationSlug }) => {
       <DropdownMenu.Content side="right" align="end">
         <div className="flex items-center gap-2 px-4 py-2">
           <Avatar.Root>
-            <Avatar.Image src={sessionData?.data?.user?.image || ""} />
+            <Avatar.Image src={user.image || ""} />
             <Avatar.Fallback>
-              {sessionData?.data?.user?.name
+              {user.name
                 ?.split(" ")
                 .map((name) => name[0])
                 .slice(0, 2)
@@ -50,10 +53,10 @@ export const UserMenu: React.FC<UserMenuProps> = ({ organizationSlug }) => {
           </Avatar.Root>
           <div className="flex flex-col items-start gap-0.5">
             <Text.Root weight="medium" size="sm">
-              {sessionData?.data?.user?.name || ""}
+              {user.name}
             </Text.Root>
             <Text.Root size="xs" color="muted">
-              {sessionData?.data?.user?.email || ""}
+              {user.email}
             </Text.Root>
           </div>
         </div>

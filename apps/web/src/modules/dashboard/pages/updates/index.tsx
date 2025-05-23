@@ -79,7 +79,7 @@ function RouteComponent() {
   return (
     <Page.Wrapper>
       <Page.Header className="justify-between">
-        <Breadcrumbs organizationId={organization.id} page="Updates" />
+        <Breadcrumbs organization={organization} page="Updates" />
         <LinkButton.Root
           isDisabled={createPost.isPending}
           onClick={handleCreateNewUpdate}

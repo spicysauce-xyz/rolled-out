@@ -1,10 +1,9 @@
 import * as Card from "@components/card";
 import { authClient } from "@lib/auth";
 import useAppForm from "@lib/form";
-import { useSession } from "@modules/auth/hooks/useSession";
 import { Button, Input, Label, Toaster } from "@mono/ui";
-import { useQueryClient } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { MailIcon, SaveIcon, UserIcon } from "lucide-react";
 import { z } from "zod";
 
@@ -16,12 +15,25 @@ export const Route = createFileRoute(
 
 function RouteComponent() {
   const queryClient = useQueryClient();
-  const { data: sessionData } = useSession();
+  const { user } = Route.useRouteContext();
+  const router = useRouter();
+
+  const updateUserMutation = useMutation({
+    mutationFn: async (value: { name: string }) => {
+      const response = await authClient.updateUser(value);
+
+      if (response.error) {
+        throw response.error;
+      }
+
+      return response.data;
+    },
+  });
 
   const form = useAppForm({
     defaultValues: {
-      name: sessionData?.data?.user?.name || "",
-      email: sessionData?.data?.user?.email || "",
+      name: user.name,
+      email: user.email,
     },
     validators: {
       onChange: z.object({
@@ -30,21 +42,21 @@ function RouteComponent() {
       }),
     },
     onSubmit: async ({ value, formApi }) => {
-      // TODO: Add error toast
-      await authClient.updateUser(
-        {
+      try {
+        await updateUserMutation.mutateAsync({
           name: value.name.trim(),
-        },
-        {
-          onSuccess: async () => {
-            await queryClient.refetchQueries({ queryKey: ["session"] });
+        });
 
-            formApi.reset();
+        await queryClient.refetchQueries({ queryKey: ["session"] });
 
-            Toaster.success("Account updated successfully!");
-          },
-        },
-      );
+        await router.invalidate();
+
+        formApi.reset();
+
+        Toaster.success("Account updated successfully!");
+      } catch {
+        Toaster.error("Failed to update profile");
+      }
     },
   });
 
@@ -104,10 +116,7 @@ function RouteComponent() {
                 <Input.Icon>
                   <MailIcon />
                 </Input.Icon>
-                <Input.Field
-                  placeholder="john@doe.com"
-                  value={sessionData?.data?.user?.email}
-                />
+                <Input.Field placeholder="john@doe.com" value={user.email} />
               </Input.Wrapper>
             </Input.Root>
           </form.FieldContainer>

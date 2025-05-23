@@ -1,7 +1,7 @@
 import * as Sidebar from "@components/layout/sidebar";
+import type { authClient } from "@lib/auth";
 import { NotificationsList } from "@modules/shared/components/notifications-list";
 import { UserMenu } from "@modules/shared/components/user-menu";
-import { useParams } from "@tanstack/react-router";
 import {
   BellIcon,
   HelpCircleIcon,
@@ -14,11 +14,15 @@ import {
   SettingsIcon,
 } from "lucide-react";
 
-export const DashboardNavigation = () => {
-  const { organizationSlug } = useParams({
-    from: "/_authorized/$organizationSlug",
-  });
+interface DashboardNavigationProps {
+  user: (typeof authClient.$Infer.Session)["user"];
+  organizationSlug: string;
+}
 
+export const DashboardNavigation: React.FC<DashboardNavigationProps> = ({
+  user,
+  organizationSlug,
+}) => {
   return (
     <Sidebar.Root className="hidden w-64 bg-neutral-50 sm:flex">
       <Sidebar.Header>
@@ -77,7 +81,7 @@ export const DashboardNavigation = () => {
         </Sidebar.Group>
       </Sidebar.ScrollArea>
       <Sidebar.Footer className="flex gap-1 p-2">
-        <UserMenu organizationSlug={organizationSlug} />
+        <UserMenu user={user} organizationSlug={organizationSlug} />
         <NotificationsList />
       </Sidebar.Footer>
     </Sidebar.Root>

@@ -2,20 +2,25 @@ import * as Transition from "@components/transition";
 import { authClient } from "@lib/auth";
 import { DropdownMenu, LinkButton, Skeleton, Text } from "@mono/ui";
 import { useDisclosure } from "@mono/ui/hooks";
+import { cn } from "@mono/ui/utils";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useRouter } from "@tanstack/react-router";
 import { last } from "lodash";
-import { ChevronsUpDownIcon, HomeIcon, PlusIcon } from "lucide-react";
+import {
+  AlertTriangleIcon,
+  ChevronsUpDownIcon,
+  HomeIcon,
+  PlusIcon,
+  RefreshCcwIcon,
+} from "lucide-react";
 import { match } from "ts-pattern";
 import { NewOrganizationDialog } from "./new-organization-dialog";
 
 interface OrganizationSelectorProps {
-  organizationId: string;
+  organization: typeof authClient.$Infer.Organization;
 }
 
-const OrganizationSelector = ({
-  organizationId,
-}: OrganizationSelectorProps) => {
+const OrganizationSelector = ({ organization }: OrganizationSelectorProps) => {
   const navigate = useNavigate();
   const router = useRouter();
 
@@ -27,6 +32,8 @@ const OrganizationSelector = ({
       if (response.error) {
         throw response.error;
       }
+
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
       return response.data;
     },
@@ -50,43 +57,55 @@ const OrganizationSelector = ({
 
   return (
     <>
-      <Transition.Root>
-        {match(organizationsQuery)
-          .with({ isPending: true }, () => (
-            <Transition.Item key="skeleton">
-              <Skeleton.Root className="h-4 w-30 rounded-sm" />
-            </Transition.Item>
-          ))
-          .with({ isError: true }, () => (
-            <Transition.Item key="error">
-              <Text.Root size="sm" weight="medium">
-                Failed to load organizations
-              </Text.Root>
-            </Transition.Item>
-          ))
-          .otherwise(({ data }) => {
-            const selectedOrganization = data.find(
-              (organization) => organization.id === organizationId,
-            );
-
-            if (!selectedOrganization) {
-              return null;
-            }
-
-            return (
-              <Transition.Item key="dropdown" className="flex">
-                <DropdownMenu.Root>
-                  <DropdownMenu.Trigger asChild>
-                    <LinkButton.Root>
-                      {selectedOrganization.name}
-                      <LinkButton.Icon>
-                        <ChevronsUpDownIcon />
-                      </LinkButton.Icon>
-                    </LinkButton.Root>
-                  </DropdownMenu.Trigger>
-                  <DropdownMenu.Content align="start">
+      <DropdownMenu.Root>
+        <DropdownMenu.Trigger asChild>
+          <LinkButton.Root>
+            {organization.name}
+            <LinkButton.Icon>
+              <ChevronsUpDownIcon />
+            </LinkButton.Icon>
+          </LinkButton.Root>
+        </DropdownMenu.Trigger>
+        <DropdownMenu.Content align="start">
+          <Transition.Root>
+            {match(organizationsQuery)
+              .with({ isPending: true }, () => (
+                <Transition.Item key="skeleton" className="flex flex-col gap-1">
+                  <Skeleton.Root className="mx-2 h-8.5 w-40 rounded-sm" />
+                  <Skeleton.Root className="mx-2 h-8.5 w-40 rounded-sm" />
+                  <Skeleton.Root className="mx-2 h-8.5 w-40 rounded-sm" />
+                </Transition.Item>
+              ))
+              .with({ isError: true }, ({ isRefetching, refetch }) => (
+                <Transition.Item key="error" className="flex flex-col">
+                  <div className="flex h-9 items-center gap-2 px-4">
+                    <AlertTriangleIcon className="size-4 stroke-danger-500" />
+                    <Text.Root size="sm" weight="medium" color="danger">
+                      Failed to load organizations
+                    </Text.Root>
+                  </div>
+                  <DropdownMenu.Separator />
+                  <DropdownMenu.Item
+                    disabled={isRefetching}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      refetch();
+                    }}
+                  >
+                    <DropdownMenu.ItemIcon>
+                      <RefreshCcwIcon
+                        className={cn("size-4", isRefetching && "animate-spin")}
+                      />
+                    </DropdownMenu.ItemIcon>
+                    Retry
+                  </DropdownMenu.Item>
+                </Transition.Item>
+              ))
+              .otherwise(({ data }) => {
+                return (
+                  <Transition.Item key="dropdown" className="flex flex-col">
                     <DropdownMenu.RadioGroup
-                      value={selectedOrganization.slug}
+                      value={organization.slug}
                       onValueChange={(value) =>
                         handleUpdateActiveOrganization(value)
                       }
@@ -110,12 +129,12 @@ const OrganizationSelector = ({
                       </DropdownMenu.ItemIcon>
                       New Organization
                     </DropdownMenu.Item>
-                  </DropdownMenu.Content>
-                </DropdownMenu.Root>
-              </Transition.Item>
-            );
-          })}
-      </Transition.Root>
+                  </Transition.Item>
+                );
+              })}
+          </Transition.Root>
+        </DropdownMenu.Content>
+      </DropdownMenu.Root>
       <NewOrganizationDialog
         isOpen={createOrganizationDialog.isOpen}
         onOpenChange={createOrganizationDialog.setOpen}
@@ -125,17 +144,17 @@ const OrganizationSelector = ({
 };
 
 interface BreadcrumbsProps {
-  organizationId: string;
+  organization: typeof authClient.$Infer.Organization;
   page: string;
 }
 
 export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
-  organizationId,
+  organization,
   page,
 }) => {
   return (
     <div className="flex items-center gap-4">
-      <OrganizationSelector organizationId={organizationId} />
+      <OrganizationSelector organization={organization} />
       <div className="h-4 w-px bg-neutral-200" />
       <Text.Root size="sm" weight="medium">
         {page}

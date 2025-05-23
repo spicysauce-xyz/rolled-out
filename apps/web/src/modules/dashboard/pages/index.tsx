@@ -14,7 +14,7 @@ function RouteComponent() {
   return (
     <Page.Wrapper>
       <Page.Header className="justify-between">
-        <Breadcrumbs organizationId={organization.id} page="Dashboard" />
+        <Breadcrumbs organization={organization} page="Dashboard" />
       </Page.Header>
       <Page.Content>Analytics</Page.Content>
     </Page.Wrapper>

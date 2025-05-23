@@ -10,14 +10,14 @@ export const Route = createFileRoute("/_authorized/$organizationSlug/settings")(
 );
 
 function RouteComponent() {
-  const { organization } = Route.useRouteContext();
+  const { organization, user } = Route.useRouteContext();
 
   return (
     <Page.Root>
-      <SettingsNavigation />
+      <SettingsNavigation user={user} organizationSlug={organization.slug} />
       <Page.Wrapper>
         <Page.Header>
-          <Breadcrumbs organizationId={organization.id} page="Settings" />
+          <Breadcrumbs organization={organization} page="Settings" />
         </Page.Header>
         <Page.Content className="mx-auto w-full max-w-180">
           <Outlet />
