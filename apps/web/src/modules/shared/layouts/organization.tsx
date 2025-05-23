@@ -18,18 +18,28 @@ export const Route = createFileRoute("/_authorized/$organizationSlug")({
       },
     });
 
-    const organization = organizations?.find(
+    const currentOrganization = organizations?.find(
       (organization) => organization.slug === params.organizationSlug,
     );
 
-    if (!organization) {
+    if (!currentOrganization) {
+      if (organizations.length) {
+        throw redirect({
+          to: "/$organizationSlug",
+          params: {
+            organizationSlug: organizations[0].slug,
+          },
+        });
+      }
+
+      // TODO: Redirect to create organization
       throw redirect({
         to: "/",
       });
     }
 
     return {
-      organization,
+      organization: currentOrganization,
     };
   },
 });

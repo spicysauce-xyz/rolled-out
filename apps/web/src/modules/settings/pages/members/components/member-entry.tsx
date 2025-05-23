@@ -58,14 +58,7 @@ const MemberEntryAvatar = forwardRef<
 
   return (
     <div className="relative">
-      <Avatar.Root
-        ref={ref}
-        className={cn(
-          "relative size-10 rounded-md border border-neutral-100 bg-neutral-50",
-          className,
-        )}
-        {...props}
-      >
+      <Avatar.Root ref={ref} className={className} {...props}>
         <Avatar.Image src={image} />
         <Avatar.Fallback>{fallback}</Avatar.Fallback>
       </Avatar.Root>

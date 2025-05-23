@@ -53,7 +53,7 @@ const AvatarImage = React.forwardRef<
   <AvatarPrimitive.Image
     ref={ref}
     className={cn(
-      "fade-in-0 aspect-square h-full w-full animate-in object-cover object-center transition-opacity",
+      "fade-in-0 aspect-square h-full w-full animate-in rounded-md object-cover object-center transition-opacity",
       className,
     )}
     {...props}
@@ -68,7 +68,7 @@ const AvatarFallback = React.forwardRef<
     <AvatarPrimitive.Fallback
       ref={ref}
       className={cn(
-        "flex h-full w-full items-center justify-center bg-neutral-50",
+        "flex h-full w-full items-center justify-center rounded-md border border-neutral-100 bg-neutral-50",
         className,
       )}
       {...props}

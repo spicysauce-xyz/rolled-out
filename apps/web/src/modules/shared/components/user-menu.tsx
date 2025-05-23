@@ -37,7 +37,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({ organizationSlug }) => {
       </DropdownMenu.Trigger>
       <DropdownMenu.Content side="right" align="end">
         <div className="flex items-center gap-2 px-4 py-2">
-          <Avatar.Root className="size-10 rounded-md border border-neutral-100">
+          <Avatar.Root>
             <Avatar.Image src={sessionData?.data?.user?.image || ""} />
             <Avatar.Fallback>
               {sessionData?.data?.user?.name
