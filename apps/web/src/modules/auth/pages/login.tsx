@@ -1,27 +1,20 @@
-import * as Sidebar from "@components/layout/sidebar";
 import { authClient } from "@lib/auth";
 import useAppForm from "@lib/form";
-import { Button, Input, LinkButton, Text, Toaster } from "@mono/ui";
+import { Button, Input, Text, Toaster } from "@mono/ui";
 import { useMutation } from "@tanstack/react-query";
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { MailIcon } from "lucide-react";
 import { z } from "zod";
 
-export const Route = createFileRoute("/login")({
+export const Route = createFileRoute("/_outside/_Auth.layout/login")({
   component: Login,
-  beforeLoad: ({ context, search }) => {
-    if (context.auth?.user) {
-      throw redirect({ to: search.redirect || "/" });
-    }
-  },
+  // TODO: Make a use of this
   validateSearch: z.object({
     redirect: z.string().optional().catch(""),
   }),
 });
 
 function Login() {
-  const search = Route.useSearch();
-
   const form = useAppForm({
     defaultValues: {
       email: "",
@@ -37,7 +30,7 @@ function Login() {
       await authClient.signIn.magicLink(
         {
           email: value.email,
-          callbackURL: `http://localhost:5173${search.redirect || ""}`,
+          callbackURL: "http://localhost:5173/",
         },
         {
           onSuccess: async () => {
@@ -72,19 +65,15 @@ function Login() {
   const handleSocialLogin = async (provider: "google" | "github") => {
     await socialLogin.mutateAsync({
       provider,
-      callbackURL: `http://localhost:5173${search.redirect || ""}`,
+      callbackURL: "http://localhost:5173",
     });
   };
 
   return (
-    <div className="flex min-h-dvh w-dvw">
-      <div className="flex w-full flex-1 flex-col items-center">
-        <div className="flex w-full items-center justify-between border-neutral-100 border-b px-6 py-4">
-          <Sidebar.Logo />
-          <Sidebar.Version />
-        </div>
+    <div className="flex flex-1">
+      <div className="flex flex-1 flex-col items-center">
         <div className="flex w-full flex-1 flex-col items-center justify-center gap-6 p-6 sm:max-w-96">
-          <div className="flex w-full flex-col items-center gap-2">
+          <div className="flex w-full flex-1 flex-col items-center justify-end gap-2">
             <Text.Root size="lg" weight="medium">
               Sign in to your account
             </Text.Root>
@@ -183,25 +172,10 @@ function Login() {
               Continue with GitHub
             </Button.Root>
           </div>
-        </div>
-        <div className="flex w-full items-center justify-between gap-6 border-neutral-100 border-t px-6 py-4">
-          <div className="flex items-center gap-4">
-            <LinkButton.Root size="sm" color="muted">
-              Privacy Policy
-            </LinkButton.Root>
-            <LinkButton.Root size="sm" color="muted">
-              Terms of Service
-            </LinkButton.Root>
-          </div>
-          <LinkButton.Root size="sm" color="muted">
-            <LinkButton.Icon>
-              <MailIcon />
-            </LinkButton.Icon>
-            Contact Us
-          </LinkButton.Root>
+          <div className="flex-1" />
         </div>
       </div>
-      <div className="hidden flex-1 border border-neutral-100 bg-neutral-50 md:flex" />
+      <div className="flex-1 border-neutral-100 border-l bg-neutral-50" />
     </div>
   );
 }

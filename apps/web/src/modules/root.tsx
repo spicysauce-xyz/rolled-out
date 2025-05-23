@@ -4,17 +4,9 @@ import {
   createRootRouteWithContext,
   useRouterState,
 } from "@tanstack/react-router";
-import type { Session, User } from "better-auth";
 import { useEffect, useRef, useState } from "react";
 
-interface RootContext {
-  auth?: {
-    user: User;
-    session: Session;
-  };
-}
-
-export const Route = createRootRouteWithContext<RootContext>()({
+export const Route = createRootRouteWithContext()({
   component: Root,
 });
 

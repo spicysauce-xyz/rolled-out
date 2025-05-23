@@ -4,11 +4,21 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { magicLink, organization } from "better-auth/plugins";
 
-export const auth: ReturnType<typeof betterAuth> = betterAuth({
+// @ts-ignore
+export const auth = betterAuth({
   basePath: "/auth",
   database: drizzleAdapter(Database, {
     provider: "pg",
   }),
+  user: {
+    additionalFields: {
+      onboarded: {
+        type: "boolean",
+        required: false,
+        defaultValue: false,
+      },
+    },
+  },
   account: {
     accountLinking: {
       enabled: true,

@@ -1,5 +1,4 @@
 import "./main.css";
-import { useSession } from "@modules/auth/hooks/useSession";
 import { Toaster } from "@mono/ui";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
@@ -21,9 +20,6 @@ const router = createRouter({
   scrollRestoration: true,
   scrollRestorationBehavior: "smooth",
   defaultHashScrollIntoView: { behavior: "smooth" },
-  context: {
-    auth: undefined,
-  },
 });
 
 declare module "@tanstack/react-router" {
@@ -33,18 +29,9 @@ declare module "@tanstack/react-router" {
 }
 
 const Root = () => {
-  const { data, isFetched } = useSession();
-
-  if (!isFetched) {
-    return null;
-  }
-
   return (
     <>
-      <RouterProvider
-        router={router}
-        context={{ auth: data?.data ?? undefined }}
-      />
+      <RouterProvider router={router} />
       <Confirmer.Root />
       <Toaster.Root />
     </>

@@ -13,10 +13,15 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './../modules/root'
-import { Route as authPagesLoginImport } from './../modules/auth/pages/login'
+import { Route as sharedLayoutsOutsideImport } from './../modules/shared/layouts/outside'
 import { Route as sharedLayoutsAuthorizedImport } from './../modules/shared/layouts/authorized'
+import { Route as onboardingOnboardinglayoutImport } from './../modules/onboarding/Onboarding.layout'
+import { Route as authAuthlayoutImport } from './../modules/auth/Auth.layout'
 import { Route as sharedLayoutsOrganizationImport } from './../modules/shared/layouts/organization'
-import { Route as indexImport } from './../modules/index'
+import { Route as splashImport } from './../modules/splash'
+import { Route as onboardingPagesProfileImport } from './../modules/onboarding/pages/profile'
+import { Route as onboardingPagesOrganizationImport } from './../modules/onboarding/pages/organization'
+import { Route as authPagesLoginImport } from './../modules/auth/pages/login'
 import { Route as settingsSettingslayoutImport } from './../modules/settings/Settings.layout'
 import { Route as dashboardDashboardlayoutImport } from './../modules/dashboard/Dashboard.layout'
 import { Route as settingsPagesMembersIndexImport } from './../modules/settings/pages/members/index'
@@ -37,9 +42,8 @@ const AuthorizedOrganizationSlugEditorImport = createFileRoute(
 
 // Create/Update Routes
 
-const authPagesLoginRoute = authPagesLoginImport.update({
-  id: '/login',
-  path: '/login',
+const sharedLayoutsOutsideRoute = sharedLayoutsOutsideImport.update({
+  id: '/_outside',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -48,16 +52,48 @@ const sharedLayoutsAuthorizedRoute = sharedLayoutsAuthorizedImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const onboardingOnboardinglayoutRoute = onboardingOnboardinglayoutImport.update(
+  {
+    id: '/onboarding',
+    path: '/onboarding',
+    getParentRoute: () => sharedLayoutsOutsideRoute,
+  } as any,
+)
+
+const authAuthlayoutRoute = authAuthlayoutImport.update({
+  id: '/_Auth.layout',
+  getParentRoute: () => sharedLayoutsOutsideRoute,
+} as any)
+
 const sharedLayoutsOrganizationRoute = sharedLayoutsOrganizationImport.update({
   id: '/$organizationSlug',
   path: '/$organizationSlug',
   getParentRoute: () => sharedLayoutsAuthorizedRoute,
 } as any)
 
-const indexRoute = indexImport.update({
+const splashRoute = splashImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => sharedLayoutsAuthorizedRoute,
+} as any)
+
+const onboardingPagesProfileRoute = onboardingPagesProfileImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => onboardingOnboardinglayoutRoute,
+} as any)
+
+const onboardingPagesOrganizationRoute =
+  onboardingPagesOrganizationImport.update({
+    id: '/organization',
+    path: '/organization',
+    getParentRoute: () => onboardingOnboardinglayoutRoute,
+  } as any)
+
+const authPagesLoginRoute = authPagesLoginImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => authAuthlayoutRoute,
 } as any)
 
 const settingsSettingslayoutRoute = settingsSettingslayoutImport.update({
@@ -145,18 +181,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof sharedLayoutsAuthorizedImport
       parentRoute: typeof rootRoute
     }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof authPagesLoginImport
+    '/_outside': {
+      id: '/_outside'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof sharedLayoutsOutsideImport
       parentRoute: typeof rootRoute
     }
     '/_authorized/': {
       id: '/_authorized/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof indexImport
+      preLoaderRoute: typeof splashImport
       parentRoute: typeof sharedLayoutsAuthorizedImport
     }
     '/_authorized/$organizationSlug': {
@@ -165,6 +201,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/$organizationSlug'
       preLoaderRoute: typeof sharedLayoutsOrganizationImport
       parentRoute: typeof sharedLayoutsAuthorizedImport
+    }
+    '/_outside/_Auth.layout': {
+      id: '/_outside/_Auth.layout'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof authAuthlayoutImport
+      parentRoute: typeof sharedLayoutsOutsideImport
+    }
+    '/_outside/onboarding': {
+      id: '/_outside/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof onboardingOnboardinglayoutImport
+      parentRoute: typeof sharedLayoutsOutsideImport
     }
     '/_authorized/$organizationSlug/_Dashboard.layout': {
       id: '/_authorized/$organizationSlug/_Dashboard.layout'
@@ -186,6 +236,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/$organizationSlug/settings'
       preLoaderRoute: typeof settingsSettingslayoutImport
       parentRoute: typeof sharedLayoutsOrganizationImport
+    }
+    '/_outside/_Auth.layout/login': {
+      id: '/_outside/_Auth.layout/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof authPagesLoginImport
+      parentRoute: typeof authAuthlayoutImport
+    }
+    '/_outside/onboarding/organization': {
+      id: '/_outside/onboarding/organization'
+      path: '/organization'
+      fullPath: '/onboarding/organization'
+      preLoaderRoute: typeof onboardingPagesOrganizationImport
+      parentRoute: typeof onboardingOnboardinglayoutImport
+    }
+    '/_outside/onboarding/profile': {
+      id: '/_outside/onboarding/profile'
+      path: '/profile'
+      fullPath: '/onboarding/profile'
+      preLoaderRoute: typeof onboardingPagesProfileImport
+      parentRoute: typeof onboardingOnboardinglayoutImport
     }
     '/_authorized/$organizationSlug/_Dashboard.layout/contacts': {
       id: '/_authorized/$organizationSlug/_Dashboard.layout/contacts'
@@ -329,13 +400,13 @@ const sharedLayoutsOrganizationRouteWithChildren =
   )
 
 interface sharedLayoutsAuthorizedRouteChildren {
-  indexRoute: typeof indexRoute
+  splashRoute: typeof splashRoute
   sharedLayoutsOrganizationRoute: typeof sharedLayoutsOrganizationRouteWithChildren
 }
 
 const sharedLayoutsAuthorizedRouteChildren: sharedLayoutsAuthorizedRouteChildren =
   {
-    indexRoute: indexRoute,
+    splashRoute: splashRoute,
     sharedLayoutsOrganizationRoute: sharedLayoutsOrganizationRouteWithChildren,
   }
 
@@ -344,13 +415,57 @@ const sharedLayoutsAuthorizedRouteWithChildren =
     sharedLayoutsAuthorizedRouteChildren,
   )
 
+interface authAuthlayoutRouteChildren {
+  authPagesLoginRoute: typeof authPagesLoginRoute
+}
+
+const authAuthlayoutRouteChildren: authAuthlayoutRouteChildren = {
+  authPagesLoginRoute: authPagesLoginRoute,
+}
+
+const authAuthlayoutRouteWithChildren = authAuthlayoutRoute._addFileChildren(
+  authAuthlayoutRouteChildren,
+)
+
+interface onboardingOnboardinglayoutRouteChildren {
+  onboardingPagesOrganizationRoute: typeof onboardingPagesOrganizationRoute
+  onboardingPagesProfileRoute: typeof onboardingPagesProfileRoute
+}
+
+const onboardingOnboardinglayoutRouteChildren: onboardingOnboardinglayoutRouteChildren =
+  {
+    onboardingPagesOrganizationRoute: onboardingPagesOrganizationRoute,
+    onboardingPagesProfileRoute: onboardingPagesProfileRoute,
+  }
+
+const onboardingOnboardinglayoutRouteWithChildren =
+  onboardingOnboardinglayoutRoute._addFileChildren(
+    onboardingOnboardinglayoutRouteChildren,
+  )
+
+interface sharedLayoutsOutsideRouteChildren {
+  authAuthlayoutRoute: typeof authAuthlayoutRouteWithChildren
+  onboardingOnboardinglayoutRoute: typeof onboardingOnboardinglayoutRouteWithChildren
+}
+
+const sharedLayoutsOutsideRouteChildren: sharedLayoutsOutsideRouteChildren = {
+  authAuthlayoutRoute: authAuthlayoutRouteWithChildren,
+  onboardingOnboardinglayoutRoute: onboardingOnboardinglayoutRouteWithChildren,
+}
+
+const sharedLayoutsOutsideRouteWithChildren =
+  sharedLayoutsOutsideRoute._addFileChildren(sharedLayoutsOutsideRouteChildren)
+
 export interface FileRoutesByFullPath {
-  '': typeof sharedLayoutsAuthorizedRouteWithChildren
-  '/login': typeof authPagesLoginRoute
-  '/': typeof indexRoute
+  '': typeof authAuthlayoutRouteWithChildren
+  '/': typeof splashRoute
   '/$organizationSlug': typeof dashboardDashboardlayoutRouteWithChildren
+  '/onboarding': typeof onboardingOnboardinglayoutRouteWithChildren
   '/$organizationSlug/editor': typeof AuthorizedOrganizationSlugEditorRouteWithChildren
   '/$organizationSlug/settings': typeof settingsSettingslayoutRouteWithChildren
+  '/login': typeof authPagesLoginRoute
+  '/onboarding/organization': typeof onboardingPagesOrganizationRoute
+  '/onboarding/profile': typeof onboardingPagesProfileRoute
   '/$organizationSlug/contacts': typeof dashboardPagesContactsRoute
   '/$organizationSlug/editor/$id': typeof editorPagesIdRoute
   '/$organizationSlug/settings/$': typeof settingsPagesSplatRoute
@@ -363,11 +478,15 @@ export interface FileRoutesByFullPath {
 }
 
 export interface FileRoutesByTo {
-  '/login': typeof authPagesLoginRoute
-  '/': typeof indexRoute
+  '': typeof authAuthlayoutRouteWithChildren
+  '/': typeof splashRoute
   '/$organizationSlug': typeof dashboardPagesIndexRoute
+  '/onboarding': typeof onboardingOnboardinglayoutRouteWithChildren
   '/$organizationSlug/editor': typeof AuthorizedOrganizationSlugEditorRouteWithChildren
   '/$organizationSlug/settings': typeof settingsSettingslayoutRouteWithChildren
+  '/login': typeof authPagesLoginRoute
+  '/onboarding/organization': typeof onboardingPagesOrganizationRoute
+  '/onboarding/profile': typeof onboardingPagesProfileRoute
   '/$organizationSlug/contacts': typeof dashboardPagesContactsRoute
   '/$organizationSlug/editor/$id': typeof editorPagesIdRoute
   '/$organizationSlug/settings/$': typeof settingsPagesSplatRoute
@@ -381,12 +500,17 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/_authorized': typeof sharedLayoutsAuthorizedRouteWithChildren
-  '/login': typeof authPagesLoginRoute
-  '/_authorized/': typeof indexRoute
+  '/_outside': typeof sharedLayoutsOutsideRouteWithChildren
+  '/_authorized/': typeof splashRoute
   '/_authorized/$organizationSlug': typeof sharedLayoutsOrganizationRouteWithChildren
+  '/_outside/_Auth.layout': typeof authAuthlayoutRouteWithChildren
+  '/_outside/onboarding': typeof onboardingOnboardinglayoutRouteWithChildren
   '/_authorized/$organizationSlug/_Dashboard.layout': typeof dashboardDashboardlayoutRouteWithChildren
   '/_authorized/$organizationSlug/editor': typeof AuthorizedOrganizationSlugEditorRouteWithChildren
   '/_authorized/$organizationSlug/settings': typeof settingsSettingslayoutRouteWithChildren
+  '/_outside/_Auth.layout/login': typeof authPagesLoginRoute
+  '/_outside/onboarding/organization': typeof onboardingPagesOrganizationRoute
+  '/_outside/onboarding/profile': typeof onboardingPagesProfileRoute
   '/_authorized/$organizationSlug/_Dashboard.layout/contacts': typeof dashboardPagesContactsRoute
   '/_authorized/$organizationSlug/editor/$id': typeof editorPagesIdRoute
   '/_authorized/$organizationSlug/settings/$': typeof settingsPagesSplatRoute
@@ -402,11 +526,14 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | ''
-    | '/login'
     | '/'
     | '/$organizationSlug'
+    | '/onboarding'
     | '/$organizationSlug/editor'
     | '/$organizationSlug/settings'
+    | '/login'
+    | '/onboarding/organization'
+    | '/onboarding/profile'
     | '/$organizationSlug/contacts'
     | '/$organizationSlug/editor/$id'
     | '/$organizationSlug/settings/$'
@@ -418,11 +545,15 @@ export interface FileRouteTypes {
     | '/$organizationSlug/settings/members'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/login'
+    | ''
     | '/'
     | '/$organizationSlug'
+    | '/onboarding'
     | '/$organizationSlug/editor'
     | '/$organizationSlug/settings'
+    | '/login'
+    | '/onboarding/organization'
+    | '/onboarding/profile'
     | '/$organizationSlug/contacts'
     | '/$organizationSlug/editor/$id'
     | '/$organizationSlug/settings/$'
@@ -434,12 +565,17 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/_authorized'
-    | '/login'
+    | '/_outside'
     | '/_authorized/'
     | '/_authorized/$organizationSlug'
+    | '/_outside/_Auth.layout'
+    | '/_outside/onboarding'
     | '/_authorized/$organizationSlug/_Dashboard.layout'
     | '/_authorized/$organizationSlug/editor'
     | '/_authorized/$organizationSlug/settings'
+    | '/_outside/_Auth.layout/login'
+    | '/_outside/onboarding/organization'
+    | '/_outside/onboarding/profile'
     | '/_authorized/$organizationSlug/_Dashboard.layout/contacts'
     | '/_authorized/$organizationSlug/editor/$id'
     | '/_authorized/$organizationSlug/settings/$'
@@ -454,12 +590,12 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   sharedLayoutsAuthorizedRoute: typeof sharedLayoutsAuthorizedRouteWithChildren
-  authPagesLoginRoute: typeof authPagesLoginRoute
+  sharedLayoutsOutsideRoute: typeof sharedLayoutsOutsideRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
   sharedLayoutsAuthorizedRoute: sharedLayoutsAuthorizedRouteWithChildren,
-  authPagesLoginRoute: authPagesLoginRoute,
+  sharedLayoutsOutsideRoute: sharedLayoutsOutsideRouteWithChildren,
 }
 
 export const routeTree = rootRoute
@@ -473,7 +609,7 @@ export const routeTree = rootRoute
       "filePath": "root.tsx",
       "children": [
         "/_authorized",
-        "/login"
+        "/_outside"
       ]
     },
     "/_authorized": {
@@ -483,11 +619,15 @@ export const routeTree = rootRoute
         "/_authorized/$organizationSlug"
       ]
     },
-    "/login": {
-      "filePath": "auth/pages/login.tsx"
+    "/_outside": {
+      "filePath": "shared/layouts/outside.tsx",
+      "children": [
+        "/_outside/_Auth.layout",
+        "/_outside/onboarding"
+      ]
     },
     "/_authorized/": {
-      "filePath": "index.tsx",
+      "filePath": "splash.tsx",
       "parent": "/_authorized"
     },
     "/_authorized/$organizationSlug": {
@@ -497,6 +637,21 @@ export const routeTree = rootRoute
         "/_authorized/$organizationSlug/_Dashboard.layout",
         "/_authorized/$organizationSlug/editor",
         "/_authorized/$organizationSlug/settings"
+      ]
+    },
+    "/_outside/_Auth.layout": {
+      "filePath": "auth/Auth.layout.tsx",
+      "parent": "/_outside",
+      "children": [
+        "/_outside/_Auth.layout/login"
+      ]
+    },
+    "/_outside/onboarding": {
+      "filePath": "onboarding/Onboarding.layout.tsx",
+      "parent": "/_outside",
+      "children": [
+        "/_outside/onboarding/organization",
+        "/_outside/onboarding/profile"
       ]
     },
     "/_authorized/$organizationSlug/_Dashboard.layout": {
@@ -525,6 +680,18 @@ export const routeTree = rootRoute
         "/_authorized/$organizationSlug/settings/sessions",
         "/_authorized/$organizationSlug/settings/members"
       ]
+    },
+    "/_outside/_Auth.layout/login": {
+      "filePath": "auth/pages/login.tsx",
+      "parent": "/_outside/_Auth.layout"
+    },
+    "/_outside/onboarding/organization": {
+      "filePath": "onboarding/pages/organization.tsx",
+      "parent": "/_outside/onboarding"
+    },
+    "/_outside/onboarding/profile": {
+      "filePath": "onboarding/pages/profile.tsx",
+      "parent": "/_outside/onboarding"
     },
     "/_authorized/$organizationSlug/_Dashboard.layout/contacts": {
       "filePath": "dashboard/pages/contacts.tsx",

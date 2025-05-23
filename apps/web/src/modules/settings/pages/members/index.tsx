@@ -18,10 +18,7 @@ export const Route = createFileRoute(
 });
 
 function RouteComponent() {
-  const {
-    organization,
-    auth: { user },
-  } = Route.useRouteContext();
+  const { organization, user } = Route.useRouteContext();
 
   const organizationQuery = useQuery({
     queryKey: ["organization", organization.id],
