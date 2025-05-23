@@ -4,8 +4,7 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { magicLink, organization } from "better-auth/plugins";
 
-// @ts-ignore
-export const auth = betterAuth({
+export const auth: ReturnType<typeof betterAuth> = betterAuth({
   basePath: "/auth",
   database: drizzleAdapter(Database, {
     provider: "pg",

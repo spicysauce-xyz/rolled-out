@@ -1,4 +1,3 @@
-import type { Auth } from "@mono/api";
 import {
   inferAdditionalFields,
   magicLinkClient,
@@ -12,6 +11,14 @@ export const authClient = createAuthClient({
   plugins: [
     organizationClient(),
     magicLinkClient(),
-    inferAdditionalFields<Auth>(),
+    inferAdditionalFields({
+      user: {
+        onboarded: {
+          type: "boolean",
+          required: false,
+          defaultValue: false,
+        },
+      },
+    }),
   ],
 });

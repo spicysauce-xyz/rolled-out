@@ -18,8 +18,6 @@ export const Route = createFileRoute("/_authorized")({
       },
     });
 
-    console.log("beforeLoad", { session });
-
     // if user is not logged in, redirect to login
     if (!session || !session.data) {
       throw redirect({
