@@ -5,7 +5,7 @@ import "@tanstack/react-query";
 
 export const queryClient = new QueryClient();
 
-export const { api } = hc<Api>("http://localhost", {
+export const { api } = hc<Api>(`https://${import.meta.env.VITE_DOMAIN}`, {
   init: {
     credentials: "include",
   },

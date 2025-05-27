@@ -19,6 +19,7 @@ jobs:
     uses: ./.github/workflows/release.yml
     with:
       release_tag: ${{ github.event.release.tag_name }}
+      domain: ${{ vars.DOMAIN }}
     secrets:
       DO_HOST: ${{ secrets.DO_HOST }}
       DO_USER: ${{ secrets.DO_USER }}

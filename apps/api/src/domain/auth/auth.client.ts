@@ -1,3 +1,4 @@
+import { Config } from "@config";
 import { Database } from "@database";
 import { Email } from "@email";
 import { betterAuth } from "better-auth";
@@ -34,7 +35,7 @@ export const auth: ReturnType<typeof betterAuth> = betterAuth({
       clientSecret: "100000000000000000000",
     },
   },
-  trustedOrigins: ["http://localhost"],
+  trustedOrigins: [`https://${Config.domain}`],
   advanced: {
     database: {
       generateId: false,
