@@ -8,7 +8,7 @@ services:
       - 3000
     environment:
       - NODE_ENV=production
-      - VITE_APP_DOMAIN=DOMAIN
+      - VITE_APP_DOMAIN=${DOMAIN}
   api:
     image: ghcr.io/spicysauce-xyz/rolled-out-api:${RELEASE_TAG:-latest}
     restart: always
@@ -19,7 +19,7 @@ services:
       - NODE_ENV=production
       - DATABASE_URL=postgres://postgres:postgres@postgres:5432/postgres
       - RESEND_API_KEY=1000000000000000000000000000
-      - DOMAIN=DOMAIN
+      - DOMAIN=${DOMAIN}
     depends_on:
       - migrator
   migrator:
