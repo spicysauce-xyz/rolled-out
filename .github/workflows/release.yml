@@ -39,8 +39,8 @@ jobs:
       - name: Build and push web image
         uses: docker/build-push-action@v5
         with:
-          context: ./apps/web
-          file: ./apps/web/Dockerfile
+          context: .
+          file: ./apps/web/Dockerfile.web
           push: true
           tags: |
             ghcr.io/${{ github.repository }}-web:${{ github.event.release.tag_name }}
@@ -49,8 +49,8 @@ jobs:
       - name: Build and push api image
         uses: docker/build-push-action@v5
         with:
-          context: ./apps/api
-          file: ./apps/api/Dockerfile
+          context: .
+          file: ./apps/api/Dockerfile.api
           push: true
           tags: |
             ghcr.io/${{ github.repository }}-api:${{ github.event.release.tag_name }}
