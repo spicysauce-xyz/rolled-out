@@ -1,13 +1,14 @@
 name: Release Images
 
 on:
-  workflow_run:
-    workflows: ["Build and Push Images"]
-    types:
-      - completed
+  workflow_call:
+    inputs:
+      release_tag:
+        required: true
+        type: string
 
 jobs:
-  deploy:
+  release:
     runs-on: ubuntu-latest
 
     steps:
@@ -22,7 +23,7 @@ jobs:
             
             cd ${{ github.repository }}
             git fetch --all
-            git checkout ${{ github.event.release.tag_name }}
+            git checkout ${{ inputs.release_tag }}
 
-            RELEASE_TAG=${{ github.event.release.tag_name }} docker compose -f docker-compose.yml pull
-            RELEASE_TAG=${{ github.event.release.tag_name }} docker compose -f docker-compose.yml up -d
+            RELEASE_TAG=${{ inputs.release_tag }} docker compose -f docker-compose.yml pull
+            RELEASE_TAG=${{ inputs.release_tag }} docker compose -f docker-compose.yml up -d

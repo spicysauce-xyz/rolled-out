@@ -1,8 +1,11 @@
 name: Build and Push Images
 
 on:
-  release:
-    types: [published]
+  workflow_call:
+    inputs:
+      release_tag:
+        required: true
+        type: string
 
 jobs:
   build-and-push:
@@ -43,7 +46,7 @@ jobs:
           file: ./apps/web/Dockerfile.web
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}-web:${{ github.event.release.tag_name }}
+            ghcr.io/${{ github.repository }}-web:${{ inputs.release_tag }}
             ghcr.io/${{ github.repository }}-web:latest
 
       - name: Build and push api image
@@ -53,5 +56,5 @@ jobs:
           file: ./apps/api/Dockerfile.api
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}-api:${{ github.event.release.tag_name }}
+            ghcr.io/${{ github.repository }}-api:${{ inputs.release_tag }}
             ghcr.io/${{ github.repository }}-api:latest
