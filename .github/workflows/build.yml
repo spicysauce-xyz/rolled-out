@@ -34,6 +34,7 @@ jobs:
         with:
           context: .
           file: ./apps/web/Dockerfile.web
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: |
             ghcr.io/${{ github.repository }}-web:${{ inputs.release_tag }}
@@ -44,6 +45,7 @@ jobs:
         with:
           context: .
           file: ./apps/api/Dockerfile.api
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: |
             ghcr.io/${{ github.repository }}-api:${{ inputs.release_tag }}
