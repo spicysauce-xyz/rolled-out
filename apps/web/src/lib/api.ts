@@ -5,7 +5,7 @@ import "@tanstack/react-query";
 
 export const queryClient = new QueryClient();
 
-export const { api } = hc<Api>(`https://${import.meta.env.VITE_DOMAIN}`, {
+export const { api } = hc<Api>("https://rolledout.xyz", {
   init: {
     credentials: "include",
   },

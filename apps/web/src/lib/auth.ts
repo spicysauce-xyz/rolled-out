@@ -6,7 +6,7 @@ import {
 import { createAuthClient } from "better-auth/react";
 
 export const authClient = createAuthClient({
-  baseURL: `https://${import.meta.env.VITE_DOMAIN}`,
+  baseURL: "https://rolledout.xyz",
   basePath: "/api/auth",
   plugins: [
     organizationClient(),
