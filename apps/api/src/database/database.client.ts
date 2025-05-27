@@ -5,13 +5,7 @@ import type { PgTransaction } from "drizzle-orm/pg-core";
 import * as schema from "./schema";
 
 export const Database = drizzle({
-  connection: {
-    host: Config.database.host,
-    port: Config.database.port,
-    user: Config.database.username,
-    password: Config.database.password,
-    database: Config.database.name,
-  },
+  connection: Config.database.url,
   schema,
 });
 

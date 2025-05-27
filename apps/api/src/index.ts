@@ -5,12 +5,13 @@ import { AuthHandler } from "./domain/auth";
 import { PostHandler } from "./domain/post";
 
 export const app = new Hono()
+  .basePath("/api")
   .use(logger())
-  .use(cors({ origin: ["http://localhost:5173", "http://localhost:4173"], credentials: true }))
+  .use(cors({ origin: ["http://localhost"], credentials: true }))
   .route("/", AuthHandler)
   .route("/", PostHandler);
 
 export default {
-  port: 3000,
+  port: 4000,
   fetch: app.fetch,
 };

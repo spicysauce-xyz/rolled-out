@@ -45,7 +45,6 @@
     "motion": "^12.5.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-scan": "^0.3.3",
     "recharts": "^2.15.1",
     "tailwindcss": "^4.0.9",
     "ts-pattern": "^5.7.0",

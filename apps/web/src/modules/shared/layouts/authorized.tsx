@@ -19,11 +19,16 @@ export const Route = createFileRoute("/_authorized")({
     });
 
     // if user is not logged in, redirect to login
-    if (!session || !session.data) {
+    if (
+      !session ||
+      !session.data ||
+      !session.data.session ||
+      !session.data.user
+    ) {
       throw redirect({
         to: "/login",
         search: {
-          redirect: location.href,
+          redirect: location.pathname,
         },
       });
     }

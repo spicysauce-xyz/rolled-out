@@ -4,14 +4,9 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { scan } from "react-scan";
 import * as Confirmer from "./components/feedback/confirmer";
 import { routeTree } from "./generated/router";
 import { queryClient } from "./lib/api";
-
-scan({
-  enabled: import.meta.env.DEV,
-});
 
 const router = createRouter({
   routeTree,

@@ -1,0 +1,37 @@
+FROM oven/bun:latest AS base
+
+# Install Turbo CLI globally (within this stage)
+RUN bun install turbo@latest --global
+
+# -------- Builder: Turbo prune workspace --------
+FROM base AS builder
+
+WORKDIR /app
+
+COPY . .
+
+# Prune to get a minimal isolated workspace
+RUN turbo prune @mono/web --docker
+
+# -------- Installer: Install deps & build app --------
+FROM base AS installer
+
+WORKDIR /app
+
+COPY --from=builder /app/out/json/ ./
+RUN bun install --frozen-lockfile
+
+COPY --from=builder /app/out/full/ ./
+RUN turbo run build
+
+# -------- Runner: Lightweight final image --------
+FROM base AS runner
+
+WORKDIR /app
+
+# Copy the built app
+COPY --from=installer /app/apps/web/dist ./dist
+
+EXPOSE 3000
+# Start the static server
+CMD ["bunx", "serve", "dist", "-s"]

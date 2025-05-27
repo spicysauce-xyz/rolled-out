@@ -5,7 +5,7 @@ import "@tanstack/react-query";
 
 export const queryClient = new QueryClient();
 
-export const api = hc<Api>("http://localhost:3000", {
+export const { api } = hc<Api>("http://localhost", {
   init: {
     credentials: "include",
   },

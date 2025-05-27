@@ -6,7 +6,7 @@
   },
   "scripts": {
     "dev": "bun run --hot --no-clear-screen src/index.ts",
-    "build": "bun build src/index.ts --outdir=dist --target=bun",
+    "build": "bun build src/index.ts scripts/* --outdir=dist --target=bun",
     "start": "bun run dist/index.js",
     "db:push": "drizzle-kit push",
     "db:generate": "drizzle-kit generate",
