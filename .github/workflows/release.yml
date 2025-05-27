@@ -23,7 +23,6 @@ jobs:
             cd ${{ github.repository }}
             git fetch --all
             git checkout ${{ github.event.release.tag_name }}
-            git reset --hard origin/${{ github.event.release.tag_name }}
 
             RELEASE_TAG=${{ github.event.release.tag_name }} docker compose -f docker-compose.yml pull
             RELEASE_TAG=${{ github.event.release.tag_name }} docker compose -f docker-compose.yml up -d
