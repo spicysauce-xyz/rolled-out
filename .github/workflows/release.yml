@@ -32,5 +32,5 @@ jobs:
             git fetch --all
             git checkout ${{ inputs.release_tag }}
 
-            RELEASE_TAG=${{ inputs.release_tag }} docker compose -f docker-compose.yml pull
-            RELEASE_TAG=${{ inputs.release_tag }} docker compose -f docker-compose.yml up -d
+            RELEASE_TAG=${{ inputs.release_tag }} docker compose -f docker-compose.production.yml pull
+            RELEASE_TAG=${{ inputs.release_tag }} docker compose -f docker-compose.production.yml up -d
