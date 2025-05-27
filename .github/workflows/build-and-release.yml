@@ -6,11 +6,15 @@ on:
 
 jobs:
   build:
+    permissions:
+      contents: read
+      packages: write
+
     uses: ./.github/workflows/build.yml
     with:
       release_tag: ${{ github.event.release.tag_name }}
 
-  deploy:
+  release:
     needs: build
     uses: ./.github/workflows/release.yml
     with:

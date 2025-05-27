@@ -15,16 +15,6 @@ jobs:
       contents: read
       packages: write
 
-    strategy:
-      matrix:
-        include:
-          - name: web
-            context: ./apps/web
-            file: ./apps/web/Dockerfile
-          - name: api
-            context: ./apps/api
-            file: ./apps/api/Dockerfile
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
