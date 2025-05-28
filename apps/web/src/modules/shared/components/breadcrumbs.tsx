@@ -33,8 +33,6 @@ const OrganizationSelector = ({ organization }: OrganizationSelectorProps) => {
         throw response.error;
       }
 
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
       return response.data;
     },
     staleTime: 1000 * 60 * 5,

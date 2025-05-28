@@ -2,10 +2,11 @@ import type { Api, ApiError } from "@mono/api";
 import { QueryClient } from "@tanstack/react-query";
 import { hc } from "hono/client";
 import "@tanstack/react-query";
+import { config } from "@lib/config";
 
 export const queryClient = new QueryClient();
 
-export const { api } = hc<Api>("https://rolledout.xyz", {
+export const { api } = hc<Api>(config.api.url, {
   init: {
     credentials: "include",
   },

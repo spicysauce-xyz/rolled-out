@@ -35,7 +35,7 @@ export const auth: ReturnType<typeof betterAuth> = betterAuth({
       clientSecret: "100000000000000000000",
     },
   },
-  trustedOrigins: [`https://${Config.domain}`],
+  trustedOrigins: [Config.client.url],
   advanced: {
     database: {
       generateId: false,

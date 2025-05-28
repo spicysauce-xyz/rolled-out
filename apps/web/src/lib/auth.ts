@@ -1,3 +1,4 @@
+import { config } from "@lib/config";
 import {
   inferAdditionalFields,
   magicLinkClient,
@@ -6,7 +7,7 @@ import {
 import { createAuthClient } from "better-auth/react";
 
 export const authClient = createAuthClient({
-  baseURL: "https://rolledout.xyz",
+  baseURL: config.api.url,
   basePath: "/api/auth",
   plugins: [
     organizationClient(),
