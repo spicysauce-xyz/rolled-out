@@ -8,7 +8,7 @@ export default defineConfig({
   plugins: [
     TanStackRouterVite({
       target: "react",
-      autoCodeSplitting: false,
+      autoCodeSplitting: true,
       generatedRouteTree: "./src/generated/router.ts",
       virtualRouteConfig: "./src/routes.ts",
       routesDirectory: "./src/modules",
@@ -17,4 +17,7 @@ export default defineConfig({
     tailwindcss(),
     tsconfigPaths(),
   ],
+  build: {
+    target: "ES2022",
+  },
 });

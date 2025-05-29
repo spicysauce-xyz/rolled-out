@@ -89,7 +89,7 @@ function RouteComponent() {
             },
           });
         } else {
-          await router.invalidate();
+          await router.invalidate({ sync: true });
         }
 
         formApi.reset();

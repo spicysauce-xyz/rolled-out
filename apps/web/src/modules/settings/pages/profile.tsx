@@ -49,7 +49,7 @@ function RouteComponent() {
 
         await queryClient.refetchQueries({ queryKey: ["session"] });
 
-        await router.invalidate();
+        await router.invalidate({ sync: true });
 
         formApi.reset();
 

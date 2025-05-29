@@ -1,12 +1,12 @@
 import * as Transition from "@components/transition";
 import {
   Outlet,
-  createRootRouteWithContext,
+  createRootRoute,
   useRouterState,
 } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 
-export const Route = createRootRouteWithContext()({
+export const Route = createRootRoute({
   component: Root,
 });
 

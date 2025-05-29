@@ -27,11 +27,9 @@ export const useLogout = () => {
     try {
       await authClient.signOut();
 
-      await queryClient.invalidateQueries({ queryKey: ["session"] });
+      await queryClient.refetchQueries({ queryKey: ["session"] });
 
-      setTimeout(async () => {
-        await router.invalidate();
-      });
+      await router.invalidate({ sync: true });
 
       Toaster.success("Logged out successfully", { id: toastId });
     } catch {

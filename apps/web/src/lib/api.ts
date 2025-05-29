@@ -2,7 +2,7 @@ import type { Api, ApiError } from "@mono/api";
 import { QueryClient } from "@tanstack/react-query";
 import { hc } from "hono/client";
 import "@tanstack/react-query";
-import { config } from "@lib/config";
+import { config } from "@config";
 
 export const queryClient = new QueryClient();
 
