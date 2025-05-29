@@ -15,9 +15,9 @@ services:
     expose:
       - 4000
     environment:
+      - CLIENT_HOST=${DOMAIN}
       - DATABASE_URL=postgres://postgres:postgres@postgres:5432/postgres
       - RESEND_API_KEY=1000000000000000000000000000
-      - DOMAIN=${DOMAIN}
     depends_on:
       - migrator
   migrator:
