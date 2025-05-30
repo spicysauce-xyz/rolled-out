@@ -16,12 +16,10 @@ const formatConfig = () => {
   return {
     self: {
       base: `http${config.SERVER_HOST === "localhost" ? "" : "s"}://${config.SERVER_HOST}${config.SERVER_PORT ? `:${config.SERVER_PORT}` : ""}`,
-      path: config.SERVER_PATH,
       port: config.SERVER_PORT,
     },
     client: {
       base: `http${config.CLIENT_HOST === "localhost" ? "" : "s"}://${config.CLIENT_HOST}${config.CLIENT_PORT ? `:${config.CLIENT_PORT}` : ""}`,
-      path: config.CLIENT_HOST,
     },
     database: {
       url: config.DATABASE_URL,
