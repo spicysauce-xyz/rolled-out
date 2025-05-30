@@ -3,6 +3,7 @@ const initializeConfigFromEnv = () => {
     type: "env",
     apiHost: import.meta.env.VITE_API_HOST,
     apiPort: import.meta.env.VITE_API_PORT,
+    apiPath: import.meta.env.VITE_API_PATH,
   };
 };
 

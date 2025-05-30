@@ -6,7 +6,6 @@ import { AuthHandler } from "./domain/auth";
 import { PostHandler } from "./domain/post";
 
 export const app = new Hono()
-  .basePath("/api")
   .use(logger())
   .use(cors({ origin: [Config.client.url], credentials: true }))
   .route("/", AuthHandler)
