@@ -8,7 +8,7 @@ const initializeConfigFromEnv = () => {
 };
 
 const initializeConfigFromRemote = async () => {
-  const res = await fetch("/config.json");
+  const res = await fetch("/app/config.json");
   const config = await res.json();
 
   window.__APP_CONFIG__ = {
