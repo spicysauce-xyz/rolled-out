@@ -49,8 +49,6 @@ services:
       - /etc/ssl/cloudflare:/etc/ssl/cloudflare:ro
     environment:
       - DOMAIN=${DOMAIN}
-      - API_PATH=${API_PATH:-/api}
-      - CLIENT_PATH=${CLIENT_PATH:-/app}
     depends_on:
       - api
       - web

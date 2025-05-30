@@ -15,6 +15,7 @@ const router = createRouter({
   scrollRestoration: true,
   scrollRestorationBehavior: "smooth",
   defaultHashScrollIntoView: { behavior: "smooth" },
+  basepath: "/app",
 });
 
 declare module "@tanstack/react-router" {

@@ -7,7 +7,8 @@ export interface RawConfig {
 
 export interface Config {
   api: {
-    url: string;
+    base: string;
+    path: string;
   };
 }
 
