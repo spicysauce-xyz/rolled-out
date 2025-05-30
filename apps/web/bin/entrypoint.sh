@@ -2,7 +2,7 @@ cat <<EOF > /usr/share/nginx/html/config.json
 {
   "apiHost": "${API_HOST}",
   "apiPort": "${API_PORT}",
-  "apiBasePath": "${API_BASE_PATH}"
+  "apiPath": "${API_PATH}"
 }
 EOF
 
