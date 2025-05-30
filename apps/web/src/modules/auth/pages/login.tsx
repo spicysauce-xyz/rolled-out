@@ -30,7 +30,7 @@ function Login() {
       await authClient.signIn.magicLink(
         {
           email: value.email,
-          callbackURL: window.location.origin,
+          callbackURL: window.location.href,
         },
         {
           onSuccess: async () => {
@@ -65,7 +65,7 @@ function Login() {
   const handleSocialLogin = async (provider: "google" | "github") => {
     await socialLogin.mutateAsync({
       provider,
-      callbackURL: window.location.origin,
+      callbackURL: window.location.href,
     });
   };
 

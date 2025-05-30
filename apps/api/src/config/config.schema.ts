@@ -1,6 +1,9 @@
 import { z } from "zod";
 
 export const configSchema = z.object({
+  SERVER_HOST: z.string().optional(),
+  SERVER_PORT: z.string({ coerce: true }).optional(),
+  SERVER_PATH: z.string().optional(),
   CLIENT_HOST: z.string(),
   CLIENT_PORT: z.number({ coerce: true }).optional(),
   DATABASE_URL: z.string(),
@@ -11,10 +14,14 @@ const formatConfig = () => {
   const config = configSchema.parse(Bun.env);
 
   return {
+    self: {
+      base: `http${config.SERVER_HOST === "localhost" ? "" : "s"}://${config.SERVER_HOST}${config.SERVER_PORT ? `:${config.SERVER_PORT}` : ""}`,
+      path: config.SERVER_PATH,
+      port: config.SERVER_PORT,
+    },
     client: {
-      url: `http${config.CLIENT_HOST === "localhost" ? "" : "s"}://${config.CLIENT_HOST}${config.CLIENT_PORT ? `:${config.CLIENT_PORT}` : ""}`,
-      host: config.CLIENT_HOST,
-      port: config.CLIENT_PORT,
+      base: `http${config.CLIENT_HOST === "localhost" ? "" : "s"}://${config.CLIENT_HOST}${config.CLIENT_PORT ? `:${config.CLIENT_PORT}` : ""}`,
+      path: config.CLIENT_HOST,
     },
     database: {
       url: config.DATABASE_URL,

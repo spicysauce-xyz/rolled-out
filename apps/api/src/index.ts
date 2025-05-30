@@ -7,11 +7,11 @@ import { PostHandler } from "./domain/post";
 
 export const app = new Hono()
   .use(logger())
-  .use(cors({ origin: [Config.client.url], credentials: true }))
+  .use(cors({ origin: [Config.client.base], credentials: true }))
   .route("/", AuthHandler)
   .route("/", PostHandler);
 
 export default {
-  port: 4000,
+  port: Config.self.port || 4000,
   fetch: app.fetch,
 };

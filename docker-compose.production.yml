@@ -8,7 +8,7 @@ services:
       - 3000
     environment:
       - API_HOST=${DOMAIN}
-      - API_PATH=${API_PATH:-/api}
+      - API_PATH=/api
   api:
     image: ghcr.io/spicysauce-xyz/rolled-out-api:${RELEASE_TAG:-latest}
     restart: always
@@ -16,6 +16,9 @@ services:
     expose:
       - 4000
     environment:
+      - SERVER_HOST=${DOMAIN}
+      - SERVER_PATH=/api
+      - CLIENT_HOST=${DOMAIN}
       - CLIENT_HOST=${DOMAIN}
       - DATABASE_URL=postgres://postgres:postgres@postgres:5432/postgres
       - RESEND_API_KEY=1000000000000000000000000000

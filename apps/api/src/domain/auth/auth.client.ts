@@ -5,8 +5,11 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { magicLink, organization } from "better-auth/plugins";
 
+console.log(Config);
+
 export const auth: ReturnType<typeof betterAuth> = betterAuth({
-  basePath: "auth",
+  baseURL: Config.self.base,
+  basePath: `${Config.self.path || ""}/auth`,
   database: drizzleAdapter(Database, {
     provider: "pg",
   }),
@@ -35,7 +38,7 @@ export const auth: ReturnType<typeof betterAuth> = betterAuth({
       clientSecret: "100000000000000000000",
     },
   },
-  trustedOrigins: [Config.client.url],
+  trustedOrigins: [Config.client.base],
   advanced: {
     database: {
       generateId: false,
