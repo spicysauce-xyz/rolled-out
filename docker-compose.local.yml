@@ -1,0 +1,60 @@
+name: "rolled-out-local"
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile.web
+    restart: always
+    expose:
+      - 3000
+    environment:
+      - API_HOST=localhost
+      - API_PATH=/api
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile.api
+    restart: always
+    command: bun run dist/src/index.js
+    expose:
+      - 4000
+    environment:
+      - SERVER_HOST=localhost
+      - SERVER_PATH=/api
+      - CLIENT_HOST=localhost
+      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/postgres
+      - RESEND_API_KEY=1000000000000000000000000000
+    depends_on:
+      - migrator
+  migrator:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile.api
+    command: bun run dist/scripts/migrate.js
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/postgres
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres:15
+    restart: always
+    expose:
+      - 5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+  nginx:
+    image: nginx:stable-alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf.local:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - api
+      - web
+volumes:
+  pgdata:
