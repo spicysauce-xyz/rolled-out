@@ -6,7 +6,7 @@ import { config } from "@config";
 
 export const queryClient = new QueryClient();
 
-export const api = hc<Api>(`${config.api.base}${config.api.path}`, {
+export const api = hc<Api>(config.apiUrl, {
   init: {
     credentials: import.meta.env.PROD ? "same-origin" : "include",
   },
