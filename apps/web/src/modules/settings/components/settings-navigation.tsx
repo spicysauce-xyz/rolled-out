@@ -13,11 +13,13 @@ import {
 } from "lucide-react";
 
 interface SettingsNavigationProps {
+  organizationName: string;
   organizationSlug: string;
   user: (typeof authClient.$Infer.Session)["user"];
 }
 
 export const SettingsNavigation: React.FC<SettingsNavigationProps> = ({
+  organizationName,
   organizationSlug,
   user,
 }) => {
@@ -56,7 +58,7 @@ export const SettingsNavigation: React.FC<SettingsNavigationProps> = ({
               icon={SmartphoneIcon}
             />
           </Sidebar.Group>
-          <Sidebar.Group label="Organization">
+          <Sidebar.Group label={organizationName}>
             <Sidebar.NavLink
               to="/$organizationSlug/settings/details"
               params={{ organizationSlug }}

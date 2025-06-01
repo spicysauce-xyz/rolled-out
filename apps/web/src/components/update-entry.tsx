@@ -72,9 +72,9 @@ const UpdateEntryTags: React.FC<UpdateEntryTagsProps> = ({
       {tags.map((tag) => (
         <div
           key={tag}
-          className="flex items-center rounded-sm bg-neutral-50 px-1"
+          className="flex items-center rounded-sm bg-accent-50 px-1"
         >
-          <Text.Root size="sm" weight="medium" className="text-neutral-500">
+          <Text.Root size="sm" weight="medium" className="text-accent-500">
             {tag}
           </Text.Root>
         </div>
