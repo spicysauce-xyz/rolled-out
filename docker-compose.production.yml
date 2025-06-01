@@ -18,7 +18,7 @@ services:
       - 4000
     environment:
       - SELF=https://${DOMAIN}/api
-      - API=https://${DOMAIN}/app
+      - CLIENT=https://${DOMAIN}/app
       - DATABASE_URL=postgres://postgres:postgres@postgres:5432/postgres
       - RESEND_API_KEY=1000000000000000000000000000
     depends_on:
