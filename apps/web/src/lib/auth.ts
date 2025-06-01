@@ -6,9 +6,11 @@ import {
 } from "better-auth/client/plugins";
 import { createAuthClient } from "better-auth/react";
 
+const url = new URL(config.authUrl);
+
 export const authClient = createAuthClient({
-  baseURL: config.api.base,
-  basePath: `${config.api.path}/auth`,
+  baseURL: url.origin,
+  basePath: url.pathname,
   plugins: [
     organizationClient(),
     magicLinkClient(),

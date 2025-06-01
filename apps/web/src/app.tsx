@@ -1,4 +1,5 @@
 import "./app.css";
+import { config } from "@config";
 import { Toaster } from "@mono/ui";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
@@ -15,7 +16,7 @@ const router = createRouter({
   scrollRestoration: true,
   scrollRestorationBehavior: "smooth",
   defaultHashScrollIntoView: { behavior: "smooth" },
-  basepath: "/app",
+  basepath: config.basepath,
 });
 
 declare module "@tanstack/react-router" {
@@ -34,16 +35,14 @@ const Root = () => {
   );
 };
 
-export const start = () => {
-  const root = document.getElementById("root");
+const root = document.getElementById("root");
 
-  if (root) {
-    ReactDOM.createRoot(root).render(
-      <React.StrictMode>
-        <QueryClientProvider client={queryClient}>
-          <Root />
-        </QueryClientProvider>
-      </React.StrictMode>,
-    );
-  }
-};
+if (root) {
+  ReactDOM.createRoot(root).render(
+    <React.StrictMode>
+      <QueryClientProvider client={queryClient}>
+        <Root />
+      </QueryClientProvider>
+    </React.StrictMode>,
+  );
+}

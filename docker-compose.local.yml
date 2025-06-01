@@ -5,12 +5,13 @@ services:
     build:
       context: .
       dockerfile: apps/web/Dockerfile.web
+    command: bun run server.prod.ts
     restart: always
     expose:
       - 3000
     environment:
-      - API_HOST=localhost
-      - API_PATH=/api
+      - SELF=http://localhost/admin
+      - API=http://localhost/interface
   api:
     build:
       context: .
@@ -20,9 +21,8 @@ services:
     expose:
       - 4000
     environment:
-      - SERVER_HOST=localhost
-      - SERVER_PATH=/api
-      - CLIENT_HOST=localhost
+      - SELF=http://localhost/interface
+      - CLIENT=http://localhost/admin
       - DATABASE_URL=postgres://postgres:postgres@postgres:5432/postgres
       - RESEND_API_KEY=1000000000000000000000000000
     depends_on:
@@ -52,9 +52,14 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./nginx/nginx.conf.local:/etc/nginx/nginx.conf:ro
+      - ./nginx/nginx.local.conf:/etc/nginx/nginx.conf.template:ro
+      - ./nginx/entrypoint.sh:/entrypoint.sh:ro
+    environment:
+      - API=/interface
+      - CLIENT=/admin
     depends_on:
       - api
       - web
+    entrypoint: ["/entrypoint.sh"]
 volumes:
   pgdata:
