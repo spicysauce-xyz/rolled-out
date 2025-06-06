@@ -39,6 +39,8 @@ jobs:
           tags: |
             ghcr.io/${{ github.repository }}-web:${{ inputs.release_tag }}
             ghcr.io/${{ github.repository }}-web:latest
+          build-args: |
+            BUILDKIT_PROGRESS=plain
 
       - name: Build and push api image
         uses: docker/build-push-action@v5
@@ -50,3 +52,5 @@ jobs:
           tags: |
             ghcr.io/${{ github.repository }}-api:${{ inputs.release_tag }}
             ghcr.io/${{ github.repository }}-api:latest
+          build-args: |
+            BUILDKIT_PROGRESS=plain
