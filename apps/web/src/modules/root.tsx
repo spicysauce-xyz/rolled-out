@@ -1,3 +1,4 @@
+import "@styles/global.css";
 import * as Confirmer from "@components/feedback/confirmer";
 import * as Transition from "@components/transition";
 import { Toaster } from "@mono/ui";
