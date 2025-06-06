@@ -16,6 +16,17 @@ export default defineConfig({
     plugins: [tailwindcss(), tsconfigPaths()],
     build: {
       target: "ES2022",
+      rollupOptions: {
+        output: {
+          assetFileNames: (info) => {
+            if (info.names.includes("global.css")) {
+              return "_build/assets/global.css";
+            }
+
+            return "_build/assets/[name]-[hash][extname]";
+          },
+        },
+      },
     },
   },
   tsr: {
