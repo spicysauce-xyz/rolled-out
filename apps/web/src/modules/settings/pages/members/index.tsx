@@ -12,7 +12,7 @@ import { InviteMemberDialog } from "./components/invite-member-dialog";
 import { MembersList } from "./components/members-list";
 
 export const Route = createFileRoute(
-  "/_authorized/$organizationSlug/settings/members",
+  "/_authorized/_has-organization/$organizationSlug/settings/members",
 )({
   component: RouteComponent,
 });

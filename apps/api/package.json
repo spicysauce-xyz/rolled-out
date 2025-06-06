@@ -1,28 +1,36 @@
 {
   "name": "@mono/api",
   "type": "module",
+  "main": "./dist/index.js",
   "exports": {
-    ".": "./src/shared.ts"
+    ".": {
+      "types": "./dist/shared.d.ts"
+    }
   },
   "scripts": {
-    "dev": "bun run --hot --no-clear-screen src/index.ts",
-    "build": "bun build src/index.ts scripts/* --outdir=dist --target=bun",
-    "start": "bun run dist/index.js",
+    "dev": "tsup index.ts --watch --onSuccess 'tsc --emitDeclarationOnly --declaration & node dist/index.js' --format esm",
+    "build": "tsup --entry index.ts --entry scripts/*.ts --format esm",
+    "start": "node dist/index.js",
     "db:push": "drizzle-kit push",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate"
   },
   "dependencies": {
+    "@hono/node-server": "^1.14.3",
     "@hono/zod-validator": "^0.4.3",
     "better-auth": "^1.2.8",
+    "dotenv": "^16.5.0",
     "drizzle-orm": "^0.40.0",
     "hono": "^4.7.2",
     "pg": "^8.13.3",
-    "resend": "^4.5.1"
+    "resend": "^4.5.1",
+    "tsup": "^8.5.0",
+    "tsx": "^4.19.4",
+    "zod": "^3.25.48"
   },
   "devDependencies": {
     "@total-typescript/tsconfig": "^1.0.4",
-    "@types/bun": "latest",
+    "@types/node": "^22.15.29",
     "@types/pg": "^8.11.11",
     "drizzle-kit": "^0.30.5",
     "typescript": "5.8.2"

@@ -7,7 +7,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { ArrowRightIcon, UserIcon } from "lucide-react";
 import { z } from "zod";
 
-export const Route = createFileRoute("/_outside/onboarding/profile")({
+export const Route = createFileRoute("/_authorized/onboarding/profile")({
   component: RouteComponent,
 });
 

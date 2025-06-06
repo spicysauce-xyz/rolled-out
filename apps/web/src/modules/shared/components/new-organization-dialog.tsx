@@ -1,8 +1,7 @@
-import { queryClient } from "@lib/api";
 import { authClient } from "@lib/auth";
 import useAppForm from "@lib/form";
 import { Button, Dialog, Input, Label, Text, Toaster } from "@mono/ui";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { Loader2Icon } from "lucide-react";
 import { useEffect } from "react";
@@ -17,6 +16,7 @@ export const NewOrganizationDialog: React.FC<NewOrganizationDialogProps> = ({
   isOpen,
   onOpenChange,
 }) => {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   const createOrganizationMutation = useMutation({

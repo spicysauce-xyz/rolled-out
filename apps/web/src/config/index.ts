@@ -1,7 +1,36 @@
-const rawConfig = window.__APP_CONFIG__;
+interface RawConfig {
+  self: string;
+  api: string;
+}
 
-export const config = {
-  basepath: new URL(rawConfig.self).pathname,
-  apiUrl: rawConfig.api,
-  authUrl: `${rawConfig.api}/auth`,
+declare global {
+  interface Window {
+    RUNTIME_CONFIG: RawConfig;
+  }
+}
+
+export const getServerConfig = (): RawConfig => {
+  return {
+    self: process.env.SELF ?? "",
+    api: process.env.API ?? "",
+  };
 };
+
+const getClientConfig = () => {
+  return window.RUNTIME_CONFIG;
+};
+
+const formatConfig = (
+  config:
+    | ReturnType<typeof getServerConfig>
+    | ReturnType<typeof getClientConfig>,
+) => {
+  return {
+    apiUrl: config.api,
+    authUrl: `${config.api}/auth`,
+  };
+};
+
+export const config = formatConfig(
+  import.meta.env.SSR ? getServerConfig() : getClientConfig(),
+);

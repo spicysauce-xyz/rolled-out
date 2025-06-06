@@ -8,7 +8,7 @@ export const configSchema = z.object({
 });
 
 const formatConfig = () => {
-  const config = configSchema.parse(Bun.env);
+  const config = configSchema.parse(process.env);
 
   return {
     self: {
@@ -19,6 +19,7 @@ const formatConfig = () => {
     client: {
       raw: config.CLIENT,
       base: new URL(config.CLIENT || "").origin,
+      domain: new URL(config.SELF || "").hostname,
     },
     database: {
       url: config.DATABASE_URL,

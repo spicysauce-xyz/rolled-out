@@ -5,10 +5,11 @@ import { Button, Input, Label, Text, Toaster } from "@mono/ui";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { Loader2Icon, SaveIcon } from "lucide-react";
+import { useEffect } from "react";
 import { z } from "zod";
 
 export const Route = createFileRoute(
-  "/_authorized/$organizationSlug/settings/details",
+  "/_authorized/_has-organization/$organizationSlug/settings/details",
 )({
   component: RouteComponent,
 });
@@ -64,7 +65,7 @@ function RouteComponent() {
         slug: z.string().trim().min(1),
       }),
     },
-    onSubmit: async ({ value, formApi }) => {
+    onSubmit: async ({ value }) => {
       try {
         await updateOrganizationMutation.mutateAsync({
           name: value.name,
@@ -92,14 +93,19 @@ function RouteComponent() {
           await router.invalidate({ sync: true });
         }
 
-        formApi.reset();
-
         Toaster.success("Organization updated successfully!");
       } catch {
         Toaster.error("Failed to update organization");
       }
     },
   });
+
+  useEffect(() => {
+    form.reset({
+      name: organization.name,
+      slug: organization.slug,
+    });
+  }, [organization, form]);
 
   return (
     <Card.Root>

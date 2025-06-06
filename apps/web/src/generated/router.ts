@@ -13,17 +13,16 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './../modules/root'
-import { Route as sharedLayoutsOutsideImport } from './../modules/shared/layouts/outside'
-import { Route as sharedLayoutsAuthorizedImport } from './../modules/shared/layouts/authorized'
-import { Route as onboardingOnboardinglayoutImport } from './../modules/onboarding/Onboarding.layout'
-import { Route as authAuthlayoutImport } from './../modules/auth/Auth.layout'
-import { Route as sharedLayoutsOrganizationImport } from './../modules/shared/layouts/organization'
-import { Route as splashImport } from './../modules/splash'
+import { Route as authLayoutsGuestOnlyImport } from './../modules/auth/layouts/guest-only'
+import { Route as authLayoutsAuthorizedImport } from './../modules/auth/layouts/authorized'
+import { Route as authPagesLoginpageImport } from './../modules/auth/pages/Login.page'
+import { Route as dashboardLayoutsHasOrganizationImport } from './../modules/dashboard/layouts/has-organization'
 import { Route as onboardingPagesProfileImport } from './../modules/onboarding/pages/profile'
 import { Route as onboardingPagesOrganizationImport } from './../modules/onboarding/pages/organization'
-import { Route as authPagesLoginImport } from './../modules/auth/pages/login'
-import { Route as settingsSettingslayoutImport } from './../modules/settings/Settings.layout'
-import { Route as dashboardDashboardlayoutImport } from './../modules/dashboard/Dashboard.layout'
+import { Route as dashboardLayoutsSelectedOrganizationImport } from './../modules/dashboard/layouts/selected-organization'
+import { Route as dashboardPagesSplashImport } from './../modules/dashboard/pages/splash'
+import { Route as dashboardLayoutsIndexImport } from './../modules/dashboard/layouts/index'
+import { Route as settingsLayoutsIndexImport } from './../modules/settings/layouts/index'
 import { Route as settingsPagesMembersIndexImport } from './../modules/settings/pages/members/index'
 import { Route as dashboardPagesUpdatesIndexImport } from './../modules/dashboard/pages/updates/index'
 import { Route as dashboardPagesIndexImport } from './../modules/dashboard/pages/index'
@@ -36,138 +35,139 @@ import { Route as dashboardPagesContactsImport } from './../modules/dashboard/pa
 
 // Create Virtual Routes
 
-const AuthorizedOrganizationSlugEditorImport = createFileRoute(
-  '/_authorized/$organizationSlug/editor',
+const AuthorizedOnboardingImport = createFileRoute('/_authorized/onboarding')()
+const AuthorizedHasOrganizationOrganizationSlugEditorImport = createFileRoute(
+  '/_authorized/_has-organization/$organizationSlug/editor',
 )()
 
 // Create/Update Routes
 
-const sharedLayoutsOutsideRoute = sharedLayoutsOutsideImport.update({
-  id: '/_outside',
+const authLayoutsGuestOnlyRoute = authLayoutsGuestOnlyImport.update({
+  id: '/_guest-only',
   getParentRoute: () => rootRoute,
 } as any)
 
-const sharedLayoutsAuthorizedRoute = sharedLayoutsAuthorizedImport.update({
+const authLayoutsAuthorizedRoute = authLayoutsAuthorizedImport.update({
   id: '/_authorized',
   getParentRoute: () => rootRoute,
 } as any)
 
-const onboardingOnboardinglayoutRoute = onboardingOnboardinglayoutImport.update(
-  {
-    id: '/onboarding',
-    path: '/onboarding',
-    getParentRoute: () => sharedLayoutsOutsideRoute,
-  } as any,
-)
-
-const authAuthlayoutRoute = authAuthlayoutImport.update({
-  id: '/_Auth.layout',
-  getParentRoute: () => sharedLayoutsOutsideRoute,
+const authPagesLoginpageRoute = authPagesLoginpageImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => authLayoutsGuestOnlyRoute,
 } as any)
 
-const sharedLayoutsOrganizationRoute = sharedLayoutsOrganizationImport.update({
-  id: '/$organizationSlug',
-  path: '/$organizationSlug',
-  getParentRoute: () => sharedLayoutsAuthorizedRoute,
+const AuthorizedOnboardingRoute = AuthorizedOnboardingImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => authLayoutsAuthorizedRoute,
 } as any)
 
-const splashRoute = splashImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => sharedLayoutsAuthorizedRoute,
-} as any)
+const dashboardLayoutsHasOrganizationRoute =
+  dashboardLayoutsHasOrganizationImport.update({
+    id: '/_has-organization',
+    getParentRoute: () => authLayoutsAuthorizedRoute,
+  } as any)
 
 const onboardingPagesProfileRoute = onboardingPagesProfileImport.update({
   id: '/profile',
   path: '/profile',
-  getParentRoute: () => onboardingOnboardinglayoutRoute,
+  getParentRoute: () => AuthorizedOnboardingRoute,
 } as any)
 
 const onboardingPagesOrganizationRoute =
   onboardingPagesOrganizationImport.update({
     id: '/organization',
     path: '/organization',
-    getParentRoute: () => onboardingOnboardinglayoutRoute,
+    getParentRoute: () => AuthorizedOnboardingRoute,
   } as any)
 
-const authPagesLoginRoute = authPagesLoginImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => authAuthlayoutRoute,
+const dashboardLayoutsSelectedOrganizationRoute =
+  dashboardLayoutsSelectedOrganizationImport.update({
+    id: '/$organizationSlug',
+    path: '/$organizationSlug',
+    getParentRoute: () => dashboardLayoutsHasOrganizationRoute,
+  } as any)
+
+const dashboardPagesSplashRoute = dashboardPagesSplashImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => dashboardLayoutsHasOrganizationRoute,
 } as any)
 
-const settingsSettingslayoutRoute = settingsSettingslayoutImport.update({
+const dashboardLayoutsIndexRoute = dashboardLayoutsIndexImport.update({
+  id: '/_index',
+  getParentRoute: () => dashboardLayoutsSelectedOrganizationRoute,
+} as any)
+
+const settingsLayoutsIndexRoute = settingsLayoutsIndexImport.update({
   id: '/settings',
   path: '/settings',
-  getParentRoute: () => sharedLayoutsOrganizationRoute,
+  getParentRoute: () => dashboardLayoutsSelectedOrganizationRoute,
 } as any)
 
-const AuthorizedOrganizationSlugEditorRoute =
-  AuthorizedOrganizationSlugEditorImport.update({
+const AuthorizedHasOrganizationOrganizationSlugEditorRoute =
+  AuthorizedHasOrganizationOrganizationSlugEditorImport.update({
     id: '/editor',
     path: '/editor',
-    getParentRoute: () => sharedLayoutsOrganizationRoute,
+    getParentRoute: () => dashboardLayoutsSelectedOrganizationRoute,
   } as any)
-
-const dashboardDashboardlayoutRoute = dashboardDashboardlayoutImport.update({
-  id: '/_Dashboard.layout',
-  getParentRoute: () => sharedLayoutsOrganizationRoute,
-} as any)
 
 const settingsPagesMembersIndexRoute = settingsPagesMembersIndexImport.update({
   id: '/members',
   path: '/members',
-  getParentRoute: () => settingsSettingslayoutRoute,
+  getParentRoute: () => settingsLayoutsIndexRoute,
 } as any)
 
 const dashboardPagesUpdatesIndexRoute = dashboardPagesUpdatesIndexImport.update(
   {
     id: '/updates',
     path: '/updates',
-    getParentRoute: () => dashboardDashboardlayoutRoute,
+    getParentRoute: () => dashboardLayoutsIndexRoute,
   } as any,
 )
 
 const dashboardPagesIndexRoute = dashboardPagesIndexImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => dashboardDashboardlayoutRoute,
+  getParentRoute: () => dashboardLayoutsIndexRoute,
 } as any)
 
 const settingsPagesSessionsRoute = settingsPagesSessionsImport.update({
   id: '/sessions',
   path: '/sessions',
-  getParentRoute: () => settingsSettingslayoutRoute,
+  getParentRoute: () => settingsLayoutsIndexRoute,
 } as any)
 
 const settingsPagesProfileRoute = settingsPagesProfileImport.update({
   id: '/profile',
   path: '/profile',
-  getParentRoute: () => settingsSettingslayoutRoute,
+  getParentRoute: () => settingsLayoutsIndexRoute,
 } as any)
 
 const settingsPagesDetailsRoute = settingsPagesDetailsImport.update({
   id: '/details',
   path: '/details',
-  getParentRoute: () => settingsSettingslayoutRoute,
+  getParentRoute: () => settingsLayoutsIndexRoute,
 } as any)
 
 const settingsPagesSplatRoute = settingsPagesSplatImport.update({
   id: '/$',
   path: '/$',
-  getParentRoute: () => settingsSettingslayoutRoute,
+  getParentRoute: () => settingsLayoutsIndexRoute,
 } as any)
 
 const editorPagesIdRoute = editorPagesIdImport.update({
   id: '/$id',
   path: '/$id',
-  getParentRoute: () => AuthorizedOrganizationSlugEditorRoute,
+  getParentRoute: () => AuthorizedHasOrganizationOrganizationSlugEditorRoute,
 } as any)
 
 const dashboardPagesContactsRoute = dashboardPagesContactsImport.update({
   id: '/contacts',
   path: '/contacts',
-  getParentRoute: () => dashboardDashboardlayoutRoute,
+  getParentRoute: () => dashboardLayoutsIndexRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -178,187 +178,186 @@ declare module '@tanstack/react-router' {
       id: '/_authorized'
       path: ''
       fullPath: ''
-      preLoaderRoute: typeof sharedLayoutsAuthorizedImport
+      preLoaderRoute: typeof authLayoutsAuthorizedImport
       parentRoute: typeof rootRoute
     }
-    '/_outside': {
-      id: '/_outside'
+    '/_guest-only': {
+      id: '/_guest-only'
       path: ''
       fullPath: ''
-      preLoaderRoute: typeof sharedLayoutsOutsideImport
+      preLoaderRoute: typeof authLayoutsGuestOnlyImport
       parentRoute: typeof rootRoute
     }
-    '/_authorized/': {
-      id: '/_authorized/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof splashImport
-      parentRoute: typeof sharedLayoutsAuthorizedImport
-    }
-    '/_authorized/$organizationSlug': {
-      id: '/_authorized/$organizationSlug'
-      path: '/$organizationSlug'
-      fullPath: '/$organizationSlug'
-      preLoaderRoute: typeof sharedLayoutsOrganizationImport
-      parentRoute: typeof sharedLayoutsAuthorizedImport
-    }
-    '/_outside/_Auth.layout': {
-      id: '/_outside/_Auth.layout'
+    '/_authorized/_has-organization': {
+      id: '/_authorized/_has-organization'
       path: ''
       fullPath: ''
-      preLoaderRoute: typeof authAuthlayoutImport
-      parentRoute: typeof sharedLayoutsOutsideImport
+      preLoaderRoute: typeof dashboardLayoutsHasOrganizationImport
+      parentRoute: typeof authLayoutsAuthorizedImport
     }
-    '/_outside/onboarding': {
-      id: '/_outside/onboarding'
+    '/_authorized/onboarding': {
+      id: '/_authorized/onboarding'
       path: '/onboarding'
       fullPath: '/onboarding'
-      preLoaderRoute: typeof onboardingOnboardinglayoutImport
-      parentRoute: typeof sharedLayoutsOutsideImport
+      preLoaderRoute: typeof AuthorizedOnboardingImport
+      parentRoute: typeof authLayoutsAuthorizedImport
     }
-    '/_authorized/$organizationSlug/_Dashboard.layout': {
-      id: '/_authorized/$organizationSlug/_Dashboard.layout'
-      path: ''
-      fullPath: '/$organizationSlug'
-      preLoaderRoute: typeof dashboardDashboardlayoutImport
-      parentRoute: typeof sharedLayoutsOrganizationImport
-    }
-    '/_authorized/$organizationSlug/editor': {
-      id: '/_authorized/$organizationSlug/editor'
-      path: '/editor'
-      fullPath: '/$organizationSlug/editor'
-      preLoaderRoute: typeof AuthorizedOrganizationSlugEditorImport
-      parentRoute: typeof sharedLayoutsOrganizationImport
-    }
-    '/_authorized/$organizationSlug/settings': {
-      id: '/_authorized/$organizationSlug/settings'
-      path: '/settings'
-      fullPath: '/$organizationSlug/settings'
-      preLoaderRoute: typeof settingsSettingslayoutImport
-      parentRoute: typeof sharedLayoutsOrganizationImport
-    }
-    '/_outside/_Auth.layout/login': {
-      id: '/_outside/_Auth.layout/login'
+    '/_guest-only/login': {
+      id: '/_guest-only/login'
       path: '/login'
       fullPath: '/login'
-      preLoaderRoute: typeof authPagesLoginImport
-      parentRoute: typeof authAuthlayoutImport
+      preLoaderRoute: typeof authPagesLoginpageImport
+      parentRoute: typeof authLayoutsGuestOnlyImport
     }
-    '/_outside/onboarding/organization': {
-      id: '/_outside/onboarding/organization'
+    '/_authorized/_has-organization/': {
+      id: '/_authorized/_has-organization/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof dashboardPagesSplashImport
+      parentRoute: typeof dashboardLayoutsHasOrganizationImport
+    }
+    '/_authorized/_has-organization/$organizationSlug': {
+      id: '/_authorized/_has-organization/$organizationSlug'
+      path: '/$organizationSlug'
+      fullPath: '/$organizationSlug'
+      preLoaderRoute: typeof dashboardLayoutsSelectedOrganizationImport
+      parentRoute: typeof dashboardLayoutsHasOrganizationImport
+    }
+    '/_authorized/onboarding/organization': {
+      id: '/_authorized/onboarding/organization'
       path: '/organization'
       fullPath: '/onboarding/organization'
       preLoaderRoute: typeof onboardingPagesOrganizationImport
-      parentRoute: typeof onboardingOnboardinglayoutImport
+      parentRoute: typeof AuthorizedOnboardingImport
     }
-    '/_outside/onboarding/profile': {
-      id: '/_outside/onboarding/profile'
+    '/_authorized/onboarding/profile': {
+      id: '/_authorized/onboarding/profile'
       path: '/profile'
       fullPath: '/onboarding/profile'
       preLoaderRoute: typeof onboardingPagesProfileImport
-      parentRoute: typeof onboardingOnboardinglayoutImport
+      parentRoute: typeof AuthorizedOnboardingImport
     }
-    '/_authorized/$organizationSlug/_Dashboard.layout/contacts': {
-      id: '/_authorized/$organizationSlug/_Dashboard.layout/contacts'
+    '/_authorized/_has-organization/$organizationSlug/editor': {
+      id: '/_authorized/_has-organization/$organizationSlug/editor'
+      path: '/editor'
+      fullPath: '/$organizationSlug/editor'
+      preLoaderRoute: typeof AuthorizedHasOrganizationOrganizationSlugEditorImport
+      parentRoute: typeof dashboardLayoutsSelectedOrganizationImport
+    }
+    '/_authorized/_has-organization/$organizationSlug/_index': {
+      id: '/_authorized/_has-organization/$organizationSlug/_index'
+      path: ''
+      fullPath: '/$organizationSlug'
+      preLoaderRoute: typeof dashboardLayoutsIndexImport
+      parentRoute: typeof dashboardLayoutsSelectedOrganizationImport
+    }
+    '/_authorized/_has-organization/$organizationSlug/settings': {
+      id: '/_authorized/_has-organization/$organizationSlug/settings'
+      path: '/settings'
+      fullPath: '/$organizationSlug/settings'
+      preLoaderRoute: typeof settingsLayoutsIndexImport
+      parentRoute: typeof dashboardLayoutsSelectedOrganizationImport
+    }
+    '/_authorized/_has-organization/$organizationSlug/_index/contacts': {
+      id: '/_authorized/_has-organization/$organizationSlug/_index/contacts'
       path: '/contacts'
       fullPath: '/$organizationSlug/contacts'
       preLoaderRoute: typeof dashboardPagesContactsImport
-      parentRoute: typeof dashboardDashboardlayoutImport
+      parentRoute: typeof dashboardLayoutsIndexImport
     }
-    '/_authorized/$organizationSlug/editor/$id': {
-      id: '/_authorized/$organizationSlug/editor/$id'
+    '/_authorized/_has-organization/$organizationSlug/editor/$id': {
+      id: '/_authorized/_has-organization/$organizationSlug/editor/$id'
       path: '/$id'
       fullPath: '/$organizationSlug/editor/$id'
       preLoaderRoute: typeof editorPagesIdImport
-      parentRoute: typeof AuthorizedOrganizationSlugEditorImport
+      parentRoute: typeof AuthorizedHasOrganizationOrganizationSlugEditorImport
     }
-    '/_authorized/$organizationSlug/settings/$': {
-      id: '/_authorized/$organizationSlug/settings/$'
+    '/_authorized/_has-organization/$organizationSlug/settings/$': {
+      id: '/_authorized/_has-organization/$organizationSlug/settings/$'
       path: '/$'
       fullPath: '/$organizationSlug/settings/$'
       preLoaderRoute: typeof settingsPagesSplatImport
-      parentRoute: typeof settingsSettingslayoutImport
+      parentRoute: typeof settingsLayoutsIndexImport
     }
-    '/_authorized/$organizationSlug/settings/details': {
-      id: '/_authorized/$organizationSlug/settings/details'
+    '/_authorized/_has-organization/$organizationSlug/settings/details': {
+      id: '/_authorized/_has-organization/$organizationSlug/settings/details'
       path: '/details'
       fullPath: '/$organizationSlug/settings/details'
       preLoaderRoute: typeof settingsPagesDetailsImport
-      parentRoute: typeof settingsSettingslayoutImport
+      parentRoute: typeof settingsLayoutsIndexImport
     }
-    '/_authorized/$organizationSlug/settings/profile': {
-      id: '/_authorized/$organizationSlug/settings/profile'
+    '/_authorized/_has-organization/$organizationSlug/settings/profile': {
+      id: '/_authorized/_has-organization/$organizationSlug/settings/profile'
       path: '/profile'
       fullPath: '/$organizationSlug/settings/profile'
       preLoaderRoute: typeof settingsPagesProfileImport
-      parentRoute: typeof settingsSettingslayoutImport
+      parentRoute: typeof settingsLayoutsIndexImport
     }
-    '/_authorized/$organizationSlug/settings/sessions': {
-      id: '/_authorized/$organizationSlug/settings/sessions'
+    '/_authorized/_has-organization/$organizationSlug/settings/sessions': {
+      id: '/_authorized/_has-organization/$organizationSlug/settings/sessions'
       path: '/sessions'
       fullPath: '/$organizationSlug/settings/sessions'
       preLoaderRoute: typeof settingsPagesSessionsImport
-      parentRoute: typeof settingsSettingslayoutImport
+      parentRoute: typeof settingsLayoutsIndexImport
     }
-    '/_authorized/$organizationSlug/_Dashboard.layout/': {
-      id: '/_authorized/$organizationSlug/_Dashboard.layout/'
+    '/_authorized/_has-organization/$organizationSlug/_index/': {
+      id: '/_authorized/_has-organization/$organizationSlug/_index/'
       path: '/'
       fullPath: '/$organizationSlug/'
       preLoaderRoute: typeof dashboardPagesIndexImport
-      parentRoute: typeof dashboardDashboardlayoutImport
+      parentRoute: typeof dashboardLayoutsIndexImport
     }
-    '/_authorized/$organizationSlug/_Dashboard.layout/updates': {
-      id: '/_authorized/$organizationSlug/_Dashboard.layout/updates'
+    '/_authorized/_has-organization/$organizationSlug/_index/updates': {
+      id: '/_authorized/_has-organization/$organizationSlug/_index/updates'
       path: '/updates'
       fullPath: '/$organizationSlug/updates'
       preLoaderRoute: typeof dashboardPagesUpdatesIndexImport
-      parentRoute: typeof dashboardDashboardlayoutImport
+      parentRoute: typeof dashboardLayoutsIndexImport
     }
-    '/_authorized/$organizationSlug/settings/members': {
-      id: '/_authorized/$organizationSlug/settings/members'
+    '/_authorized/_has-organization/$organizationSlug/settings/members': {
+      id: '/_authorized/_has-organization/$organizationSlug/settings/members'
       path: '/members'
       fullPath: '/$organizationSlug/settings/members'
       preLoaderRoute: typeof settingsPagesMembersIndexImport
-      parentRoute: typeof settingsSettingslayoutImport
+      parentRoute: typeof settingsLayoutsIndexImport
     }
   }
 }
 
 // Create and export the route tree
 
-interface dashboardDashboardlayoutRouteChildren {
+interface AuthorizedHasOrganizationOrganizationSlugEditorRouteChildren {
+  editorPagesIdRoute: typeof editorPagesIdRoute
+}
+
+const AuthorizedHasOrganizationOrganizationSlugEditorRouteChildren: AuthorizedHasOrganizationOrganizationSlugEditorRouteChildren =
+  {
+    editorPagesIdRoute: editorPagesIdRoute,
+  }
+
+const AuthorizedHasOrganizationOrganizationSlugEditorRouteWithChildren =
+  AuthorizedHasOrganizationOrganizationSlugEditorRoute._addFileChildren(
+    AuthorizedHasOrganizationOrganizationSlugEditorRouteChildren,
+  )
+
+interface dashboardLayoutsIndexRouteChildren {
   dashboardPagesContactsRoute: typeof dashboardPagesContactsRoute
   dashboardPagesIndexRoute: typeof dashboardPagesIndexRoute
   dashboardPagesUpdatesIndexRoute: typeof dashboardPagesUpdatesIndexRoute
 }
 
-const dashboardDashboardlayoutRouteChildren: dashboardDashboardlayoutRouteChildren =
-  {
-    dashboardPagesContactsRoute: dashboardPagesContactsRoute,
-    dashboardPagesIndexRoute: dashboardPagesIndexRoute,
-    dashboardPagesUpdatesIndexRoute: dashboardPagesUpdatesIndexRoute,
-  }
-
-const dashboardDashboardlayoutRouteWithChildren =
-  dashboardDashboardlayoutRoute._addFileChildren(
-    dashboardDashboardlayoutRouteChildren,
-  )
-
-interface AuthorizedOrganizationSlugEditorRouteChildren {
-  editorPagesIdRoute: typeof editorPagesIdRoute
+const dashboardLayoutsIndexRouteChildren: dashboardLayoutsIndexRouteChildren = {
+  dashboardPagesContactsRoute: dashboardPagesContactsRoute,
+  dashboardPagesIndexRoute: dashboardPagesIndexRoute,
+  dashboardPagesUpdatesIndexRoute: dashboardPagesUpdatesIndexRoute,
 }
 
-const AuthorizedOrganizationSlugEditorRouteChildren: AuthorizedOrganizationSlugEditorRouteChildren =
-  {
-    editorPagesIdRoute: editorPagesIdRoute,
-  }
-
-const AuthorizedOrganizationSlugEditorRouteWithChildren =
-  AuthorizedOrganizationSlugEditorRoute._addFileChildren(
-    AuthorizedOrganizationSlugEditorRouteChildren,
+const dashboardLayoutsIndexRouteWithChildren =
+  dashboardLayoutsIndexRoute._addFileChildren(
+    dashboardLayoutsIndexRouteChildren,
   )
 
-interface settingsSettingslayoutRouteChildren {
+interface settingsLayoutsIndexRouteChildren {
   settingsPagesSplatRoute: typeof settingsPagesSplatRoute
   settingsPagesDetailsRoute: typeof settingsPagesDetailsRoute
   settingsPagesProfileRoute: typeof settingsPagesProfileRoute
@@ -366,106 +365,103 @@ interface settingsSettingslayoutRouteChildren {
   settingsPagesMembersIndexRoute: typeof settingsPagesMembersIndexRoute
 }
 
-const settingsSettingslayoutRouteChildren: settingsSettingslayoutRouteChildren =
+const settingsLayoutsIndexRouteChildren: settingsLayoutsIndexRouteChildren = {
+  settingsPagesSplatRoute: settingsPagesSplatRoute,
+  settingsPagesDetailsRoute: settingsPagesDetailsRoute,
+  settingsPagesProfileRoute: settingsPagesProfileRoute,
+  settingsPagesSessionsRoute: settingsPagesSessionsRoute,
+  settingsPagesMembersIndexRoute: settingsPagesMembersIndexRoute,
+}
+
+const settingsLayoutsIndexRouteWithChildren =
+  settingsLayoutsIndexRoute._addFileChildren(settingsLayoutsIndexRouteChildren)
+
+interface dashboardLayoutsSelectedOrganizationRouteChildren {
+  AuthorizedHasOrganizationOrganizationSlugEditorRoute: typeof AuthorizedHasOrganizationOrganizationSlugEditorRouteWithChildren
+  dashboardLayoutsIndexRoute: typeof dashboardLayoutsIndexRouteWithChildren
+  settingsLayoutsIndexRoute: typeof settingsLayoutsIndexRouteWithChildren
+}
+
+const dashboardLayoutsSelectedOrganizationRouteChildren: dashboardLayoutsSelectedOrganizationRouteChildren =
   {
-    settingsPagesSplatRoute: settingsPagesSplatRoute,
-    settingsPagesDetailsRoute: settingsPagesDetailsRoute,
-    settingsPagesProfileRoute: settingsPagesProfileRoute,
-    settingsPagesSessionsRoute: settingsPagesSessionsRoute,
-    settingsPagesMembersIndexRoute: settingsPagesMembersIndexRoute,
+    AuthorizedHasOrganizationOrganizationSlugEditorRoute:
+      AuthorizedHasOrganizationOrganizationSlugEditorRouteWithChildren,
+    dashboardLayoutsIndexRoute: dashboardLayoutsIndexRouteWithChildren,
+    settingsLayoutsIndexRoute: settingsLayoutsIndexRouteWithChildren,
   }
 
-const settingsSettingslayoutRouteWithChildren =
-  settingsSettingslayoutRoute._addFileChildren(
-    settingsSettingslayoutRouteChildren,
+const dashboardLayoutsSelectedOrganizationRouteWithChildren =
+  dashboardLayoutsSelectedOrganizationRoute._addFileChildren(
+    dashboardLayoutsSelectedOrganizationRouteChildren,
   )
 
-interface sharedLayoutsOrganizationRouteChildren {
-  dashboardDashboardlayoutRoute: typeof dashboardDashboardlayoutRouteWithChildren
-  AuthorizedOrganizationSlugEditorRoute: typeof AuthorizedOrganizationSlugEditorRouteWithChildren
-  settingsSettingslayoutRoute: typeof settingsSettingslayoutRouteWithChildren
+interface dashboardLayoutsHasOrganizationRouteChildren {
+  dashboardPagesSplashRoute: typeof dashboardPagesSplashRoute
+  dashboardLayoutsSelectedOrganizationRoute: typeof dashboardLayoutsSelectedOrganizationRouteWithChildren
 }
 
-const sharedLayoutsOrganizationRouteChildren: sharedLayoutsOrganizationRouteChildren =
+const dashboardLayoutsHasOrganizationRouteChildren: dashboardLayoutsHasOrganizationRouteChildren =
   {
-    dashboardDashboardlayoutRoute: dashboardDashboardlayoutRouteWithChildren,
-    AuthorizedOrganizationSlugEditorRoute:
-      AuthorizedOrganizationSlugEditorRouteWithChildren,
-    settingsSettingslayoutRoute: settingsSettingslayoutRouteWithChildren,
+    dashboardPagesSplashRoute: dashboardPagesSplashRoute,
+    dashboardLayoutsSelectedOrganizationRoute:
+      dashboardLayoutsSelectedOrganizationRouteWithChildren,
   }
 
-const sharedLayoutsOrganizationRouteWithChildren =
-  sharedLayoutsOrganizationRoute._addFileChildren(
-    sharedLayoutsOrganizationRouteChildren,
+const dashboardLayoutsHasOrganizationRouteWithChildren =
+  dashboardLayoutsHasOrganizationRoute._addFileChildren(
+    dashboardLayoutsHasOrganizationRouteChildren,
   )
 
-interface sharedLayoutsAuthorizedRouteChildren {
-  splashRoute: typeof splashRoute
-  sharedLayoutsOrganizationRoute: typeof sharedLayoutsOrganizationRouteWithChildren
-}
-
-const sharedLayoutsAuthorizedRouteChildren: sharedLayoutsAuthorizedRouteChildren =
-  {
-    splashRoute: splashRoute,
-    sharedLayoutsOrganizationRoute: sharedLayoutsOrganizationRouteWithChildren,
-  }
-
-const sharedLayoutsAuthorizedRouteWithChildren =
-  sharedLayoutsAuthorizedRoute._addFileChildren(
-    sharedLayoutsAuthorizedRouteChildren,
-  )
-
-interface authAuthlayoutRouteChildren {
-  authPagesLoginRoute: typeof authPagesLoginRoute
-}
-
-const authAuthlayoutRouteChildren: authAuthlayoutRouteChildren = {
-  authPagesLoginRoute: authPagesLoginRoute,
-}
-
-const authAuthlayoutRouteWithChildren = authAuthlayoutRoute._addFileChildren(
-  authAuthlayoutRouteChildren,
-)
-
-interface onboardingOnboardinglayoutRouteChildren {
+interface AuthorizedOnboardingRouteChildren {
   onboardingPagesOrganizationRoute: typeof onboardingPagesOrganizationRoute
   onboardingPagesProfileRoute: typeof onboardingPagesProfileRoute
 }
 
-const onboardingOnboardinglayoutRouteChildren: onboardingOnboardinglayoutRouteChildren =
-  {
-    onboardingPagesOrganizationRoute: onboardingPagesOrganizationRoute,
-    onboardingPagesProfileRoute: onboardingPagesProfileRoute,
-  }
+const AuthorizedOnboardingRouteChildren: AuthorizedOnboardingRouteChildren = {
+  onboardingPagesOrganizationRoute: onboardingPagesOrganizationRoute,
+  onboardingPagesProfileRoute: onboardingPagesProfileRoute,
+}
 
-const onboardingOnboardinglayoutRouteWithChildren =
-  onboardingOnboardinglayoutRoute._addFileChildren(
-    onboardingOnboardinglayoutRouteChildren,
+const AuthorizedOnboardingRouteWithChildren =
+  AuthorizedOnboardingRoute._addFileChildren(AuthorizedOnboardingRouteChildren)
+
+interface authLayoutsAuthorizedRouteChildren {
+  dashboardLayoutsHasOrganizationRoute: typeof dashboardLayoutsHasOrganizationRouteWithChildren
+  AuthorizedOnboardingRoute: typeof AuthorizedOnboardingRouteWithChildren
+}
+
+const authLayoutsAuthorizedRouteChildren: authLayoutsAuthorizedRouteChildren = {
+  dashboardLayoutsHasOrganizationRoute:
+    dashboardLayoutsHasOrganizationRouteWithChildren,
+  AuthorizedOnboardingRoute: AuthorizedOnboardingRouteWithChildren,
+}
+
+const authLayoutsAuthorizedRouteWithChildren =
+  authLayoutsAuthorizedRoute._addFileChildren(
+    authLayoutsAuthorizedRouteChildren,
   )
 
-interface sharedLayoutsOutsideRouteChildren {
-  authAuthlayoutRoute: typeof authAuthlayoutRouteWithChildren
-  onboardingOnboardinglayoutRoute: typeof onboardingOnboardinglayoutRouteWithChildren
+interface authLayoutsGuestOnlyRouteChildren {
+  authPagesLoginpageRoute: typeof authPagesLoginpageRoute
 }
 
-const sharedLayoutsOutsideRouteChildren: sharedLayoutsOutsideRouteChildren = {
-  authAuthlayoutRoute: authAuthlayoutRouteWithChildren,
-  onboardingOnboardinglayoutRoute: onboardingOnboardinglayoutRouteWithChildren,
+const authLayoutsGuestOnlyRouteChildren: authLayoutsGuestOnlyRouteChildren = {
+  authPagesLoginpageRoute: authPagesLoginpageRoute,
 }
 
-const sharedLayoutsOutsideRouteWithChildren =
-  sharedLayoutsOutsideRoute._addFileChildren(sharedLayoutsOutsideRouteChildren)
+const authLayoutsGuestOnlyRouteWithChildren =
+  authLayoutsGuestOnlyRoute._addFileChildren(authLayoutsGuestOnlyRouteChildren)
 
 export interface FileRoutesByFullPath {
-  '': typeof authAuthlayoutRouteWithChildren
-  '/': typeof splashRoute
-  '/$organizationSlug': typeof dashboardDashboardlayoutRouteWithChildren
-  '/onboarding': typeof onboardingOnboardinglayoutRouteWithChildren
-  '/$organizationSlug/editor': typeof AuthorizedOrganizationSlugEditorRouteWithChildren
-  '/$organizationSlug/settings': typeof settingsSettingslayoutRouteWithChildren
-  '/login': typeof authPagesLoginRoute
+  '': typeof dashboardLayoutsHasOrganizationRouteWithChildren
+  '/onboarding': typeof AuthorizedOnboardingRouteWithChildren
+  '/login': typeof authPagesLoginpageRoute
+  '/': typeof dashboardPagesSplashRoute
+  '/$organizationSlug': typeof dashboardLayoutsIndexRouteWithChildren
   '/onboarding/organization': typeof onboardingPagesOrganizationRoute
   '/onboarding/profile': typeof onboardingPagesProfileRoute
+  '/$organizationSlug/editor': typeof AuthorizedHasOrganizationOrganizationSlugEditorRouteWithChildren
+  '/$organizationSlug/settings': typeof settingsLayoutsIndexRouteWithChildren
   '/$organizationSlug/contacts': typeof dashboardPagesContactsRoute
   '/$organizationSlug/editor/$id': typeof editorPagesIdRoute
   '/$organizationSlug/settings/$': typeof settingsPagesSplatRoute
@@ -478,15 +474,15 @@ export interface FileRoutesByFullPath {
 }
 
 export interface FileRoutesByTo {
-  '': typeof authAuthlayoutRouteWithChildren
-  '/': typeof splashRoute
+  '': typeof authLayoutsGuestOnlyRouteWithChildren
+  '/onboarding': typeof AuthorizedOnboardingRouteWithChildren
+  '/login': typeof authPagesLoginpageRoute
+  '/': typeof dashboardPagesSplashRoute
   '/$organizationSlug': typeof dashboardPagesIndexRoute
-  '/onboarding': typeof onboardingOnboardinglayoutRouteWithChildren
-  '/$organizationSlug/editor': typeof AuthorizedOrganizationSlugEditorRouteWithChildren
-  '/$organizationSlug/settings': typeof settingsSettingslayoutRouteWithChildren
-  '/login': typeof authPagesLoginRoute
   '/onboarding/organization': typeof onboardingPagesOrganizationRoute
   '/onboarding/profile': typeof onboardingPagesProfileRoute
+  '/$organizationSlug/editor': typeof AuthorizedHasOrganizationOrganizationSlugEditorRouteWithChildren
+  '/$organizationSlug/settings': typeof settingsLayoutsIndexRouteWithChildren
   '/$organizationSlug/contacts': typeof dashboardPagesContactsRoute
   '/$organizationSlug/editor/$id': typeof editorPagesIdRoute
   '/$organizationSlug/settings/$': typeof settingsPagesSplatRoute
@@ -499,41 +495,41 @@ export interface FileRoutesByTo {
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
-  '/_authorized': typeof sharedLayoutsAuthorizedRouteWithChildren
-  '/_outside': typeof sharedLayoutsOutsideRouteWithChildren
-  '/_authorized/': typeof splashRoute
-  '/_authorized/$organizationSlug': typeof sharedLayoutsOrganizationRouteWithChildren
-  '/_outside/_Auth.layout': typeof authAuthlayoutRouteWithChildren
-  '/_outside/onboarding': typeof onboardingOnboardinglayoutRouteWithChildren
-  '/_authorized/$organizationSlug/_Dashboard.layout': typeof dashboardDashboardlayoutRouteWithChildren
-  '/_authorized/$organizationSlug/editor': typeof AuthorizedOrganizationSlugEditorRouteWithChildren
-  '/_authorized/$organizationSlug/settings': typeof settingsSettingslayoutRouteWithChildren
-  '/_outside/_Auth.layout/login': typeof authPagesLoginRoute
-  '/_outside/onboarding/organization': typeof onboardingPagesOrganizationRoute
-  '/_outside/onboarding/profile': typeof onboardingPagesProfileRoute
-  '/_authorized/$organizationSlug/_Dashboard.layout/contacts': typeof dashboardPagesContactsRoute
-  '/_authorized/$organizationSlug/editor/$id': typeof editorPagesIdRoute
-  '/_authorized/$organizationSlug/settings/$': typeof settingsPagesSplatRoute
-  '/_authorized/$organizationSlug/settings/details': typeof settingsPagesDetailsRoute
-  '/_authorized/$organizationSlug/settings/profile': typeof settingsPagesProfileRoute
-  '/_authorized/$organizationSlug/settings/sessions': typeof settingsPagesSessionsRoute
-  '/_authorized/$organizationSlug/_Dashboard.layout/': typeof dashboardPagesIndexRoute
-  '/_authorized/$organizationSlug/_Dashboard.layout/updates': typeof dashboardPagesUpdatesIndexRoute
-  '/_authorized/$organizationSlug/settings/members': typeof settingsPagesMembersIndexRoute
+  '/_authorized': typeof authLayoutsAuthorizedRouteWithChildren
+  '/_guest-only': typeof authLayoutsGuestOnlyRouteWithChildren
+  '/_authorized/_has-organization': typeof dashboardLayoutsHasOrganizationRouteWithChildren
+  '/_authorized/onboarding': typeof AuthorizedOnboardingRouteWithChildren
+  '/_guest-only/login': typeof authPagesLoginpageRoute
+  '/_authorized/_has-organization/': typeof dashboardPagesSplashRoute
+  '/_authorized/_has-organization/$organizationSlug': typeof dashboardLayoutsSelectedOrganizationRouteWithChildren
+  '/_authorized/onboarding/organization': typeof onboardingPagesOrganizationRoute
+  '/_authorized/onboarding/profile': typeof onboardingPagesProfileRoute
+  '/_authorized/_has-organization/$organizationSlug/editor': typeof AuthorizedHasOrganizationOrganizationSlugEditorRouteWithChildren
+  '/_authorized/_has-organization/$organizationSlug/_index': typeof dashboardLayoutsIndexRouteWithChildren
+  '/_authorized/_has-organization/$organizationSlug/settings': typeof settingsLayoutsIndexRouteWithChildren
+  '/_authorized/_has-organization/$organizationSlug/_index/contacts': typeof dashboardPagesContactsRoute
+  '/_authorized/_has-organization/$organizationSlug/editor/$id': typeof editorPagesIdRoute
+  '/_authorized/_has-organization/$organizationSlug/settings/$': typeof settingsPagesSplatRoute
+  '/_authorized/_has-organization/$organizationSlug/settings/details': typeof settingsPagesDetailsRoute
+  '/_authorized/_has-organization/$organizationSlug/settings/profile': typeof settingsPagesProfileRoute
+  '/_authorized/_has-organization/$organizationSlug/settings/sessions': typeof settingsPagesSessionsRoute
+  '/_authorized/_has-organization/$organizationSlug/_index/': typeof dashboardPagesIndexRoute
+  '/_authorized/_has-organization/$organizationSlug/_index/updates': typeof dashboardPagesUpdatesIndexRoute
+  '/_authorized/_has-organization/$organizationSlug/settings/members': typeof settingsPagesMembersIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | ''
+    | '/onboarding'
+    | '/login'
     | '/'
     | '/$organizationSlug'
-    | '/onboarding'
-    | '/$organizationSlug/editor'
-    | '/$organizationSlug/settings'
-    | '/login'
     | '/onboarding/organization'
     | '/onboarding/profile'
+    | '/$organizationSlug/editor'
+    | '/$organizationSlug/settings'
     | '/$organizationSlug/contacts'
     | '/$organizationSlug/editor/$id'
     | '/$organizationSlug/settings/$'
@@ -546,14 +542,14 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | ''
+    | '/onboarding'
+    | '/login'
     | '/'
     | '/$organizationSlug'
-    | '/onboarding'
-    | '/$organizationSlug/editor'
-    | '/$organizationSlug/settings'
-    | '/login'
     | '/onboarding/organization'
     | '/onboarding/profile'
+    | '/$organizationSlug/editor'
+    | '/$organizationSlug/settings'
     | '/$organizationSlug/contacts'
     | '/$organizationSlug/editor/$id'
     | '/$organizationSlug/settings/$'
@@ -565,37 +561,37 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/_authorized'
-    | '/_outside'
-    | '/_authorized/'
-    | '/_authorized/$organizationSlug'
-    | '/_outside/_Auth.layout'
-    | '/_outside/onboarding'
-    | '/_authorized/$organizationSlug/_Dashboard.layout'
-    | '/_authorized/$organizationSlug/editor'
-    | '/_authorized/$organizationSlug/settings'
-    | '/_outside/_Auth.layout/login'
-    | '/_outside/onboarding/organization'
-    | '/_outside/onboarding/profile'
-    | '/_authorized/$organizationSlug/_Dashboard.layout/contacts'
-    | '/_authorized/$organizationSlug/editor/$id'
-    | '/_authorized/$organizationSlug/settings/$'
-    | '/_authorized/$organizationSlug/settings/details'
-    | '/_authorized/$organizationSlug/settings/profile'
-    | '/_authorized/$organizationSlug/settings/sessions'
-    | '/_authorized/$organizationSlug/_Dashboard.layout/'
-    | '/_authorized/$organizationSlug/_Dashboard.layout/updates'
-    | '/_authorized/$organizationSlug/settings/members'
+    | '/_guest-only'
+    | '/_authorized/_has-organization'
+    | '/_authorized/onboarding'
+    | '/_guest-only/login'
+    | '/_authorized/_has-organization/'
+    | '/_authorized/_has-organization/$organizationSlug'
+    | '/_authorized/onboarding/organization'
+    | '/_authorized/onboarding/profile'
+    | '/_authorized/_has-organization/$organizationSlug/editor'
+    | '/_authorized/_has-organization/$organizationSlug/_index'
+    | '/_authorized/_has-organization/$organizationSlug/settings'
+    | '/_authorized/_has-organization/$organizationSlug/_index/contacts'
+    | '/_authorized/_has-organization/$organizationSlug/editor/$id'
+    | '/_authorized/_has-organization/$organizationSlug/settings/$'
+    | '/_authorized/_has-organization/$organizationSlug/settings/details'
+    | '/_authorized/_has-organization/$organizationSlug/settings/profile'
+    | '/_authorized/_has-organization/$organizationSlug/settings/sessions'
+    | '/_authorized/_has-organization/$organizationSlug/_index/'
+    | '/_authorized/_has-organization/$organizationSlug/_index/updates'
+    | '/_authorized/_has-organization/$organizationSlug/settings/members'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-  sharedLayoutsAuthorizedRoute: typeof sharedLayoutsAuthorizedRouteWithChildren
-  sharedLayoutsOutsideRoute: typeof sharedLayoutsOutsideRouteWithChildren
+  authLayoutsAuthorizedRoute: typeof authLayoutsAuthorizedRouteWithChildren
+  authLayoutsGuestOnlyRoute: typeof authLayoutsGuestOnlyRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  sharedLayoutsAuthorizedRoute: sharedLayoutsAuthorizedRouteWithChildren,
-  sharedLayoutsOutsideRoute: sharedLayoutsOutsideRouteWithChildren,
+  authLayoutsAuthorizedRoute: authLayoutsAuthorizedRouteWithChildren,
+  authLayoutsGuestOnlyRoute: authLayoutsGuestOnlyRouteWithChildren,
 }
 
 export const routeTree = rootRoute
@@ -609,125 +605,125 @@ export const routeTree = rootRoute
       "filePath": "root.tsx",
       "children": [
         "/_authorized",
-        "/_outside"
+        "/_guest-only"
       ]
     },
     "/_authorized": {
-      "filePath": "shared/layouts/authorized.tsx",
+      "filePath": "auth/layouts/authorized.tsx",
       "children": [
-        "/_authorized/",
-        "/_authorized/$organizationSlug"
+        "/_authorized/_has-organization",
+        "/_authorized/onboarding"
       ]
     },
-    "/_outside": {
-      "filePath": "shared/layouts/outside.tsx",
+    "/_guest-only": {
+      "filePath": "auth/layouts/guest-only.tsx",
       "children": [
-        "/_outside/_Auth.layout",
-        "/_outside/onboarding"
+        "/_guest-only/login"
       ]
     },
-    "/_authorized/": {
-      "filePath": "splash.tsx",
-      "parent": "/_authorized"
-    },
-    "/_authorized/$organizationSlug": {
-      "filePath": "shared/layouts/organization.tsx",
+    "/_authorized/_has-organization": {
+      "filePath": "dashboard/layouts/has-organization.tsx",
       "parent": "/_authorized",
       "children": [
-        "/_authorized/$organizationSlug/_Dashboard.layout",
-        "/_authorized/$organizationSlug/editor",
-        "/_authorized/$organizationSlug/settings"
+        "/_authorized/_has-organization/",
+        "/_authorized/_has-organization/$organizationSlug"
       ]
     },
-    "/_outside/_Auth.layout": {
-      "filePath": "auth/Auth.layout.tsx",
-      "parent": "/_outside",
-      "children": [
-        "/_outside/_Auth.layout/login"
-      ]
-    },
-    "/_outside/onboarding": {
-      "filePath": "onboarding/Onboarding.layout.tsx",
-      "parent": "/_outside",
-      "children": [
-        "/_outside/onboarding/organization",
-        "/_outside/onboarding/profile"
-      ]
-    },
-    "/_authorized/$organizationSlug/_Dashboard.layout": {
-      "filePath": "dashboard/Dashboard.layout.tsx",
-      "parent": "/_authorized/$organizationSlug",
-      "children": [
-        "/_authorized/$organizationSlug/_Dashboard.layout/contacts",
-        "/_authorized/$organizationSlug/_Dashboard.layout/",
-        "/_authorized/$organizationSlug/_Dashboard.layout/updates"
-      ]
-    },
-    "/_authorized/$organizationSlug/editor": {
+    "/_authorized/onboarding": {
       "filePath": "",
-      "parent": "/_authorized/$organizationSlug",
+      "parent": "/_authorized",
       "children": [
-        "/_authorized/$organizationSlug/editor/$id"
+        "/_authorized/onboarding/organization",
+        "/_authorized/onboarding/profile"
       ]
     },
-    "/_authorized/$organizationSlug/settings": {
-      "filePath": "settings/Settings.layout.tsx",
-      "parent": "/_authorized/$organizationSlug",
+    "/_guest-only/login": {
+      "filePath": "auth/pages/Login.page.tsx",
+      "parent": "/_guest-only"
+    },
+    "/_authorized/_has-organization/": {
+      "filePath": "dashboard/pages/splash.tsx",
+      "parent": "/_authorized/_has-organization"
+    },
+    "/_authorized/_has-organization/$organizationSlug": {
+      "filePath": "dashboard/layouts/selected-organization.tsx",
+      "parent": "/_authorized/_has-organization",
       "children": [
-        "/_authorized/$organizationSlug/settings/$",
-        "/_authorized/$organizationSlug/settings/details",
-        "/_authorized/$organizationSlug/settings/profile",
-        "/_authorized/$organizationSlug/settings/sessions",
-        "/_authorized/$organizationSlug/settings/members"
+        "/_authorized/_has-organization/$organizationSlug/editor",
+        "/_authorized/_has-organization/$organizationSlug/_index",
+        "/_authorized/_has-organization/$organizationSlug/settings"
       ]
     },
-    "/_outside/_Auth.layout/login": {
-      "filePath": "auth/pages/login.tsx",
-      "parent": "/_outside/_Auth.layout"
-    },
-    "/_outside/onboarding/organization": {
+    "/_authorized/onboarding/organization": {
       "filePath": "onboarding/pages/organization.tsx",
-      "parent": "/_outside/onboarding"
+      "parent": "/_authorized/onboarding"
     },
-    "/_outside/onboarding/profile": {
+    "/_authorized/onboarding/profile": {
       "filePath": "onboarding/pages/profile.tsx",
-      "parent": "/_outside/onboarding"
+      "parent": "/_authorized/onboarding"
     },
-    "/_authorized/$organizationSlug/_Dashboard.layout/contacts": {
+    "/_authorized/_has-organization/$organizationSlug/editor": {
+      "filePath": "",
+      "parent": "/_authorized/_has-organization/$organizationSlug",
+      "children": [
+        "/_authorized/_has-organization/$organizationSlug/editor/$id"
+      ]
+    },
+    "/_authorized/_has-organization/$organizationSlug/_index": {
+      "filePath": "dashboard/layouts/index.tsx",
+      "parent": "/_authorized/_has-organization/$organizationSlug",
+      "children": [
+        "/_authorized/_has-organization/$organizationSlug/_index/contacts",
+        "/_authorized/_has-organization/$organizationSlug/_index/",
+        "/_authorized/_has-organization/$organizationSlug/_index/updates"
+      ]
+    },
+    "/_authorized/_has-organization/$organizationSlug/settings": {
+      "filePath": "settings/layouts/index.tsx",
+      "parent": "/_authorized/_has-organization/$organizationSlug",
+      "children": [
+        "/_authorized/_has-organization/$organizationSlug/settings/$",
+        "/_authorized/_has-organization/$organizationSlug/settings/details",
+        "/_authorized/_has-organization/$organizationSlug/settings/profile",
+        "/_authorized/_has-organization/$organizationSlug/settings/sessions",
+        "/_authorized/_has-organization/$organizationSlug/settings/members"
+      ]
+    },
+    "/_authorized/_has-organization/$organizationSlug/_index/contacts": {
       "filePath": "dashboard/pages/contacts.tsx",
-      "parent": "/_authorized/$organizationSlug/_Dashboard.layout"
+      "parent": "/_authorized/_has-organization/$organizationSlug/_index"
     },
-    "/_authorized/$organizationSlug/editor/$id": {
+    "/_authorized/_has-organization/$organizationSlug/editor/$id": {
       "filePath": "editor/pages/$id.tsx",
-      "parent": "/_authorized/$organizationSlug/editor"
+      "parent": "/_authorized/_has-organization/$organizationSlug/editor"
     },
-    "/_authorized/$organizationSlug/settings/$": {
+    "/_authorized/_has-organization/$organizationSlug/settings/$": {
       "filePath": "settings/pages/splat.tsx",
-      "parent": "/_authorized/$organizationSlug/settings"
+      "parent": "/_authorized/_has-organization/$organizationSlug/settings"
     },
-    "/_authorized/$organizationSlug/settings/details": {
+    "/_authorized/_has-organization/$organizationSlug/settings/details": {
       "filePath": "settings/pages/details.tsx",
-      "parent": "/_authorized/$organizationSlug/settings"
+      "parent": "/_authorized/_has-organization/$organizationSlug/settings"
     },
-    "/_authorized/$organizationSlug/settings/profile": {
+    "/_authorized/_has-organization/$organizationSlug/settings/profile": {
       "filePath": "settings/pages/profile.tsx",
-      "parent": "/_authorized/$organizationSlug/settings"
+      "parent": "/_authorized/_has-organization/$organizationSlug/settings"
     },
-    "/_authorized/$organizationSlug/settings/sessions": {
+    "/_authorized/_has-organization/$organizationSlug/settings/sessions": {
       "filePath": "settings/pages/sessions.tsx",
-      "parent": "/_authorized/$organizationSlug/settings"
+      "parent": "/_authorized/_has-organization/$organizationSlug/settings"
     },
-    "/_authorized/$organizationSlug/_Dashboard.layout/": {
+    "/_authorized/_has-organization/$organizationSlug/_index/": {
       "filePath": "dashboard/pages/index.tsx",
-      "parent": "/_authorized/$organizationSlug/_Dashboard.layout"
+      "parent": "/_authorized/_has-organization/$organizationSlug/_index"
     },
-    "/_authorized/$organizationSlug/_Dashboard.layout/updates": {
+    "/_authorized/_has-organization/$organizationSlug/_index/updates": {
       "filePath": "dashboard/pages/updates/index.tsx",
-      "parent": "/_authorized/$organizationSlug/_Dashboard.layout"
+      "parent": "/_authorized/_has-organization/$organizationSlug/_index"
     },
-    "/_authorized/$organizationSlug/settings/members": {
+    "/_authorized/_has-organization/$organizationSlug/settings/members": {
       "filePath": "settings/pages/members/index.tsx",
-      "parent": "/_authorized/$organizationSlug/settings"
+      "parent": "/_authorized/_has-organization/$organizationSlug/settings"
     }
   }
 }

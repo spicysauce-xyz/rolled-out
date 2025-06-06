@@ -3,15 +3,13 @@
   "module": "index.ts",
   "type": "module",
   "private": true,
-  "workspaces": ["apps/*", "packages/*"],
-  "packageManager": "bun@1.2.4",
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
-    "@types/bun": "latest",
     "concurrently": "^9.1.2",
     "turbo": "^2.5.0"
   },
   "peerDependencies": {
     "typescript": "5.8.2"
-  }
+  },
+  "packageManager": "pnpm@10.11.0"
 }

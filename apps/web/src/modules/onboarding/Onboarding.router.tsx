@@ -1,6 +1,0 @@
-import { route } from "@tanstack/virtual-file-routes";
-
-export const onboardingRoutes = [
-  route("/profile", "onboarding/pages/profile.tsx"),
-  route("/organization", "onboarding/pages/organization.tsx"),
-];

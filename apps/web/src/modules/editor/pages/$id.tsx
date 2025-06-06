@@ -11,7 +11,7 @@ import { ArrowLeftIcon, ClockIcon, SendIcon } from "lucide-react";
 import { useCallback, useMemo } from "react";
 
 export const Route = createFileRoute(
-  "/_authorized/$organizationSlug/editor/$id",
+  "/_authorized/_has-organization/$organizationSlug/editor/$id",
 )({
   component: RouteComponent,
 });

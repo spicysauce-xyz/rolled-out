@@ -1,13 +1,26 @@
 import * as Confirmer from "@components/feedback/confirmer";
+import { sessionQuery } from "@lib/api/queries";
 import { authClient } from "@lib/auth";
 import { Toaster } from "@mono/ui";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
 import { LogOutIcon } from "lucide-react";
 
 export const useLogout = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
+
+  const signOutMutation = useMutation({
+    mutationFn: async () => {
+      const response = await authClient.signOut();
+
+      if (response.error) {
+        throw response.error;
+      }
+
+      return response;
+    },
+  });
 
   return async () => {
     const confirmed = await Confirmer.confirm({
@@ -25,9 +38,9 @@ export const useLogout = () => {
     const toastId = Toaster.loading("Logging out...");
 
     try {
-      await authClient.signOut();
+      await signOutMutation.mutateAsync();
 
-      await queryClient.refetchQueries({ queryKey: ["session"] });
+      await queryClient.refetchQueries(sessionQuery());
 
       await router.invalidate({ sync: true });
 

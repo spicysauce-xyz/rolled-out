@@ -38,6 +38,16 @@ export const auth: ReturnType<typeof betterAuth> = betterAuth({
   },
   trustedOrigins: [Config.client.base],
   advanced: {
+    crossSubDomainCookies: {
+      enabled: true,
+      domain: `.${Config.client.domain.split(".").slice(-2).join(".")}`,
+    },
+    defaultCookieAttributes: {
+      secure: process.env.NODE_ENV === "production",
+      httpOnly: true,
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      partitioned: process.env.NODE_ENV === "production",
+    },
     database: {
       generateId: false,
     },

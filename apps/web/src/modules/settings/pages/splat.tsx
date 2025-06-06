@@ -1,7 +1,7 @@
 import { Outlet, createFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute(
-  "/_authorized/$organizationSlug/settings/$",
+  "/_authorized/_has-organization/$organizationSlug/settings/$",
 )({
   component: Outlet,
   beforeLoad: ({ params }) => {

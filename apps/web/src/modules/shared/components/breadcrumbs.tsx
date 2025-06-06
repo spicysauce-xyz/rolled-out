@@ -5,7 +5,7 @@ import { useDisclosure } from "@mono/ui/hooks";
 import { cn } from "@mono/ui/utils";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useRouter } from "@tanstack/react-router";
-import { last } from "lodash";
+import _ from "lodash";
 import {
   AlertTriangleIcon,
   ChevronsUpDownIcon,
@@ -39,16 +39,18 @@ const OrganizationSelector = ({ organization }: OrganizationSelectorProps) => {
   });
 
   const handleUpdateActiveOrganization = async (organizationSlug: string) => {
-    const lastMatch = last(router.state.matches);
+    const lastMatch = _.last(router.state.matches);
 
     if (!lastMatch) {
       return;
     }
 
-    navigate({
+    await navigate({
       to: ".",
       params: { ...lastMatch.params, organizationSlug },
     });
+
+    await router.invalidate({ sync: true });
   };
 
   const createOrganizationDialog = useDisclosure();

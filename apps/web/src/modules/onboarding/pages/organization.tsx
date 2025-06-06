@@ -6,7 +6,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { ArrowRightIcon, Loader2Icon } from "lucide-react";
 import { z } from "zod";
 
-export const Route = createFileRoute("/_outside/onboarding/organization")({
+export const Route = createFileRoute("/_authorized/onboarding/organization")({
   component: RouteComponent,
 });
 

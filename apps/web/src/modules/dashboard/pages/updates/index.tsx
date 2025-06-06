@@ -10,7 +10,7 @@ import { P, match } from "ts-pattern";
 import { UpdatesList } from "./components/updates-list";
 
 export const Route = createFileRoute(
-  "/_authorized/$organizationSlug/_Dashboard.layout/updates",
+  "/_authorized/_has-organization/$organizationSlug/_index/updates",
 )({
   component: RouteComponent,
 });
