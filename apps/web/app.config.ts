@@ -12,6 +12,7 @@ export default defineConfig({
     },
   },
   vite: {
+    cacheDir: "./.vite",
     plugins: [tailwindcss(), tsconfigPaths()],
     build: {
       target: "ES2022",

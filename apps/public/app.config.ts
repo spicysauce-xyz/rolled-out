@@ -1,5 +1,5 @@
-import tailwindcss from '@tailwindcss/vite'
-import { defineConfig } from '@tanstack/react-start/config'
+import tailwindcss from "@tailwindcss/vite";
+import { defineConfig } from "@tanstack/react-start/config";
 import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
@@ -12,6 +12,7 @@ export default defineConfig({
     },
   },
   vite: {
+    cacheDir: "./.vite",
     plugins: [tailwindcss(), tsconfigPaths()],
     build: {
       target: "ES2022",
@@ -20,6 +21,6 @@ export default defineConfig({
   tsr: {
     generatedRouteTree: "./src/generated/router.ts",
     virtualRouteConfig: "./src/modules/routes.ts",
-    routesDirectory: "./src/modules" 
-  }
+    routesDirectory: "./src/modules",
+  },
 });
