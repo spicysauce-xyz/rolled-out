@@ -1,4 +1,4 @@
-import { groupBy } from "lodash";
+import _ from "lodash";
 import React from "react";
 
 export function GroupBy<T, K extends keyof T>(props: {
@@ -8,7 +8,7 @@ export function GroupBy<T, K extends keyof T>(props: {
   children: (item: T) => React.ReactNode;
 }) {
   const { data, field, divider, children } = props;
-  const groupedData = groupBy(data, field);
+  const groupedData = _.groupBy(data, field);
 
   return Object.entries(groupedData).map(([key, items]) => {
     return (
