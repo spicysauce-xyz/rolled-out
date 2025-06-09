@@ -5,7 +5,6 @@ import { Link, type LinkComponentProps } from "@tanstack/react-router";
 import {
   CircleIcon,
   ExternalLinkIcon,
-  FlameIcon,
   type LucideIcon,
   ScrollTextIcon,
 } from "lucide-react";
