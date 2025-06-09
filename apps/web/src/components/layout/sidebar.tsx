@@ -7,6 +7,7 @@ import {
   ExternalLinkIcon,
   FlameIcon,
   type LucideIcon,
+  ScrollTextIcon,
 } from "lucide-react";
 import React from "react";
 
@@ -158,9 +159,9 @@ const SidebarLogo = React.forwardRef<
       className={cn("flex items-center gap-2", className)}
       {...props}
     >
-      <FlameIcon className="size-4 stroke-2 stroke-neutral-900" />
+      <ScrollTextIcon className="size-4 stroke-2 stroke-neutral-900" />
       <Text.Root size="sm" weight="medium">
-        Spicy
+        Rolled Out
       </Text.Root>
     </div>
   );
