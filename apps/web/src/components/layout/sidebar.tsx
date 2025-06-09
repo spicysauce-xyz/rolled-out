@@ -1,3 +1,4 @@
+import { config } from "@config";
 import { Clickable, ScrollArea, Text } from "@mono/ui";
 import { cn } from "@mono/ui/utils";
 import { Link, type LinkComponentProps } from "@tanstack/react-router";
@@ -170,8 +171,14 @@ const SidebarVersion = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof Text.Root>
 >(({ children, className, ...props }, ref) => {
   return (
-    <Text.Root ref={ref} size="xs" color="muted" {...props}>
-      v0.0.1 · h1a2sh3
+    <Text.Root ref={ref} size="xs" color="muted" {...props} asChild>
+      <a
+        href={`https://github.com/spicysauce-xyz/rolled-out/releases/tag/${config.version}`}
+        rel="noreferrer"
+        target="_blank"
+      >
+        v{config.version}
+      </a>
     </Text.Root>
   );
 });
