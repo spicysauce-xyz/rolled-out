@@ -42,7 +42,8 @@ services:
       - SELF=https://api.${DOMAIN}
       - CLIENT=https://app.${DOMAIN}
       - DATABASE_URL=postgres://postgres:postgres@postgres:5432/postgres
-      - RESEND_API_KEY=1000000000000000000000000000
+      - RESEND_API_KEY=${RESEND_API_KEY}
+      - RESEND_DOMAIN=${RESEND_DOMAIN}
     depends_on:
       - migrator
     labels:

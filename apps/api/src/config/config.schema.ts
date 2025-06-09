@@ -5,6 +5,7 @@ export const configSchema = z.object({
   CLIENT: z.string().optional(),
   DATABASE_URL: z.string(),
   RESEND_API_KEY: z.string(),
+  RESEND_DOMAIN: z.string(),
 });
 
 const formatConfig = () => {
@@ -26,6 +27,7 @@ const formatConfig = () => {
     },
     resend: {
       apiKey: config.RESEND_API_KEY,
+      domain: config.RESEND_DOMAIN,
     },
   };
 };

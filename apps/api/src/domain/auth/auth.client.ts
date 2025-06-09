@@ -1,11 +1,11 @@
 import { Config } from "@config";
 import { Database } from "@database";
 import { Email } from "@email";
-import { betterAuth } from "better-auth";
+import * as BetterAuth from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { magicLink, organization } from "better-auth/plugins";
 
-export const auth: ReturnType<typeof betterAuth> = betterAuth({
+export const auth: ReturnType<typeof BetterAuth.betterAuth> = BetterAuth.betterAuth({
   baseURL: Config.self.base,
   basePath: "/auth",
   database: drizzleAdapter(Database, {
@@ -58,22 +58,17 @@ export const auth: ReturnType<typeof betterAuth> = betterAuth({
         console.log("Invitation email sent to", data.invitation.email, data.invitation.role);
         // TODO: Implement invitation email template
         // TODO: Throw proper error (return error json) if email fails to send
-        return Email.send({
-          to: data.email,
-          subject: "",
-          html: "",
-        });
+        return;
       },
     }),
     magicLink({
       sendMagicLink: async (data) => {
-        console.log("Magic link sent to", data.email, data.url);
-        // TODO: Implement welcome email template
         // TODO: Throw proper error (return error json) if email fails to send
-        return Email.send({
+        await Email.sendMagicLinkEmail({
           to: data.email,
-          subject: "",
-          html: "",
+          props: {
+            link: data.url,
+          },
         });
       },
     }),

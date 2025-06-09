@@ -9,7 +9,12 @@ on:
       domain:
         required: true
         type: string
+      resend_domain:
+        required: true
+        type: string
     secrets:
+      RESEND_API_KEY:
+        required: true
       DO_HOST:
         required: true
       DO_USER:
@@ -36,4 +41,4 @@ jobs:
             git checkout ${{ inputs.release_tag }}
 
             RELEASE_TAG=${{ inputs.release_tag }} docker compose -f docker-compose.production.yml pull
-            RELEASE_TAG=${{ inputs.release_tag }} DOMAIN=${{ inputs.domain }} docker compose -f docker-compose.production.yml up -d
+            RELEASE_TAG=${{ inputs.release_tag }} DOMAIN=${{ inputs.domain }} RESEND_API_KEY=${{ secrets.RESEND_API_KEY }} RESEND_DOMAIN=${{ inputs.resend_domain }} docker compose -f docker-compose.production.yml up -d

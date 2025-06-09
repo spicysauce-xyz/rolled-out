@@ -13,6 +13,8 @@
       "@*": ["src/*"]
     },
 
+    "jsx": "react-jsx",
+
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,

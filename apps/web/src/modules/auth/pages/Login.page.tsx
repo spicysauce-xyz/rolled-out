@@ -25,8 +25,6 @@ function Login() {
       }),
     },
     onSubmit: async ({ value }) => {
-      // TODO: Replace localhost with the host
-      // TODO: Move to useMutation
       await authClient.signIn.magicLink(
         {
           email: value.email,
@@ -70,112 +68,108 @@ function Login() {
   };
 
   return (
-    <div className="flex flex-1">
-      <div className="flex flex-1 flex-col items-center">
-        <div className="flex w-full flex-1 flex-col items-center justify-center gap-6 p-6 sm:max-w-96">
-          <div className="flex w-full flex-1 flex-col items-center justify-end gap-2">
-            <Text.Root size="lg" weight="medium">
-              Sign in to your account
-            </Text.Root>
-            <Text.Root size="sm" color="muted" className="px-6 text-center">
-              If you don't have an account, we will create one for you.
-            </Text.Root>
-          </div>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              form.handleSubmit();
-            }}
-            className="flex w-full flex-col gap-4"
-            noValidate
+    <div className="flex min-h-dvh flex-1 flex-col items-center justify-center bg-neutral-50">
+      <div className="flex w-full flex-col items-center gap-6 rounded-2xl p-6 sm:max-w-96">
+        <div className="flex w-full flex-col items-center gap-2">
+          <Text.Root size="lg" weight="medium">
+            Sign in to your account
+          </Text.Root>
+          <Text.Root size="sm" color="muted" className="px-6 text-center">
+            If you don't have an account, we will create one for you.
+          </Text.Root>
+        </div>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            form.handleSubmit();
+          }}
+          className="flex w-full flex-col gap-4"
+          noValidate
+        >
+          <form.Field name="email">
+            {(field) => (
+              <form.FieldContainer>
+                <Input.Root isInvalid={field.state.meta.errors.length > 0}>
+                  <Input.Wrapper>
+                    <Input.Icon>
+                      <MailIcon />
+                    </Input.Icon>
+                    <Input.Field
+                      id={field.name}
+                      name={field.name}
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      type="email"
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      placeholder="john.doe@example.com"
+                    />
+                  </Input.Wrapper>
+                </Input.Root>
+                {field.state.meta.errors.length ? (
+                  <Text.Root size="sm" className="text-danger-500">
+                    {field.state.meta.errors[0]?.message}
+                  </Text.Root>
+                ) : null}
+              </form.FieldContainer>
+            )}
+          </form.Field>
+          <form.Subscribe
+            selector={({ isSubmitting, isFieldsValid }) => ({
+              isSubmitting,
+              isFieldsValid,
+            })}
           >
-            <form.Field name="email">
-              {(field) => (
-                <form.FieldContainer>
-                  <Input.Root isInvalid={field.state.meta.errors.length > 0}>
-                    <Input.Wrapper>
-                      <Input.Icon>
-                        <MailIcon />
-                      </Input.Icon>
-                      <Input.Field
-                        id={field.name}
-                        name={field.name}
-                        value={field.state.value}
-                        onBlur={field.handleBlur}
-                        type="email"
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        placeholder="john.doe@example.com"
-                      />
-                    </Input.Wrapper>
-                  </Input.Root>
-                  {field.state.meta.errors.length ? (
-                    <Text.Root size="sm" className="text-danger-500">
-                      {field.state.meta.errors[0]?.message}
-                    </Text.Root>
-                  ) : null}
-                </form.FieldContainer>
-              )}
-            </form.Field>
-            <form.Subscribe
-              selector={({ isSubmitting, isFieldsValid }) => ({
-                isSubmitting,
-                isFieldsValid,
-              })}
-            >
-              {({ isSubmitting, isFieldsValid }) => (
-                <Button.Root
-                  type="submit"
-                  className="w-full"
-                  color="accent"
-                  isLoading={isSubmitting}
-                  isDisabled={!isFieldsValid}
-                >
-                  Send Magic Link
-                </Button.Root>
-              )}
-            </form.Subscribe>
-          </form>
-          <div className="relative h-px w-full bg-neutral-100">
-            <Text.Root
-              color="muted"
-              size="sm"
-              className="-translate-x-1/2 -translate-y-1/2 absolute top-1/2 left-1/2 bg-white px-2"
-            >
-              or
-            </Text.Root>
-          </div>
-          <div className="flex w-full flex-col gap-4">
-            <Button.Root
-              isLoading={
-                socialLogin.isPending &&
-                socialLogin.variables.provider === "google"
-              }
-              isDisabled={socialLogin.isPending}
-              onClick={() => handleSocialLogin("google")}
-              color="neutral"
-              variant="secondary"
-              className="w-full"
-            >
-              Continue with Google
-            </Button.Root>
-            <Button.Root
-              isLoading={
-                socialLogin.isPending &&
-                socialLogin.variables.provider === "github"
-              }
-              isDisabled={socialLogin.isPending}
-              onClick={() => handleSocialLogin("github")}
-              color="neutral"
-              variant="secondary"
-              className="w-full"
-            >
-              Continue with GitHub
-            </Button.Root>
-          </div>
-          <div className="flex-1" />
+            {({ isSubmitting, isFieldsValid }) => (
+              <Button.Root
+                type="submit"
+                className="w-full"
+                color="accent"
+                isLoading={isSubmitting}
+                isDisabled={!isFieldsValid}
+              >
+                Send Magic Link
+              </Button.Root>
+            )}
+          </form.Subscribe>
+        </form>
+        <div className="relative h-px w-full bg-neutral-100">
+          <Text.Root
+            color="muted"
+            size="sm"
+            className="-translate-x-1/2 -translate-y-1/2 absolute top-1/2 left-1/2 bg-neutral-50 px-2"
+          >
+            or
+          </Text.Root>
+        </div>
+        <div className="flex w-full flex-col gap-4">
+          <Button.Root
+            isLoading={
+              socialLogin.isPending &&
+              socialLogin.variables.provider === "google"
+            }
+            isDisabled={socialLogin.isPending}
+            onClick={() => handleSocialLogin("google")}
+            color="neutral"
+            variant="secondary"
+            className="w-full"
+          >
+            Continue with Google
+          </Button.Root>
+          <Button.Root
+            isLoading={
+              socialLogin.isPending &&
+              socialLogin.variables.provider === "github"
+            }
+            isDisabled={socialLogin.isPending}
+            onClick={() => handleSocialLogin("github")}
+            color="neutral"
+            variant="secondary"
+            className="w-full"
+          >
+            Continue with GitHub
+          </Button.Root>
         </div>
       </div>
-      <div className="flex-1 border-neutral-100 border-l bg-neutral-50" />
     </div>
   );
 }
