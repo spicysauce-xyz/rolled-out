@@ -1,47 +1,32 @@
-import { Database, schema } from "@database";
+import { organizationFactory } from "@domain/organizaiton/organization.factory";
 import { zValidator } from "@hono/zod-validator";
 import { notOk, ok } from "@utils/network";
-import { and, eq } from "drizzle-orm";
-import { Hono } from "hono";
 import { z } from "zod";
 import { authMiddleware } from "../auth";
 import { PostsService } from "./post.service";
 
-export const PostHandler = new Hono()
-  .basePath("/organization/:organizationId/posts")
-  .get("/", authMiddleware({ required: true }), async (c) => {
-    const user = c.get("user");
-    const organizationId = c.req.param("organizationId");
+export const PostHandler = organizationFactory
+  .createApp()
+  .get("/", async (c) => {
+    const member = c.get("member");
 
-    const member = await Database.query.member.findFirst({
-      where: and(eq(schema.member.userId, user.id), eq(schema.member.organizationId, organizationId)),
-    });
-
-    if (!member) {
-      return notOk(c, { message: "Forbidden" }, 403);
-    }
-
-    const posts = await PostsService.getPostsByOrganizationId(organizationId);
+    const posts = await PostsService.getPostsByOrganizationId(member.organizationId);
 
     return ok(c, posts);
   })
   .post(
     "/",
     zValidator("json", z.object({ title: z.string().optional(), content: z.object({}).optional() })),
-    authMiddleware({ required: true }),
     async (c) => {
-      const organizationId = c.req.param("organizationId");
-
-      if (!organizationId) {
-        return notOk(c, { message: "Organization not found" }, 404);
-      }
+      const member = c.get("member");
 
       const { title, content } = c.req.valid("json");
 
       const post = await PostsService.createPost({
-        organizationId,
+        organizationId: member.organizationId,
         title: title ?? "Untitled Update",
         content: content ?? {},
+        createdBy: member.userId,
       });
 
       if (!post) {
@@ -51,11 +36,15 @@ export const PostHandler = new Hono()
       return ok(c, post);
     },
   )
-  // not secure
   .get("/:id", authMiddleware({ required: true }), async (c) => {
-    const { id } = c.req.param();
+    const postId = c.req.param("id");
+    const member = c.get("member");
 
-    const post = await PostsService.getPostById(id);
+    const post = await PostsService.getPostById(postId);
+
+    if (post?.organizationId !== member.organizationId) {
+      return notOk(c, { message: "Forbidden" }, 403);
+    }
 
     if (!post) {
       return notOk(c, { message: "Post not found" }, 404);
@@ -63,25 +52,53 @@ export const PostHandler = new Hono()
 
     return ok(c, post);
   })
-  // not secure
   .patch(
     "/:id",
     zValidator("json", z.object({ title: z.string(), content: z.record(z.any()) })),
     authMiddleware({ required: true }),
     async (c) => {
-      const { id } = c.req.param();
+      const postId = c.req.param("id");
+      const member = c.get("member");
+
+      const post = await PostsService.getPostById(postId);
+
+      if (post?.organizationId !== member.organizationId) {
+        return notOk(c, { message: "Forbidden" }, 403);
+      }
+
+      if (!post) {
+        return notOk(c, { message: "Post not found" }, 404);
+      }
+
+      if (post.status === "published") {
+        return notOk(c, { message: "Cannot edit published post" }, 400);
+      }
+
       const { title, content } = c.req.valid("json");
+      const updatedPost = await PostsService.updatePostById(postId, { title, content });
 
-      const post = await PostsService.updatePostById(id, { title, content });
-
-      return ok(c, post);
+      return ok(c, updatedPost);
     },
   )
-  // not secure
   .post("/:id/publish", authMiddleware({ required: true }), async (c) => {
-    const { id } = c.req.param();
+    const postId = c.req.param("id");
+    const member = c.get("member");
 
-    const post = await PostsService.publishPostById(id);
+    const post = await PostsService.getPostById(postId);
 
-    return ok(c, post);
+    if (post?.organizationId !== member.organizationId) {
+      return notOk(c, { message: "Forbidden" }, 403);
+    }
+
+    if (!post) {
+      return notOk(c, { message: "Post not found" }, 404);
+    }
+
+    if (post.status === "published") {
+      return notOk(c, { message: "Post already published" }, 400);
+    }
+
+    const publishedPost = await PostsService.publishPostById(postId);
+
+    return ok(c, publishedPost);
   });

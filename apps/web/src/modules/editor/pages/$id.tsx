@@ -29,13 +29,14 @@ function RouteComponent() {
     from: "/_authorized/_has-organization/$organizationSlug/editor/$id",
   });
   const router = useRouter();
+  const { organization } = Route.useRouteContext();
 
   const { data } = useQuery({
     queryKey: ["posts", id],
     queryFn: async () => {
-      const response = await api.organization[":organizationId"].posts[
+      const response = await api.organizations[":organizationId"].posts[
         ":id"
-      ].$get({ param: { id, organizationId: organizationSlug } });
+      ].$get({ param: { id, organizationId: organization.id } });
       const json = await response.json();
 
       if (!json.success) {
@@ -52,8 +53,8 @@ function RouteComponent() {
 
   const updatePost = useMutation({
     mutationFn: (content: JSONContent) => {
-      return api.organization[":organizationId"].posts[":id"].$patch({
-        param: { id, organizationId: organizationSlug },
+      return api.organizations[":organizationId"].posts[":id"].$patch({
+        param: { id, organizationId: organization.id },
         json: { title: getTitleFromContent(content), content },
       });
     },
@@ -109,8 +110,8 @@ function RouteComponent() {
 
   const publishPostMutation = useMutation({
     mutationFn: () => {
-      return api.organization[":organizationId"].posts[":id"].publish.$post({
-        param: { id, organizationId: organizationSlug },
+      return api.organizations[":organizationId"].posts[":id"].publish.$post({
+        param: { id, organizationId: organization.id },
       });
     },
   });

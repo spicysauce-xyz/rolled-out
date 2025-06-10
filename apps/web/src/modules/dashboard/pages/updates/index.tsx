@@ -23,7 +23,7 @@ function RouteComponent() {
   const postsQuery = useQuery({
     queryKey: ["posts", organization.id],
     queryFn: async ({ queryKey }) => {
-      const response = await api.organization[":organizationId"].posts.$get({
+      const response = await api.organizations[":organizationId"].posts.$get({
         param: {
           organizationId: queryKey[1],
         },
@@ -32,6 +32,7 @@ function RouteComponent() {
       const json = await response.json();
 
       if (!json.success) {
+        // @ts-expect-error - TODO: fix this
         throw json.error;
       }
 
@@ -40,7 +41,7 @@ function RouteComponent() {
   });
 
   const createPost = useMutation({
-    mutationFn: api.organization[":organizationId"].posts.$post,
+    mutationFn: api.organizations[":organizationId"].posts.$post,
   });
 
   const handleCreateNewUpdate = async () => {

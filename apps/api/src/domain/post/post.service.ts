@@ -1,10 +1,17 @@
 import { Database, schema } from "@database";
-import { eq, sql } from "drizzle-orm";
+import { count, eq, sql } from "drizzle-orm";
 import { PostsRepository } from "./post.repository";
 
 export const PostsService = {
-  createPost: async (data: typeof schema.post.$inferInsert) => {
-    const [newPost] = await PostsRepository.create(data);
+  createPost: async (data: Omit<typeof schema.post.$inferInsert, "order">) => {
+    const [{ count: currentCount }] = await Database.select({ count: count() })
+      .from(schema.post)
+      .where(eq(schema.post.organizationId, data.organizationId));
+
+    const [newPost] = await PostsRepository.create({
+      ...data,
+      order: currentCount + 1,
+    });
 
     return newPost;
   },
@@ -17,6 +24,7 @@ export const PostsService = {
     const posts = await Database.select()
       .from(schema.post)
       .where(eq(schema.post.organizationId, organizationId))
+      .leftJoin(schema.user, eq(schema.post.createdBy, schema.user.id))
       .orderBy(
         sql`CASE
           WHEN ${schema.post.status} = 'draft' THEN 1
@@ -30,7 +38,10 @@ export const PostsService = {
         END DESC`,
       );
 
-    return posts;
+    return posts.map((entry) => ({
+      ...entry.post,
+      createdBy: entry.user,
+    }));
   },
   updatePostById: async (id: string, data: Pick<typeof schema.post.$inferSelect, "content" | "title">) => {
     const [updatedPost] = await Database.update(schema.post)
@@ -46,7 +57,7 @@ export const PostsService = {
   },
   publishPostById: async (id: string) => {
     const [updatedPost] = await Database.update(schema.post)
-      .set({ status: "published" })
+      .set({ status: "published", publishedAt: new Date() })
       .where(eq(schema.post.id, id))
       .returning();
 

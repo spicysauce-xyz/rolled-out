@@ -1,8 +1,9 @@
 import { GroupBy } from "@components/group-by";
 import * as UpdateEntry from "@components/update-entry";
 import type { SuccessResponse, api } from "@lib/api";
-import { IconButton, Skeleton, Text, Tooltip } from "@mono/ui";
+import { Avatar, IconButton, Skeleton, Text, Tooltip } from "@mono/ui";
 import { Link } from "@tanstack/react-router";
+import { format } from "date-fns";
 import type { InferResponseType } from "hono/client";
 import { CircleCheckIcon, CircleDashedIcon, ClockIcon } from "lucide-react";
 import {
@@ -15,7 +16,7 @@ import type React from "react";
 
 type Update = SuccessResponse<
   InferResponseType<
-    (typeof api.organization)[":organizationId"]["posts"]["$get"]
+    (typeof api.organizations)[":organizationId"]["posts"]["$get"]
   >
 >[number];
 
@@ -24,8 +25,11 @@ interface DraftUpdateProps extends Update {
 }
 
 const DraftUpdate: React.FC<DraftUpdateProps> = ({
+  order,
   title,
   id,
+  createdBy,
+  createdAt,
   organizationSlug,
 }) => {
   return (
@@ -35,7 +39,7 @@ const DraftUpdate: React.FC<DraftUpdateProps> = ({
         params={{ organizationSlug, id }}
       >
         <UpdateEntry.Group>
-          <UpdateEntry.Number number={1} />
+          <UpdateEntry.Number number={order} />
           <UpdateEntry.Title title={title} />
         </UpdateEntry.Group>
         <UpdateEntry.Tags
@@ -44,16 +48,15 @@ const DraftUpdate: React.FC<DraftUpdateProps> = ({
         />
         <UpdateEntry.Meta>
           <div className="flex gap-1">
-            <img
-              className="size-5 rounded-sm border-2 border-white bg-neutral-100"
-              src="https://plus.unsplash.com/premium_photo-1747290111870-5842a4f652cc?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwyfHx8ZW58MHx8fHx8"
-              alt="asdf"
-            />
+            <Avatar.Root className="size-5 rounded-sm">
+              <Avatar.Image src={createdBy?.image || ""} />
+              <Avatar.Fallback>{createdBy?.name?.charAt(0)}</Avatar.Fallback>
+            </Avatar.Root>
             <Text.Root size="sm" weight="medium">
-              Ilya Kulhavy
+              {createdBy?.name ?? "Unknown"}
             </Text.Root>
           </div>
-          <Tooltip.Root>
+          {/* <Tooltip.Root>
             <Tooltip.Trigger>
               <Text.Root
                 size="sm"
@@ -66,7 +69,7 @@ const DraftUpdate: React.FC<DraftUpdateProps> = ({
             <Tooltip.Content>
               <Tooltip.Title>Last edited on May 15, 8:30 AM</Tooltip.Title>
             </Tooltip.Content>
-          </Tooltip.Root>
+          </Tooltip.Root> */}
           <Tooltip.Root>
             <Tooltip.Trigger>
               <Text.Root
@@ -74,11 +77,13 @@ const DraftUpdate: React.FC<DraftUpdateProps> = ({
                 color="muted"
                 className="decoration-dashed underline-offset-2 hover:underline"
               >
-                May 15
+                {format(createdAt, "MMM d")}
               </Text.Root>
             </Tooltip.Trigger>
             <Tooltip.Content>
-              <Tooltip.Title>Created on May 15, 8:30 AM</Tooltip.Title>
+              <Tooltip.Title>
+                Created on {format(createdAt, "MMM d, h:mm a")}
+              </Tooltip.Title>
             </Tooltip.Content>
           </Tooltip.Root>
         </UpdateEntry.Meta>
@@ -92,23 +97,22 @@ const DraftUpdate: React.FC<DraftUpdateProps> = ({
   );
 };
 
-const ScheduledUpdate: React.FC<Update> = ({ title }) => {
+const ScheduledUpdate: React.FC<Update> = ({ title, createdBy, order }) => {
   return (
     <UpdateEntry.Root>
       <UpdateEntry.Group>
-        <UpdateEntry.Number number={1} />
+        <UpdateEntry.Number number={order} />
         <UpdateEntry.Title title={title} />
       </UpdateEntry.Group>
       <UpdateEntry.Tags tags={["Feature", "Scheduled"]} className="flex-1" />
       <UpdateEntry.Meta>
         <div className="flex gap-1">
-          <img
-            className="size-5 rounded-sm border-2 border-white bg-neutral-100"
-            src="https://plus.unsplash.com/premium_photo-1747290111870-5842a4f652cc?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwyfHx8ZW58MHx8fHx8"
-            alt="asdf"
-          />
+          <Avatar.Root className="size-5 rounded-sm">
+            <Avatar.Image src={createdBy?.image || ""} />
+            <Avatar.Fallback>{createdBy?.name?.charAt(0)}</Avatar.Fallback>
+          </Avatar.Root>
           <Text.Root size="sm" weight="medium">
-            Ilya Kulhavy
+            {createdBy?.name ?? "Unknown"}
           </Text.Root>
         </div>
         <Tooltip.Root>
@@ -135,11 +139,16 @@ const ScheduledUpdate: React.FC<Update> = ({ title }) => {
   );
 };
 
-const PublishedUpdate: React.FC<Update> = ({ title }) => {
+const PublishedUpdate: React.FC<Update> = ({
+  order,
+  title,
+  createdBy,
+  publishedAt,
+}) => {
   return (
     <UpdateEntry.Root>
       <UpdateEntry.Group>
-        <UpdateEntry.Number number={1} />
+        <UpdateEntry.Number number={order} />
         <UpdateEntry.Title title={title} />
       </UpdateEntry.Group>
       <UpdateEntry.Tags tags={["Feature", "Published"]} className="flex-1" />
@@ -201,29 +210,32 @@ const PublishedUpdate: React.FC<Update> = ({ title }) => {
       </UpdateEntry.Meta>
       <UpdateEntry.Meta>
         <div className="flex gap-1">
-          <img
-            className="size-5 rounded-sm border-2 border-white bg-neutral-100"
-            src="https://plus.unsplash.com/premium_photo-1747290111870-5842a4f652cc?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwyfHx8ZW58MHx8fHx8"
-            alt="Sarah Chen"
-          />
+          <Avatar.Root className="size-5 rounded-sm">
+            <Avatar.Image src={createdBy?.image || ""} />
+            <Avatar.Fallback>{createdBy?.name?.charAt(0)}</Avatar.Fallback>
+          </Avatar.Root>
           <Text.Root size="sm" weight="medium">
-            Sarah Chen
+            {createdBy?.name ?? "Unknown"}
           </Text.Root>
         </div>
-        <Tooltip.Root>
-          <Tooltip.Trigger>
-            <Text.Root
-              size="sm"
-              color="muted"
-              className="decoration-dashed underline-offset-2 hover:underline"
-            >
-              May 15
-            </Text.Root>
-          </Tooltip.Trigger>
-          <Tooltip.Content>
-            <Tooltip.Title>Published on May 15, 9:45 AM</Tooltip.Title>
-          </Tooltip.Content>
-        </Tooltip.Root>
+        {publishedAt && (
+          <Tooltip.Root>
+            <Tooltip.Trigger>
+              <Text.Root
+                size="sm"
+                color="muted"
+                className="decoration-dashed underline-offset-2 hover:underline"
+              >
+                {format(publishedAt, "MMM d")}
+              </Text.Root>
+            </Tooltip.Trigger>
+            <Tooltip.Content>
+              <Tooltip.Title>
+                Published on {format(publishedAt, "MMM d, h:mm a")}
+              </Tooltip.Title>
+            </Tooltip.Content>
+          </Tooltip.Root>
+        )}
       </UpdateEntry.Meta>
       <IconButton.Root size="sm" variant="tertiary" className="-my-2">
         <IconButton.Icon>
@@ -281,15 +293,17 @@ export const UpdatesList: React.FC<UpdateListProps> & {
         field="status"
         divider={(status) => <GroupDivider status={status} />}
       >
-        {(update) => (
-          <div className="flex w-full" key={update.id}>
-            {update.status === "draft" && (
-              <DraftUpdate {...update} organizationSlug={organizationSlug} />
-            )}
-            {update.status === "scheduled" && <ScheduledUpdate {...update} />}
-            {update.status === "published" && <PublishedUpdate {...update} />}
-          </div>
-        )}
+        {(update) => {
+          return (
+            <div className="flex w-full" key={update.id}>
+              {update.status === "draft" && (
+                <DraftUpdate {...update} organizationSlug={organizationSlug} />
+              )}
+              {update.status === "scheduled" && <ScheduledUpdate {...update} />}
+              {update.status === "published" && <PublishedUpdate {...update} />}
+            </div>
+          );
+        }}
       </GroupBy>
     </div>
   );

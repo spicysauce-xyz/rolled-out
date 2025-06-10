@@ -1,0 +1,2 @@
+ALTER TABLE "post" ADD COLUMN "created_by" uuid;--> statement-breakpoint
+ALTER TABLE "post" ADD CONSTRAINT "post_created_by_user_id_fk" FOREIGN KEY ("created_by") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;
