@@ -1,4 +1,3 @@
-import "@styles/global.css";
 import * as Confirmer from "@components/feedback/confirmer";
 import * as Transition from "@components/transition";
 import { Toaster } from "@mono/ui";
@@ -13,7 +12,7 @@ import {
   useRouterState,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 
 export const Route = createRootRouteWithContext<{
@@ -57,13 +56,11 @@ export const Route = createRootRouteWithContext<{
 });
 
 function RootComponent() {
-  const initializedRef = useRef(false);
   const [isLoading, setIsLoading] = useState(true);
   const route = useRouterState();
 
   useEffect(() => {
-    if (route.status === "idle" && !initializedRef.current) {
-      initializedRef.current = true;
+    if (route.status === "idle") {
       setIsLoading(false);
     }
   }, [route.status]);

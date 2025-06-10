@@ -1,12 +1,13 @@
 import * as Editor from "@components/editor/editor";
 import { TimeSince } from "@components/editor/time-since";
+import * as Confirmer from "@components/feedback/confirmer";
 import * as Page from "@components/layout/page";
 import { api } from "@lib/api";
-import { Button, IconButton, Text } from "@mono/ui";
+import { Button, IconButton, Text, Toaster } from "@mono/ui";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createFileRoute, useParams } from "@tanstack/react-router";
+import { createFileRoute, useParams, useRouter } from "@tanstack/react-router";
 import type { JSONContent } from "@tiptap/react";
-import { debounce } from "lodash";
+import _ from "lodash";
 import { ArrowLeftIcon, ClockIcon, SendIcon } from "lucide-react";
 import { useCallback, useMemo } from "react";
 
@@ -25,8 +26,9 @@ const getTitleFromContent = (content: JSONContent | undefined) => {
 function RouteComponent() {
   const queryClient = useQueryClient();
   const { id, organizationSlug } = useParams({
-    from: "/_authorized/$organizationSlug/editor/$id",
+    from: "/_authorized/_has-organization/$organizationSlug/editor/$id",
   });
+  const router = useRouter();
 
   const { data } = useQuery({
     queryKey: ["posts", id],
@@ -72,7 +74,7 @@ function RouteComponent() {
   });
 
   const debouncedUpdatePost = useCallback(
-    debounce(updatePost.mutateAsync, 1000),
+    _.debounce(updatePost.mutateAsync, 1000),
     [],
   );
 
@@ -93,6 +95,49 @@ function RouteComponent() {
     [id, queryClient, debouncedUpdatePost],
   );
 
+  const handleGoBack = useCallback(() => {
+    if (router.history.canGoBack()) {
+      router.history.back();
+      return;
+    }
+
+    router.navigate({
+      to: "/$organizationSlug/updates",
+      params: { organizationSlug },
+    });
+  }, [router, organizationSlug]);
+
+  const publishPostMutation = useMutation({
+    mutationFn: () => {
+      return api.organization[":organizationId"].posts[":id"].publish.$post({
+        param: { id, organizationId: organizationSlug },
+      });
+    },
+  });
+
+  const handlePublish = async () => {
+    const confirmed = await Confirmer.confirm({
+      title: "Publish Post",
+      description: "Are you sure you want to publish this post?",
+      action: {
+        label: "Publish",
+        icon: SendIcon,
+      },
+    });
+
+    if (!confirmed) return;
+
+    const toastId = Toaster.loading("Publishing...");
+
+    try {
+      await publishPostMutation.mutateAsync();
+      Toaster.success("Post published", { id: toastId });
+      handleGoBack();
+    } catch {
+      Toaster.error("Failed to publish post", { id: toastId });
+    }
+  };
+
   if (!data) return null;
 
   return (
@@ -100,7 +145,7 @@ function RouteComponent() {
       <Page.Wrapper>
         <Page.Header>
           <div className="flex items-center gap-4">
-            <IconButton.Root variant="tertiary">
+            <IconButton.Root variant="tertiary" onClick={handleGoBack}>
               <IconButton.Icon>
                 <ArrowLeftIcon />
               </IconButton.Icon>
@@ -131,7 +176,10 @@ function RouteComponent() {
               </Button.Icon>
               Schedule
             </Button.Root>
-            <Button.Root>
+            <Button.Root
+              isLoading={publishPostMutation.isPending}
+              onClick={handlePublish}
+            >
               <Button.Icon>
                 <SendIcon />
               </Button.Icon>

@@ -111,7 +111,10 @@ function RouteComponent() {
             )
             .otherwise(({ data }) => (
               <Transition.Item key="list">
-                <UpdatesList data={data || []} />
+                <UpdatesList
+                  data={data || []}
+                  organizationSlug={organizationSlug}
+                />
               </Transition.Item>
             ))}
         </Transition.Root>

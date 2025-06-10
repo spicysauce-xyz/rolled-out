@@ -13,7 +13,6 @@ export const sessionQuery = () =>
 
       return response;
     },
-    staleTime: 0,
   });
 
 export const organizationsQuery = () =>

@@ -44,4 +44,12 @@ export const PostsService = {
 
     return updatedPost;
   },
+  publishPostById: async (id: string) => {
+    const [updatedPost] = await Database.update(schema.post)
+      .set({ status: "published" })
+      .where(eq(schema.post.id, id))
+      .returning();
+
+    return updatedPost;
+  },
 };

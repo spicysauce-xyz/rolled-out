@@ -76,4 +76,12 @@ export const PostHandler = new Hono()
 
       return ok(c, post);
     },
-  );
+  )
+  // not secure
+  .post("/:id/publish", authMiddleware({ required: true }), async (c) => {
+    const { id } = c.req.param();
+
+    const post = await PostsService.publishPostById(id);
+
+    return ok(c, post);
+  });

@@ -2,6 +2,7 @@ import { GroupBy } from "@components/group-by";
 import * as UpdateEntry from "@components/update-entry";
 import type { SuccessResponse, api } from "@lib/api";
 import { IconButton, Skeleton, Text, Tooltip } from "@mono/ui";
+import { Link } from "@tanstack/react-router";
 import type { InferResponseType } from "hono/client";
 import { CircleCheckIcon, CircleDashedIcon, ClockIcon } from "lucide-react";
 import {
@@ -18,59 +19,75 @@ type Update = SuccessResponse<
   >
 >[number];
 
-const DraftUpdate: React.FC<Update> = ({ title }) => {
+interface DraftUpdateProps extends Update {
+  organizationSlug: string;
+}
+
+const DraftUpdate: React.FC<DraftUpdateProps> = ({
+  title,
+  id,
+  organizationSlug,
+}) => {
   return (
-    <UpdateEntry.Root>
-      <UpdateEntry.Group>
-        <UpdateEntry.Number number={1} />
-        <UpdateEntry.Title title={title} />
-      </UpdateEntry.Group>
-      <UpdateEntry.Tags tags={["Feature", "Improvement"]} className="flex-1" />
-      <UpdateEntry.Meta>
-        <div className="flex gap-1">
-          <img
-            className="size-5 rounded-sm border-2 border-white bg-neutral-100"
-            src="https://plus.unsplash.com/premium_photo-1747290111870-5842a4f652cc?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwyfHx8ZW58MHx8fHx8"
-            alt="asdf"
-          />
-          <Text.Root size="sm" weight="medium">
-            Ilya Kulhavy
-          </Text.Root>
-        </div>
-        <Tooltip.Root>
-          <Tooltip.Trigger>
-            <Text.Root
-              size="sm"
-              color="muted"
-              className="decoration-dashed underline-offset-2 hover:underline"
-            >
-              5 minutes ago
+    <UpdateEntry.Root asChild>
+      <Link
+        to="/$organizationSlug/editor/$id"
+        params={{ organizationSlug, id }}
+      >
+        <UpdateEntry.Group>
+          <UpdateEntry.Number number={1} />
+          <UpdateEntry.Title title={title} />
+        </UpdateEntry.Group>
+        <UpdateEntry.Tags
+          tags={["Feature", "Improvement"]}
+          className="flex-1"
+        />
+        <UpdateEntry.Meta>
+          <div className="flex gap-1">
+            <img
+              className="size-5 rounded-sm border-2 border-white bg-neutral-100"
+              src="https://plus.unsplash.com/premium_photo-1747290111870-5842a4f652cc?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwyfHx8ZW58MHx8fHx8"
+              alt="asdf"
+            />
+            <Text.Root size="sm" weight="medium">
+              Ilya Kulhavy
             </Text.Root>
-          </Tooltip.Trigger>
-          <Tooltip.Content>
-            <Tooltip.Title>Last edited on May 15, 8:30 AM</Tooltip.Title>
-          </Tooltip.Content>
-        </Tooltip.Root>
-        <Tooltip.Root>
-          <Tooltip.Trigger>
-            <Text.Root
-              size="sm"
-              color="muted"
-              className="decoration-dashed underline-offset-2 hover:underline"
-            >
-              May 15
-            </Text.Root>
-          </Tooltip.Trigger>
-          <Tooltip.Content>
-            <Tooltip.Title>Created on May 15, 8:30 AM</Tooltip.Title>
-          </Tooltip.Content>
-        </Tooltip.Root>
-      </UpdateEntry.Meta>
-      <IconButton.Root size="sm" variant="tertiary" className="-my-2">
-        <IconButton.Icon>
-          <EllipsisVerticalIcon />
-        </IconButton.Icon>
-      </IconButton.Root>
+          </div>
+          <Tooltip.Root>
+            <Tooltip.Trigger>
+              <Text.Root
+                size="sm"
+                color="muted"
+                className="decoration-dashed underline-offset-2 hover:underline"
+              >
+                5 minutes ago
+              </Text.Root>
+            </Tooltip.Trigger>
+            <Tooltip.Content>
+              <Tooltip.Title>Last edited on May 15, 8:30 AM</Tooltip.Title>
+            </Tooltip.Content>
+          </Tooltip.Root>
+          <Tooltip.Root>
+            <Tooltip.Trigger>
+              <Text.Root
+                size="sm"
+                color="muted"
+                className="decoration-dashed underline-offset-2 hover:underline"
+              >
+                May 15
+              </Text.Root>
+            </Tooltip.Trigger>
+            <Tooltip.Content>
+              <Tooltip.Title>Created on May 15, 8:30 AM</Tooltip.Title>
+            </Tooltip.Content>
+          </Tooltip.Root>
+        </UpdateEntry.Meta>
+        <IconButton.Root size="sm" variant="tertiary" className="-my-2">
+          <IconButton.Icon>
+            <EllipsisVerticalIcon />
+          </IconButton.Icon>
+        </IconButton.Root>
+      </Link>
     </UpdateEntry.Root>
   );
 };
@@ -250,12 +267,13 @@ const GroupDivider: React.FC<{ status: Update["status"] }> = ({ status }) => {
 };
 
 interface UpdateListProps {
+  organizationSlug: string;
   data: Update[];
 }
 
 export const UpdatesList: React.FC<UpdateListProps> & {
   Skeleton: React.FC;
-} = ({ data }) => {
+} = ({ data, organizationSlug }) => {
   return (
     <div className="flex flex-col divide-y divide-neutral-100">
       <GroupBy
@@ -265,7 +283,9 @@ export const UpdatesList: React.FC<UpdateListProps> & {
       >
         {(update) => (
           <div className="flex w-full" key={update.id}>
-            {update.status === "draft" && <DraftUpdate {...update} />}
+            {update.status === "draft" && (
+              <DraftUpdate {...update} organizationSlug={organizationSlug} />
+            )}
             {update.status === "scheduled" && <ScheduledUpdate {...update} />}
             {update.status === "published" && <PublishedUpdate {...update} />}
           </div>
