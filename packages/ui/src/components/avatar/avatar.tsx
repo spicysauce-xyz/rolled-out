@@ -6,7 +6,7 @@ import { Text } from "../text";
 
 const avatarVariants = tv({
   slots: {
-    root: "relative flex shrink-0 overflow-hidden",
+    root: "relative flex shrink-0 rounded-md overflow-clip bg-neutral-100",
   },
   variants: {
     size: {
@@ -53,7 +53,7 @@ const AvatarImage = React.forwardRef<
   <AvatarPrimitive.Image
     ref={ref}
     className={cn(
-      "fade-in-0 aspect-square h-full w-full animate-in rounded-md object-cover object-center transition-opacity",
+      "fade-in-0 aspect-square h-full w-full animate-in rounded-[inherit] object-cover object-center transition-opacity",
       className,
     )}
     {...props}
@@ -68,7 +68,7 @@ const AvatarFallback = React.forwardRef<
     <AvatarPrimitive.Fallback
       ref={ref}
       className={cn(
-        "flex h-full w-full items-center justify-center rounded-md border border-neutral-100 bg-neutral-50 uppercase",
+        "flex h-full w-full items-center justify-center rounded-[inherit] border border-neutral-100 bg-neutral-50 uppercase",
         className,
       )}
       {...props}

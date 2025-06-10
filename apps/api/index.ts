@@ -1,5 +1,6 @@
 import "dotenv/config";
 import { Config } from "@config";
+import { AssetsHandler } from "@domain/assets";
 import { memberMiddleware } from "@domain/organizaiton/member.middleware";
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
@@ -12,6 +13,7 @@ export const app = new Hono()
   .use(logger())
   .use(cors({ origin: [Config.client.base], credentials: true }))
   .route("/auth", AuthHandler)
+  .route("/assets", AssetsHandler)
   .route(
     "/organizations/:organizationId",
     new Hono()

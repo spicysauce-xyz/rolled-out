@@ -6,6 +6,11 @@ export const configSchema = z.object({
   DATABASE_URL: z.string(),
   RESEND_API_KEY: z.string(),
   RESEND_DOMAIN: z.string(),
+  S3_ENDPOINT: z.string(),
+  S3_ACCESS_KEY_ID: z.string(),
+  S3_SECRET_ACCESS_KEY: z.string(),
+  S3_BUCKET_NAME: z.string(),
+  S3_ASSETS_BASE: z.string(),
 });
 
 const formatConfig = () => {
@@ -28,6 +33,13 @@ const formatConfig = () => {
     resend: {
       apiKey: config.RESEND_API_KEY,
       domain: config.RESEND_DOMAIN,
+    },
+    s3: {
+      endpoint: config.S3_ENDPOINT,
+      accessKeyId: config.S3_ACCESS_KEY_ID,
+      secretAccessKey: config.S3_SECRET_ACCESS_KEY,
+      bucketName: config.S3_BUCKET_NAME,
+      assetsBase: config.S3_ASSETS_BASE,
     },
   };
 };

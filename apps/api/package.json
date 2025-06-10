@@ -17,6 +17,9 @@
     "email:dev": "email dev --port 3123 --dir src/email/templates"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.826.0",
+    "@aws-sdk/s3-presigned-post": "^3.826.0",
+    "@aws-sdk/s3-request-presigner": "^3.826.0",
     "@hono/node-server": "^1.14.3",
     "@hono/zod-validator": "^0.4.3",
     "@react-email/components": "0.0.41",
@@ -30,13 +33,14 @@
     "resend": "^4.5.1",
     "tsup": "^8.5.0",
     "tsx": "^4.19.4",
+    "uuid": "^11.1.0",
     "zod": "^3.25.48"
   },
   "devDependencies": {
-    "@types/react": "^18.3.23",
     "@total-typescript/tsconfig": "^1.0.4",
     "@types/node": "^22.15.29",
     "@types/pg": "^8.11.11",
+    "@types/react": "^18.3.23",
     "drizzle-kit": "^0.30.5",
     "react-email": "4.0.16",
     "typescript": "5.8.2"
