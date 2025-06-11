@@ -1,12 +1,11 @@
-import * as Editor from "@components/editor/editor";
 import { TimeSince } from "@components/editor/time-since";
 import * as Confirmer from "@components/feedback/confirmer";
 import * as Page from "@components/layout/page";
 import { api } from "@lib/api";
+import { Editor, type JSONContent } from "@mono/editor";
 import { Button, IconButton, Text, Toaster } from "@mono/ui";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useParams, useRouter } from "@tanstack/react-router";
-import type { JSONContent } from "@tiptap/react";
 import _ from "lodash";
 import { ArrowLeftIcon, ClockIcon, SendIcon } from "lucide-react";
 import { useCallback, useMemo } from "react";
@@ -190,7 +189,10 @@ function RouteComponent() {
         </Page.Header>
         <Page.Content className="mx-auto flex w-full max-w-180 flex-1 flex-col">
           {content && (
-            <Editor.Root content={content} onUpdate={handleUpdate}>
+            <Editor.Root
+              content={content}
+              onUpdate={({ editor }) => handleUpdate(editor.getJSON())}
+            >
               <Editor.Content />
               <Editor.BubbleMenu />
             </Editor.Root>

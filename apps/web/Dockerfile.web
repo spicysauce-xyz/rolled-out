@@ -36,7 +36,6 @@ FROM base AS runner
 WORKDIR /app
 
 COPY --from=installer /app/apps/web/.output ./.output
-COPY --from=installer /app/apps/web/.vinxi ./.vinxi
 
 ENV NODE_ENV=production
 ENV PORT=3000

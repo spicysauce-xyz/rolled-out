@@ -5,7 +5,7 @@ import { config } from "@config";
 
 export const api = hc<Api>(config.apiUrl, {
   init: {
-    credentials: import.meta.env.PROD ? "same-origin" : "include",
+    credentials: "include",
   },
 });
 

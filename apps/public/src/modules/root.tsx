@@ -1,15 +1,19 @@
-import * as Confirmer from "@components/feedback/confirmer";
-import { Toaster } from "@mono/ui";
 import styles from "@styles/global.css?url";
+import type { QueryClient } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import {
   HeadContent,
   Outlet,
   Scripts,
-  createRootRoute,
+  createRootRouteWithContext,
 } from "@tanstack/react-router";
+import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import { getHost, getSubdomainFromHost } from "@utils/domain";
 import type { ReactNode } from "react";
 
-export const Route = createRootRoute({
+export const Route = createRootRouteWithContext<{
+  queryClient: QueryClient;
+}>()({
   head: () => ({
     meta: [
       {
@@ -24,6 +28,7 @@ export const Route = createRootRoute({
       },
     ],
     links: [
+      { rel: "icon", href: "/favicon.ico" },
       {
         rel: "preconnect",
         href: "https://fonts.googleapis.com",
@@ -44,14 +49,25 @@ export const Route = createRootRoute({
     ],
   }),
   component: RootComponent,
+  beforeLoad: async () => {
+    let host = "";
+
+    if (import.meta.env.SSR) {
+      host = await getHost();
+    } else {
+      host = window.location.host;
+    }
+
+    return {
+      subdomain: getSubdomainFromHost(host),
+    };
+  },
 });
 
 function RootComponent() {
   return (
     <RootDocument>
       <Outlet />
-      <Confirmer.Root />
-      <Toaster.Root />
     </RootDocument>
   );
 }
@@ -64,6 +80,8 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
       </head>
       <body>
         {children}
+        <TanStackRouterDevtools position="bottom-right" />
+        <ReactQueryDevtools buttonPosition="bottom-left" />
         <Scripts />
       </body>
     </html>

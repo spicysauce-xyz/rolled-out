@@ -11,6 +11,7 @@
 @source "../lib";
 @source "../modules";
 @source "../../../../packages/ui/**/*.{ts,tsx}";
+@source "../../../../packages/editor/**/*.{ts,tsx}";
 
 html {
   font-size: 16px;

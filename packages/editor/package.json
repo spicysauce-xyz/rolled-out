@@ -1,0 +1,57 @@
+{
+  "name": "@mono/editor",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.tsx"
+  },
+  "scripts": {
+    "dev": "storybook dev -p 6006"
+  },
+  "dependencies": {
+    "@mono/ui": "workspace:*",
+    "@tiptap/extension-blockquote": "^2.12.0",
+    "@tiptap/extension-bold": "^2.11.7",
+    "@tiptap/extension-bullet-list": "^2.12.0",
+    "@tiptap/extension-code": "^2.11.7",
+    "@tiptap/extension-document": "^2.11.7",
+    "@tiptap/extension-hard-break": "^2.12.0",
+    "@tiptap/extension-heading": "^2.11.7",
+    "@tiptap/extension-image": "^2.11.7",
+    "@tiptap/extension-italic": "^2.11.7",
+    "@tiptap/extension-link": "^2.11.7",
+    "@tiptap/extension-list-item": "^2.12.0",
+    "@tiptap/extension-ordered-list": "^2.12.0",
+    "@tiptap/extension-paragraph": "^2.11.7",
+    "@tiptap/extension-placeholder": "^2.12.0",
+    "@tiptap/extension-strike": "^2.11.7",
+    "@tiptap/extension-text": "^2.11.7",
+    "@tiptap/extension-underline": "^2.11.7",
+    "@tiptap/html": "^2.14.0",
+    "@tiptap/pm": "^2.11.7",
+    "@tiptap/react": "^2.11.7",
+    "@tiptap/suggestion": "^2.12.0",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.483.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tailwindcss": "^4.0.14",
+    "tippy.js": "^6.3.7"
+  },
+  "devDependencies": {
+    "@chromatic-com/storybook": "^3",
+    "@storybook/addon-essentials": "^8.6.11",
+    "@storybook/addon-onboarding": "^8.6.11",
+    "@storybook/blocks": "^8.6.11",
+    "@storybook/react": "^8.6.11",
+    "@storybook/react-vite": "^8.6.11",
+    "@storybook/test": "^8.6.11",
+    "@types/react": "^18.2.66",
+    "@types/react-dom": "^18.2.22",
+    "@vitejs/plugin-react": "^4.2.1",
+    "storybook": "^8.6.11",
+    "typescript": "^5.2.2",
+    "vite": "^5.2.0"
+  }
+}

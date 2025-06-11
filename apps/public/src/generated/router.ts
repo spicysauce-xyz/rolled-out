@@ -8,173 +8,59 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { createFileRoute } from '@tanstack/react-router'
+import { Route as rootRouteImport } from './../modules/root'
+import { Route as boardRouteImport } from './../modules/board'
 
-// Import Routes
-
-import { Route as rootRoute } from './../modules/root'
-import { Route as indexImport } from './../modules/index'
-import { Route as postImport } from './../modules/post'
-import { Route as boardImport } from './../modules/board'
-
-// Create Virtual Routes
-
-const BoardSlugImport = createFileRoute('/$boardSlug')()
-
-// Create/Update Routes
-
-const BoardSlugRoute = BoardSlugImport.update({
-  id: '/$boardSlug',
-  path: '/$boardSlug',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const indexRoute = indexImport.update({
+const boardRoute = boardRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
 
-const postRoute = postImport.update({
-  id: '/$postSlug',
-  path: '/$postSlug',
-  getParentRoute: () => BoardSlugRoute,
-} as any)
-
-const boardRoute = boardImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => BoardSlugRoute,
-} as any)
-
-// Populate the FileRoutesByPath interface
+export interface FileRoutesByFullPath {
+  '/': typeof boardRoute
+}
+export interface FileRoutesByTo {
+  '/': typeof boardRoute
+}
+export interface FileRoutesById {
+  __root__: typeof rootRouteImport
+  '/': typeof boardRoute
+}
+export interface FileRouteTypes {
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths: '/'
+  fileRoutesByTo: FileRoutesByTo
+  to: '/'
+  id: '__root__' | '/'
+  fileRoutesById: FileRoutesById
+}
+export interface RootRouteChildren {
+  boardRoute: typeof boardRoute
+}
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
     '/': {
       id: '/'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: unknown
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof indexImport
-      parentRoute: typeof rootRoute
-    }
-    '/$boardSlug': {
-      id: '/$boardSlug'
-      path: '/$boardSlug'
-      fullPath: '/$boardSlug'
-      preLoaderRoute: typeof BoardSlugImport
-      parentRoute: typeof rootRoute
-    }
-    '/$boardSlug/': {
-      id: '/$boardSlug/'
-      path: '/'
-      fullPath: '/$boardSlug/'
-      preLoaderRoute: typeof boardImport
-      parentRoute: typeof BoardSlugImport
-    }
-    '/$boardSlug/$postSlug': {
-      id: '/$boardSlug/$postSlug'
-      path: '/$postSlug'
-      fullPath: '/$boardSlug/$postSlug'
-      preLoaderRoute: typeof postImport
-      parentRoute: typeof BoardSlugImport
+      preLoaderRoute: typeof boardRouteImport
+      parentRoute: typeof rootRouteImport
     }
   }
-}
-
-// Create and export the route tree
-
-interface BoardSlugRouteChildren {
-  boardRoute: typeof boardRoute
-  postRoute: typeof postRoute
-}
-
-const BoardSlugRouteChildren: BoardSlugRouteChildren = {
-  boardRoute: boardRoute,
-  postRoute: postRoute,
-}
-
-const BoardSlugRouteWithChildren = BoardSlugRoute._addFileChildren(
-  BoardSlugRouteChildren,
-)
-
-export interface FileRoutesByFullPath {
-  '/': typeof indexRoute
-  '/$boardSlug': typeof BoardSlugRouteWithChildren
-  '/$boardSlug/': typeof boardRoute
-  '/$boardSlug/$postSlug': typeof postRoute
-}
-
-export interface FileRoutesByTo {
-  '/': typeof indexRoute
-  '/$boardSlug': typeof boardRoute
-  '/$boardSlug/$postSlug': typeof postRoute
-}
-
-export interface FileRoutesById {
-  __root__: typeof rootRoute
-  '/': typeof indexRoute
-  '/$boardSlug': typeof BoardSlugRouteWithChildren
-  '/$boardSlug/': typeof boardRoute
-  '/$boardSlug/$postSlug': typeof postRoute
-}
-
-export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/$boardSlug' | '/$boardSlug/' | '/$boardSlug/$postSlug'
-  fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/$boardSlug' | '/$boardSlug/$postSlug'
-  id:
-    | '__root__'
-    | '/'
-    | '/$boardSlug'
-    | '/$boardSlug/'
-    | '/$boardSlug/$postSlug'
-  fileRoutesById: FileRoutesById
-}
-
-export interface RootRouteChildren {
-  indexRoute: typeof indexRoute
-  BoardSlugRoute: typeof BoardSlugRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  indexRoute: indexRoute,
-  BoardSlugRoute: BoardSlugRouteWithChildren,
+  boardRoute: boardRoute,
 }
-
-export const routeTree = rootRoute
+export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-/* ROUTE_MANIFEST_START
-{
-  "routes": {
-    "__root__": {
-      "filePath": "root.tsx",
-      "children": [
-        "/",
-        "/$boardSlug"
-      ]
-    },
-    "/": {
-      "filePath": "index.tsx"
-    },
-    "/$boardSlug": {
-      "filePath": "",
-      "children": [
-        "/$boardSlug/",
-        "/$boardSlug/$postSlug"
-      ]
-    },
-    "/$boardSlug/": {
-      "filePath": "board.tsx",
-      "parent": "/$boardSlug"
-    },
-    "/$boardSlug/$postSlug": {
-      "filePath": "post.tsx",
-      "parent": "/$boardSlug"
-    }
-  }
-}
-ROUTE_MANIFEST_END */
