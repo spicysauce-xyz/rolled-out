@@ -1,10 +1,9 @@
 import { sessionQuery } from "@lib/api/queries";
-import { useQuery } from "@tanstack/react-query";
 import { Outlet, createFileRoute, redirect } from "@tanstack/react-router";
 import { tryCatch } from "@utils/promise";
 
 export const Route = createFileRoute("/_authorized")({
-  component: RouteComponent,
+  component: Outlet,
   beforeLoad: async ({ context, location }) => {
     const { data: session } = await tryCatch(
       context.queryClient.ensureQueryData(sessionQuery()),
@@ -31,9 +30,3 @@ export const Route = createFileRoute("/_authorized")({
     };
   },
 });
-
-function RouteComponent() {
-  useQuery(sessionQuery());
-
-  return <Outlet />;
-}

@@ -10,6 +10,14 @@ import { AuthHandler, authMiddleware } from "./src/domain/auth";
 import { PostHandler } from "./src/domain/post";
 
 export const app = new Hono()
+  .use(async (_, next) => {
+    if (process.env.NODE_ENV === "development") {
+      await new Promise((resolve) =>
+        setTimeout(resolve, Math.random() * 1000 + 250),
+      );
+    }
+    await next();
+  })
   .use(logger())
   .use(cors({ origin: [Config.client.base], credentials: true }))
   .route("/auth", AuthHandler)

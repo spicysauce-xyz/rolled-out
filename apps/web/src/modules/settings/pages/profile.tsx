@@ -1,9 +1,10 @@
 import * as Card from "@components/card";
 import { FileUpload } from "@components/file-upload";
+import { sessionQuery } from "@lib/api/queries";
 import { authClient } from "@lib/auth";
 import useAppForm from "@lib/form";
 import { Avatar, Button, Input, Label, Text, Toaster } from "@mono/ui";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { MailIcon, SaveIcon, UserIcon } from "lucide-react";
 import { match } from "ts-pattern";
@@ -17,8 +18,9 @@ export const Route = createFileRoute(
 
 function RouteComponent() {
   const queryClient = useQueryClient();
-  const { user } = Route.useRouteContext();
   const router = useRouter();
+  const { user: initialUser, session: initialSession } =
+    Route.useRouteContext();
 
   const updateUserMutation = useMutation({
     mutationFn: async (value: { name: string; image: string | null }) => {
@@ -32,11 +34,26 @@ function RouteComponent() {
     },
   });
 
+  const { data: sessionQueryData, isPending: isSessionQueryPending } = useQuery(
+    {
+      ...sessionQuery(),
+      initialData: () => ({
+        error: null,
+        data: {
+          user: initialUser,
+          session: initialSession,
+        },
+      }),
+    },
+  );
+
+  const user = sessionQueryData?.data.user;
+
   const form = useAppForm({
     defaultValues: {
-      image: user.image || null,
-      name: user.name,
-      email: user.email,
+      image: user?.image || null,
+      name: user?.name || "",
+      email: user?.email || "",
     },
     validators: {
       onChange: z.object({
@@ -123,7 +140,9 @@ function RouteComponent() {
                               </div>
                             </>
                           ))}
-                        <Avatar.Fallback>{user.name.charAt(0)}</Avatar.Fallback>
+                        <Avatar.Fallback>
+                          {user?.name.charAt(0)}
+                        </Avatar.Fallback>
                       </Avatar.Root>
                     </label>
                   )}
@@ -141,6 +160,7 @@ function RouteComponent() {
                 <Input.Root
                   className="w-full"
                   isInvalid={field.state.meta.errors.length > 0}
+                  isDisabled={isSessionQueryPending}
                 >
                   <Input.Wrapper>
                     <Input.Icon>
@@ -170,7 +190,7 @@ function RouteComponent() {
                 <Input.Icon>
                   <MailIcon />
                 </Input.Icon>
-                <Input.Field placeholder="john@doe.com" value={user.email} />
+                <Input.Field placeholder="john@doe.com" value={user?.email} />
               </Input.Wrapper>
             </Input.Root>
           </form.FieldContainer>

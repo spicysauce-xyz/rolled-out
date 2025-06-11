@@ -28,3 +28,21 @@ export const organizationsQuery = () =>
       return response.data;
     },
   });
+
+export const organizationQuery = (id: string) =>
+  queryOptions({
+    queryKey: ["organization", id],
+    queryFn: async ({ queryKey }) => {
+      const response = await authClient.organization.getFullOrganization({
+        query: {
+          organizationId: queryKey[1],
+        },
+      });
+
+      if (response.error) {
+        throw response.error;
+      }
+
+      return response.data;
+    },
+  });

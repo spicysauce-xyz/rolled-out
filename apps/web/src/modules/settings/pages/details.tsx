@@ -1,8 +1,9 @@
 import * as Card from "@components/card";
+import { organizationQuery, organizationsQuery } from "@lib/api/queries";
 import { authClient } from "@lib/auth";
 import useAppForm from "@lib/form";
 import { Button, Input, Label, Text, Toaster } from "@mono/ui";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { Loader2Icon, SaveIcon } from "lucide-react";
 import { useEffect } from "react";
@@ -16,9 +17,19 @@ export const Route = createFileRoute(
 
 function RouteComponent() {
   const queryClient = useQueryClient();
-  const { organization } = Route.useRouteContext();
   const navigate = Route.useNavigate();
   const router = useRouter();
+  const { organization } = Route.useRouteContext();
+
+  const { data: organizationQueryData, isPending: isOrganizationQueryPending } =
+    useQuery({
+      ...organizationQuery(organization.id),
+      placeholderData: {
+        ...organization,
+        members: [],
+        invitations: [],
+      },
+    });
 
   const updateOrganizationMutation = useMutation({
     mutationFn: async (data: {
@@ -56,8 +67,8 @@ function RouteComponent() {
 
   const form = useAppForm({
     defaultValues: {
-      name: organization.name,
-      slug: organization.slug,
+      name: organizationQueryData?.name || "",
+      slug: organizationQueryData?.slug || "",
     },
     validators: {
       onSubmit: z.object({
@@ -73,13 +84,9 @@ function RouteComponent() {
           organizationId: organization.id,
         });
 
-        await queryClient.refetchQueries({
-          queryKey: ["organization", organization.id],
-        });
+        await queryClient.refetchQueries(organizationQuery(organization.id));
 
-        await queryClient.refetchQueries({
-          queryKey: ["organizations"],
-        });
+        await queryClient.refetchQueries(organizationsQuery());
 
         if (value.slug !== organization.slug) {
           navigate({
@@ -134,6 +141,7 @@ function RouteComponent() {
                 <Input.Root
                   className="w-full"
                   isInvalid={field.state.meta.errors.length > 0}
+                  isDisabled={isOrganizationQueryPending}
                 >
                   <Input.Wrapper>
                     <Input.Field
@@ -190,6 +198,7 @@ function RouteComponent() {
                 <Input.Root
                   className="w-full"
                   isInvalid={field.state.meta.errors.length > 0}
+                  isDisabled={isOrganizationQueryPending}
                 >
                   <Input.Wrapper>
                     <Input.Field

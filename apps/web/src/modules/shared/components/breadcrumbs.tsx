@@ -35,7 +35,6 @@ const OrganizationSelector = ({ organization }: OrganizationSelectorProps) => {
 
       return response.data;
     },
-    staleTime: 1000 * 60 * 5,
   });
 
   const handleUpdateActiveOrganization = async (organizationSlug: string) => {

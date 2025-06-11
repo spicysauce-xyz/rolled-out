@@ -1,10 +1,9 @@
 import { organizationsQuery } from "@lib/api/queries";
-import { useQuery } from "@tanstack/react-query";
 import { Outlet, createFileRoute, redirect } from "@tanstack/react-router";
 import { tryCatch } from "@utils/promise";
 
 export const Route = createFileRoute("/_authorized/_has-organization")({
-  component: RouteComponent,
+  component: Outlet,
   beforeLoad: async ({ context }) => {
     const { data: organizations } = await tryCatch(
       context.queryClient.ensureQueryData(organizationsQuery()),
@@ -21,9 +20,3 @@ export const Route = createFileRoute("/_authorized/_has-organization")({
     };
   },
 });
-
-function RouteComponent() {
-  useQuery(organizationsQuery());
-
-  return <Outlet />;
-}
