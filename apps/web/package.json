@@ -4,9 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vinxi dev",
-    "build": "vinxi build",
-    "start": "vinxi start"
+    "dev": "vite dev --port 3000",
+    "build": "vite build",
+    "start": "node .output/server/index.mjs"
   },
   "dependencies": {
     "@mono/api": "workspace:*",
@@ -15,11 +15,11 @@
     "@tanstack/react-form": "^1.0.5",
     "@tanstack/react-query": "^5.80.2",
     "@tanstack/react-query-devtools": "^5.80.2",
-    "@tanstack/react-router": "^1.120.15",
-    "@tanstack/react-router-devtools": "^1.120.13",
-    "@tanstack/react-router-with-query": "^1.120.13",
-    "@tanstack/react-start": "^1.120.15",
-    "@tanstack/virtual-file-routes": "^1.115.0",
+    "@tanstack/react-router": "^1.121.0",
+    "@tanstack/react-router-devtools": "^1.121.0",
+    "@tanstack/react-router-with-query": "^1.121.0",
+    "@tanstack/react-start": "^1.121.0",
+    "@tanstack/virtual-file-routes": "^1.120.17",
     "@tiptap/extension-blockquote": "^2.12.0",
     "@tiptap/extension-bold": "^2.11.7",
     "@tiptap/extension-bullet-list": "^2.12.0",
@@ -55,15 +55,14 @@
     "tippy.js": "^6.3.7",
     "ts-pattern": "^5.7.0",
     "ua-parser-js": "^2.0.3",
-    "vinxi": "^0.5.6",
     "zod": "^3.24.2",
     "zustand": "^5.0.3"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.16",
-    "@tanstack/router-cli": "^1.120.13",
-    "@tanstack/router-devtools": "^1.120.15",
-    "@tanstack/router-plugin": "^1.114.17",
+    "@tanstack/router-cli": "^1.121.0",
+    "@tanstack/router-devtools": "^1.121.0",
+    "@tanstack/router-plugin": "^1.121.0",
     "@types/compression": "^1.8.0",
     "@types/express": "^5.0.2",
     "@types/lodash": "^4.17.16",

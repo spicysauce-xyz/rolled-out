@@ -6,7 +6,8 @@ out
 dist
 *.tgz
 .output
-.vinxi
+.nitro
+.tanstack
 .vite
 
 # code coverage

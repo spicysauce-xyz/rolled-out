@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
-import { getHeaders as getVinxiHeaders } from "vinxi/http";
+import { getHeaders as getTanstackHeaders } from "@tanstack/react-start/server";
 
 export const getHeaders = createServerFn().handler(async () => {
-  return getVinxiHeaders() || {};
+  return getTanstackHeaders() || {};
 });
