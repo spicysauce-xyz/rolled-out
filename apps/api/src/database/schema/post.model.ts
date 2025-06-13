@@ -1,6 +1,22 @@
 import { integer, jsonb, pgTable, text, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
+import { customType } from "drizzle-orm/pg-core";
 import { organization } from "./organization.model";
 import { user } from "./user.model";
+
+export const bytea = customType<{
+  data: Uint8Array;
+  driverData: Buffer;
+}>({
+  dataType() {
+    return "bytea";
+  },
+  toDriver(value) {
+    return Buffer.from(value);
+  },
+  fromDriver(value) {
+    return new Uint8Array(value);
+  },
+});
 
 export const post = pgTable("post", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -14,6 +30,7 @@ export const post = pgTable("post", {
     .notNull(),
   title: text("title").notNull(),
   content: jsonb("content").$type<Record<string, unknown>>().default({}).notNull(),
+  byteContent: bytea("byte_content"),
 
   createdBy: uuid("created_by")
     .references(() => user.id, { onDelete: "cascade" })

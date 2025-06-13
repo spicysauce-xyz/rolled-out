@@ -1,5 +1,5 @@
 import { api } from "@lib/api";
-import { Editor, editorContentClassName, generateHtml } from "@mono/editor";
+import { editorContentClassName, generateHtml } from "@mono/editor";
 import { Button, Text } from "@mono/ui";
 import { cn } from "@mono/ui/utils";
 import { createFileRoute } from "@tanstack/react-router";
