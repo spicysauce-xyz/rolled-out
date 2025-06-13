@@ -21,6 +21,16 @@ on:
         required: true
       DO_SSH_KEY:
         required: true
+      S3_ENDPOINT:
+        required: true
+      S3_ACCESS_KEY_ID:
+        required: true
+      S3_SECRET_ACCESS_KEY:
+        required: true
+      S3_BUCKET_NAME:
+        required: true
+      S3_ASSETS_BASE:
+        required: true
 
 jobs:
   release:
@@ -40,5 +50,15 @@ jobs:
             git fetch --all
             git checkout ${{ inputs.release_tag }}
 
-            RELEASE_TAG=${{ inputs.release_tag }} docker compose -f docker-compose.production.yml pull
-            RELEASE_TAG=${{ inputs.release_tag }} DOMAIN=${{ inputs.domain }} RESEND_API_KEY=${{ secrets.RESEND_API_KEY }} RESEND_DOMAIN=${{ inputs.resend_domain }} docker compose -f docker-compose.production.yml up -d
+            export RELEASE_TAG="${{ inputs.release_tag }}"
+            export DOMAIN="${{ inputs.domain }}"
+            export RESEND_API_KEY="${{ secrets.RESEND_API_KEY }}"
+            export RESEND_DOMAIN="${{ inputs.resend_domain }}"
+            export S3_ENDPOINT="${{ secrets.S3_ENDPOINT }}"
+            export S3_ACCESS_KEY_ID="${{ secrets.S3_ACCESS_KEY_ID }}"
+            export S3_SECRET_ACCESS_KEY="${{ secrets.S3_SECRET_ACCESS_KEY }}"
+            export S3_BUCKET_NAME="${{ secrets.S3_BUCKET_NAME }}"
+            export S3_ASSETS_BASE="${{ secrets.S3_ASSETS_BASE }}"
+
+            docker compose -f docker-compose.production.yml pull
+            docker compose -f docker-compose.production.yml up -d
