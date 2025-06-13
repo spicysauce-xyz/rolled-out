@@ -1,0 +1,32 @@
+{
+  "name": "@mono/db",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/schema/index.js",
+      "types": "./dist/schema/index.d.ts"
+    }
+  },
+  "scripts": {
+    "dev": "tsup --entry migrate.ts --entry schema/index.ts --watch --onSuccess 'tsc --emitDeclarationOnly --declaration' --format esm",
+    "build": "tsup --entry migrate.ts --entry schema/index.ts --format esm",
+    "start": "node dist/migrate.js",
+
+    "db:push": "drizzle-kit push",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate"
+  },
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "drizzle-orm": "^0.40.0",
+    "pg": "^8.13.3",
+    "tsup": "^8.5.0",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.29",
+    "@types/pg": "^8.11.11",
+    "drizzle-kit": "^0.30.5",
+    "typescript": "5.8.2"
+  }
+}

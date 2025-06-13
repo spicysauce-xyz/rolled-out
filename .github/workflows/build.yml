@@ -11,6 +11,25 @@ jobs:
   build-and-push:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        include:
+          - image_suffix: web
+            dockerfile: ./apps/web/Dockerfile.web
+            build_args: |
+              BUILDKIT_PROGRESS=plain
+              VERSION=${{ inputs.release_tag }}
+
+          - image_suffix: api
+            dockerfile: ./apps/api/Dockerfile.api
+            build_args: |
+              BUILDKIT_PROGRESS=plain
+
+          - image_suffix: db
+            dockerfile: ./packages/db/Dockerfile.db
+            build_args: |
+              BUILDKIT_PROGRESS=plain
+
     permissions:
       contents: read
       packages: write
@@ -29,29 +48,14 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push web image
+      - name: Build and push ${{ matrix.image_suffix }} image
         uses: docker/build-push-action@v5
         with:
-          context: .
-          file: ./apps/web/Dockerfile.web
+          context: .                         # repo root for all three
+          file: ${{ matrix.dockerfile }}     # matrix-specific Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}-web:${{ inputs.release_tag }}
-            ghcr.io/${{ github.repository }}-web:latest
-          build-args: |
-            BUILDKIT_PROGRESS=plain
-            VERSION=${{ inputs.release_tag }}
-
-      - name: Build and push api image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./apps/api/Dockerfile.api
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: |
-            ghcr.io/${{ github.repository }}-api:${{ inputs.release_tag }}
-            ghcr.io/${{ github.repository }}-api:latest
-          build-args: |
-            BUILDKIT_PROGRESS=plain
+            ghcr.io/${{ github.repository }}-${{ matrix.image_suffix }}:${{ inputs.release_tag }}
+            ghcr.io/${{ github.repository }}-${{ matrix.image_suffix }}:latest
+          build-args: ${{ matrix.build_args }}

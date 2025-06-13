@@ -59,8 +59,8 @@ services:
       - traefik.http.services.api.loadbalancer.server.port=4000
   
   migrator:
-    image: ghcr.io/spicysauce-xyz/rolled-out-api:${RELEASE_TAG:-latest}
-    command: node dist/scripts/migrate.js
+    image: ghcr.io/spicysauce-xyz/rolled-out-db:${RELEASE_TAG:-latest}
+    command: node dist/migrate.js
     environment:
       - DATABASE_URL=postgres://postgres:postgres@postgres:5432/postgres
     depends_on:
