@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "preserve",
+    "moduleDetection": "force",
+
+    "declaration": true,
+    "declarationDir": "dist",
+    "outDir": "dist",
+
+    "baseUrl": ".",
+    "paths": {
+      "@*": ["src/*"]
+    },
+
+    "jsx": "react-jsx",
+
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "exclude": ["node_modules"],
+  "include": ["migrate.ts", "drizzle.config.ts", "schema"]
+}

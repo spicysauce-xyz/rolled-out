@@ -11,12 +11,10 @@
     "dev": "tsup index.ts --watch --onSuccess 'tsc --emitDeclarationOnly --declaration & node dist/index.js' --format esm",
     "build": "tsup --entry index.ts --entry scripts/*.ts --format esm",
     "start": "node dist/index.js",
-    "db:push": "drizzle-kit push",
-    "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate",
     "email:dev": "email dev --port 3123 --dir src/email/templates"
   },
   "dependencies": {
+    "@mono/db": "workspace:*",
     "@aws-sdk/client-s3": "^3.826.0",
     "@aws-sdk/s3-presigned-post": "^3.826.0",
     "@aws-sdk/s3-request-presigner": "^3.826.0",
@@ -44,7 +42,6 @@
     "@types/node": "^22.15.29",
     "@types/pg": "^8.11.11",
     "@types/react": "^18.3.23",
-    "drizzle-kit": "^0.30.5",
     "react-email": "4.0.16",
     "typescript": "5.8.2"
   }

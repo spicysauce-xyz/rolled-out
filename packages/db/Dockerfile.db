@@ -1,0 +1,40 @@
+FROM node:22-slim AS base
+
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
+
+# Install Turbo CLI globally (within this stage)
+RUN pnpm add -g turbo@latest
+
+# -------- Builder: Turbo prune workspace --------
+FROM base AS builder
+
+WORKDIR /app
+
+COPY . .
+
+# Prune to get a minimal isolated workspace
+RUN turbo prune @mono/db --docker
+
+# -------- Installer: Install deps & build app --------
+FROM base AS installer
+
+WORKDIR /app
+
+COPY --from=builder /app/out/json/ ./
+RUN pnpm install --frozen-lockfile
+
+COPY --from=builder /app/out/full/ ./
+RUN turbo run build --filter=@mono/db
+
+# -------- Runner: Lightweight final image --------
+FROM base AS runner
+
+WORKDIR /app
+
+COPY --from=installer /app ./
+
+ENV NODE_ENV=production
+
+WORKDIR /app/packages/db

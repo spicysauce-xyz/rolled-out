@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { migrate } from "drizzle-orm/node-postgres/migrator";
 
@@ -14,9 +15,11 @@ const run = async () => {
   try {
     await migrate(db, { migrationsFolder: "./migrations" });
     console.log("Migration complete");
+    process.exit(0);
   } catch (error) {
     console.error("Migration failed");
     console.error(error);
+    process.exit(1);
   }
 };
 
