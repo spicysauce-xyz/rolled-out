@@ -34,7 +34,7 @@ export const Route = createFileRoute("/")({
     return {
       posts: json.data.map((post) => ({
         ...post,
-        contentHTML: generateHtml(post.content),
+        contentHTML: generateHtml(post.contentJSON.default),
       })),
     };
   },
@@ -80,7 +80,7 @@ function RouteComponent() {
         </div>
       </div>
 
-      <div className="flex flex-col">
+      <div className="flex flex-col divide-y divide-neutral-100">
         {posts.map((post) => (
           <div className="mx-auto flex w-full" key={post.id}>
             <div className="relative flex flex-1 items-start justify-end p-6">

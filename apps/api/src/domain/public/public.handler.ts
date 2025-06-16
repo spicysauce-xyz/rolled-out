@@ -1,7 +1,10 @@
 import { Database, schema } from "@database";
+import { TiptapTransformer } from "@hocuspocus/transformer";
 import { notOk, ok } from "@utils/network";
 import { and, eq } from "drizzle-orm";
 import { Hono } from "hono";
+import _ from "lodash";
+import * as Y from "yjs";
 
 export const PublicHandler = new Hono().basePath("/:organizationSlug").get("/posts", async (c) => {
   const organization = await Database.query.organization.findFirst({
@@ -21,11 +24,24 @@ export const PublicHandler = new Hono().basePath("/:organizationSlug").get("/pos
   const posts = await Database.query.post.findMany({
     columns: {
       id: true,
-      content: true,
+      byteContent: true,
       publishedAt: true,
     },
     where: and(eq(schema.post.organizationId, organization.id), eq(schema.post.status, "published")),
   });
 
-  return ok(c, posts);
+  const mappedPosts = posts.map((post) => {
+    const doc = new Y.Doc();
+
+    if (post.byteContent) {
+      Y.applyUpdate(doc, post.byteContent);
+    }
+
+    return {
+      ..._.omit(post, "byteContent"),
+      contentJSON: TiptapTransformer.fromYdoc(doc),
+    };
+  });
+
+  return ok(c, mappedPosts);
 });

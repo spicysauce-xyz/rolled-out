@@ -1,0 +1,30 @@
+{
+  "name": "@mono/hocus",
+  "type": "module",
+  "main": "./dist/index.js",
+  "scripts": {
+    "dev": "pnpm build:types && pnpm build:module --watch --onSuccess 'node dist/index.js'",
+    "build": "pnpm build:module & pnpm build:types",
+    "build:module": "tsup --entry index.ts --entry scripts/*.ts --format esm",
+    "build:types": "tsc --emitDeclarationOnly --declaration",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@hocuspocus/extension-database": "^3.1.3",
+    "@hocuspocus/server": "^3.1.3",
+    "@hocuspocus/transformer": "^3.1.3",
+    "@hono/node-server": "^1.14.3",
+    "@hono/node-ws": "^1.1.7",
+    "@mono/auth": "workspace:*",
+    "@mono/db": "workspace:*",
+    "dotenv": "^16.5.0",
+    "drizzle-orm": "^0.40.0",
+    "hono": "catalog:",
+    "pg": "^8.13.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.29",
+    "@types/pg": "^8.11.11",
+    "typescript": "catalog:"
+  }
+}

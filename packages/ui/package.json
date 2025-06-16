@@ -4,14 +4,25 @@
   "version": "0.0.0",
   "type": "module",
   "exports": {
-    ".": "./src/components/index.ts",
-    "./utils": "./src/utils/index.ts",
-    "./hooks": "./src/hooks/index.ts",
-    "./theme": "./src/theme.css",
-    "./plugins": "./src/plugins.css"
+    ".": {
+      "import": "./dist/components/index.js",
+      "types": "./dist/components/index.d.ts"
+    },
+    "./utils": {
+      "import": "./dist/utils/index.js",
+      "types": "./dist/utils/index.d.ts"
+    },
+    "./hooks": {
+      "import": "./dist/hooks/index.js",
+      "types": "./dist/hooks/index.d.ts"
+    },
+    "./theme": "./dist/theme.css",
+    "./plugins": "./dist/plugins.css"
   },
   "scripts": {
-    "dev": "storybook dev -p 6006"
+    "build": "pnpm build:module & pnpm build:types",
+    "build:module": "tsup src/**/*.{ts,tsx,css} --format esm --silent",
+    "build:types": "tsc --emitDeclarationOnly --declaration"
   },
   "dependencies": {
     "@radix-ui/react-alert-dialog": "^1.1.14",
@@ -27,12 +38,13 @@
     "@tailwindcss/vite": "^4.0.17",
     "clsx": "^2.1.1",
     "lucide-react": "^0.483.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "catalog:",
+    "react-dom": "catalog:",
     "sonner": "^2.0.2",
     "tailwind-merge": "^3.3.0",
     "tailwind-variants": "^1.0.0",
     "tailwindcss": "^4.0.14",
+    "tsup": "^8.5.0",
     "tw-animate-css": "^1.2.4",
     "vaul": "^1.1.2"
   },
@@ -49,8 +61,8 @@
     "@types/react-dom": "^18.2.22",
     "@vitejs/plugin-react": "^4.2.1",
     "storybook": "^8.6.11",
-    "typescript": "^5.2.2",
-    "vite": "^5.2.0"
+    "typescript": "catalog:",
+    "vite": "catalog:"
   },
   "overrides": {
     "@radix-ui/react-dismissable-layer": "1.1.4"

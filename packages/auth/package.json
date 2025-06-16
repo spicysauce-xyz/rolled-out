@@ -1,0 +1,26 @@
+{
+  "name": "@mono/auth",
+  "type": "module",
+  "exports": {
+    "./server": {
+      "import": "./dist/server.js",
+      "types": "./dist/server.d.ts"
+    },
+    "./client": {
+      "import": "./dist/client.js",
+      "types": "./dist/client.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "pnpm build:module & pnpm build:types",
+    "build:module": "tsup --entry server.ts --entry client.ts --format esm --silent",
+    "build:types": "tsc --emitDeclarationOnly --declaration"
+  },
+  "dependencies": {
+    "better-auth": "^1.2.8",
+    "tsup": "^8.5.0"
+  },
+  "devDependencies": {
+    "typescript": "catalog:"
+  }
+}

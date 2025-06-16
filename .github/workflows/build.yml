@@ -25,6 +25,16 @@ jobs:
             build_args: |
               BUILDKIT_PROGRESS=plain
 
+          - image_suffix: hocus
+            dockerfile: ./apps/hocus/Dockerfile.hocus
+            build_args: |
+              BUILDKIT_PROGRESS=plain
+
+          - image_suffix: public
+            dockerfile: ./apps/public/Dockerfile.public
+            build_args: |
+              BUILDKIT_PROGRESS=plain
+
           - image_suffix: db
             dockerfile: ./packages/db/Dockerfile.db
             build_args: |

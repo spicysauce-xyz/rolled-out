@@ -1,3 +1,4 @@
+import type { HocuspocusProvider } from "@hocuspocus/provider";
 import { cn } from "@mono/ui/utils";
 import Collaboration from "@tiptap/extension-collaboration";
 import CollaborationCaret from "@tiptap/extension-collaboration-cursor";
@@ -15,8 +16,8 @@ import { BubbleMenu } from "./components/bubble-menu";
 import { extensions } from "./extensions";
 
 interface EditorRootProps extends Omit<UseEditorOptions, "extensions"> {
-  provider: any;
-  user: { id: string; name: string; image?: string };
+  provider: HocuspocusProvider;
+  user: { id: string; name: string; image?: string | null };
 }
 
 export const EditorRoot: React.FC<React.PropsWithChildren<EditorRootProps>> = ({

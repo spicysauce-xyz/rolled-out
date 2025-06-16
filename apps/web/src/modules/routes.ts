@@ -1,6 +1,5 @@
 import auth from "@modules/auth";
 import dashboard from "@modules/dashboard";
-import editor from "@modules/editor";
 import onboarding from "@modules/onboarding";
 import settings from "@modules/settings";
 import { index, layout, rootRoute, route } from "@tanstack/virtual-file-routes";
@@ -17,7 +16,7 @@ export const routes = rootRoute("root.tsx", [
         [
           layout("dashboard/layouts/index.tsx", dashboard),
           route("/settings", "settings/layouts/index.tsx", settings),
-          route("/editor", editor),
+          route("/editor/$id", "editor/index.tsx"),
         ],
       ),
     ]),

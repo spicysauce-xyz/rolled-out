@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { EllipsisVerticalIcon, Plus, User2 } from "lucide-react";
+import { EllipsisVerticalIcon, User2 } from "lucide-react";
 import { Clickable } from ".";
 
 const meta = {

@@ -1,6 +1,4 @@
 interface RawConfig {
-  version?: string;
-  self: string;
   api: string;
 }
 
@@ -12,8 +10,6 @@ declare global {
 
 export const getServerConfig = (): RawConfig => {
   return {
-    version: process.env.VERSION ?? "0.0.0",
-    self: process.env.SELF ?? "",
     api: process.env.API ?? "",
   };
 };
@@ -28,7 +24,6 @@ const formatConfig = (
     | ReturnType<typeof getClientConfig>,
 ) => {
   return {
-    version: config.version,
     apiUrl: config.api,
   };
 };

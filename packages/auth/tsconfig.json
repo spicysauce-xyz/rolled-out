@@ -27,6 +27,6 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "exclude": ["node_modules", "dist"],
-  "include": ["scripts", "src", "index.ts", "shared.ts"]
+  "exclude": ["node_modules"],
+  "include": ["server.ts", "client.ts"]
 }
