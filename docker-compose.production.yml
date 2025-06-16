@@ -74,8 +74,6 @@ services:
       - traefik.http.routers.hocus.entrypoints=websecure
       - traefik.http.routers.hocus.tls=true
       - traefik.http.services.hocus.loadbalancer.server.port=4100
-      - traefik.http.routers.hocus.middlewares=hocus-ws
-      - traefik.http.middlewares.hocus-ws.redirectscheme.scheme=wss
 
   public:
     image: ghcr.io/spicysauce-xyz/rolled-out-public:${RELEASE_TAG:-latest}
