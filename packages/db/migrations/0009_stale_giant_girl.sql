@@ -1,0 +1,1 @@
+ALTER TABLE "post" ADD COLUMN "byte_content" "bytea";
