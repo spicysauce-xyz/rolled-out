@@ -25,7 +25,7 @@ const formatConfig = () => {
     client: {
       raw: config.CLIENT,
       base: new URL(config.CLIENT || "").origin,
-      domain: new URL(config.SELF || "").hostname,
+      domain: new URL(config.CLIENT || "").hostname,
     },
     database: {
       url: config.DATABASE_URL,

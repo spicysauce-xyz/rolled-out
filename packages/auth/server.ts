@@ -53,7 +53,7 @@ export const createServerAuth = (
     advanced: {
       crossSubDomainCookies: {
         enabled: true,
-        domain: `.${params.domain}`,
+        domain: params.domain,
       },
       defaultCookieAttributes: {
         secure: process.env.NODE_ENV === "production",
