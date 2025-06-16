@@ -127,7 +127,6 @@ const dashboardPagesContactsRoute = dashboardPagesContactsRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
-  '': typeof dashboardLayoutsHasOrganizationRouteWithChildren
   '/login': typeof authPagesLoginDotpageRoute
   '/': typeof dashboardPagesSplashRoute
   '/$organizationSlug': typeof dashboardLayoutsIndexRouteWithChildren
@@ -145,7 +144,6 @@ export interface FileRoutesByFullPath {
   '/$organizationSlug/settings/members': typeof settingsPagesMembersIndexRoute
 }
 export interface FileRoutesByTo {
-  '': typeof authLayoutsGuestOnlyRouteWithChildren
   '/login': typeof authPagesLoginDotpageRoute
   '/': typeof dashboardPagesSplashRoute
   '/$organizationSlug': typeof dashboardPagesIndexRoute
@@ -186,7 +184,6 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | ''
     | '/login'
     | '/'
     | '/$organizationSlug'
@@ -204,7 +201,6 @@ export interface FileRouteTypes {
     | '/$organizationSlug/settings/members'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | ''
     | '/login'
     | '/'
     | '/$organizationSlug'
@@ -249,13 +245,6 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/_authorized': {
-      id: '/_authorized'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof authLayoutsAuthorizedRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_guest-only': {
       id: '/_guest-only'
       path: ''
@@ -263,18 +252,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authLayoutsGuestOnlyRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authorized/_has-organization': {
-      id: '/_authorized/_has-organization'
+    '/_authorized': {
+      id: '/_authorized'
       path: ''
       fullPath: ''
-      preLoaderRoute: typeof dashboardLayoutsHasOrganizationRouteImport
-      parentRoute: typeof authLayoutsAuthorizedRoute
-    }
-    '/_authorized/onboarding': {
-      id: '/_authorized/onboarding'
-      path: ''
-      fullPath: '/onboarding'
-      preLoaderRoute: unknown
+      preLoaderRoute: typeof authLayoutsAuthorizedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_guest-only/login': {
@@ -284,25 +266,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authPagesLoginDotpageRouteImport
       parentRoute: typeof authLayoutsGuestOnlyRoute
     }
-    '/_authorized/_has-organization/': {
-      id: '/_authorized/_has-organization/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof dashboardPagesSplashRouteImport
-      parentRoute: typeof dashboardLayoutsHasOrganizationRoute
-    }
-    '/_authorized/_has-organization/$organizationSlug': {
-      id: '/_authorized/_has-organization/$organizationSlug'
-      path: '/$organizationSlug'
-      fullPath: '/$organizationSlug'
-      preLoaderRoute: typeof dashboardLayoutsSelectedOrganizationRouteImport
-      parentRoute: typeof dashboardLayoutsHasOrganizationRoute
-    }
-    '/_authorized/onboarding/organization': {
-      id: '/_authorized/onboarding/organization'
-      path: '/onboarding/organization'
-      fullPath: '/onboarding/organization'
-      preLoaderRoute: typeof onboardingPagesOrganizationRouteImport
+    '/_authorized/_has-organization': {
+      id: '/_authorized/_has-organization'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof dashboardLayoutsHasOrganizationRouteImport
       parentRoute: typeof authLayoutsAuthorizedRoute
     }
     '/_authorized/onboarding/profile': {
@@ -311,6 +279,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/onboarding/profile'
       preLoaderRoute: typeof onboardingPagesProfileRouteImport
       parentRoute: typeof authLayoutsAuthorizedRoute
+    }
+    '/_authorized/onboarding/organization': {
+      id: '/_authorized/onboarding/organization'
+      path: '/onboarding/organization'
+      fullPath: '/onboarding/organization'
+      preLoaderRoute: typeof onboardingPagesOrganizationRouteImport
+      parentRoute: typeof authLayoutsAuthorizedRoute
+    }
+    '/_authorized/_has-organization/$organizationSlug': {
+      id: '/_authorized/_has-organization/$organizationSlug'
+      path: '/$organizationSlug'
+      fullPath: '/$organizationSlug'
+      preLoaderRoute: typeof dashboardLayoutsSelectedOrganizationRouteImport
+      parentRoute: typeof dashboardLayoutsHasOrganizationRoute
+    }
+    '/_authorized/_has-organization/': {
+      id: '/_authorized/_has-organization/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof dashboardPagesSplashRouteImport
+      parentRoute: typeof dashboardLayoutsHasOrganizationRoute
     }
     '/_authorized/_has-organization/$organizationSlug/_index': {
       id: '/_authorized/_has-organization/$organizationSlug/_index'
@@ -326,25 +315,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof settingsLayoutsIndexRouteImport
       parentRoute: typeof dashboardLayoutsSelectedOrganizationRoute
     }
-    '/_authorized/_has-organization/$organizationSlug/_index/contacts': {
-      id: '/_authorized/_has-organization/$organizationSlug/_index/contacts'
-      path: '/contacts'
-      fullPath: '/$organizationSlug/contacts'
-      preLoaderRoute: typeof dashboardPagesContactsRouteImport
-      parentRoute: typeof dashboardLayoutsIndexRoute
-    }
-    '/_authorized/_has-organization/$organizationSlug/settings/$': {
-      id: '/_authorized/_has-organization/$organizationSlug/settings/$'
-      path: '/$'
-      fullPath: '/$organizationSlug/settings/$'
-      preLoaderRoute: typeof settingsPagesSplatRouteImport
+    '/_authorized/_has-organization/$organizationSlug/settings/members': {
+      id: '/_authorized/_has-organization/$organizationSlug/settings/members'
+      path: '/members'
+      fullPath: '/$organizationSlug/settings/members'
+      preLoaderRoute: typeof settingsPagesMembersIndexRouteImport
       parentRoute: typeof settingsLayoutsIndexRoute
     }
-    '/_authorized/_has-organization/$organizationSlug/settings/details': {
-      id: '/_authorized/_has-organization/$organizationSlug/settings/details'
-      path: '/details'
-      fullPath: '/$organizationSlug/settings/details'
-      preLoaderRoute: typeof settingsPagesDetailsRouteImport
+    '/_authorized/_has-organization/$organizationSlug/editor/$id': {
+      id: '/_authorized/_has-organization/$organizationSlug/editor/$id'
+      path: '/editor/$id'
+      fullPath: '/$organizationSlug/editor/$id'
+      preLoaderRoute: typeof editorIndexRouteImport
+      parentRoute: typeof dashboardLayoutsSelectedOrganizationRoute
+    }
+    '/_authorized/_has-organization/$organizationSlug/_index/updates': {
+      id: '/_authorized/_has-organization/$organizationSlug/_index/updates'
+      path: '/updates'
+      fullPath: '/$organizationSlug/updates'
+      preLoaderRoute: typeof dashboardPagesUpdatesIndexRouteImport
+      parentRoute: typeof dashboardLayoutsIndexRoute
+    }
+    '/_authorized/_has-organization/$organizationSlug/_index/': {
+      id: '/_authorized/_has-organization/$organizationSlug/_index/'
+      path: '/'
+      fullPath: '/$organizationSlug/'
+      preLoaderRoute: typeof dashboardPagesIndexRouteImport
+      parentRoute: typeof dashboardLayoutsIndexRoute
+    }
+    '/_authorized/_has-organization/$organizationSlug/settings/sessions': {
+      id: '/_authorized/_has-organization/$organizationSlug/settings/sessions'
+      path: '/sessions'
+      fullPath: '/$organizationSlug/settings/sessions'
+      preLoaderRoute: typeof settingsPagesSessionsRouteImport
       parentRoute: typeof settingsLayoutsIndexRoute
     }
     '/_authorized/_has-organization/$organizationSlug/settings/profile': {
@@ -354,40 +357,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof settingsPagesProfileRouteImport
       parentRoute: typeof settingsLayoutsIndexRoute
     }
-    '/_authorized/_has-organization/$organizationSlug/settings/sessions': {
-      id: '/_authorized/_has-organization/$organizationSlug/settings/sessions'
-      path: '/sessions'
-      fullPath: '/$organizationSlug/settings/sessions'
-      preLoaderRoute: typeof settingsPagesSessionsRouteImport
+    '/_authorized/_has-organization/$organizationSlug/settings/details': {
+      id: '/_authorized/_has-organization/$organizationSlug/settings/details'
+      path: '/details'
+      fullPath: '/$organizationSlug/settings/details'
+      preLoaderRoute: typeof settingsPagesDetailsRouteImport
       parentRoute: typeof settingsLayoutsIndexRoute
     }
-    '/_authorized/_has-organization/$organizationSlug/_index/': {
-      id: '/_authorized/_has-organization/$organizationSlug/_index/'
-      path: '/'
-      fullPath: '/$organizationSlug/'
-      preLoaderRoute: typeof dashboardPagesIndexRouteImport
-      parentRoute: typeof dashboardLayoutsIndexRoute
-    }
-    '/_authorized/_has-organization/$organizationSlug/_index/updates': {
-      id: '/_authorized/_has-organization/$organizationSlug/_index/updates'
-      path: '/updates'
-      fullPath: '/$organizationSlug/updates'
-      preLoaderRoute: typeof dashboardPagesUpdatesIndexRouteImport
-      parentRoute: typeof dashboardLayoutsIndexRoute
-    }
-    '/_authorized/_has-organization/$organizationSlug/editor/$id': {
-      id: '/_authorized/_has-organization/$organizationSlug/editor/$id'
-      path: '/editor/$id'
-      fullPath: '/$organizationSlug/editor/$id'
-      preLoaderRoute: typeof editorIndexRouteImport
-      parentRoute: typeof dashboardLayoutsSelectedOrganizationRoute
-    }
-    '/_authorized/_has-organization/$organizationSlug/settings/members': {
-      id: '/_authorized/_has-organization/$organizationSlug/settings/members'
-      path: '/members'
-      fullPath: '/$organizationSlug/settings/members'
-      preLoaderRoute: typeof settingsPagesMembersIndexRouteImport
+    '/_authorized/_has-organization/$organizationSlug/settings/$': {
+      id: '/_authorized/_has-organization/$organizationSlug/settings/$'
+      path: '/$'
+      fullPath: '/$organizationSlug/settings/$'
+      preLoaderRoute: typeof settingsPagesSplatRouteImport
       parentRoute: typeof settingsLayoutsIndexRoute
+    }
+    '/_authorized/_has-organization/$organizationSlug/_index/contacts': {
+      id: '/_authorized/_has-organization/$organizationSlug/_index/contacts'
+      path: '/contacts'
+      fullPath: '/$organizationSlug/contacts'
+      preLoaderRoute: typeof dashboardPagesContactsRouteImport
+      parentRoute: typeof dashboardLayoutsIndexRoute
     }
   }
 }

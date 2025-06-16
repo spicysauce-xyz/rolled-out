@@ -43,13 +43,6 @@ declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
     '/': {
       id: '/'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: unknown
-      parentRoute: typeof rootRouteImport
-    }
-    '/': {
-      id: '/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof boardRouteImport

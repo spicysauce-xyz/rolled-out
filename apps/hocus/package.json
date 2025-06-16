@@ -21,6 +21,7 @@
     "drizzle-orm": "^0.40.0",
     "hono": "catalog:",
     "pg": "^8.13.3",
+    "tsup": "^8.5.0",
     "zod": "^3.25.64"
   },
   "devDependencies": {
