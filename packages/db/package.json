@@ -8,9 +8,9 @@
     }
   },
   "scripts": {
-    "dev": "tsup --entry migrate.ts --entry schema/index.ts --watch --onSuccess 'tsc --emitDeclarationOnly --declaration' --format esm",
-    "build": "tsup --entry migrate.ts --entry schema/index.ts --format esm",
-    "start": "node dist/migrate.js",
+    "build": "pnpm build:module & pnpm build:types",
+    "build:module": "tsup --entry migrate.ts --entry schema/index.ts --format esm --silent",
+    "build:types": "tsc --emitDeclarationOnly --declaration",
 
     "db:push": "drizzle-kit push",
     "db:generate": "drizzle-kit generate",
@@ -27,6 +27,6 @@
     "@types/node": "^22.15.29",
     "@types/pg": "^8.11.11",
     "drizzle-kit": "^0.30.5",
-    "typescript": "5.8.2"
+    "typescript": "catalog:"
   }
 }

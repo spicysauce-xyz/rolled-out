@@ -25,6 +25,7 @@ services:
     environment:
       - SELF=https://app.${DOMAIN}
       - API=https://api.${DOMAIN}
+      - HOCUS=https://hocus.${DOMAIN}
     labels:
       - traefik.enable=true
       - traefik.http.routers.web.rule=Host(`app.${DOMAIN}`)
@@ -57,6 +58,36 @@ services:
       - traefik.http.routers.api.entrypoints=websecure
       - traefik.http.routers.api.tls=true
       - traefik.http.services.api.loadbalancer.server.port=4000
+
+
+  hocus:
+    image: ghcr.io/spicysauce-xyz/rolled-out-hocus:${RELEASE_TAG:-latest}
+    restart: always
+    command: node dist/index.js
+    environment:
+      - SELF=https://hocus.${DOMAIN}
+      - CLIENT=https://app.${DOMAIN}
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.hocus.rule=Host(`hocus.${DOMAIN}`)
+      - traefik.http.routers.hocus.entrypoints=websecure
+      - traefik.http.routers.hocus.tls=true
+      - traefik.http.services.hocus.loadbalancer.server.port=4100
+      - traefik.http.routers.hocus.middlewares=hocus-ws
+      - traefik.http.middlewares.hocus-ws.redirectscheme.scheme=wss
+
+  public:
+    image: ghcr.io/spicysauce-xyz/rolled-out-public:${RELEASE_TAG:-latest}
+    restart: always
+    command: node dist/index.js
+    environment:
+      - API=https://api.${DOMAIN}
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.public.rule=Host(`*.${DOMAIN}`)
+      - traefik.http.routers.public.entrypoints=websecure
+      - traefik.http.routers.public.tls=true
+      - traefik.http.services.public.loadbalancer.server.port=3100
   
   migrator:
     image: ghcr.io/spicysauce-xyz/rolled-out-db:${RELEASE_TAG:-latest}

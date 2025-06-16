@@ -20,10 +20,15 @@ export const app = new Hono()
     await next();
   })
   .use(logger())
-  .use(cors({ origin: [Config.client.base], credentials: true }))
+  .route("/public", PublicHandler)
+  .use(
+    cors({
+      origin: [Config.client.base],
+      credentials: true,
+    }),
+  )
   .route("/auth", AuthHandler)
   .route("/assets", AssetsHandler)
-  .route("/public", PublicHandler)
   .route(
     "/organizations/:organizationId",
     new Hono()

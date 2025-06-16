@@ -20,13 +20,13 @@ import { Route as dashboardPagesSplashRouteImport } from './../modules/dashboard
 import { Route as dashboardLayoutsIndexRouteImport } from './../modules/dashboard/layouts/index'
 import { Route as settingsLayoutsIndexRouteImport } from './../modules/settings/layouts/index'
 import { Route as settingsPagesMembersIndexRouteImport } from './../modules/settings/pages/members/index'
+import { Route as editorIndexRouteImport } from './../modules/editor/index'
 import { Route as dashboardPagesUpdatesIndexRouteImport } from './../modules/dashboard/pages/updates/index'
 import { Route as dashboardPagesIndexRouteImport } from './../modules/dashboard/pages/index'
 import { Route as settingsPagesSessionsRouteImport } from './../modules/settings/pages/sessions'
 import { Route as settingsPagesProfileRouteImport } from './../modules/settings/pages/profile'
 import { Route as settingsPagesDetailsRouteImport } from './../modules/settings/pages/details'
 import { Route as settingsPagesSplatRouteImport } from './../modules/settings/pages/splat'
-import { Route as editorPagesIdRouteImport } from './../modules/editor/pages/$id'
 import { Route as dashboardPagesContactsRouteImport } from './../modules/dashboard/pages/contacts'
 
 const authLayoutsGuestOnlyRoute = authLayoutsGuestOnlyRouteImport.update({
@@ -84,6 +84,11 @@ const settingsPagesMembersIndexRoute =
     path: '/members',
     getParentRoute: () => settingsLayoutsIndexRoute,
   } as any)
+const editorIndexRoute = editorIndexRouteImport.update({
+  id: '/editor/$id',
+  path: '/editor/$id',
+  getParentRoute: () => dashboardLayoutsSelectedOrganizationRoute,
+} as any)
 const dashboardPagesUpdatesIndexRoute =
   dashboardPagesUpdatesIndexRouteImport.update({
     id: '/updates',
@@ -115,11 +120,6 @@ const settingsPagesSplatRoute = settingsPagesSplatRouteImport.update({
   path: '/$',
   getParentRoute: () => settingsLayoutsIndexRoute,
 } as any)
-const editorPagesIdRoute = editorPagesIdRouteImport.update({
-  id: '/editor/$id',
-  path: '/editor/$id',
-  getParentRoute: () => dashboardLayoutsSelectedOrganizationRoute,
-} as any)
 const dashboardPagesContactsRoute = dashboardPagesContactsRouteImport.update({
   id: '/contacts',
   path: '/contacts',
@@ -135,13 +135,13 @@ export interface FileRoutesByFullPath {
   '/onboarding/profile': typeof onboardingPagesProfileRoute
   '/$organizationSlug/settings': typeof settingsLayoutsIndexRouteWithChildren
   '/$organizationSlug/contacts': typeof dashboardPagesContactsRoute
-  '/$organizationSlug/editor/$id': typeof editorPagesIdRoute
   '/$organizationSlug/settings/$': typeof settingsPagesSplatRoute
   '/$organizationSlug/settings/details': typeof settingsPagesDetailsRoute
   '/$organizationSlug/settings/profile': typeof settingsPagesProfileRoute
   '/$organizationSlug/settings/sessions': typeof settingsPagesSessionsRoute
   '/$organizationSlug/': typeof dashboardPagesIndexRoute
   '/$organizationSlug/updates': typeof dashboardPagesUpdatesIndexRoute
+  '/$organizationSlug/editor/$id': typeof editorIndexRoute
   '/$organizationSlug/settings/members': typeof settingsPagesMembersIndexRoute
 }
 export interface FileRoutesByTo {
@@ -153,12 +153,12 @@ export interface FileRoutesByTo {
   '/onboarding/profile': typeof onboardingPagesProfileRoute
   '/$organizationSlug/settings': typeof settingsLayoutsIndexRouteWithChildren
   '/$organizationSlug/contacts': typeof dashboardPagesContactsRoute
-  '/$organizationSlug/editor/$id': typeof editorPagesIdRoute
   '/$organizationSlug/settings/$': typeof settingsPagesSplatRoute
   '/$organizationSlug/settings/details': typeof settingsPagesDetailsRoute
   '/$organizationSlug/settings/profile': typeof settingsPagesProfileRoute
   '/$organizationSlug/settings/sessions': typeof settingsPagesSessionsRoute
   '/$organizationSlug/updates': typeof dashboardPagesUpdatesIndexRoute
+  '/$organizationSlug/editor/$id': typeof editorIndexRoute
   '/$organizationSlug/settings/members': typeof settingsPagesMembersIndexRoute
 }
 export interface FileRoutesById {
@@ -174,13 +174,13 @@ export interface FileRoutesById {
   '/_authorized/_has-organization/$organizationSlug/_index': typeof dashboardLayoutsIndexRouteWithChildren
   '/_authorized/_has-organization/$organizationSlug/settings': typeof settingsLayoutsIndexRouteWithChildren
   '/_authorized/_has-organization/$organizationSlug/_index/contacts': typeof dashboardPagesContactsRoute
-  '/_authorized/_has-organization/$organizationSlug/editor/$id': typeof editorPagesIdRoute
   '/_authorized/_has-organization/$organizationSlug/settings/$': typeof settingsPagesSplatRoute
   '/_authorized/_has-organization/$organizationSlug/settings/details': typeof settingsPagesDetailsRoute
   '/_authorized/_has-organization/$organizationSlug/settings/profile': typeof settingsPagesProfileRoute
   '/_authorized/_has-organization/$organizationSlug/settings/sessions': typeof settingsPagesSessionsRoute
   '/_authorized/_has-organization/$organizationSlug/_index/': typeof dashboardPagesIndexRoute
   '/_authorized/_has-organization/$organizationSlug/_index/updates': typeof dashboardPagesUpdatesIndexRoute
+  '/_authorized/_has-organization/$organizationSlug/editor/$id': typeof editorIndexRoute
   '/_authorized/_has-organization/$organizationSlug/settings/members': typeof settingsPagesMembersIndexRoute
 }
 export interface FileRouteTypes {
@@ -194,13 +194,13 @@ export interface FileRouteTypes {
     | '/onboarding/profile'
     | '/$organizationSlug/settings'
     | '/$organizationSlug/contacts'
-    | '/$organizationSlug/editor/$id'
     | '/$organizationSlug/settings/$'
     | '/$organizationSlug/settings/details'
     | '/$organizationSlug/settings/profile'
     | '/$organizationSlug/settings/sessions'
     | '/$organizationSlug/'
     | '/$organizationSlug/updates'
+    | '/$organizationSlug/editor/$id'
     | '/$organizationSlug/settings/members'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -212,12 +212,12 @@ export interface FileRouteTypes {
     | '/onboarding/profile'
     | '/$organizationSlug/settings'
     | '/$organizationSlug/contacts'
-    | '/$organizationSlug/editor/$id'
     | '/$organizationSlug/settings/$'
     | '/$organizationSlug/settings/details'
     | '/$organizationSlug/settings/profile'
     | '/$organizationSlug/settings/sessions'
     | '/$organizationSlug/updates'
+    | '/$organizationSlug/editor/$id'
     | '/$organizationSlug/settings/members'
   id:
     | '__root__'
@@ -232,13 +232,13 @@ export interface FileRouteTypes {
     | '/_authorized/_has-organization/$organizationSlug/_index'
     | '/_authorized/_has-organization/$organizationSlug/settings'
     | '/_authorized/_has-organization/$organizationSlug/_index/contacts'
-    | '/_authorized/_has-organization/$organizationSlug/editor/$id'
     | '/_authorized/_has-organization/$organizationSlug/settings/$'
     | '/_authorized/_has-organization/$organizationSlug/settings/details'
     | '/_authorized/_has-organization/$organizationSlug/settings/profile'
     | '/_authorized/_has-organization/$organizationSlug/settings/sessions'
     | '/_authorized/_has-organization/$organizationSlug/_index/'
     | '/_authorized/_has-organization/$organizationSlug/_index/updates'
+    | '/_authorized/_has-organization/$organizationSlug/editor/$id'
     | '/_authorized/_has-organization/$organizationSlug/settings/members'
   fileRoutesById: FileRoutesById
 }
@@ -312,13 +312,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof onboardingPagesProfileRouteImport
       parentRoute: typeof authLayoutsAuthorizedRoute
     }
-    '/_authorized/_has-organization/$organizationSlug/editor': {
-      id: '/_authorized/_has-organization/$organizationSlug/editor'
-      path: ''
-      fullPath: '/$organizationSlug/editor'
-      preLoaderRoute: unknown
-      parentRoute: typeof rootRouteImport
-    }
     '/_authorized/_has-organization/$organizationSlug/_index': {
       id: '/_authorized/_has-organization/$organizationSlug/_index'
       path: ''
@@ -339,13 +332,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/$organizationSlug/contacts'
       preLoaderRoute: typeof dashboardPagesContactsRouteImport
       parentRoute: typeof dashboardLayoutsIndexRoute
-    }
-    '/_authorized/_has-organization/$organizationSlug/editor/$id': {
-      id: '/_authorized/_has-organization/$organizationSlug/editor/$id'
-      path: '/editor/$id'
-      fullPath: '/$organizationSlug/editor/$id'
-      preLoaderRoute: typeof editorPagesIdRouteImport
-      parentRoute: typeof dashboardLayoutsSelectedOrganizationRoute
     }
     '/_authorized/_has-organization/$organizationSlug/settings/$': {
       id: '/_authorized/_has-organization/$organizationSlug/settings/$'
@@ -388,6 +374,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/$organizationSlug/updates'
       preLoaderRoute: typeof dashboardPagesUpdatesIndexRouteImport
       parentRoute: typeof dashboardLayoutsIndexRoute
+    }
+    '/_authorized/_has-organization/$organizationSlug/editor/$id': {
+      id: '/_authorized/_has-organization/$organizationSlug/editor/$id'
+      path: '/editor/$id'
+      fullPath: '/$organizationSlug/editor/$id'
+      preLoaderRoute: typeof editorIndexRouteImport
+      parentRoute: typeof dashboardLayoutsSelectedOrganizationRoute
     }
     '/_authorized/_has-organization/$organizationSlug/settings/members': {
       id: '/_authorized/_has-organization/$organizationSlug/settings/members'
@@ -438,14 +431,14 @@ const settingsLayoutsIndexRouteWithChildren =
 interface dashboardLayoutsSelectedOrganizationRouteChildren {
   dashboardLayoutsIndexRoute: typeof dashboardLayoutsIndexRouteWithChildren
   settingsLayoutsIndexRoute: typeof settingsLayoutsIndexRouteWithChildren
-  editorPagesIdRoute: typeof editorPagesIdRoute
+  editorIndexRoute: typeof editorIndexRoute
 }
 
 const dashboardLayoutsSelectedOrganizationRouteChildren: dashboardLayoutsSelectedOrganizationRouteChildren =
   {
     dashboardLayoutsIndexRoute: dashboardLayoutsIndexRouteWithChildren,
     settingsLayoutsIndexRoute: settingsLayoutsIndexRouteWithChildren,
-    editorPagesIdRoute: editorPagesIdRoute,
+    editorIndexRoute: editorIndexRoute,
   }
 
 const dashboardLayoutsSelectedOrganizationRouteWithChildren =

@@ -28,5 +28,5 @@
     "forceConsistentCasingInFileNames": true
   },
   "exclude": ["node_modules", "dist"],
-  "include": ["scripts", "src", "index.ts", "shared.ts"]
+  "include": ["src", "index.ts"]
 }

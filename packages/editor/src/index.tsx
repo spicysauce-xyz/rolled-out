@@ -1,4 +1,7 @@
+import type { HocuspocusProvider } from "@hocuspocus/provider";
 import { cn } from "@mono/ui/utils";
+import Collaboration from "@tiptap/extension-collaboration";
+import CollaborationCaret from "@tiptap/extension-collaboration-cursor";
 import { generateHTML as generateTiptapHTML } from "@tiptap/html";
 import {
   EditorContext,
@@ -12,11 +15,62 @@ import { useCallback } from "react";
 import { BubbleMenu } from "./components/bubble-menu";
 import { extensions } from "./extensions";
 
-export const EditorRoot: React.FC<
-  React.PropsWithChildren<Omit<UseEditorOptions, "extensions">>
-> = ({ children, ...options }) => {
+interface EditorRootProps extends Omit<UseEditorOptions, "extensions"> {
+  provider: HocuspocusProvider;
+  user: { id: string; name: string; image?: string | null };
+}
+
+export const EditorRoot: React.FC<React.PropsWithChildren<EditorRootProps>> = ({
+  children,
+  provider,
+  user,
+  ...options
+}) => {
   const editor = useEditor({
-    extensions,
+    extensions: [
+      ...extensions,
+      Collaboration.configure({
+        document: provider.document,
+      }),
+      CollaborationCaret.configure({
+        provider: provider,
+        user: {
+          id: user.id,
+          name: user.name,
+          image: user.image,
+        },
+        render: (user) => {
+          const cursor = document.createElement("span");
+
+          cursor.classList.add("border-x", "-mx-px", "relative");
+          cursor.setAttribute("style", `border-color: ${user.color}`);
+
+          const label = document.createElement("div");
+
+          label.classList.add(
+            "rounded-sm",
+            "text-xs",
+            "leading-4",
+            "font-weight-500",
+            "left-1/2",
+            "-translate-x-1/2",
+            "line-height-normal",
+            "px-1",
+            "py-0.5",
+            "absolute",
+            "-top-5",
+            "user-select-none",
+            "whitespace-nowrap",
+          );
+
+          label.setAttribute("style", `background-color: ${user.color}`);
+          label.insertBefore(document.createTextNode(user.name), null);
+          cursor.insertBefore(label, null);
+
+          return cursor;
+        },
+      }),
+    ],
     ...options,
   });
 

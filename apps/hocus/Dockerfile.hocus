@@ -15,7 +15,7 @@ WORKDIR /app
 COPY . .
 
 # Prune to get a minimal isolated workspace
-RUN turbo prune @mono/public --docker
+RUN turbo prune @mono/hocus --docker
 
 # -------- Installer: Install deps & build app --------
 FROM base AS installer
@@ -26,19 +26,17 @@ COPY --from=builder /app/out/json/ ./
 RUN pnpm install --frozen-lockfile
 
 COPY --from=builder /app/out/full/ ./
-RUN turbo run build --filter=@mono/public
+RUN turbo run build --filter=@mono/hocus
 
 # -------- Runner: Lightweight final image --------
 FROM base AS runner
 
 WORKDIR /app
 
-COPY --from=installer /app/apps/public/.output ./.output
+COPY --from=installer /app ./
 
 ENV NODE_ENV=production
-ENV PORT=3100
-ENV HOST=0.0.0.0
 
-EXPOSE 3100
+WORKDIR /app/apps/hocus
 
-CMD ["node", ".output/server/index.mjs"]
+EXPOSE 4100
