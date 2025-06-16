@@ -67,6 +67,7 @@ services:
     environment:
       - SELF=https://hocus.${DOMAIN}
       - CLIENT=https://app.${DOMAIN}
+      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/postgres
     labels:
       - traefik.enable=true
       - traefik.http.routers.hocus.rule=Host(`hocus.${DOMAIN}`)
@@ -79,7 +80,6 @@ services:
   public:
     image: ghcr.io/spicysauce-xyz/rolled-out-public:${RELEASE_TAG:-latest}
     restart: always
-    command: node dist/index.js
     environment:
       - API=https://api.${DOMAIN}
     labels:
