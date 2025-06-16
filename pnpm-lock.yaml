@@ -415,6 +415,9 @@ importers:
 
   packages/auth:
     dependencies:
+      '@types/node':
+        specifier: ^22.15.29
+        version: 22.15.29
       better-auth:
         specifier: ^1.2.8
         version: 1.2.8

@@ -17,6 +17,7 @@
     "build:types": "tsc --emitDeclarationOnly --declaration"
   },
   "dependencies": {
+    "@types/node": "^22.15.29",
     "better-auth": "^1.2.8",
     "tsup": "^8.5.0"
   },
