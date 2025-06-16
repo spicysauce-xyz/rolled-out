@@ -18,12 +18,6 @@ export const Route = createFileRoute("/_authorized")({
       });
     }
 
-    if (!session.data.user.onboarded) {
-      throw redirect({
-        to: "/onboarding/profile",
-      });
-    }
-
     return {
       session: session.data.session,
       user: session.data.user,
