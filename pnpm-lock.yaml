@@ -175,6 +175,9 @@ importers:
       pg:
         specifier: ^8.13.3
         version: 8.16.0
+      zod:
+        specifier: ^3.25.64
+        version: 3.25.64
     devDependencies:
       '@types/node':
         specifier: ^22.15.29
@@ -7669,6 +7672,9 @@ packages:
 
   zod@3.25.48:
     resolution: {integrity: sha512-0X1mz8FtgEIvaxGjdIImYpZEaZMrund9pGXm3M6vM7Reba0e2eI71KPjSCGXBfwKDPwPoywf6waUKc3/tFvX2Q==}
+
+  zod@3.25.64:
+    resolution: {integrity: sha512-hbP9FpSZf7pkS7hRVUrOjhwKJNyampPgtXKc3AN6DsWtoHsg2Sb4SQaS4Tcay380zSwd2VPo9G9180emBACp5g==}
 
   zustand@5.0.5:
     resolution: {integrity: sha512-mILtRfKW9xM47hqxGIxCv12gXusoY/xTSHBYApXozR0HmQv299whhBeeAcRy+KrPPybzosvJBCOmVjq6x12fCg==}
@@ -15405,6 +15411,8 @@ snapshots:
       readable-stream: 4.7.0
 
   zod@3.25.48: {}
+
+  zod@3.25.64: {}
 
   zustand@5.0.5(@types/react@18.3.23)(immer@10.1.1)(react@19.1.0)(use-sync-external-store@1.5.0(react@19.1.0)):
     optionalDependencies:

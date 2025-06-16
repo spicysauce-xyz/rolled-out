@@ -20,7 +20,8 @@
     "dotenv": "^16.5.0",
     "drizzle-orm": "^0.40.0",
     "hono": "catalog:",
-    "pg": "^8.13.3"
+    "pg": "^8.13.3",
+    "zod": "^3.25.64"
   },
   "devDependencies": {
     "@types/node": "^22.15.29",
