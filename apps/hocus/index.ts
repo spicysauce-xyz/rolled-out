@@ -32,6 +32,7 @@ const hocuspocus = new Hocuspocus({
           .set({
             byteContent: state,
             title,
+            updatedAt: new Date(),
           })
           .where(eq(schema.post.id, documentName));
       },

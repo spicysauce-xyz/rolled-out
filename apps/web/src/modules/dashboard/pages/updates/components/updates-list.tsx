@@ -30,6 +30,7 @@ const DraftUpdate: React.FC<DraftUpdateProps> = ({
   id,
   createdBy,
   createdAt,
+  updatedAt,
   organizationSlug,
 }) => {
   return (
@@ -42,10 +43,7 @@ const DraftUpdate: React.FC<DraftUpdateProps> = ({
           <UpdateEntry.Number number={order} />
           <UpdateEntry.Title title={title} />
         </UpdateEntry.Group>
-        <UpdateEntry.Tags
-          tags={["Feature", "Improvement"]}
-          className="flex-1"
-        />
+        <UpdateEntry.Tags tags={["Fixes", "Mobile"]} className="flex-1" />
         <UpdateEntry.Meta>
           <div className="flex gap-1">
             <Avatar.Root className="size-5 rounded-sm">
@@ -56,20 +54,22 @@ const DraftUpdate: React.FC<DraftUpdateProps> = ({
               {createdBy?.name ?? "Unknown"}
             </Text.Root>
           </div>
-          {/* <Tooltip.Root>
+          <Tooltip.Root>
             <Tooltip.Trigger>
               <Text.Root
                 size="sm"
                 color="muted"
                 className="decoration-dashed underline-offset-2 hover:underline"
               >
-                5 minutes ago
+                {format(updatedAt, "MMM d")}
               </Text.Root>
             </Tooltip.Trigger>
             <Tooltip.Content>
-              <Tooltip.Title>Last edited on May 15, 8:30 AM</Tooltip.Title>
+              <Tooltip.Title>
+                Last edited on {format(updatedAt, "MMM d, h:mm a")}
+              </Tooltip.Title>
             </Tooltip.Content>
-          </Tooltip.Root> */}
+          </Tooltip.Root>
           <Tooltip.Root>
             <Tooltip.Trigger>
               <Text.Root
