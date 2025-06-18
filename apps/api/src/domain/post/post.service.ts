@@ -21,10 +21,31 @@ export const PostsService = {
     return post;
   },
   getPostsByOrganizationId: async (organizationId: string) => {
-    const posts = await Database.select()
+    const posts = await Database.select({
+      id: schema.post.id,
+      order: schema.post.order,
+      title: schema.post.title,
+      status: schema.post.status,
+      createdAt: schema.post.createdAt,
+      updatedAt: schema.post.updatedAt,
+      publishedAt: schema.post.publishedAt,
+      editors: sql`
+        coalesce(
+          jsonb_agg(
+            jsonb_build_object(
+              'id',         ${schema.user.id},
+              'name',       ${schema.user.name},
+              'image',  ${schema.user.image}
+            )
+          ) filter (where ${schema.user.id} is not null),
+          '[]'::jsonb
+        )
+      `.as<Pick<typeof schema.user.$inferSelect, "id" | "name" | "image">[]>("editors"),
+    })
       .from(schema.post)
       .where(eq(schema.post.organizationId, organizationId))
-      .leftJoin(schema.user, eq(schema.post.createdBy, schema.user.id))
+      .leftJoin(schema.editor, eq(schema.editor.postId, schema.post.id))
+      .leftJoin(schema.user, eq(schema.editor.userId, schema.user.id))
       .orderBy(
         sql`CASE
           WHEN ${schema.post.status} = 'draft' THEN 1
@@ -36,18 +57,15 @@ export const PostsService = {
           WHEN ${schema.post.status} = 'scheduled' THEN ${schema.post.updatedAt}
           WHEN ${schema.post.status} = 'published' THEN ${schema.post.updatedAt}
         END DESC`,
-      );
+      )
+      .groupBy(schema.post.id);
 
-    return posts.map((entry) => ({
-      ...entry.post,
-      createdBy: entry.user,
-    }));
+    return posts;
   },
-  updatePostById: async (id: string, data: Pick<typeof schema.post.$inferSelect, "content" | "title">) => {
+  updatePostById: async (id: string, data: Pick<typeof schema.post.$inferSelect, "title">) => {
     const [updatedPost] = await Database.update(schema.post)
       .set({
         title: data.title,
-        content: data.content,
         updatedAt: new Date(),
       })
       .where(eq(schema.post.id, id))

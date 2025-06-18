@@ -71,6 +71,13 @@
       "when": 1750095571531,
       "tag": "0009_stale_giant_girl",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1750270866910,
+      "tag": "0010_giant_red_wolf",
+      "breakpoints": true
     }
   ]
 }

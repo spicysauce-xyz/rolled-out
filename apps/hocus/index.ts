@@ -11,7 +11,21 @@ import { eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 
+const editorsMap = new Map<string, Set<string>>();
+
 const hocuspocus = new Hocuspocus({
+  onChange: async ({ documentName, context }) => {
+    if (!editorsMap.has(documentName)) {
+      editorsMap.set(documentName, new Set());
+    }
+
+    const set = editorsMap.get(documentName) as Set<string>;
+    const userId = context.user.id;
+
+    if (userId) {
+      set.add(userId);
+    }
+  },
   extensions: [
     new DatabaseExtension({
       fetch: async ({ documentName }) => {
@@ -35,6 +49,20 @@ const hocuspocus = new Hocuspocus({
             updatedAt: new Date(),
           })
           .where(eq(schema.post.id, documentName));
+
+        const editors = editorsMap.get(documentName);
+        editorsMap.delete(documentName);
+
+        if (editors?.size) {
+          await Database.insert(schema.editor)
+            .values(
+              Array.from(editors).map((userId) => ({
+                postId: documentName,
+                userId,
+              })),
+            )
+            .onConflictDoNothing();
+        }
       },
     }),
   ],

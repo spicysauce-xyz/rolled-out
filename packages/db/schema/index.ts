@@ -6,3 +6,4 @@ export * from "./post.model";
 export * from "./session.model";
 export * from "./user.model";
 export * from "./verification.model";
+export * from "./editor.model";
