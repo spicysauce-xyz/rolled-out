@@ -1,8 +1,9 @@
 import { api } from "@lib/api";
 import { editorContentClassName, generateHtml } from "@mono/editor";
-import { Button, Text } from "@mono/ui";
+import { Avatar, Button, Tag, Text } from "@mono/ui";
 import { cn } from "@mono/ui/utils";
 import { createFileRoute } from "@tanstack/react-router";
+import { format } from "date-fns";
 import {
   CircleIcon,
   GlobeIcon,
@@ -83,10 +84,21 @@ function RouteComponent() {
       <div className="flex flex-col divide-y divide-neutral-100">
         {posts.map((post) => (
           <div className="mx-auto flex w-full" key={post.id}>
-            <div className="relative flex flex-1 items-start justify-end p-6">
-              <Text.Root className="sticky top-6" color="muted" size="sm">
-                Jan 20, 2025
-              </Text.Root>
+            <div className="relative flex flex-1 items-start justify-end gap-4 p-6">
+              <div className="sticky top-6 flex flex-col items-end gap-4">
+                {post.publishedAt && (
+                  <Text.Root color="muted" size="sm">
+                    {format(post.publishedAt, "MMM d, h:mm a")}
+                  </Text.Root>
+                )}
+                <div className="flex flex-wrap justify-end gap-2">
+                  {post.tags.map((tag) => (
+                    <Tag.Root key={tag.id} className="h-7.5 rounded-sm px-2">
+                      {tag.label}
+                    </Tag.Root>
+                  ))}
+                </div>
+              </div>
             </div>
             <div className="w-full max-w-180 border-neutral-100 border-x">
               <div
@@ -94,12 +106,22 @@ function RouteComponent() {
                 dangerouslySetInnerHTML={{ __html: post.contentHTML }}
               />
               <div className="flex w-full items-center justify-between border-neutral-100 border-t p-6">
-                <div className="flex items-center gap-4">
-                  <div className="-space-x-2 flex">
-                    <div className="size-10 rounded-md bg-neutral-200" />
-                    <div className="size-10 rounded-md bg-neutral-300" />
-                    <div className="size-10 rounded-md bg-neutral-400" />
-                    <div className="size-10 rounded-md bg-neutral-500" />
+                <div className="flex flex-col gap-0.5">
+                  <Text.Root size="xs" color="muted">
+                    Published by:
+                  </Text.Root>
+                  <div className="flex items-center gap-2">
+                    {post.editors.map((editor) => (
+                      <div className="flex items-center gap-1" key={editor.id}>
+                        <Avatar.Root className="size-4 rounded-sm">
+                          <Avatar.Image src={editor.image || ""} />
+                          <Avatar.Fallback>{editor.name[0]}</Avatar.Fallback>
+                        </Avatar.Root>
+                        <Text.Root size="sm" weight="medium">
+                          {editor.name}
+                        </Text.Root>
+                      </div>
+                    ))}
                   </div>
                 </div>
                 <div className="flex gap-2">

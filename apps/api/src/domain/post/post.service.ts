@@ -26,13 +26,10 @@ export const PostsService = {
       order: schema.post.order,
       title: schema.post.title,
       status: schema.post.status,
-      createdAt: schema.post.createdAt,
-      updatedAt: schema.post.updatedAt,
-      publishedAt: schema.post.publishedAt,
-      editors: sql`
+      editors: sql<Pick<typeof schema.user.$inferSelect, "id" | "name" | "image">[]>`
         coalesce(
           jsonb_agg(
-            jsonb_build_object(
+            DISTINCT jsonb_build_object(
               'id',         ${schema.user.id},
               'name',       ${schema.user.name},
               'image',  ${schema.user.image}
@@ -40,12 +37,28 @@ export const PostsService = {
           ) filter (where ${schema.user.id} is not null),
           '[]'::jsonb
         )
-      `.as<Pick<typeof schema.user.$inferSelect, "id" | "name" | "image">[]>("editors"),
+      `.as("editors"),
+      tags: sql<Pick<typeof schema.tag.$inferSelect, "id" | "label">[]>`
+        coalesce(
+          jsonb_agg(
+            DISTINCT jsonb_build_object(
+              'id',         ${schema.tag.id},
+              'label',       ${schema.tag.label}
+            )
+          ) filter (where ${schema.tag.id} is not null),
+          '[]'::jsonb
+        )
+      `.as("tags"),
+      createdAt: schema.post.createdAt,
+      updatedAt: schema.post.updatedAt,
+      publishedAt: schema.post.publishedAt,
     })
       .from(schema.post)
       .where(eq(schema.post.organizationId, organizationId))
       .leftJoin(schema.editor, eq(schema.editor.postId, schema.post.id))
       .leftJoin(schema.user, eq(schema.editor.userId, schema.user.id))
+      .leftJoin(schema.postTag, eq(schema.post.id, schema.postTag.postId))
+      .leftJoin(schema.tag, eq(schema.postTag.tagId, schema.tag.id))
       .orderBy(
         sql`CASE
           WHEN ${schema.post.status} = 'draft' THEN 1

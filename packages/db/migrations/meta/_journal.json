@@ -78,6 +78,13 @@
       "when": 1750270866910,
       "tag": "0010_giant_red_wolf",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1750281551364,
+      "tag": "0011_little_photon",
+      "breakpoints": true
     }
   ]
 }

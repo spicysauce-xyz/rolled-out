@@ -41,6 +41,7 @@ const DraftUpdate: React.FC<DraftUpdateProps> = ({
   title,
   id,
   editors: _editors,
+  tags,
   createdAt,
   updatedAt,
   organizationSlug,
@@ -58,7 +59,10 @@ const DraftUpdate: React.FC<DraftUpdateProps> = ({
           <UpdateEntry.Number number={order} />
           <UpdateEntry.Title title={title} />
         </UpdateEntry.Group>
-        <UpdateEntry.Tags tags={["Fixes", "Mobile"]} className="flex-1" />
+        <UpdateEntry.Tags
+          tags={tags.map((tag) => tag.label)}
+          className="flex-1"
+        />
         <UpdateEntry.Meta>
           {creator && (
             <Tooltip.Root>

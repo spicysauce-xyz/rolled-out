@@ -15,6 +15,7 @@ import { tryCatch } from "@utils/promise";
 import { ArrowLeftIcon, ClockIcon, SendIcon } from "lucide-react";
 import { useCallback } from "react";
 import { ConnectedPeers } from "./components/ConnectedPeers";
+import { EditorTags } from "./components/EditorTags";
 import { useHocuspocusProvider } from "./hooks/useHocuspocusProvider";
 
 export const Route = createFileRoute(
@@ -114,10 +115,14 @@ function RouteComponent() {
             <div className="flex flex-col gap-0.5">
               <Transition.Root>
                 {hocuspocus.isReady ? (
-                  <Transition.Item key="title">
+                  <Transition.Item
+                    key="title"
+                    className="flex items-center gap-4"
+                  >
                     <Text.Root size="sm" weight="medium">
                       {hocuspocus.title || "Untitled Update"}
                     </Text.Root>
+                    <EditorTags provider={hocuspocus.provider} />
                   </Transition.Item>
                 ) : (
                   <Transition.Item key="title-loading">
@@ -179,7 +184,7 @@ function RouteComponent() {
         <Page.Content className="mx-auto flex w-full max-w-180 flex-1 flex-col">
           <Transition.Root>
             {hocuspocus.isReady ? (
-              <Transition.Item key="editor">
+              <Transition.Item key="editor" className="flex flex-1">
                 <Editor.Root provider={hocuspocus.provider} user={{ ...user }}>
                   <Editor.Content />
                   <Editor.BubbleMenu />

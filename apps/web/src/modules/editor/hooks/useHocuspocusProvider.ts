@@ -1,6 +1,5 @@
 import { config } from "@config";
 import { HocuspocusProvider } from "@hocuspocus/provider";
-import { TiptapTransformer } from "@hocuspocus/transformer";
 import { useEffect, useRef, useState } from "react";
 import type * as Y from "yjs";
 
@@ -69,11 +68,14 @@ export const useHocuspocusProvider = (
 
   useEffect(() => {
     const handle = (doc: Y.Doc) => {
-      const { default: jsonDocument } = TiptapTransformer.fromYdoc(doc);
+      const yContent = doc.getXmlFragment("default");
 
-      const title = jsonDocument?.content?.[0]?.content?.[0]?.text?.trim();
+      if (yContent.length) {
+        const titleNode = (yContent.get(0) as Y.XmlElement).get(0);
+        const title = titleNode.toString();
 
-      setTitle(title ?? "");
+        setTitle(title ?? "");
+      }
     };
 
     if (providerRef.current?.document) {

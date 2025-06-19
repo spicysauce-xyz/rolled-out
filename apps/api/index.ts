@@ -3,6 +3,7 @@ import { Config } from "@config";
 import { AssetsHandler } from "@domain/assets";
 import { memberMiddleware } from "@domain/organizaiton/member.middleware";
 import { PublicHandler } from "@domain/public";
+import { TagHandler } from "@domain/tag";
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
@@ -34,7 +35,8 @@ export const app = new Hono()
     new Hono()
       .use(authMiddleware({ required: true }))
       .use(memberMiddleware)
-      .route("/posts", PostHandler),
+      .route("/posts", PostHandler)
+      .route("/tags", TagHandler),
   );
 
 serve(
