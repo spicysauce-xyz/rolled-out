@@ -18,3 +18,4 @@ export * from "./toast";
 export * from "./link-button";
 export * from "./skeleton";
 export * from "./dialog";
+export * from "./tag";

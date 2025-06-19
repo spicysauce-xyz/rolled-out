@@ -1,4 +1,4 @@
-import { Clickable, Text, Tooltip } from "@mono/ui";
+import { Clickable, Tag, Text, Tooltip } from "@mono/ui";
 import { cn } from "@mono/ui/utils";
 import React from "react";
 
@@ -69,16 +69,13 @@ const UpdateEntryTags: React.FC<UpdateEntryTagsProps> = ({
 }) => {
   return (
     <div className={cn("flex items-start gap-2", className)}>
-      {tags.map((tag) => (
-        <div
-          key={tag}
-          className="flex items-center rounded-sm bg-accent-50 px-1"
-        >
-          <Text.Root size="sm" weight="medium" className="text-accent-500">
+      {tags.map((tag) => {
+        return (
+          <Tag.Root className="h-auto rounded-sm px-1" key={tag}>
             {tag}
-          </Text.Root>
-        </div>
-      ))}
+          </Tag.Root>
+        );
+      })}
     </div>
   );
 };

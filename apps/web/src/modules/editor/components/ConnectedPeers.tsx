@@ -20,7 +20,7 @@ export const ConnectedPeers: React.FC<ConnectedPeersProps> = ({
               <Avatar.Image src={peer.user.image} />
               <Avatar.Fallback>{peer.user.name.slice(0, 1)}</Avatar.Fallback>
             </Avatar.Root>
-            <div className="-right-1.5 -top-1.5 absolute flex size-3 items-center justify-center rounded-full bg-white p-0.75">
+            <div className="-right-0.5 -bottom-0.5 absolute flex size-3 items-center justify-center rounded-full bg-white p-0.75">
               <div
                 className={cn(
                   "h-full w-full rounded-full",

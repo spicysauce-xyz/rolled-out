@@ -1,12 +1,14 @@
 import * as Card from "@components/card";
+import { FileUpload } from "@components/file-upload";
 import { organizationQuery, organizationsQuery } from "@lib/api/queries";
 import { authClient } from "@lib/auth";
 import useAppForm from "@lib/form";
-import { Button, Input, Label, Text, Toaster } from "@mono/ui";
+import { Avatar, Button, Input, Label, Text, Toaster } from "@mono/ui";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { Loader2Icon, SaveIcon } from "lucide-react";
 import { useEffect } from "react";
+import { match } from "ts-pattern";
 import { z } from "zod";
 
 export const Route = createFileRoute(
@@ -35,6 +37,7 @@ function RouteComponent() {
     mutationFn: async (data: {
       name: string;
       slug: string;
+      logo: string | undefined;
       organizationId: string;
     }) => {
       const response = await authClient.organization.update({
@@ -42,6 +45,7 @@ function RouteComponent() {
         data: {
           name: data.name,
           slug: data.slug,
+          logo: data.logo,
         },
       });
 
@@ -69,11 +73,13 @@ function RouteComponent() {
     defaultValues: {
       name: organizationQueryData?.name || "",
       slug: organizationQueryData?.slug || "",
+      logo: organizationQueryData?.logo || null,
     },
     validators: {
       onSubmit: z.object({
         name: z.string().trim().min(1),
         slug: z.string().trim().min(1),
+        logo: z.string().nullable(),
       }),
     },
     onSubmit: async ({ value }) => {
@@ -81,6 +87,7 @@ function RouteComponent() {
         await updateOrganizationMutation.mutateAsync({
           name: value.name,
           slug: value.slug,
+          logo: value.logo || undefined,
           organizationId: organization.id,
         });
 
@@ -111,6 +118,7 @@ function RouteComponent() {
     form.reset({
       name: organization.name,
       slug: organization.slug,
+      logo: organization.logo || null,
     });
   }, [organization, form]);
 
@@ -131,6 +139,57 @@ function RouteComponent() {
         }}
       >
         <Card.Content className="gap-4">
+          <form.Field name="logo">
+            {(field) => (
+              <form.FieldContainer>
+                <Label.Root>Avatar</Label.Root>
+                <FileUpload
+                  type="logo"
+                  id={field.name}
+                  onUploadComplete={(url) => {
+                    field.setValue(url);
+                  }}
+                >
+                  {({ id }, state) => (
+                    <label htmlFor={id}>
+                      <Avatar.Root className="group size-15">
+                        {match(state)
+                          .with(
+                            { state: "uploading" },
+                            ({ preview, progress }) => (
+                              <div className="relative overflow-hidden rounded-md">
+                                <Avatar.Image src={preview} />
+                                <div
+                                  className="absolute inset-x-0 bottom-0 bg-white/10 backdrop-blur-sm transition-all"
+                                  style={{ top: `${progress}%` }}
+                                />
+                              </div>
+                            ),
+                          )
+                          .otherwise(() => (
+                            <>
+                              <Avatar.Image src={field.state.value || ""} />
+                              <div className="absolute inset-0 flex items-center justify-center bg-white/10 opacity-0 backdrop-blur-sm transition-all group-hover:opacity-100">
+                                <Text.Root
+                                  size="xs"
+                                  weight="medium"
+                                  className="text-white"
+                                >
+                                  Update
+                                </Text.Root>
+                              </div>
+                            </>
+                          ))}
+                        <Avatar.Fallback>
+                          {organization.name[0]}
+                        </Avatar.Fallback>
+                      </Avatar.Root>
+                    </label>
+                  )}
+                </FileUpload>
+              </form.FieldContainer>
+            )}
+          </form.Field>
           <form.Field name="name">
             {(field) => (
               <form.FieldContainer>

@@ -1,11 +1,23 @@
 import { GroupBy } from "@components/group-by";
 import * as UpdateEntry from "@components/update-entry";
 import type { SuccessResponse, api } from "@lib/api";
-import { Avatar, IconButton, Skeleton, Text, Tooltip } from "@mono/ui";
+import {
+  Avatar,
+  DropdownMenu,
+  IconButton,
+  Skeleton,
+  Text,
+  Tooltip,
+} from "@mono/ui";
 import { Link } from "@tanstack/react-router";
 import { format } from "date-fns";
 import type { InferResponseType } from "hono/client";
-import { CircleCheckIcon, CircleDashedIcon, ClockIcon } from "lucide-react";
+import {
+  ArchiveIcon,
+  CircleCheckIcon,
+  CircleDashedIcon,
+  ClockIcon,
+} from "lucide-react";
 import {
   EllipsisVerticalIcon,
   EyeIcon,
@@ -28,10 +40,15 @@ const DraftUpdate: React.FC<DraftUpdateProps> = ({
   order,
   title,
   id,
-  createdBy,
+  editors: _editors,
+  tags,
   createdAt,
+  updatedAt,
   organizationSlug,
 }) => {
+  const creator = _editors[0];
+  const editors = _editors.slice(1);
+
   return (
     <UpdateEntry.Root asChild>
       <Link
@@ -43,33 +60,62 @@ const DraftUpdate: React.FC<DraftUpdateProps> = ({
           <UpdateEntry.Title title={title} />
         </UpdateEntry.Group>
         <UpdateEntry.Tags
-          tags={["Feature", "Improvement"]}
+          tags={tags.map((tag) => tag.label)}
           className="flex-1"
         />
         <UpdateEntry.Meta>
-          <div className="flex gap-1">
-            <Avatar.Root className="size-5 rounded-sm">
-              <Avatar.Image src={createdBy?.image || ""} />
-              <Avatar.Fallback>{createdBy?.name?.charAt(0)}</Avatar.Fallback>
-            </Avatar.Root>
-            <Text.Root size="sm" weight="medium">
-              {createdBy?.name ?? "Unknown"}
-            </Text.Root>
-          </div>
-          {/* <Tooltip.Root>
+          {creator && (
+            <Tooltip.Root>
+              <div className="flex items-center gap-1">
+                <div className="flex gap-1">
+                  <Avatar.Root className="size-5 rounded-sm">
+                    <Avatar.Image src={creator?.image || ""} />
+                    <Avatar.Fallback>
+                      {creator?.name?.charAt(0)}
+                    </Avatar.Fallback>
+                  </Avatar.Root>
+                  <Text.Root size="sm" weight="medium">
+                    {creator?.name}
+                  </Text.Root>
+                </div>
+                <Tooltip.Trigger asChild>
+                  {editors.length > 0 && (
+                    <Text.Root
+                      size="sm"
+                      color="muted"
+                      className="decoration-dashed underline-offset-2 hover:underline"
+                    >
+                      {" "}
+                      and {editors.length} other
+                      {editors.length !== 1 ? "s" : ""}
+                    </Text.Root>
+                  )}
+                </Tooltip.Trigger>
+              </div>
+              <Tooltip.Content>
+                <Tooltip.Title>
+                  {editors.map((editor) => editor.name).join(", ")}
+                </Tooltip.Title>
+              </Tooltip.Content>
+            </Tooltip.Root>
+          )}
+
+          <Tooltip.Root>
             <Tooltip.Trigger>
               <Text.Root
                 size="sm"
                 color="muted"
                 className="decoration-dashed underline-offset-2 hover:underline"
               >
-                5 minutes ago
+                {format(updatedAt, "MMM d")}
               </Text.Root>
             </Tooltip.Trigger>
             <Tooltip.Content>
-              <Tooltip.Title>Last edited on May 15, 8:30 AM</Tooltip.Title>
+              <Tooltip.Title>
+                Last edited on {format(updatedAt, "MMM d, h:mm a")}
+              </Tooltip.Title>
             </Tooltip.Content>
-          </Tooltip.Root> */}
+          </Tooltip.Root>
           <Tooltip.Root>
             <Tooltip.Trigger>
               <Text.Root
@@ -87,11 +133,23 @@ const DraftUpdate: React.FC<DraftUpdateProps> = ({
             </Tooltip.Content>
           </Tooltip.Root>
         </UpdateEntry.Meta>
-        <IconButton.Root size="sm" variant="tertiary" className="-my-2">
-          <IconButton.Icon>
-            <EllipsisVerticalIcon />
-          </IconButton.Icon>
-        </IconButton.Root>
+        <DropdownMenu.Root>
+          <DropdownMenu.Trigger asChild>
+            <IconButton.Root size="sm" variant="tertiary" className="-my-2">
+              <IconButton.Icon>
+                <EllipsisVerticalIcon />
+              </IconButton.Icon>
+            </IconButton.Root>
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Content side="bottom" align="end">
+            <DropdownMenu.Item>
+              <DropdownMenu.ItemIcon>
+                <ArchiveIcon />
+              </DropdownMenu.ItemIcon>
+              Archive
+            </DropdownMenu.Item>
+          </DropdownMenu.Content>
+        </DropdownMenu.Root>
       </Link>
     </UpdateEntry.Root>
   );

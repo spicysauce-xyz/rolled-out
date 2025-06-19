@@ -1,39 +1,62 @@
 import "dotenv/config";
 import { authMiddleware } from "@auth";
 import { Config } from "@config";
-import { Database, schema } from "@database";
 import { Database as DatabaseExtension } from "@hocuspocus/extension-database";
+import { Logger } from "@hocuspocus/extension-logger";
 import { Hocuspocus } from "@hocuspocus/server";
-import { TiptapTransformer } from "@hocuspocus/transformer";
 import { serve } from "@hono/node-server";
 import { createNodeWebSocket } from "@hono/node-ws";
-import { eq } from "drizzle-orm";
+import {
+  deletePostTagsByDocumentName,
+  getPostByDocumentName,
+  insertPostTagsByDocumentName,
+  updatePostByDocumentName,
+  upsertEditorsByDocumentName,
+} from "@utils/db";
+import { getDocumentTags, getDocumentTitle } from "@utils/document";
+import { addUserIdToEditorsMap } from "@utils/map";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 
+const editorsMap = new Map<string, Set<string>>();
+
 const hocuspocus = new Hocuspocus({
+  onChange: async ({ documentName, context }) => {
+    addUserIdToEditorsMap(editorsMap, documentName, context.user.id);
+  },
   extensions: [
+    new Logger(),
     new DatabaseExtension({
       fetch: async ({ documentName }) => {
-        const post = await Database.query.post.findFirst({
-          where: eq(schema.post.id, documentName),
-        });
+        const post = await getPostByDocumentName(documentName);
 
         return post?.byteContent ?? null;
       },
       store: async ({ documentName, document, state }) => {
-        const { default: jsonDocument } = TiptapTransformer.fromYdoc(document);
+        const title = getDocumentTitle(document);
 
-        const title =
-          jsonDocument?.content?.[0]?.content?.[0]?.text?.trim() ||
-          "Untitled Update";
+        await updatePostByDocumentName(documentName, {
+          byteContent: state,
+          title,
+        });
 
-        await Database.update(schema.post)
-          .set({
-            byteContent: state,
-            title,
-          })
-          .where(eq(schema.post.id, documentName));
+        const editors = editorsMap.get(documentName);
+        editorsMap.delete(documentName);
+
+        if (editors?.size) {
+          await upsertEditorsByDocumentName(documentName, Array.from(editors));
+        }
+
+        const tags = getDocumentTags(document);
+
+        await deletePostTagsByDocumentName(documentName);
+
+        if (tags.length) {
+          await insertPostTagsByDocumentName(
+            documentName,
+            tags.map(({ id }) => id),
+          );
+        }
       },
     }),
   ],

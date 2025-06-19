@@ -1,6 +1,6 @@
 import * as Transition from "@components/transition";
 import { authClient } from "@lib/auth";
-import { DropdownMenu, LinkButton, Skeleton, Text } from "@mono/ui";
+import { Avatar, DropdownMenu, LinkButton, Skeleton, Text } from "@mono/ui";
 import { useDisclosure } from "@mono/ui/hooks";
 import { cn } from "@mono/ui/utils";
 import { useQuery } from "@tanstack/react-query";
@@ -9,7 +9,6 @@ import _ from "lodash";
 import {
   AlertTriangleIcon,
   ChevronsUpDownIcon,
-  HomeIcon,
   PlusIcon,
   RefreshCcwIcon,
 } from "lucide-react";
@@ -59,8 +58,14 @@ const OrganizationSelector = ({ organization }: OrganizationSelectorProps) => {
       <DropdownMenu.Root>
         <DropdownMenu.Trigger asChild>
           <LinkButton.Root>
+            <Avatar.Root className="mr-1 size-5 rounded-sm">
+              <Avatar.Image src={organization.logo || ""} />
+              <Avatar.Fallback className="text-xs">
+                {organization.name[0]}
+              </Avatar.Fallback>
+            </Avatar.Root>
             {organization.name}
-            <LinkButton.Icon>
+            <LinkButton.Icon className="ml-1">
               <ChevronsUpDownIcon />
             </LinkButton.Icon>
           </LinkButton.Root>
@@ -114,9 +119,12 @@ const OrganizationSelector = ({ organization }: OrganizationSelectorProps) => {
                           key={organization.id}
                           value={organization.slug}
                         >
-                          <DropdownMenu.ItemIcon>
-                            <HomeIcon />
-                          </DropdownMenu.ItemIcon>
+                          <Avatar.Root className="size-5 rounded-sm">
+                            <Avatar.Image src={organization.logo || ""} />
+                            <Avatar.Fallback className="text-xs">
+                              {organization.name[0]}
+                            </Avatar.Fallback>
+                          </Avatar.Root>
                           {organization.name}
                         </DropdownMenu.RadioItem>
                       ))}

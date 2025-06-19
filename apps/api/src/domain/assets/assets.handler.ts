@@ -15,4 +15,11 @@ export const AssetsHandler = new Hono()
     const uploadUrl = await S3.createUploadUrl(filename);
 
     return ok(c, { uploadUrl, filename, url: `${Config.s3.assetsBase}/${filename}` });
+  })
+  .post("/logo", zValidator("query", z.object({ type: z.string() })), async (c) => {
+    const filename = uuidv4();
+
+    const uploadUrl = await S3.createUploadUrl(filename);
+
+    return ok(c, { uploadUrl, filename, url: `${Config.s3.assetsBase}/${filename}` });
   });

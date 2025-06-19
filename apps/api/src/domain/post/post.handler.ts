@@ -1,3 +1,4 @@
+import { Database, schema } from "@database";
 import { organizationFactory } from "@domain/organizaiton/organization.factory";
 import { zValidator } from "@hono/zod-validator";
 import { notOk, ok } from "@utils/network";
@@ -14,28 +15,28 @@ export const PostHandler = organizationFactory
 
     return ok(c, posts);
   })
-  .post(
-    "/",
-    zValidator("json", z.object({ title: z.string().optional(), content: z.object({}).optional() })),
-    async (c) => {
-      const member = c.get("member");
+  .post("/", zValidator("json", z.object({ title: z.string().optional() })), async (c) => {
+    const member = c.get("member");
 
-      const { title, content } = c.req.valid("json");
+    const { title } = c.req.valid("json");
 
-      const post = await PostsService.createPost({
-        organizationId: member.organizationId,
-        title: title ?? "Untitled Update",
-        content: content ?? {},
-        createdBy: member.userId,
-      });
+    const post = await PostsService.createPost({
+      organizationId: member.organizationId,
+      title: title ?? "Untitled Update",
+    });
 
-      if (!post) {
-        return notOk(c, { message: "Failed to create post" }, 500);
-      }
+    if (!post) {
+      return notOk(c, { message: "Failed to create post" }, 500);
+    }
 
-      return ok(c, post);
-    },
-  )
+    // TODO: move to its own service/repo
+    await Database.insert(schema.editor).values({
+      postId: post.id,
+      userId: member.userId,
+    });
+
+    return ok(c, post);
+  })
   .get("/:id", authMiddleware({ required: true }), async (c) => {
     const postId = c.req.param("id");
     const member = c.get("member");
@@ -74,8 +75,8 @@ export const PostHandler = organizationFactory
         return notOk(c, { message: "Cannot edit published post" }, 400);
       }
 
-      const { title, content } = c.req.valid("json");
-      const updatedPost = await PostsService.updatePostById(postId, { title, content });
+      const { title } = c.req.valid("json");
+      const updatedPost = await PostsService.updatePostById(postId, { title });
 
       return ok(c, updatedPost);
     },
