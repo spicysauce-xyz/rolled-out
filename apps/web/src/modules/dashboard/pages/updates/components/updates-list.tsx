@@ -1,16 +1,8 @@
 import { GroupBy } from "@components/group-by";
 import * as UpdateEntry from "@components/update-entry";
 import type { SuccessResponse, api } from "@lib/api";
-import {
-  Avatar,
-  DropdownMenu,
-  IconButton,
-  Skeleton,
-  Text,
-  Tooltip,
-} from "@mono/ui";
+import { DropdownMenu, IconButton, Skeleton, Text, Tooltip } from "@mono/ui";
 import { Link } from "@tanstack/react-router";
-import { format } from "date-fns";
 import type { InferResponseType } from "hono/client";
 import {
   ArchiveIcon,
@@ -40,15 +32,12 @@ const DraftUpdate: React.FC<DraftUpdateProps> = ({
   order,
   title,
   id,
-  editors: _editors,
+  editors,
   tags,
   createdAt,
   updatedAt,
   organizationSlug,
 }) => {
-  const creator = _editors[0];
-  const editors = _editors.slice(1);
-
   return (
     <UpdateEntry.Root asChild>
       <Link
@@ -64,74 +53,9 @@ const DraftUpdate: React.FC<DraftUpdateProps> = ({
           className="flex-1"
         />
         <UpdateEntry.Meta>
-          {creator && (
-            <Tooltip.Root>
-              <div className="flex items-center gap-1">
-                <div className="flex gap-1">
-                  <Avatar.Root className="size-5 rounded-sm">
-                    <Avatar.Image src={creator?.image || ""} />
-                    <Avatar.Fallback>
-                      {creator?.name?.charAt(0)}
-                    </Avatar.Fallback>
-                  </Avatar.Root>
-                  <Text.Root size="sm" weight="medium">
-                    {creator?.name}
-                  </Text.Root>
-                </div>
-                <Tooltip.Trigger asChild>
-                  {editors.length > 0 && (
-                    <Text.Root
-                      size="sm"
-                      color="muted"
-                      className="decoration-dashed underline-offset-2 hover:underline"
-                    >
-                      {" "}
-                      and {editors.length} other
-                      {editors.length !== 1 ? "s" : ""}
-                    </Text.Root>
-                  )}
-                </Tooltip.Trigger>
-              </div>
-              <Tooltip.Content>
-                <Tooltip.Title>
-                  {editors.map((editor) => editor.name).join(", ")}
-                </Tooltip.Title>
-              </Tooltip.Content>
-            </Tooltip.Root>
-          )}
-
-          <Tooltip.Root>
-            <Tooltip.Trigger>
-              <Text.Root
-                size="sm"
-                color="muted"
-                className="decoration-dashed underline-offset-2 hover:underline"
-              >
-                {format(updatedAt, "MMM d")}
-              </Text.Root>
-            </Tooltip.Trigger>
-            <Tooltip.Content>
-              <Tooltip.Title>
-                Last edited on {format(updatedAt, "MMM d, h:mm a")}
-              </Tooltip.Title>
-            </Tooltip.Content>
-          </Tooltip.Root>
-          <Tooltip.Root>
-            <Tooltip.Trigger>
-              <Text.Root
-                size="sm"
-                color="muted"
-                className="decoration-dashed underline-offset-2 hover:underline"
-              >
-                {format(createdAt, "MMM d")}
-              </Text.Root>
-            </Tooltip.Trigger>
-            <Tooltip.Content>
-              <Tooltip.Title>
-                Created on {format(createdAt, "MMM d, h:mm a")}
-              </Tooltip.Title>
-            </Tooltip.Content>
-          </Tooltip.Root>
+          {editors.length > 0 && <UpdateEntry.Editors editors={editors} />}
+          <UpdateEntry.Date date={updatedAt} label="Last edited on" />
+          <UpdateEntry.Date date={createdAt} label="Created on" />
         </UpdateEntry.Meta>
         <DropdownMenu.Root>
           <DropdownMenu.Trigger asChild>
@@ -155,7 +79,7 @@ const DraftUpdate: React.FC<DraftUpdateProps> = ({
   );
 };
 
-const ScheduledUpdate: React.FC<Update> = ({ title, createdBy, order }) => {
+const ScheduledUpdate: React.FC<Update> = ({ title, editors, order }) => {
   return (
     <UpdateEntry.Root>
       <UpdateEntry.Group>
@@ -164,29 +88,11 @@ const ScheduledUpdate: React.FC<Update> = ({ title, createdBy, order }) => {
       </UpdateEntry.Group>
       <UpdateEntry.Tags tags={["Feature", "Scheduled"]} className="flex-1" />
       <UpdateEntry.Meta>
-        <div className="flex gap-1">
-          <Avatar.Root className="size-5 rounded-sm">
-            <Avatar.Image src={createdBy?.image || ""} />
-            <Avatar.Fallback>{createdBy?.name?.charAt(0)}</Avatar.Fallback>
-          </Avatar.Root>
-          <Text.Root size="sm" weight="medium">
-            {createdBy?.name ?? "Unknown"}
-          </Text.Root>
-        </div>
-        <Tooltip.Root>
-          <Tooltip.Trigger>
-            <Text.Root
-              size="sm"
-              color="muted"
-              className="decoration-dashed underline-offset-2 hover:underline"
-            >
-              in 2 days
-            </Text.Root>
-          </Tooltip.Trigger>
-          <Tooltip.Content>
-            <Tooltip.Title>Scheduled for May 17, 8:30 AM</Tooltip.Title>
-          </Tooltip.Content>
-        </Tooltip.Root>
+        {editors.length > 0 && <UpdateEntry.Editors editors={editors} />}
+        <UpdateEntry.Date
+          date={new Date().toISOString()}
+          label="Scheduled for"
+        />
       </UpdateEntry.Meta>
       <IconButton.Root size="sm" variant="tertiary" className="-my-2">
         <IconButton.Icon>
@@ -200,7 +106,8 @@ const ScheduledUpdate: React.FC<Update> = ({ title, createdBy, order }) => {
 const PublishedUpdate: React.FC<Update> = ({
   order,
   title,
-  createdBy,
+  tags,
+  editors,
   publishedAt,
 }) => {
   return (
@@ -209,7 +116,10 @@ const PublishedUpdate: React.FC<Update> = ({
         <UpdateEntry.Number number={order} />
         <UpdateEntry.Title title={title} />
       </UpdateEntry.Group>
-      <UpdateEntry.Tags tags={["Feature", "Published"]} className="flex-1" />
+      <UpdateEntry.Tags
+        tags={tags.map((tag) => tag.label)}
+        className="flex-1"
+      />
       <UpdateEntry.Meta>
         <Tooltip.Root>
           <Tooltip.Trigger asChild>
@@ -267,32 +177,9 @@ const PublishedUpdate: React.FC<Update> = ({
         </Tooltip.Root>
       </UpdateEntry.Meta>
       <UpdateEntry.Meta>
-        <div className="flex gap-1">
-          <Avatar.Root className="size-5 rounded-sm">
-            <Avatar.Image src={createdBy?.image || ""} />
-            <Avatar.Fallback>{createdBy?.name?.charAt(0)}</Avatar.Fallback>
-          </Avatar.Root>
-          <Text.Root size="sm" weight="medium">
-            {createdBy?.name ?? "Unknown"}
-          </Text.Root>
-        </div>
+        {editors.length > 0 && <UpdateEntry.Editors editors={editors} />}
         {publishedAt && (
-          <Tooltip.Root>
-            <Tooltip.Trigger>
-              <Text.Root
-                size="sm"
-                color="muted"
-                className="decoration-dashed underline-offset-2 hover:underline"
-              >
-                {format(publishedAt, "MMM d")}
-              </Text.Root>
-            </Tooltip.Trigger>
-            <Tooltip.Content>
-              <Tooltip.Title>
-                Published on {format(publishedAt, "MMM d, h:mm a")}
-              </Tooltip.Title>
-            </Tooltip.Content>
-          </Tooltip.Root>
+          <UpdateEntry.Date date={publishedAt} label="Published on" />
         )}
       </UpdateEntry.Meta>
       <IconButton.Root size="sm" variant="tertiary" className="-my-2">

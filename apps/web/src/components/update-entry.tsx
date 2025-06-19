@@ -1,5 +1,6 @@
-import { Clickable, Tag, Text, Tooltip } from "@mono/ui";
+import { Avatar, Clickable, Tag, Text, Tooltip } from "@mono/ui";
 import { cn } from "@mono/ui/utils";
+import { format } from "date-fns";
 import React from "react";
 
 interface UpdateEntryProps
@@ -100,6 +101,75 @@ const UpdateEntryMeta: React.FC<React.PropsWithChildren> = ({ children }) => {
   );
 };
 
+interface UpdateEntryEditorsProps {
+  editors: { id: string; name: string; image: string | null }[];
+}
+
+const UpdateEntryEditors: React.FC<UpdateEntryEditorsProps> = ({ editors }) => {
+  const creator = editors[0];
+  const otherEditors = editors.slice(1);
+
+  return (
+    <Tooltip.Root>
+      <div className="flex items-center gap-1">
+        <div className="flex gap-1">
+          <Avatar.Root className="size-5 rounded-sm">
+            <Avatar.Image src={creator?.image || ""} />
+            <Avatar.Fallback>{creator?.name?.charAt(0)}</Avatar.Fallback>
+          </Avatar.Root>
+          <Text.Root size="sm" weight="medium">
+            {creator?.name}
+          </Text.Root>
+        </div>
+        <Tooltip.Trigger asChild>
+          {otherEditors.length > 0 && (
+            <Text.Root
+              size="sm"
+              color="muted"
+              className="decoration-dashed underline-offset-2 hover:underline"
+            >
+              {" "}
+              and {otherEditors.length} other
+              {otherEditors.length !== 1 ? "s" : ""}
+            </Text.Root>
+          )}
+        </Tooltip.Trigger>
+      </div>
+      <Tooltip.Content>
+        <Tooltip.Title>
+          {otherEditors.map((editor) => editor.name).join(", ")}
+        </Tooltip.Title>
+      </Tooltip.Content>
+    </Tooltip.Root>
+  );
+};
+
+interface UpdateEntryDateProps {
+  date: string;
+  label: string;
+}
+
+const UpdateEntryDate: React.FC<UpdateEntryDateProps> = ({ date, label }) => {
+  return (
+    <Tooltip.Root>
+      <Tooltip.Trigger>
+        <Text.Root
+          size="sm"
+          color="muted"
+          className="decoration-dashed underline-offset-2 hover:underline"
+        >
+          {format(date, "MMM d")}
+        </Text.Root>
+      </Tooltip.Trigger>
+      <Tooltip.Content>
+        <Tooltip.Title>
+          {label} {format(date, "MMM d, h:mm a")}
+        </Tooltip.Title>
+      </Tooltip.Content>
+    </Tooltip.Root>
+  );
+};
+
 export {
   UpdateEntryRoot as Root,
   UpdateEntryGroup as Group,
@@ -107,4 +177,6 @@ export {
   UpdateEntryTitle as Title,
   UpdateEntryTags as Tags,
   UpdateEntryMeta as Meta,
+  UpdateEntryEditors as Editors,
+  UpdateEntryDate as Date,
 };
