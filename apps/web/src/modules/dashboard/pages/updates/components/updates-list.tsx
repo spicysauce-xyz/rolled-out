@@ -1,7 +1,15 @@
 import { GroupBy } from "@components/group-by";
 import * as UpdateEntry from "@components/update-entry";
 import type { SuccessResponse, api } from "@lib/api";
-import { DropdownMenu, IconButton, Skeleton, Text, Tooltip } from "@mono/ui";
+import { useUpdateManager } from "@modules/dashboard/hooks/useUpdateManager";
+import {
+  Clickable,
+  DropdownMenu,
+  IconButton,
+  Skeleton,
+  Text,
+  Tooltip,
+} from "@mono/ui";
 import { Link } from "@tanstack/react-router";
 import type { InferResponseType } from "hono/client";
 import {
@@ -17,6 +25,7 @@ import {
   MousePointer2,
 } from "lucide-react";
 import type React from "react";
+import { useMemo, useState } from "react";
 
 type Update = SuccessResponse<
   InferResponseType<
@@ -26,6 +35,7 @@ type Update = SuccessResponse<
 
 interface DraftUpdateProps extends Update {
   organizationSlug: string;
+  organizationId: string;
 }
 
 const DraftUpdate: React.FC<DraftUpdateProps> = ({
@@ -37,7 +47,10 @@ const DraftUpdate: React.FC<DraftUpdateProps> = ({
   createdAt,
   updatedAt,
   organizationSlug,
+  organizationId,
 }) => {
+  const { archiveUpdate } = useUpdateManager(id, organizationId);
+
   return (
     <UpdateEntry.Root asChild>
       <Link
@@ -65,8 +78,15 @@ const DraftUpdate: React.FC<DraftUpdateProps> = ({
               </IconButton.Icon>
             </IconButton.Root>
           </DropdownMenu.Trigger>
-          <DropdownMenu.Content side="bottom" align="end">
-            <DropdownMenu.Item>
+          <DropdownMenu.Content
+            side="bottom"
+            align="end"
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+            }}
+          >
+            <DropdownMenu.Item onClick={archiveUpdate}>
               <DropdownMenu.ItemIcon>
                 <ArchiveIcon />
               </DropdownMenu.ItemIcon>
@@ -191,6 +211,72 @@ const PublishedUpdate: React.FC<Update> = ({
   );
 };
 
+interface ArchivedUpdateProps extends Update {
+  organizationSlug: string;
+  organizationId: string;
+}
+
+const ArchivedUpdate: React.FC<ArchivedUpdateProps> = ({
+  order,
+  title,
+  id,
+  editors,
+  tags,
+  createdAt,
+  updatedAt,
+  organizationSlug,
+  organizationId,
+}) => {
+  const { unarchiveUpdate } = useUpdateManager(id, organizationId);
+
+  return (
+    <UpdateEntry.Root asChild>
+      <Link
+        to="/$organizationSlug/editor/$id"
+        params={{ organizationSlug, id }}
+      >
+        <UpdateEntry.Group>
+          <UpdateEntry.Number number={order} />
+          <UpdateEntry.Title title={title} />
+        </UpdateEntry.Group>
+        <UpdateEntry.Tags
+          tags={tags.map((tag) => tag.label)}
+          className="flex-1"
+        />
+        <UpdateEntry.Meta>
+          {editors.length > 0 && <UpdateEntry.Editors editors={editors} />}
+          <UpdateEntry.Date date={updatedAt} label="Last edited on" />
+          <UpdateEntry.Date date={createdAt} label="Created on" />
+        </UpdateEntry.Meta>
+        <DropdownMenu.Root>
+          <DropdownMenu.Trigger asChild>
+            <IconButton.Root size="sm" variant="tertiary" className="-my-2">
+              <IconButton.Icon>
+                <EllipsisVerticalIcon />
+              </IconButton.Icon>
+            </IconButton.Root>
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Content
+            side="bottom"
+            align="end"
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+            }}
+          >
+            <DropdownMenu.Item onClick={unarchiveUpdate}>
+              <DropdownMenu.ItemIcon>
+                <ArchiveIcon />
+              </DropdownMenu.ItemIcon>
+              Unarchive
+            </DropdownMenu.Item>
+          </DropdownMenu.Content>
+        </DropdownMenu.Root>
+      </Link>
+    </UpdateEntry.Root>
+  );
+};
+
 const GroupDivider: React.FC<{ status: Update["status"] }> = ({ status }) => {
   const variants = {
     draft: {
@@ -204,6 +290,10 @@ const GroupDivider: React.FC<{ status: Update["status"] }> = ({ status }) => {
     published: {
       icon: <CircleCheckIcon className="size-4 text-success-500" />,
       label: "Published",
+    },
+    archived: {
+      icon: <ArchiveIcon className="size-4 text-neutral-500" />,
+      label: "Archived",
     },
   };
 
@@ -224,32 +314,75 @@ const GroupDivider: React.FC<{ status: Update["status"] }> = ({ status }) => {
 };
 
 interface UpdateListProps {
+  organizationId: string;
   organizationSlug: string;
   data: Update[];
 }
 
 export const UpdatesList: React.FC<UpdateListProps> & {
   Skeleton: React.FC;
-} = ({ data, organizationSlug }) => {
+} = ({ data, organizationSlug, organizationId }) => {
+  const [archivedVisible, setArchivedVisible] = useState(false);
+  const archivedPosts = useMemo(
+    () => data.filter((post) => post.status === "archived"),
+    [data],
+  );
+
   return (
     <div className="flex flex-col divide-y divide-neutral-100">
       <GroupBy
         data={data}
         field="status"
         divider={(status) => <GroupDivider status={status} />}
+        visible={(status) => {
+          if (status === "archived") {
+            return archivedVisible;
+          }
+
+          return true;
+        }}
       >
         {(update) => {
           return (
             <div className="flex w-full" key={update.id}>
               {update.status === "draft" && (
-                <DraftUpdate {...update} organizationSlug={organizationSlug} />
+                <DraftUpdate
+                  {...update}
+                  organizationSlug={organizationSlug}
+                  organizationId={organizationId}
+                />
               )}
               {update.status === "scheduled" && <ScheduledUpdate {...update} />}
               {update.status === "published" && <PublishedUpdate {...update} />}
+              {update.status === "archived" && (
+                <ArchivedUpdate
+                  {...update}
+                  organizationSlug={organizationSlug}
+                  organizationId={organizationId}
+                />
+              )}
             </div>
           );
         }}
       </GroupBy>
+      {archivedPosts.length > 0 && (
+        <Clickable.Root
+          variant="tertiary"
+          className="flex items-center justify-center gap-2 rounded-none px-6 py-4"
+          onClick={() => setArchivedVisible((prev) => !prev)}
+        >
+          {archivedVisible ? (
+            <Text.Root size="sm" color="muted" className="text-center">
+              Click here to hide archived updates
+            </Text.Root>
+          ) : (
+            <Text.Root size="sm" color="muted" className="text-center">
+              You have {archivedPosts.length} archived update
+              {archivedPosts.length === 1 ? "" : "s"}. Click here to view them
+            </Text.Root>
+          )}
+        </Clickable.Root>
+      )}
     </div>
   );
 };

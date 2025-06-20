@@ -31,7 +31,9 @@ export const post = pgTable("post", {
     .notNull()
     .references(() => organization.id, { onDelete: "cascade" }),
 
-  status: varchar("status", { enum: ["draft", "scheduled", "published"] })
+  status: varchar("status", {
+    enum: ["archived", "draft", "scheduled", "published"],
+  })
     .default("draft")
     .notNull(),
   title: text("title").notNull(),
@@ -44,4 +46,5 @@ export const post = pgTable("post", {
     .notNull()
     .defaultNow(),
   publishedAt: timestamp("published_at", { withTimezone: true }),
+  archivedAt: timestamp("archived_at", { withTimezone: true }),
 });

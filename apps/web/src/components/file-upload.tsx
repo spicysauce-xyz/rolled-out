@@ -50,6 +50,10 @@ export const FileUpload: React.FC<FileUploadProps> = ({
 
       const json = await response.json();
 
+      if (!json.success) {
+        throw json.error;
+      }
+
       return json.data;
     },
   });

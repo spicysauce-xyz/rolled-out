@@ -95,8 +95,11 @@ function RouteComponent() {
       await publishPostMutation.mutateAsync();
       Toaster.success("Post published", { id: toastId });
       handleGoBack();
-    } catch {
-      Toaster.error("Failed to publish post", { id: toastId });
+    } catch (error) {
+      Toaster.error("Error", {
+        id: toastId,
+        description: error instanceof Error ? error.message : "Unknown error",
+      });
     }
   };
 

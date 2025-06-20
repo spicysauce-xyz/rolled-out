@@ -55,10 +55,6 @@ function RouteComponent() {
         },
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to create new draft");
-      }
-
       const json = await response.json();
 
       if (!json.success) {
@@ -66,14 +62,18 @@ function RouteComponent() {
       }
 
       const post = json.data;
+
       navigate({
         to: "/$organizationSlug/editor/$id",
         params: { id: post.id, organizationSlug: organizationSlug },
       });
 
       Toaster.success("Successfully created new draft", { id });
-    } catch {
-      Toaster.error("Failed to create new draft", { id });
+    } catch (error) {
+      Toaster.error("Error", {
+        description: error instanceof Error ? error.message : "Unknown error",
+        id,
+      });
     }
   };
 
@@ -115,6 +115,7 @@ function RouteComponent() {
                 <UpdatesList
                   data={data || []}
                   organizationSlug={organizationSlug}
+                  organizationId={organization.id}
                 />
               </Transition.Item>
             ))}

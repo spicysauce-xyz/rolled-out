@@ -130,7 +130,10 @@ export const TagInput: React.FC<TagInputProps> = ({ provider }) => {
           });
         },
         onError: (error) => {
-          Toaster.error(error.message, { id: toastId });
+          Toaster.error("Error", {
+            description: error.message,
+            id: toastId,
+          });
         },
       });
     },

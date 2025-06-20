@@ -1,10 +1,8 @@
-import { Database, schema } from "@database";
 import { organizationFactory } from "@domain/organizaiton/organization.factory";
 import { zValidator } from "@hono/zod-validator";
 import { handleValidationError, notOk, ok } from "@utils/network";
-import { desc, eq } from "drizzle-orm";
-import { DatabaseError } from "pg";
 import z from "zod";
+import { TagService } from "./tag.service";
 
 export const TagHandler = organizationFactory
   .createApp()
@@ -25,37 +23,23 @@ export const TagHandler = organizationFactory
 
       const { label } = c.req.valid("json");
 
-      try {
-        const tag = await Database.insert(schema.tag)
-          .values({ label, organizationId: member.organizationId })
-          .returning();
+      const tagResult = await TagService.createTag(member, label);
 
-        return ok(c, tag);
-      } catch (error) {
-        if (error instanceof DatabaseError) {
-          if (error.constraint === "tag_organization_id_label_unique") {
-            return notOk(
-              c,
-              {
-                code: "TAG_ALREADY_EXISTS",
-                message: "Tag already exists",
-              },
-              400,
-            );
-          }
-        }
-
-        throw error;
+      if (tagResult.isErr()) {
+        return notOk(c, { message: tagResult.error.message }, 500);
       }
+
+      return ok(c, tagResult.value);
     },
   )
   .get("/", async (c) => {
     const member = c.get("member");
 
-    const tags = await Database.query.tag.findMany({
-      where: eq(schema.tag.organizationId, member.organizationId),
-      orderBy: [desc(schema.tag.createdAt)],
-    });
+    const tagsResult = await TagService.getTags(member);
 
-    return ok(c, tags);
+    if (tagsResult.isErr()) {
+      return notOk(c, { message: tagsResult.error.message }, 500);
+    }
+
+    return ok(c, tagsResult.value);
   });
