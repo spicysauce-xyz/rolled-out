@@ -1,46 +1,30 @@
-import { Database, schema } from "@database";
-import { and, count, eq, sql } from "drizzle-orm";
-import { ResultAsync, errAsync, okAsync } from "neverthrow";
+import type { schema } from "@database";
+import { errAsync, okAsync } from "neverthrow";
+import { PostsRepository } from "./post.repository";
 
 export const PostsService = {
   createPost: async (
     member: { organizationId: string; userId: string },
     data?: Omit<typeof schema.post.$inferInsert, "order" | "title" | "organizationId">,
   ) => {
-    const countResult = await ResultAsync.fromPromise(
-      Database.select({ count: count() })
-        .from(schema.post)
-        .where(eq(schema.post.organizationId, member.organizationId)),
-      (error) => new Error("Failed to get posts count", { cause: error }),
-    );
+    const countResult = await PostsRepository.getPostsCount(member.organizationId);
 
     if (countResult.isErr()) {
       return errAsync(countResult.error);
     }
 
-    const insertResult = await ResultAsync.fromPromise(
-      Database.insert(schema.post)
-        .values({
-          ...(data ?? {}),
-          title: "Untitled Update",
-          order: countResult.value[0].count + 1,
-          organizationId: member.organizationId,
-        })
-        .returning(),
-      (error) => new Error("Failed to create post", { cause: error }),
-    );
+    const insertResult = await PostsRepository.createPost({
+      ...(data ?? {}),
+      title: "Untitled Update",
+      order: countResult.value[0].count + 1,
+      organizationId: member.organizationId,
+    });
 
     if (insertResult.isErr()) {
       return errAsync(insertResult.error);
     }
 
-    const editorResult = await ResultAsync.fromPromise(
-      Database.insert(schema.editor).values({
-        postId: insertResult.value[0].id,
-        userId: member.userId,
-      }),
-      (error) => new Error("Failed to create editor for post", { cause: error }),
-    );
+    const editorResult = await PostsRepository.createEditor(insertResult.value[0].id, member.userId);
 
     if (editorResult.isErr()) {
       return errAsync(editorResult.error);
@@ -48,13 +32,9 @@ export const PostsService = {
 
     return okAsync(insertResult.value[0]);
   },
+
   getPostById: async (member: { organizationId: string }, id: string) => {
-    const result = await ResultAsync.fromPromise(
-      Database.query.post.findFirst({
-        where: and(eq(schema.post.id, id), eq(schema.post.organizationId, member.organizationId)),
-      }),
-      (error) => new Error("Failed to get post by id", { cause: error }),
-    );
+    const result = await PostsRepository.findPostById(id, member.organizationId);
 
     if (result.isErr()) {
       return errAsync(result.error);
@@ -68,72 +48,17 @@ export const PostsService = {
 
     return okAsync(post);
   },
+
   getPostsFromOrganization: async (member: { organizationId: string }) => {
-    return ResultAsync.fromPromise(
-      Database.query.post.findMany({
-        columns: {
-          id: true,
-          title: true,
-          status: true,
-          order: true,
-          createdAt: true,
-          updatedAt: true,
-          publishedAt: true,
-          archivedAt: true,
-        },
-        where: eq(schema.post.organizationId, member.organizationId),
-        with: {
-          editors: {
-            with: {
-              user: {
-                columns: {
-                  id: true,
-                  name: true,
-                  image: true,
-                },
-              },
-            },
-          },
-          tags: {
-            with: {
-              tag: {
-                columns: {
-                  id: true,
-                  label: true,
-                },
-              },
-            },
-          },
-        },
-        orderBy: [
-          sql`CASE
-        WHEN ${schema.post.status} = 'draft' THEN 1
-        WHEN ${schema.post.status} = 'scheduled' THEN 2
-        WHEN ${schema.post.status} = 'published' THEN 3
-        WHEN ${schema.post.status} = 'archived' THEN 4
-      END`,
-          sql`CASE
-        WHEN ${schema.post.status} = 'draft' THEN ${schema.post.createdAt}
-        WHEN ${schema.post.status} = 'scheduled' THEN ${schema.post.updatedAt}
-        WHEN ${schema.post.status} = 'published' THEN ${schema.post.updatedAt}
-        WHEN ${schema.post.status} = 'archived' THEN ${schema.post.archivedAt}
-        END DESC`,
-        ],
-      }),
-      (error) => new Error("Failed to get posts from organization", { cause: error }),
-    );
+    return PostsRepository.findPostsByOrganization(member.organizationId);
   },
+
   updatePostStatusById: async (
     member: { organizationId: string },
     id: string,
     status: "published" | "archived" | "draft",
   ) => {
-    const postResult = await ResultAsync.fromPromise(
-      Database.query.post.findFirst({
-        where: and(eq(schema.post.id, id), eq(schema.post.organizationId, member.organizationId)),
-      }),
-      (error) => new Error("Failed to get post by id", { cause: error }),
-    );
+    const postResult = await PostsRepository.findPostById(id, member.organizationId);
 
     if (postResult.isErr()) {
       return errAsync(postResult.error);
@@ -149,18 +74,7 @@ export const PostsService = {
       return okAsync(post);
     }
 
-    const updatedPostResult = await ResultAsync.fromPromise(
-      Database.update(schema.post)
-        .set({
-          status,
-          ...(status === "published" ? { status, publishedAt: new Date() } : {}),
-          ...(status === "archived" ? { status, archivedAt: new Date() } : {}),
-          ...(status === "draft" ? { status, publishedAt: null, archivedAt: null } : {}),
-        })
-        .where(and(eq(schema.post.id, id), eq(schema.post.organizationId, member.organizationId)))
-        .returning(),
-      (error) => new Error("Failed to update post status", { cause: error }),
-    );
+    const updatedPostResult = await PostsRepository.updatePostStatus(id, member.organizationId, status);
 
     if (updatedPostResult.isErr()) {
       return errAsync(updatedPostResult.error);
