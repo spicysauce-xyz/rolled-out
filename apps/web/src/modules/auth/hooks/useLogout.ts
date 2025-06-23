@@ -2,13 +2,15 @@ import * as Confirmer from "@components/feedback/confirmer";
 import { sessionQuery } from "@lib/api/queries";
 import { authClient } from "@lib/auth";
 import { Toaster } from "@mono/ui";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
 import { LogOutIcon } from "lucide-react";
 
 export const useLogout = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
+
+  useQuery(sessionQuery());
 
   const signOutMutation = useMutation({
     mutationFn: async () => {

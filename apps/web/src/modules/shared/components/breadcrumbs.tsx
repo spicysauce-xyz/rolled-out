@@ -1,5 +1,6 @@
 import * as Transition from "@components/transition";
-import { authClient } from "@lib/auth";
+import { organizationsQuery } from "@lib/api/queries";
+import type { authClient } from "@lib/auth";
 import { Avatar, DropdownMenu, LinkButton, Skeleton, Text } from "@mono/ui";
 import { useDisclosure } from "@mono/ui/hooks";
 import { cn } from "@mono/ui/utils";
@@ -23,18 +24,7 @@ const OrganizationSelector = ({ organization }: OrganizationSelectorProps) => {
   const navigate = useNavigate();
   const router = useRouter();
 
-  const organizationsQuery = useQuery({
-    queryKey: ["organizations"],
-    queryFn: async () => {
-      const response = await authClient.organization.list();
-
-      if (response.error) {
-        throw response.error;
-      }
-
-      return response.data;
-    },
-  });
+  const organizations = useQuery(organizationsQuery());
 
   const handleUpdateActiveOrganization = async (organizationSlug: string) => {
     const lastMatch = _.last(router.state.matches);
@@ -72,7 +62,7 @@ const OrganizationSelector = ({ organization }: OrganizationSelectorProps) => {
         </DropdownMenu.Trigger>
         <DropdownMenu.Content align="start">
           <Transition.Root>
-            {match(organizationsQuery)
+            {match(organizations)
               .with({ isPending: true }, () => (
                 <Transition.Item key="skeleton" className="flex flex-col gap-1">
                   <Skeleton.Root className="mx-2 h-8.5 w-40 rounded-sm" />

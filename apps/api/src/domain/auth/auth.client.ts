@@ -18,6 +18,11 @@ export const auth = createServerAuth({
     return;
   },
   sendMagicLinkEmail: async (data) => {
+    if (process.env.NODE_ENV !== "production") {
+      console.log("Magic link email sent:", data.email, data.url);
+      return;
+    }
+
     // TODO: Throw proper error (return error json) if email fails to send
     await Email.sendMagicLinkEmail({
       to: data.email,

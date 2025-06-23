@@ -13,6 +13,7 @@ export const sessionQuery = () =>
 
       return response;
     },
+    staleTime: 1000 * 30,
   });
 
 export const organizationsQuery = () =>
@@ -27,6 +28,7 @@ export const organizationsQuery = () =>
 
       return response.data;
     },
+    staleTime: 1000 * 30,
   });
 
 export const organizationQuery = (id: string) =>
