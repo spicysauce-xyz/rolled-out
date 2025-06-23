@@ -8,10 +8,6 @@ import { z } from "zod";
 
 export const Route = createFileRoute("/_guest-only/login")({
   component: Login,
-  // TODO: Make a use of this
-  validateSearch: z.object({
-    redirect: z.string().optional().catch(""),
-  }),
 });
 
 function Login() {
