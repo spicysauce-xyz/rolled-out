@@ -8,3 +8,5 @@ export * from "./user.model";
 export * from "./verification.model";
 export * from "./editor.model";
 export * from "./tag.model";
+export * from "./post-tag.model";
+export * from "./relations";

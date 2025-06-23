@@ -62,7 +62,7 @@ const DraftUpdate: React.FC<DraftUpdateProps> = ({
           <UpdateEntry.Title title={title} />
         </UpdateEntry.Group>
         <UpdateEntry.Tags
-          tags={tags.map((tag) => tag.label)}
+          tags={tags.map(({ tag }) => tag.label)}
           className="flex-1"
         />
         <UpdateEntry.Meta>
@@ -137,7 +137,7 @@ const PublishedUpdate: React.FC<Update> = ({
         <UpdateEntry.Title title={title} />
       </UpdateEntry.Group>
       <UpdateEntry.Tags
-        tags={tags.map((tag) => tag.label)}
+        tags={tags.map(({ tag }) => tag.label)}
         className="flex-1"
       />
       <UpdateEntry.Meta>
@@ -240,7 +240,7 @@ const ArchivedUpdate: React.FC<ArchivedUpdateProps> = ({
           <UpdateEntry.Title title={title} />
         </UpdateEntry.Group>
         <UpdateEntry.Tags
-          tags={tags.map((tag) => tag.label)}
+          tags={tags.map(({ tag }) => tag.label)}
           className="flex-1"
         />
         <UpdateEntry.Meta>

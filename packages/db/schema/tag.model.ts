@@ -1,13 +1,5 @@
-import {
-  pgTable,
-  primaryKey,
-  text,
-  timestamp,
-  unique,
-  uuid,
-} from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, unique, uuid } from "drizzle-orm/pg-core";
 import { organization } from "./organization.model";
-import { post } from "./post.model";
 
 export const tag = pgTable(
   "tag",
@@ -27,17 +19,4 @@ export const tag = pgTable(
       .defaultNow(),
   },
   (tag) => [unique().on(tag.organizationId, tag.label)],
-);
-
-export const postTag = pgTable(
-  "post_tag",
-  {
-    postId: uuid("post_id")
-      .references(() => post.id, { onDelete: "cascade" })
-      .notNull(),
-    tagId: uuid("tag_id")
-      .references(() => tag.id, { onDelete: "cascade" })
-      .notNull(),
-  },
-  (postTag) => [primaryKey({ columns: [postTag.postId, postTag.tagId] })],
 );

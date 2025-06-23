@@ -92,7 +92,7 @@ function RouteComponent() {
                   </Text.Root>
                 )}
                 <div className="flex flex-wrap justify-end gap-2">
-                  {post.tags.map((tag) => (
+                  {post.tags.map(({ tag }) => (
                     <Tag.Root key={tag.id} className="h-7.5 rounded-sm px-2">
                       {tag.label}
                     </Tag.Root>
@@ -114,11 +114,13 @@ function RouteComponent() {
                     {post.editors.map((editor) => (
                       <div className="flex items-center gap-1" key={editor.id}>
                         <Avatar.Root className="size-4 rounded-sm">
-                          <Avatar.Image src={editor.image || ""} />
-                          <Avatar.Fallback>{editor.name[0]}</Avatar.Fallback>
+                          <Avatar.Image src={editor.user.image || ""} />
+                          <Avatar.Fallback>
+                            {editor.user.name[0]}
+                          </Avatar.Fallback>
                         </Avatar.Root>
                         <Text.Root size="sm" weight="medium">
-                          {editor.name}
+                          {editor.user.name}
                         </Text.Root>
                       </div>
                     ))}

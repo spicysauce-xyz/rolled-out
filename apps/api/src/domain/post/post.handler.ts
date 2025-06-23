@@ -9,9 +9,13 @@ export const PostHandler = organizationFactory
   .get("/", async (c) => {
     const member = c.get("member");
 
-    const posts = await PostsService.getPostsFromOrganization(member);
+    const postsResult = await PostsService.getPostsFromOrganization(member);
 
-    return ok(c, posts);
+    if (postsResult.isErr()) {
+      return notOk(c, { message: postsResult.error.message }, 500);
+    }
+
+    return ok(c, postsResult.value);
   })
 
   .post("/", zValidator("json", z.object({ title: z.string().optional() })), async (c) => {

@@ -102,11 +102,11 @@ const UpdateEntryMeta: React.FC<React.PropsWithChildren> = ({ children }) => {
 };
 
 interface UpdateEntryEditorsProps {
-  editors: { id: string; name: string; image: string | null }[];
+  editors: { user: { id: string; name: string; image: string | null } }[];
 }
 
 const UpdateEntryEditors: React.FC<UpdateEntryEditorsProps> = ({ editors }) => {
-  const creator = editors[0];
+  const creator = editors[0].user;
   const otherEditors = editors.slice(1);
 
   return (
@@ -137,7 +137,7 @@ const UpdateEntryEditors: React.FC<UpdateEntryEditorsProps> = ({ editors }) => {
       </div>
       <Tooltip.Content>
         <Tooltip.Title>
-          {otherEditors.map((editor) => editor.name).join(", ")}
+          {otherEditors.map((editor) => editor.user.name).join(", ")}
         </Tooltip.Title>
       </Tooltip.Content>
     </Tooltip.Root>

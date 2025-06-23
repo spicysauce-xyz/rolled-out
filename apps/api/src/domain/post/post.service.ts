@@ -68,63 +68,60 @@ export const PostsService = {
 
     return okAsync(post);
   },
-  // TODO: do something
   getPostsFromOrganization: async (member: { organizationId: string }) => {
-    const posts = await Database.select({
-      id: schema.post.id,
-      order: schema.post.order,
-      title: schema.post.title,
-      status: schema.post.status,
-      editors: sql<Pick<typeof schema.user.$inferSelect, "id" | "name" | "image">[]>`
-        coalesce(
-          jsonb_agg(
-            DISTINCT jsonb_build_object(
-              'id',         ${schema.user.id},
-              'name',       ${schema.user.name},
-              'image',  ${schema.user.image}
-            )
-          ) filter (where ${schema.user.id} is not null),
-          '[]'::jsonb
-        )
-      `.as("editors"),
-      tags: sql<Pick<typeof schema.tag.$inferSelect, "id" | "label">[]>`
-        coalesce(
-          jsonb_agg(
-            DISTINCT jsonb_build_object(
-              'id',         ${schema.tag.id},
-              'label',       ${schema.tag.label}
-            )
-          ) filter (where ${schema.tag.id} is not null),
-          '[]'::jsonb
-        )
-      `.as("tags"),
-      createdAt: schema.post.createdAt,
-      updatedAt: schema.post.updatedAt,
-      publishedAt: schema.post.publishedAt,
-    })
-      .from(schema.post)
-      .where(eq(schema.post.organizationId, member.organizationId))
-      .leftJoin(schema.editor, eq(schema.editor.postId, schema.post.id))
-      .leftJoin(schema.user, eq(schema.editor.userId, schema.user.id))
-      .leftJoin(schema.postTag, eq(schema.post.id, schema.postTag.postId))
-      .leftJoin(schema.tag, eq(schema.postTag.tagId, schema.tag.id))
-      .orderBy(
-        sql`CASE
-          WHEN ${schema.post.status} = 'draft' THEN 1
-          WHEN ${schema.post.status} = 'scheduled' THEN 2
-          WHEN ${schema.post.status} = 'published' THEN 3
-          WHEN ${schema.post.status} = 'archived' THEN 4
-        END`,
-        sql`CASE
-          WHEN ${schema.post.status} = 'draft' THEN ${schema.post.createdAt}
-          WHEN ${schema.post.status} = 'scheduled' THEN ${schema.post.updatedAt}
-          WHEN ${schema.post.status} = 'published' THEN ${schema.post.updatedAt}
-          WHEN ${schema.post.status} = 'archived' THEN ${schema.post.archivedAt}
+    return ResultAsync.fromPromise(
+      Database.query.post.findMany({
+        columns: {
+          id: true,
+          title: true,
+          status: true,
+          order: true,
+          createdAt: true,
+          updatedAt: true,
+          publishedAt: true,
+          archivedAt: true,
+        },
+        where: eq(schema.post.organizationId, member.organizationId),
+        with: {
+          editors: {
+            with: {
+              user: {
+                columns: {
+                  id: true,
+                  name: true,
+                  image: true,
+                },
+              },
+            },
+          },
+          tags: {
+            with: {
+              tag: {
+                columns: {
+                  id: true,
+                  label: true,
+                },
+              },
+            },
+          },
+        },
+        orderBy: [
+          sql`CASE
+        WHEN ${schema.post.status} = 'draft' THEN 1
+        WHEN ${schema.post.status} = 'scheduled' THEN 2
+        WHEN ${schema.post.status} = 'published' THEN 3
+        WHEN ${schema.post.status} = 'archived' THEN 4
+      END`,
+          sql`CASE
+        WHEN ${schema.post.status} = 'draft' THEN ${schema.post.createdAt}
+        WHEN ${schema.post.status} = 'scheduled' THEN ${schema.post.updatedAt}
+        WHEN ${schema.post.status} = 'published' THEN ${schema.post.updatedAt}
+        WHEN ${schema.post.status} = 'archived' THEN ${schema.post.archivedAt}
         END DESC`,
-      )
-      .groupBy(schema.post.id);
-
-    return posts;
+        ],
+      }),
+      (error) => new Error("Failed to get posts from organization", { cause: error }),
+    );
   },
   updatePostStatusById: async (
     member: { organizationId: string },
