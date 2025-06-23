@@ -17,16 +17,6 @@ export const PostsRepository = {
     );
   },
 
-  createEditor: async (postId: string, userId: string) => {
-    return ResultAsync.fromPromise(
-      Database.insert(schema.editor).values({
-        postId,
-        userId,
-      }),
-      (error) => new Error("Failed to create editor for post", { cause: error }),
-    );
-  },
-
   findPostById: async (id: string, organizationId: string) => {
     return ResultAsync.fromPromise(
       Database.query.post.findFirst({

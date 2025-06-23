@@ -1,4 +1,5 @@
 import type { schema } from "@database";
+import { EditorRepository } from "@domain/editor";
 import { errAsync, okAsync } from "neverthrow";
 import { PostsRepository } from "./post.repository";
 
@@ -24,7 +25,7 @@ export const PostsService = {
       return errAsync(insertResult.error);
     }
 
-    const editorResult = await PostsRepository.createEditor(insertResult.value[0].id, member.userId);
+    const editorResult = await EditorRepository.createEditor(insertResult.value[0].id, member.userId);
 
     if (editorResult.isErr()) {
       return errAsync(editorResult.error);
