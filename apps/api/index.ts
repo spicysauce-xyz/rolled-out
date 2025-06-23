@@ -13,7 +13,7 @@ import { PostHandler } from "./src/domain/post";
 
 export const app = new Hono()
   .use(async (_, next) => {
-    if (process.env.NODE_ENV === "development") {
+    if (process.env.NODE_ENV !== "production") {
       await new Promise((resolve) =>
         setTimeout(resolve, Math.random() * 1000 + 250),
       );
