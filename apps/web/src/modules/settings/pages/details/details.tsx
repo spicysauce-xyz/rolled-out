@@ -1,15 +1,15 @@
 import * as Card from "@components/card";
 import { FileUpload } from "@components/file-upload";
-import { organizationQuery, organizationsQuery } from "@lib/api/queries";
-import { authClient } from "@lib/auth";
+import { organizationQuery } from "@lib/api/queries";
 import useAppForm from "@lib/form";
-import { Avatar, Button, Input, Label, Text, Toaster } from "@mono/ui";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Avatar, Button, Input, Label, Text } from "@mono/ui";
+import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { Loader2Icon, SaveIcon } from "lucide-react";
-import { useEffect } from "react";
 import { match } from "ts-pattern";
 import { z } from "zod";
+import { useCheckSlugMutation } from "./hooks/useCheckSlugMutation";
+import { useUpdateOrganizationMutation } from "./hooks/useUpdateOrganizationMutation";
 
 export const Route = createFileRoute(
   "/_authorized/_has-organization/$organizationSlug/settings/details",
@@ -18,7 +18,6 @@ export const Route = createFileRoute(
 });
 
 function RouteComponent() {
-  const queryClient = useQueryClient();
   const navigate = Route.useNavigate();
   const router = useRouter();
   const { organization } = Route.useRouteContext();
@@ -33,41 +32,9 @@ function RouteComponent() {
       },
     });
 
-  const updateOrganizationMutation = useMutation({
-    mutationFn: async (data: {
-      name: string;
-      slug: string;
-      logo: string | undefined;
-      organizationId: string;
-    }) => {
-      const response = await authClient.organization.update({
-        organizationId: data.organizationId,
-        data: {
-          name: data.name,
-          slug: data.slug,
-          logo: data.logo,
-        },
-      });
+  const checkSlugMutation = useCheckSlugMutation();
 
-      if (response.error) {
-        throw response.error;
-      }
-
-      return response.data;
-    },
-  });
-
-  const checkSlugMutation = useMutation({
-    mutationFn: async (slug: string) => {
-      const response = await authClient.organization.checkSlug({ slug });
-
-      if (response.error) {
-        throw response.error;
-      }
-
-      return response.data;
-    },
-  });
+  const updateOrganizationMutation = useUpdateOrganizationMutation();
 
   const form = useAppForm({
     defaultValues: {
@@ -83,44 +50,31 @@ function RouteComponent() {
       }),
     },
     onSubmit: async ({ value }) => {
-      try {
-        await updateOrganizationMutation.mutateAsync({
+      await updateOrganizationMutation.mutateAsync(
+        {
           name: value.name,
           slug: value.slug,
           logo: value.logo || undefined,
           organizationId: organization.id,
-        });
-
-        await queryClient.refetchQueries(organizationQuery(organization.id));
-
-        await queryClient.refetchQueries(organizationsQuery());
-
-        if (value.slug !== organization.slug) {
-          navigate({
-            to: ".",
-            replace: true,
-            params: {
-              organizationSlug: value.slug,
-            },
-          });
-        } else {
-          await router.invalidate({ sync: true });
-        }
-
-        Toaster.success("Organization updated successfully!");
-      } catch {
-        Toaster.error("Failed to update organization");
-      }
+        },
+        {
+          onSuccess: async () => {
+            if (value.slug !== organization.slug) {
+              navigate({
+                to: ".",
+                replace: true,
+                params: {
+                  organizationSlug: value.slug,
+                },
+              });
+            } else {
+              await router.invalidate({ sync: true });
+            }
+          },
+        },
+      );
     },
   });
-
-  useEffect(() => {
-    form.reset({
-      name: organization.name,
-      slug: organization.slug,
-      logo: organization.logo || null,
-    });
-  }, [organization, form]);
 
   return (
     <Card.Root>
@@ -200,7 +154,9 @@ function RouteComponent() {
                 <Input.Root
                   className="w-full"
                   isInvalid={field.state.meta.errors.length > 0}
-                  isDisabled={isOrganizationQueryPending}
+                  isDisabled={
+                    isOrganizationQueryPending || form.state.isSubmitting
+                  }
                 >
                   <Input.Wrapper>
                     <Input.Field
@@ -257,7 +213,9 @@ function RouteComponent() {
                 <Input.Root
                   className="w-full"
                   isInvalid={field.state.meta.errors.length > 0}
-                  isDisabled={isOrganizationQueryPending}
+                  isDisabled={
+                    isOrganizationQueryPending || form.state.isSubmitting
+                  }
                 >
                   <Input.Wrapper>
                     <Input.Field

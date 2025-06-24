@@ -1,16 +1,18 @@
-import { authClient } from "@lib/auth";
 import useAppForm from "@lib/form";
-import { Button, Input, Text, Toaster } from "@mono/ui";
-import { useMutation } from "@tanstack/react-query";
+import { Button, Input, Text } from "@mono/ui";
 import { createFileRoute } from "@tanstack/react-router";
 import { MailIcon } from "lucide-react";
 import { z } from "zod";
+import { useSendMagicLinkMutation } from "../hooks/useSendMagicLinkMutation";
+import { useSocialLoginMutation } from "../hooks/useSocialLoginMutation";
 
 export const Route = createFileRoute("/_guest-only/login")({
   component: Login,
 });
 
 function Login() {
+  const sendMagicLinkMutation = useSendMagicLinkMutation();
+
   const form = useAppForm({
     defaultValues: {
       email: "",
@@ -20,44 +22,17 @@ function Login() {
         email: z.string().email("Invalid email address"),
       }),
     },
-    onSubmit: async ({ value }) => {
-      await authClient.signIn.magicLink(
-        {
-          email: value.email,
-          callbackURL: window.location.href,
-        },
-        {
-          onSuccess: async () => {
-            Toaster.success("Magic link sent");
-          },
-          onError: (ctx) => {
-            Toaster.error("Error", { description: ctx.error.message });
-          },
-        },
-      );
-    },
+    onSubmit: async ({ value }) =>
+      sendMagicLinkMutation.mutateAsync({
+        email: value.email,
+        callbackURL: window.location.href,
+      }),
   });
 
-  const socialLogin = useMutation({
-    mutationFn: async (data: {
-      provider: "google" | "github";
-      callbackURL: string;
-    }) => {
-      const response = await authClient.signIn.social({
-        provider: data.provider,
-        callbackURL: data.callbackURL,
-      });
-
-      if (response.error) {
-        throw response.error;
-      }
-
-      return response.data;
-    },
-  });
+  const socialLoginMutation = useSocialLoginMutation();
 
   const handleSocialLogin = async (provider: "google" | "github") => {
-    await socialLogin.mutateAsync({
+    await socialLoginMutation.mutateAsync({
       provider,
       callbackURL: window.location.href,
     });
@@ -140,10 +115,10 @@ function Login() {
         <div className="flex w-full flex-col gap-4">
           <Button.Root
             isLoading={
-              socialLogin.isPending &&
-              socialLogin.variables.provider === "google"
+              socialLoginMutation.isPending &&
+              socialLoginMutation.variables.provider === "google"
             }
-            isDisabled={socialLogin.isPending}
+            isDisabled={socialLoginMutation.isPending}
             onClick={() => handleSocialLogin("google")}
             color="neutral"
             variant="secondary"
@@ -153,10 +128,10 @@ function Login() {
           </Button.Root>
           <Button.Root
             isLoading={
-              socialLogin.isPending &&
-              socialLogin.variables.provider === "github"
+              socialLoginMutation.isPending &&
+              socialLoginMutation.variables.provider === "github"
             }
-            isDisabled={socialLogin.isPending}
+            isDisabled={socialLoginMutation.isPending}
             onClick={() => handleSocialLogin("github")}
             color="neutral"
             variant="secondary"

@@ -1,13 +1,13 @@
 import * as Card from "@components/card";
 import * as Confirmer from "@components/feedback/confirmer";
 import * as Transition from "@components/transition";
-import { authClient } from "@lib/auth";
-import { useLogout } from "@modules/auth/hooks/useLogout";
+import { sessionsQuery } from "@lib/api/queries";
+import type { authClient } from "@lib/auth";
+import { useLogoutMutation } from "@modules/auth/hooks/useLogoutMutation";
 import { useSession } from "@modules/auth/hooks/useSession";
-import { Button, Skeleton, Text, Toaster } from "@mono/ui";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Button, Skeleton, Text } from "@mono/ui";
+import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import type { Session } from "better-auth";
 import { format } from "date-fns";
 import {
   BanIcon,
@@ -18,6 +18,8 @@ import {
 } from "lucide-react";
 import { match } from "ts-pattern";
 import { UAParser } from "ua-parser-js";
+import { useTerminateOtherSessionsMutation } from "./hooks/useTerminateOtherSessionsMutation";
+import { useTerminateSessionMutation } from "./hooks/useTerminateSessionMutation";
 
 export const Route = createFileRoute(
   "/_authorized/_has-organization/$organizationSlug/settings/sessions",
@@ -26,41 +28,16 @@ export const Route = createFileRoute(
 });
 
 function RouteComponent() {
-  const queryClient = useQueryClient();
   const { data: currentSessionData } = useSession();
-  const logout = useLogout();
+  const logoutMutation = useLogoutMutation();
 
-  const sessionsQuery = useQuery({
-    queryKey: ["sessions"],
-    queryFn: async () => {
-      const response = await authClient.listSessions();
+  const sessionsData = useQuery(sessionsQuery());
 
-      if (response.error) {
-        throw response.error;
-      }
+  const terminateSessionMutation = useTerminateSessionMutation();
 
-      return response.data;
-    },
-  });
-
-  const terminateSessionMutation = useMutation({
-    mutationFn: async (data: { sessionToken: string }) => {
-      const response = await authClient.revokeSession({
-        token: data.sessionToken,
-      });
-
-      if (response.error) {
-        throw response.error;
-      }
-
-      return response.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["sessions"] });
-    },
-  });
-
-  const handleTerminateSession = async (session: Session) => {
+  const handleTerminateSession = async (
+    session: (typeof authClient.$Infer.Session)["session"],
+  ) => {
     const parser = new UAParser(session.userAgent || "");
     const browser = parser.getBrowser();
     const os = parser.getOS();
@@ -87,36 +64,12 @@ function RouteComponent() {
 
     if (!confirmed) return;
 
-    const toastId = Toaster.loading("Terminating session...");
-
-    try {
-      await terminateSessionMutation.mutateAsync({
-        sessionToken: session.token,
-      });
-      Toaster.success("Session terminated", {
-        id: toastId,
-      });
-    } catch {
-      Toaster.error("Failed to terminate session", {
-        id: toastId,
-      });
-    }
+    await terminateSessionMutation.mutateAsync({
+      sessionToken: session.token,
+    });
   };
 
-  const terminateOtherSessionsMutation = useMutation({
-    mutationFn: async () => {
-      const response = await authClient.revokeOtherSessions();
-
-      if (response.error) {
-        throw response.error;
-      }
-
-      return response.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["sessions"] });
-    },
-  });
+  const terminateOtherSessionsMutation = useTerminateOtherSessionsMutation();
 
   const handleTerminateOtherSessions = async () => {
     const confirmed = await Confirmer.confirm({
@@ -132,18 +85,23 @@ function RouteComponent() {
 
     if (!confirmed) return;
 
-    const toastId = Toaster.loading("Terminating other sessions...");
+    await terminateOtherSessionsMutation.mutateAsync();
+  };
 
-    try {
-      await terminateOtherSessionsMutation.mutateAsync();
-      Toaster.success("Other sessions terminated", {
-        id: toastId,
-      });
-    } catch {
-      Toaster.error("Failed to terminate other sessions", {
-        id: toastId,
-      });
-    }
+  const handleLogout = async () => {
+    const confirmed = await Confirmer.confirm({
+      title: "Logout",
+      description: "Are you sure you want to logout?",
+      action: {
+        icon: LogOutIcon,
+        label: "Logout",
+        color: "danger",
+      },
+    });
+
+    if (!confirmed) return;
+
+    await logoutMutation.mutateAsync();
   };
 
   return (
@@ -158,7 +116,7 @@ function RouteComponent() {
       </Card.Header>
       <Card.Content>
         <Transition.Root>
-          {match(sessionsQuery)
+          {match(sessionsData)
             .with({ isPending: true }, () => (
               <Transition.Item key="loading">
                 <div className="flex flex-col gap-4">
@@ -223,7 +181,7 @@ function RouteComponent() {
                       </div>
                       {isCurrentSession ? (
                         <Button.Root
-                          onClick={logout}
+                          onClick={handleLogout}
                           className="opacity-0 transition-[background-color,border-color,opacity] group-hover:opacity-100"
                           variant="tertiary"
                         >
@@ -251,7 +209,7 @@ function RouteComponent() {
             ))}
         </Transition.Root>
       </Card.Content>
-      {sessionsQuery.data && sessionsQuery.data.length > 1 && (
+      {sessionsData.data && sessionsData.data.length > 1 && (
         <Card.Footer>
           <Button.Root
             variant="secondary"

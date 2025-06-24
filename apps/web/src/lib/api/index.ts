@@ -24,6 +24,13 @@ export const api = hc<Api>(config.apiUrl, {
 declare module "@tanstack/react-query" {
   interface Register {
     defaultError: ApiError;
+    meta: {
+      toasts?: {
+        loading?: string;
+        success?: string;
+        error?: string;
+      };
+    };
   }
 }
 

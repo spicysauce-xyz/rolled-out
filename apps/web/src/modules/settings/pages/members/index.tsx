@@ -1,6 +1,6 @@
 import * as Card from "@components/card";
 import * as Transition from "@components/transition";
-import { authClient } from "@lib/auth";
+import { organizationQuery } from "@lib/api/queries";
 import { useHasPermission } from "@modules/shared/hooks/useHasPermission";
 import { Button } from "@mono/ui";
 import { useDisclosure } from "@mono/ui/hooks";
@@ -20,20 +20,7 @@ export const Route = createFileRoute(
 function RouteComponent() {
   const { organization, user } = Route.useRouteContext();
 
-  const organizationQuery = useQuery({
-    queryKey: ["organization", organization.id],
-    queryFn: async ({ queryKey }) => {
-      const response = await authClient.organization.getFullOrganization({
-        query: { organizationId: queryKey[1] },
-      });
-
-      if (response.error) {
-        throw response.error;
-      }
-
-      return response.data;
-    },
-  });
+  const organizationData = useQuery(organizationQuery(organization.id));
 
   const inviteMemberDialog = useDisclosure();
   const inviteMemberPermission = useHasPermission({
@@ -55,7 +42,7 @@ function RouteComponent() {
       </Card.Header>
       <Card.Content>
         <Transition.Root>
-          {match(organizationQuery)
+          {match(organizationData)
             .with({ isPending: true }, () => (
               <Transition.Item key="loading">
                 <MembersList.Skeleton />
@@ -81,7 +68,7 @@ function RouteComponent() {
         <Card.Footer>
           <Button.Root
             onClick={inviteMemberDialog.open}
-            isDisabled={organizationQuery.isPending}
+            isDisabled={organizationData.isPending}
             variant="secondary"
           >
             <Button.Icon>

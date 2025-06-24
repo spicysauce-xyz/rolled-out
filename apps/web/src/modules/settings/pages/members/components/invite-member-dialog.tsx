@@ -8,11 +8,11 @@ import {
   Select,
   Text,
 } from "@mono/ui";
-import { capitalize } from "lodash";
+import _ from "lodash";
 import { SendIcon } from "lucide-react";
 import { useEffect } from "react";
 import { z } from "zod";
-import { useInviteMember } from "../hooks/useInviteMember";
+import { useInviteMemberMutation } from "../hooks/useInviteMemberMutation";
 
 interface InviteMemberDialogProps {
   isOpen: boolean;
@@ -25,7 +25,11 @@ export const InviteMemberDialog: React.FC<InviteMemberDialogProps> = ({
   onOpenChange,
   organizationId,
 }) => {
-  const inviteMember = useInviteMember();
+  const inviteMemberMutation = useInviteMemberMutation({
+    onSuccess: () => {
+      onOpenChange(false);
+    },
+  });
 
   const form = useAppForm({
     defaultValues: {
@@ -38,17 +42,12 @@ export const InviteMemberDialog: React.FC<InviteMemberDialogProps> = ({
         role: z.enum(["member", "admin", "owner"]),
       }),
     },
-    onSubmit: async ({ value }) => {
-      const invitation = await inviteMember(
+    onSubmit: async ({ value }) =>
+      inviteMemberMutation.mutateAsync({
         organizationId,
-        value.email,
-        value.role,
-      );
-
-      if (invitation) {
-        onOpenChange(false);
-      }
-    },
+        email: value.email,
+        role: value.role,
+      }),
   });
 
   useEffect(() => {
@@ -132,7 +131,7 @@ export const InviteMemberDialog: React.FC<InviteMemberDialogProps> = ({
                         <Select.Item key={role} value={role}>
                           <Select.ItemText>
                             <Text.Root size="sm" weight="medium">
-                              {capitalize(role)}
+                              {_.capitalize(role)}
                             </Text.Root>
                           </Select.ItemText>
                         </Select.Item>

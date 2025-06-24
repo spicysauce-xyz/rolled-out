@@ -1,7 +1,9 @@
+import * as Confirmer from "@components/feedback/confirmer";
 import { GroupBy } from "@components/group-by";
 import * as UpdateEntry from "@components/update-entry";
-import type { SuccessResponse, api } from "@lib/api";
-import { useUpdateManager } from "@modules/dashboard/hooks/useUpdateManager";
+import { useArchiveUpdateMutation } from "@modules/dashboard/hooks/useArchiveUpdateMutation";
+import { useUnarchiveUpdateMutation } from "@modules/dashboard/hooks/useUnarchiveUpdateMutation";
+import type { Update } from "@modules/dashboard/types";
 import {
   Clickable,
   DropdownMenu,
@@ -11,7 +13,6 @@ import {
   Tooltip,
 } from "@mono/ui";
 import { Link } from "@tanstack/react-router";
-import type { InferResponseType } from "hono/client";
 import {
   ArchiveIcon,
   CircleCheckIcon,
@@ -26,12 +27,6 @@ import {
 } from "lucide-react";
 import type React from "react";
 import { useMemo, useState } from "react";
-
-type Update = SuccessResponse<
-  InferResponseType<
-    (typeof api.organizations)[":organizationId"]["posts"]["$get"]
-  >
->[number];
 
 interface DraftUpdateProps extends Update {
   organizationSlug: string;
@@ -49,7 +44,28 @@ const DraftUpdate: React.FC<DraftUpdateProps> = ({
   organizationSlug,
   organizationId,
 }) => {
-  const { archiveUpdate } = useUpdateManager(id, organizationId);
+  const archiveUpdateMutation = useArchiveUpdateMutation();
+
+  const handleArchiveUpdate = async () => {
+    const confirmed = await Confirmer.confirm({
+      title: "Archive Update",
+      description:
+        "Are you sure you want to archive this update? This update will be moved to the archived section.",
+      action: {
+        label: "Archive",
+        icon: ArchiveIcon,
+      },
+    });
+
+    if (!confirmed) {
+      return;
+    }
+
+    await archiveUpdateMutation.mutateAsync({
+      organizationId,
+      id,
+    });
+  };
 
   return (
     <UpdateEntry.Root asChild>
@@ -86,7 +102,7 @@ const DraftUpdate: React.FC<DraftUpdateProps> = ({
               e.preventDefault();
             }}
           >
-            <DropdownMenu.Item onClick={archiveUpdate}>
+            <DropdownMenu.Item onClick={handleArchiveUpdate}>
               <DropdownMenu.ItemIcon>
                 <ArchiveIcon />
               </DropdownMenu.ItemIcon>
@@ -227,7 +243,28 @@ const ArchivedUpdate: React.FC<ArchivedUpdateProps> = ({
   organizationSlug,
   organizationId,
 }) => {
-  const { unarchiveUpdate } = useUpdateManager(id, organizationId);
+  const unarchiveUpdateMutation = useUnarchiveUpdateMutation();
+
+  const handleUnarchiveUpdate = async () => {
+    const confirmed = await Confirmer.confirm({
+      title: "Unarchive Update",
+      description:
+        "Are you sure you want to unarchive this update? This update will be moved back to the drafts section.",
+      action: {
+        label: "Unarchive",
+        icon: ArchiveIcon,
+      },
+    });
+
+    if (!confirmed) {
+      return;
+    }
+
+    await unarchiveUpdateMutation.mutateAsync({
+      organizationId,
+      id,
+    });
+  };
 
   return (
     <UpdateEntry.Root asChild>
@@ -264,7 +301,7 @@ const ArchivedUpdate: React.FC<ArchivedUpdateProps> = ({
               e.preventDefault();
             }}
           >
-            <DropdownMenu.Item onClick={unarchiveUpdate}>
+            <DropdownMenu.Item onClick={handleUnarchiveUpdate}>
               <DropdownMenu.ItemIcon>
                 <ArchiveIcon />
               </DropdownMenu.ItemIcon>

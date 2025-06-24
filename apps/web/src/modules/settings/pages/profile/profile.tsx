@@ -1,14 +1,14 @@
 import * as Card from "@components/card";
 import { FileUpload } from "@components/file-upload";
 import { sessionQuery } from "@lib/api/queries";
-import { authClient } from "@lib/auth";
 import useAppForm from "@lib/form";
-import { Avatar, Button, Input, Label, Text, Toaster } from "@mono/ui";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { Avatar, Button, Input, Label, Text } from "@mono/ui";
+import { useQuery } from "@tanstack/react-query";
+import { createFileRoute } from "@tanstack/react-router";
 import { MailIcon, SaveIcon, UserIcon } from "lucide-react";
 import { match } from "ts-pattern";
 import { z } from "zod";
+import { useUpdateUserMutation } from "./hooks/useUpdateUserMutation";
 
 export const Route = createFileRoute(
   "/_authorized/_has-organization/$organizationSlug/settings/profile",
@@ -17,22 +17,10 @@ export const Route = createFileRoute(
 });
 
 function RouteComponent() {
-  const queryClient = useQueryClient();
-  const router = useRouter();
   const { user: initialUser, session: initialSession } =
     Route.useRouteContext();
 
-  const updateUserMutation = useMutation({
-    mutationFn: async (value: { name: string; image: string | null }) => {
-      const response = await authClient.updateUser(value);
-
-      if (response.error) {
-        throw response.error;
-      }
-
-      return response.data;
-    },
-  });
+  const updateUserMutation = useUpdateUserMutation();
 
   const { data: sessionQueryData, isPending: isSessionQueryPending } = useQuery(
     {
@@ -63,22 +51,12 @@ function RouteComponent() {
       }),
     },
     onSubmit: async ({ value, formApi }) => {
-      try {
-        await updateUserMutation.mutateAsync({
-          name: value.name.trim(),
-          image: value.image,
-        });
+      await updateUserMutation.mutateAsync({
+        name: value.name.trim(),
+        image: value.image,
+      });
 
-        await queryClient.refetchQueries({ queryKey: ["session"] });
-
-        await router.invalidate({ sync: true });
-
-        formApi.reset();
-
-        Toaster.success("Account updated successfully!");
-      } catch {
-        Toaster.error("Failed to update profile");
-      }
+      formApi.reset();
     },
   });
 
@@ -160,7 +138,7 @@ function RouteComponent() {
                 <Input.Root
                   className="w-full"
                   isInvalid={field.state.meta.errors.length > 0}
-                  isDisabled={isSessionQueryPending}
+                  isDisabled={isSessionQueryPending || form.state.isSubmitting}
                 >
                   <Input.Wrapper>
                     <Input.Icon>

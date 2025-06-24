@@ -2,18 +2,13 @@ import * as Confirmer from "@components/feedback/confirmer";
 import * as Page from "@components/layout/page";
 import * as Transition from "@components/transition";
 import { api } from "@lib/api";
+import { useGoBack } from "@modules/dashboard/hooks/useGoBack";
+import { usePublishUpdateMutation } from "@modules/dashboard/hooks/usePublishUpdateMutation";
 import { Editor } from "@mono/editor";
-import { Button, IconButton, Skeleton, Text, Toaster } from "@mono/ui";
-import { useMutation } from "@tanstack/react-query";
-import {
-  createFileRoute,
-  redirect,
-  useParams,
-  useRouter,
-} from "@tanstack/react-router";
+import { Button, IconButton, Skeleton, Text } from "@mono/ui";
+import { createFileRoute, redirect, useParams } from "@tanstack/react-router";
 import { tryCatch } from "@utils/promise";
 import { ArrowLeftIcon, ClockIcon, SendIcon } from "lucide-react";
-import { useCallback } from "react";
 import { ConnectedPeers } from "./components/ConnectedPeers";
 import { EditorTags } from "./components/EditorTags";
 import { useHocuspocusProvider } from "./hooks/useHocuspocusProvider";
@@ -54,28 +49,14 @@ function RouteComponent() {
   const { id, organizationSlug } = useParams({
     from: "/_authorized/_has-organization/$organizationSlug/editor/$id",
   });
-  const router = useRouter();
   const { organization, user } = Route.useRouteContext();
 
-  const handleGoBack = useCallback(() => {
-    if (router.history.canGoBack()) {
-      router.history.back();
-      return;
-    }
-
-    router.navigate({
-      to: "/$organizationSlug/updates",
-      params: { organizationSlug },
-    });
-  }, [router, organizationSlug]);
-
-  const publishPostMutation = useMutation({
-    mutationFn: () => {
-      return api.organizations[":organizationId"].posts[":id"].publish.$post({
-        param: { id, organizationId: organization.id },
-      });
-    },
+  const handleGoBack = useGoBack({
+    to: "/$organizationSlug/updates",
+    params: { organizationSlug },
   });
+
+  const publishPostMutation = usePublishUpdateMutation();
 
   const handlePublish = async () => {
     const confirmed = await Confirmer.confirm({
@@ -89,18 +70,15 @@ function RouteComponent() {
 
     if (!confirmed) return;
 
-    const toastId = Toaster.loading("Publishing...");
-
-    try {
-      await publishPostMutation.mutateAsync();
-      Toaster.success("Post published", { id: toastId });
-      handleGoBack();
-    } catch (error) {
-      Toaster.error("Error", {
-        id: toastId,
-        description: error instanceof Error ? error.message : "Unknown error",
-      });
-    }
+    await publishPostMutation.mutateAsync(
+      {
+        organizationId: organization.id,
+        id,
+      },
+      {
+        onSuccess: handleGoBack,
+      },
+    );
   };
 
   const hocuspocus = useHocuspocusProvider(id);

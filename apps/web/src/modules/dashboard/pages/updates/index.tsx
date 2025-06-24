@@ -1,9 +1,10 @@
 import * as Page from "@components/layout/page";
 import * as Transition from "@components/transition";
-import { api } from "@lib/api";
+import { updatesQuery } from "@lib/api/queries";
+import { useCreateUpdateMutation } from "@modules/dashboard/hooks/useCreateUpdateMutation";
 import { Breadcrumbs } from "@modules/shared/components/breadcrumbs";
-import { LinkButton, Text, Toaster } from "@mono/ui";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { LinkButton, Text } from "@mono/ui";
+import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { PlusIcon } from "lucide-react";
 import { P, match } from "ts-pattern";
@@ -20,62 +21,16 @@ function RouteComponent() {
   const { organizationSlug } = Route.useParams();
   const { organization } = Route.useRouteContext();
 
-  const postsQuery = useQuery({
-    queryKey: ["posts", organization.id],
-    queryFn: async ({ queryKey }) => {
-      const response = await api.organizations[":organizationId"].posts.$get({
-        param: {
-          organizationId: queryKey[1],
-        },
-      });
+  const postsQuery = useQuery(updatesQuery(organization.id));
 
-      const json = await response.json();
-
-      if (!json.success) {
-        // @ts-expect-error - TODO: fix this
-        throw json.error;
-      }
-
-      return json.data;
-    },
-  });
-
-  const createPost = useMutation({
-    mutationFn: api.organizations[":organizationId"].posts.$post,
-  });
-
-  const handleCreateNewUpdate = async () => {
-    const id = Toaster.loading("Creating new draft...");
-
-    try {
-      const response = await createPost.mutateAsync({
-        json: {},
-        param: {
-          organizationId: organization.id,
-        },
-      });
-
-      const json = await response.json();
-
-      if (!json.success) {
-        throw json.error;
-      }
-
-      const post = json.data;
-
+  const createPost = useCreateUpdateMutation({
+    onSuccess: (post) => {
       navigate({
         to: "/$organizationSlug/editor/$id",
         params: { id: post.id, organizationSlug: organizationSlug },
       });
-
-      Toaster.success("Successfully created new draft", { id });
-    } catch (error) {
-      Toaster.error("Error", {
-        description: error instanceof Error ? error.message : "Unknown error",
-        id,
-      });
-    }
-  };
+    },
+  });
 
   return (
     <Page.Wrapper>
@@ -83,7 +38,7 @@ function RouteComponent() {
         <Breadcrumbs organization={organization} page="Updates" />
         <LinkButton.Root
           isDisabled={createPost.isPending}
-          onClick={handleCreateNewUpdate}
+          onClick={() => createPost.mutateAsync(organization.id)}
         >
           <LinkButton.Icon>
             <PlusIcon />

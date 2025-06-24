@@ -1,7 +1,9 @@
+import * as Confirmer from "@components/feedback/confirmer";
 import { useHasPermission } from "@modules/shared/hooks/useHasPermission";
 import { Button, DropdownMenu } from "@mono/ui";
 import { EllipsisVerticalIcon, Trash2Icon } from "lucide-react";
-import { useCancelInvitation } from "../hooks/useCancelInvitation";
+import { useCallback } from "react";
+import { useCancelInvitationMutation } from "../hooks/useCancelInvitationMutation";
 
 interface InvitationMenuProps {
   invitation: { id: string; email: string };
@@ -12,12 +14,31 @@ export const InvitationMenu = ({
   invitation,
   organizationId,
 }: InvitationMenuProps) => {
-  const cancelInvitation = useCancelInvitation();
+  const cancelInvitationMutation = useCancelInvitationMutation();
 
   const cancelInvitationPermission = useHasPermission({
     organizationId,
     permission: { invitation: ["cancel"] },
   });
+
+  const handleCancelInvitation = useCallback(async () => {
+    const confirmed = await Confirmer.confirm({
+      title: "Cancel Invitation",
+      description: `Are you sure you want to cancel invitation for ${invitation.email}?`,
+      phrase: invitation.email.toLowerCase().trim(),
+      action: {
+        icon: Trash2Icon,
+        label: "Cancel",
+        color: "danger",
+      },
+    });
+
+    if (!confirmed) return;
+
+    await cancelInvitationMutation.mutateAsync({
+      invitationId: invitation.id,
+    });
+  }, [cancelInvitationMutation, invitation]);
 
   if (cancelInvitationPermission.isPending) {
     return null;
@@ -38,9 +59,7 @@ export const InvitationMenu = ({
       </DropdownMenu.Trigger>
       <DropdownMenu.Content align="end">
         {cancelInvitationPermission.hasPermission && (
-          <DropdownMenu.Item
-            onClick={() => cancelInvitation(organizationId, invitation)}
-          >
+          <DropdownMenu.Item onClick={handleCancelInvitation}>
             <DropdownMenu.ItemIcon>
               <Trash2Icon />
             </DropdownMenu.ItemIcon>

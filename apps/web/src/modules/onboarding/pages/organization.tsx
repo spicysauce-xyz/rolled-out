@@ -1,7 +1,7 @@
-import { authClient } from "@lib/auth";
 import useAppForm from "@lib/form";
-import { Button, Input, Label, Text, Toaster } from "@mono/ui";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useCreateOrganizationMutation } from "@modules/dashboard/hooks/useCreateOrganizationMutation";
+import { useCheckSlugMutation } from "@modules/settings/pages/details/hooks/useCheckSlugMutation";
+import { Button, Input, Label, Text } from "@mono/ui";
 import { createFileRoute } from "@tanstack/react-router";
 import { ArrowRightIcon, Loader2Icon } from "lucide-react";
 import { z } from "zod";
@@ -11,35 +11,11 @@ export const Route = createFileRoute("/_authorized/onboarding/organization")({
 });
 
 function RouteComponent() {
-  const queryClient = useQueryClient();
   const navigate = Route.useNavigate();
 
-  const createOrganizationMutation = useMutation({
-    mutationFn: async (data: { name: string; slug: string }) => {
-      const response = await authClient.organization.create({
-        slug: data.slug,
-        name: data.name,
-      });
+  const createOrganizationMutation = useCreateOrganizationMutation();
 
-      if (response.error) {
-        throw response.error;
-      }
-
-      return response.data;
-    },
-  });
-
-  const checkSlugMutation = useMutation({
-    mutationFn: async (slug: string) => {
-      const response = await authClient.organization.checkSlug({ slug });
-
-      if (response.error) {
-        throw response.error;
-      }
-
-      return response.data;
-    },
-  });
+  const checkSlugMutation = useCheckSlugMutation();
 
   const form = useAppForm({
     defaultValues: {
@@ -53,28 +29,23 @@ function RouteComponent() {
       }),
     },
     onSubmit: async ({ value }) => {
-      try {
-        await createOrganizationMutation.mutateAsync({
+      await createOrganizationMutation.mutateAsync(
+        {
           name: value.name,
           slug: value.slug,
-        });
-
-        await queryClient.refetchQueries({
-          queryKey: ["organizations"],
-        });
-
-        navigate({
-          to: "/$organizationSlug",
-          replace: true,
-          params: {
-            organizationSlug: value.slug,
+        },
+        {
+          onSuccess: () => {
+            navigate({
+              to: "/$organizationSlug",
+              replace: true,
+              params: {
+                organizationSlug: value.slug,
+              },
+            });
           },
-        });
-
-        Toaster.success("Organization updated successfully!");
-      } catch {
-        Toaster.error("Failed to update organization");
-      }
+        },
+      );
     },
   });
 

@@ -1,65 +1,22 @@
 import type { HocuspocusProvider } from "@hocuspocus/provider";
-import { api } from "@lib/api";
+import { organizationTagsQuery } from "@lib/api/queries";
 import useAppForm from "@lib/form";
-import { Clickable, Input, Tag as TagComponent, Text, Toaster } from "@mono/ui";
+import { Clickable, Input, Tag as TagComponent, Text } from "@mono/ui";
 import { cn } from "@mono/ui/utils";
 import { useStore } from "@tanstack/react-form";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useRouteContext } from "@tanstack/react-router";
 import { SearchIcon } from "lucide-react";
 import { useCallback, useMemo, useRef } from "react";
 import { P, match } from "ts-pattern";
 import { z } from "zod";
+import { useCreateTagMutation } from "../hooks/useCreateTagMutation";
 import { useDocumentTagManager } from "../hooks/useDocumentTagManager";
 import type { Tag } from "../types";
 
 interface TagInputProps {
   provider: HocuspocusProvider;
 }
-
-const useOrganizationTags = (organizationId: string) => {
-  return useQuery({
-    queryKey: ["tags", organizationId],
-    queryFn: async ({ queryKey }) => {
-      const response = await api.organizations[":organizationId"].tags.$get({
-        param: {
-          organizationId: queryKey[1],
-        },
-      });
-
-      const json = await response.json();
-
-      if (!json.success) {
-        throw new Error(json.error);
-      }
-
-      return json.data;
-    },
-  });
-};
-
-const useCreateTagMutation = (organizationId: string) => {
-  return useMutation({
-    mutationFn: async (tag: string) => {
-      const response = await api.organizations[":organizationId"].tags.$post({
-        json: {
-          label: tag,
-        },
-        param: {
-          organizationId,
-        },
-      });
-
-      const json = await response.json();
-
-      if (!json.success) {
-        throw json.error;
-      }
-
-      return json.data;
-    },
-  });
-};
 
 const useFilteredTags = (
   search: string,
@@ -82,13 +39,15 @@ export const TagInput: React.FC<TagInputProps> = ({ provider }) => {
     from: "/_authorized/_has-organization/$organizationSlug/editor/$id",
   });
 
-  const tagManager = useDocumentTagManager(provider);
-  const { data: organizationTags } = useOrganizationTags(organization.id);
+  const { data: organizationTags } = useQuery(
+    organizationTagsQuery(organization.id),
+  );
 
-  const queryClient = useQueryClient();
+  const tagManager = useDocumentTagManager(provider);
+
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const createTagMutation = useCreateTagMutation(organization.id);
+  const createTagMutation = useCreateTagMutation();
 
   const handleClickTag = useCallback(
     (tag: Tag) => {
@@ -112,30 +71,24 @@ export const TagInput: React.FC<TagInputProps> = ({ provider }) => {
           .max(20, "Tag must be less than 20 characters long"),
       }),
     },
-    onSubmit: async ({ value, formApi }) => {
-      const toastId = Toaster.loading("Creating tag...");
-
-      await createTagMutation.mutateAsync(value.search, {
-        onSuccess: async ([tag]) => {
-          tagManager.add(tag);
-
-          Toaster.success(`${value.search} created and added to your tags`, {
-            id: toastId,
-          });
-
-          formApi.reset();
-
-          await queryClient.invalidateQueries({
-            queryKey: ["tags", organization.id],
-          });
+    onSubmit: ({ value, formApi }) => {
+      createTagMutation.mutate(
+        {
+          organizationId: organization.id,
+          label: value.search,
         },
-        onError: (error) => {
-          Toaster.error("Error", {
-            description: error.message,
-            id: toastId,
-          });
+        {
+          onSuccess: (tag) => {
+            tagManager.add(tag);
+            formApi.reset();
+          },
+          onSettled: () => {
+            setTimeout(() => {
+              inputRef.current?.focus();
+            });
+          },
         },
-      });
+      );
     },
   });
 
@@ -157,7 +110,11 @@ export const TagInput: React.FC<TagInputProps> = ({ provider }) => {
       <form.Field name="search">
         {(field) => (
           <form.FieldContainer>
-            <Input.Root className="relative">
+            <Input.Root
+              className="relative"
+              isDisabled={createTagMutation.isPending}
+              isInvalid={field.state.meta.errors.length > 0}
+            >
               <Input.Wrapper>
                 <Input.Icon>
                   <SearchIcon />

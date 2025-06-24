@@ -1,5 +1,6 @@
+import * as Confirmer from "@components/feedback/confirmer";
 import type { authClient } from "@lib/auth";
-import { useLogout } from "@modules/auth/hooks/useLogout";
+import { useLogoutMutation } from "@modules/auth/hooks/useLogoutMutation";
 import { Avatar, Clickable, DropdownMenu, Text } from "@mono/ui";
 import { Link } from "@tanstack/react-router";
 import {
@@ -18,7 +19,23 @@ export const UserMenu: React.FC<UserMenuProps> = ({
   organizationSlug,
   user,
 }) => {
-  const logout = useLogout();
+  const logoutMutation = useLogoutMutation();
+
+  const handleLogout = async () => {
+    const confirmed = await Confirmer.confirm({
+      title: "Logout",
+      description: "Are you sure you want to logout?",
+      action: {
+        icon: LogOutIcon,
+        label: "Logout",
+        color: "danger",
+      },
+    });
+
+    if (!confirmed) return;
+
+    await logoutMutation.mutateAsync();
+  };
 
   return (
     <DropdownMenu.Root>
@@ -69,7 +86,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({
             Settings
           </Link>
         </DropdownMenu.Item>
-        <DropdownMenu.Item onClick={logout}>
+        <DropdownMenu.Item onClick={handleLogout}>
           <DropdownMenu.ItemIcon>
             <LogOutIcon />
           </DropdownMenu.ItemIcon>

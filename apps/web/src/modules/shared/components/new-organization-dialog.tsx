@@ -1,7 +1,7 @@
-import { authClient } from "@lib/auth";
 import useAppForm from "@lib/form";
-import { Button, Dialog, Input, Label, Text, Toaster } from "@mono/ui";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useCreateOrganizationMutation } from "@modules/dashboard/hooks/useCreateOrganizationMutation";
+import { useCheckSlugMutation } from "@modules/settings/pages/details/hooks/useCheckSlugMutation";
+import { Button, Dialog, Input, Label, Text } from "@mono/ui";
 import { useNavigate } from "@tanstack/react-router";
 import { Loader2Icon } from "lucide-react";
 import { useEffect } from "react";
@@ -16,35 +16,11 @@ export const NewOrganizationDialog: React.FC<NewOrganizationDialogProps> = ({
   isOpen,
   onOpenChange,
 }) => {
-  const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  const createOrganizationMutation = useMutation({
-    mutationFn: async (data: { name: string; slug: string }) => {
-      const response = await authClient.organization.create({
-        slug: data.slug,
-        name: data.name,
-      });
+  const createOrganizationMutation = useCreateOrganizationMutation();
 
-      if (response.error) {
-        throw response.error;
-      }
-
-      return response.data;
-    },
-  });
-
-  const checkSlugMutation = useMutation({
-    mutationFn: async (slug: string) => {
-      const response = await authClient.organization.checkSlug({ slug });
-
-      if (response.error) {
-        throw response.error;
-      }
-
-      return response.data;
-    },
-  });
+  const checkSlugMutation = useCheckSlugMutation();
 
   const form = useAppForm({
     defaultValues: {
@@ -58,32 +34,27 @@ export const NewOrganizationDialog: React.FC<NewOrganizationDialogProps> = ({
       }),
     },
     onSubmit: async ({ value, formApi }) => {
-      try {
-        await createOrganizationMutation.mutateAsync({
+      await createOrganizationMutation.mutateAsync(
+        {
           name: value.name,
           slug: value.slug,
-        });
+        },
+        {
+          onSuccess: () => {
+            navigate({
+              to: ".",
+              replace: true,
+              params: {
+                organizationSlug: value.slug,
+              },
+            });
 
-        await queryClient.refetchQueries({
-          queryKey: ["organizations"],
-        });
+            formApi.reset();
 
-        navigate({
-          to: ".",
-          replace: true,
-          params: {
-            organizationSlug: value.slug,
+            onOpenChange(false);
           },
-        });
-
-        formApi.reset();
-
-        Toaster.success("Organization created successfully!");
-
-        onOpenChange(false);
-      } catch {
-        Toaster.error("Failed to create organization");
-      }
+        },
+      );
     },
   });
 
@@ -141,6 +112,7 @@ export const NewOrganizationDialog: React.FC<NewOrganizationDialogProps> = ({
                   <Input.Root
                     className="w-full"
                     isInvalid={field.state.meta.errors.length > 0}
+                    isDisabled={form.state.isSubmitting}
                   >
                     <Input.Wrapper>
                       <Input.Field
@@ -193,6 +165,7 @@ export const NewOrganizationDialog: React.FC<NewOrganizationDialogProps> = ({
                   <Input.Root
                     className="w-full"
                     isInvalid={field.state.meta.errors.length > 0}
+                    isDisabled={form.state.isSubmitting}
                   >
                     <Input.Wrapper>
                       <Input.Field

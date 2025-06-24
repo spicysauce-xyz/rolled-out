@@ -1,7 +1,7 @@
 import type { authClient } from "@lib/auth";
 import { Skeleton, Text } from "@mono/ui";
 import { formatDistance } from "date-fns";
-import { capitalize } from "lodash";
+import _ from "lodash";
 import { useMemo } from "react";
 import { InvitationMenu } from "./invite-menu";
 import * as MemberEntry from "./member-entry";
@@ -33,7 +33,7 @@ const Member: React.FC<MemberProps> = ({
         <MemberEntry.Content>
           <MemberEntry.Heading>{data.user.name}</MemberEntry.Heading>
           <MemberEntry.Subheading>
-            {capitalize(data.role)} · {data.user.email}
+            {_.capitalize(data.role)} · {data.user.email}
           </MemberEntry.Subheading>
         </MemberEntry.Content>
       </MemberEntry.Group>
@@ -65,7 +65,7 @@ const Invitation: React.FC<InvitationProps> = ({ data, organizationId }) => {
           <MemberEntry.Heading>{data.email}</MemberEntry.Heading>
           <MemberEntry.Subheading>
             <Text.Root size="xs" color={statusColor} asChild>
-              <span>{capitalize(data.status)} Invitation</span>
+              <span>{_.capitalize(data.status)} Invitation</span>
             </Text.Root>{" "}
             · Expires in {formatDistance(data.expiresAt, new Date())}
           </MemberEntry.Subheading>
