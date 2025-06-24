@@ -52,7 +52,7 @@ export const DashboardNavigation: React.FC<DashboardNavigationProps> = ({
               icon={BellIcon}
             />
             <Sidebar.NavLink
-              to="/$organizationSlug/settings"
+              to="/$organizationSlug/settings/details"
               params={{ organizationSlug }}
               label="Settings"
               icon={SettingsIcon}

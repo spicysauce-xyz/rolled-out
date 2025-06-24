@@ -8,6 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { PlusIcon } from "lucide-react";
 import { P, match } from "ts-pattern";
+import { UpdatesEmpty } from "./components/updates-empty";
 import { UpdatesList } from "./components/updates-list";
 
 export const Route = createFileRoute(
@@ -23,22 +24,26 @@ function RouteComponent() {
 
   const postsQuery = useQuery(updatesQuery(organization.id));
 
-  const createPost = useCreateUpdateMutation({
-    onSuccess: (post) => {
-      navigate({
-        to: "/$organizationSlug/editor/$id",
-        params: { id: post.id, organizationSlug: organizationSlug },
-      });
-    },
-  });
+  const createPostMutation = useCreateUpdateMutation();
+
+  const handleCreatePost = () => {
+    createPostMutation.mutate(organization.id, {
+      onSuccess: (post) => {
+        navigate({
+          to: "/$organizationSlug/editor/$id",
+          params: { id: post.id, organizationSlug: organizationSlug },
+        });
+      },
+    });
+  };
 
   return (
     <Page.Wrapper>
       <Page.Header className="justify-between">
         <Breadcrumbs organization={organization} page="Updates" />
         <LinkButton.Root
-          isDisabled={createPost.isPending}
-          onClick={() => createPost.mutateAsync(organization.id)}
+          isDisabled={createPostMutation.isPending}
+          onClick={handleCreatePost}
         >
           <LinkButton.Icon>
             <PlusIcon />
@@ -46,7 +51,7 @@ function RouteComponent() {
           New Update
         </LinkButton.Root>
       </Page.Header>
-      <Page.Content className="gap-0 p-0">
+      <Page.Content className="flex-1 gap-0 p-0">
         <Transition.Root>
           {match(postsQuery)
             .with({ isPending: true }, () => (
@@ -63,12 +68,22 @@ function RouteComponent() {
             ))
             .with(
               { isSuccess: true, data: P.when((posts) => posts.length === 0) },
-              () => <Transition.Item key="empty">empty</Transition.Item>,
+              () => (
+                <Transition.Item
+                  key="empty"
+                  className="flex flex-1 flex-col items-center justify-center pb-13"
+                >
+                  <UpdatesEmpty
+                    onCreatePost={handleCreatePost}
+                    isCreatingPost={createPostMutation.isPending}
+                  />
+                </Transition.Item>
+              ),
             )
             .otherwise(({ data }) => (
               <Transition.Item key="list">
                 <UpdatesList
-                  data={data || []}
+                  data={data}
                   organizationSlug={organizationSlug}
                   organizationId={organization.id}
                 />

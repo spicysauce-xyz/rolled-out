@@ -1,22 +1,12 @@
-import { type SuccessResponse, api } from "@lib/api";
-import type { ApiError } from "@mono/api";
+import { api } from "@lib/api";
+import { updatesQuery } from "@lib/api/queries";
 import { Toaster } from "@mono/ui";
-import { useMutation } from "@tanstack/react-query";
-import type { InferResponseType } from "hono";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-type CreatedUpdate = SuccessResponse<
-  InferResponseType<
-    (typeof api.organizations)[":organizationId"]["posts"]["$post"]
-  >
->;
+export const useCreateUpdateMutation = () => {
+  const queryClient = useQueryClient();
 
-interface UseCreateUpdateMutationArgs {
-  onSuccess?: (update: CreatedUpdate) => void;
-  onError?: (error: ApiError) => void;
-}
-
-export const useCreateUpdateMutation = (args?: UseCreateUpdateMutationArgs) =>
-  useMutation({
+  return useMutation({
     mutationFn: async (organizationId: string) => {
       const response = await api.organizations[":organizationId"].posts.$post({
         param: {
@@ -37,7 +27,7 @@ export const useCreateUpdateMutation = (args?: UseCreateUpdateMutationArgs) =>
       return { toastId: Toaster.loading("Creating new draft...") };
     },
     onSuccess: async (post, _, context) => {
-      args?.onSuccess?.(post);
+      await queryClient.refetchQueries(updatesQuery(post.organizationId));
 
       Toaster.success("Successfully created new draft", {
         id: context.toastId,
@@ -52,3 +42,4 @@ export const useCreateUpdateMutation = (args?: UseCreateUpdateMutationArgs) =>
       }
     },
   });
+};

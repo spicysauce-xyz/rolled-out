@@ -1,4 +1,4 @@
-import { Avatar, Clickable, Tag, Text, Tooltip } from "@mono/ui";
+import { Clickable, Tag, Text, Tooltip } from "@mono/ui";
 import { cn } from "@mono/ui/utils";
 import { format } from "date-fns";
 import React from "react";
@@ -112,15 +112,9 @@ const UpdateEntryEditors: React.FC<UpdateEntryEditorsProps> = ({ editors }) => {
   return (
     <Tooltip.Root>
       <div className="flex items-center gap-1">
-        <div className="flex gap-1">
-          <Avatar.Root className="size-5 rounded-sm">
-            <Avatar.Image src={creator?.image || ""} />
-            <Avatar.Fallback>{creator?.name?.charAt(0)}</Avatar.Fallback>
-          </Avatar.Root>
-          <Text.Root size="sm" weight="medium">
-            {creator?.name}
-          </Text.Root>
-        </div>
+        <Text.Root size="sm" weight="medium">
+          {creator?.name}
+        </Text.Root>
         <Tooltip.Trigger asChild>
           {otherEditors.length > 0 && (
             <Text.Root
