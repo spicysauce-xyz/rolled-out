@@ -96,7 +96,9 @@ function RouteComponent() {
               <Transition.Item key="list">
                 <UpdatesList.Root>
                   {updates.data?.map((update) => (
-                    <BoardUpdate key={update.id} {...update} />
+                    <div className="mx-auto flex w-full" key={update.id}>
+                      <BoardUpdate {...update} />
+                    </div>
                   ))}
                 </UpdatesList.Root>
               </Transition.Item>
