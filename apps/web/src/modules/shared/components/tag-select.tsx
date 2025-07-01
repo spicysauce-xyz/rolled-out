@@ -66,7 +66,7 @@ export const TagSelect: React.FC<TagSelectProps> = ({
               <div className="flex flex-1 items-center justify-between gap-4">
                 {tag.label}
                 <Text.Root size="sm" color="muted">
-                  {tag.posts.length || ""}
+                  {tag.postsCount || ""}
                 </Text.Root>
               </div>
             </DropdownMenu.CheckboxItem>

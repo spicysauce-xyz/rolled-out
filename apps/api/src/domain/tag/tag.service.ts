@@ -1,5 +1,5 @@
 import { Database, schema } from "@database";
-import { desc, eq } from "drizzle-orm";
+import { countDistinct, desc, eq } from "drizzle-orm";
 import { ResultAsync, errAsync } from "neverthrow";
 import { DatabaseError } from "pg";
 import { TagRepository } from "./tag.repository";
@@ -20,13 +20,17 @@ export const TagService = {
   },
   getTags: async (member: { organizationId: string }) => {
     return ResultAsync.fromPromise(
-      Database.query.tag.findMany({
-        where: eq(schema.tag.organizationId, member.organizationId),
-        orderBy: [desc(schema.tag.createdAt)],
-        with: {
-          posts: true,
-        },
-      }),
+      Database.select({
+        id: schema.tag.id,
+        label: schema.tag.label,
+        postsCount: countDistinct(schema.post.id),
+      })
+        .from(schema.tag)
+        .where(eq(schema.tag.organizationId, member.organizationId))
+        .leftJoin(schema.postTag, eq(schema.tag.id, schema.postTag.tagId))
+        .leftJoin(schema.post, eq(schema.postTag.postId, schema.post.id))
+        .groupBy(schema.tag.id)
+        .orderBy(desc(schema.tag.createdAt)),
       (error) => new Error("Failed to get tags", { cause: error }),
     );
   },
