@@ -3,7 +3,7 @@ import { Breadcrumbs } from "@modules/shared/components/breadcrumbs";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute(
-  "/_authorized/_has-organization/$organizationSlug/_index/",
+  "/_authorized/_has-organization/$organizationSlug/_index/analytics",
 )({
   component: RouteComponent,
 });

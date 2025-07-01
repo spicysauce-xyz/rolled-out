@@ -8,6 +8,8 @@ import {
   type LucideIcon,
   ScrollTextIcon,
 } from "lucide-react";
+// @ts-expect-error https://github.com/lucide-icons/lucide/issues/2867
+import { DynamicIcon, type IconName } from "lucide-react/dynamic.mjs";
 import React from "react";
 
 type SidebarProps = React.HTMLAttributes<HTMLDivElement>;
@@ -43,7 +45,7 @@ const SidebarGroup = React.forwardRef<HTMLDivElement, SidebarGroupProps>(
       >
         {label && (
           <div className="flex h-9 items-center px-2">
-            <Text.Root size="sm" weight="medium" color="muted">
+            <Text.Root size="sm" weight="medium" className="text-neutral-400">
               {label}
             </Text.Root>
           </div>
@@ -66,11 +68,24 @@ const SidebarFill = React.forwardRef<
 });
 
 type SidebarNavLinkProps = React.HTMLAttributes<HTMLAnchorElement> &
-  LinkComponentProps & { icon?: LucideIcon; label: string };
+  LinkComponentProps & {
+    icon?: LucideIcon;
+    iconName?: IconName;
+    label: string;
+  };
 
 const SidebarNavLink = React.forwardRef<HTMLAnchorElement, SidebarNavLinkProps>(
-  ({ children, className, icon, label, ...props }, ref) => {
-    const Icon = icon ?? CircleIcon;
+  ({ children, className, icon, iconName, label, ...props }, ref) => {
+    let iconNode: React.ReactNode;
+
+    if (icon) {
+      const Icon = icon;
+      iconNode = <Icon />;
+    } else if (iconName) {
+      iconNode = <DynamicIcon name={iconName} />;
+    } else {
+      iconNode = <CircleIcon />;
+    }
 
     return (
       <Clickable.Root
@@ -80,7 +95,7 @@ const SidebarNavLink = React.forwardRef<HTMLAnchorElement, SidebarNavLinkProps>(
       >
         <Link ref={ref} {...props}>
           <Clickable.Icon className="mr-2 group-data-[status=active]/clickable-root:text-neutral-900">
-            <Icon />
+            {iconNode}
           </Clickable.Icon>
           <Text.Root
             weight="medium"
@@ -95,6 +110,37 @@ const SidebarNavLink = React.forwardRef<HTMLAnchorElement, SidebarNavLinkProps>(
     );
   },
 );
+
+const SidebarButton = React.forwardRef<
+  React.ComponentRef<typeof Clickable.Root>,
+  React.ComponentPropsWithoutRef<typeof Clickable.Root> & {
+    icon?: LucideIcon;
+    label: string;
+  }
+>(({ children, className, icon, label, ...props }, ref) => {
+  const Icon = icon ?? CircleIcon;
+
+  return (
+    <Clickable.Root
+      variant="tertiary"
+      className="flex h-9 items-center border-0 px-2 hover:bg-neutral-100 focus-visible:bg-neutral-100"
+      ref={ref}
+      {...props}
+    >
+      <Clickable.Icon className="mr-2 group-data-[status=active]/clickable-root:text-neutral-900">
+        <Icon />
+      </Clickable.Icon>
+      <Text.Root
+        weight="medium"
+        size="sm"
+        className="text-inherit transition-colors group-data-[status=active]/clickable-root:text-neutral-900"
+      >
+        {label}
+      </Text.Root>
+      {children}
+    </Clickable.Root>
+  );
+});
 
 type SidebarLinkProps = React.HTMLAttributes<HTMLAnchorElement> &
   LinkComponentProps & { icon?: LucideIcon; label: string };
@@ -215,6 +261,7 @@ export {
   SidebarFill as Fill,
   SidebarNavLink as NavLink,
   SidebarLink as Link,
+  SidebarButton as Button,
   SidebarHeader as Header,
   SidebarLogo as Logo,
   SidebarVersion as Version,

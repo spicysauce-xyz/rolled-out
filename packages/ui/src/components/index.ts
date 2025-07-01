@@ -19,3 +19,5 @@ export * from "./link-button";
 export * from "./skeleton";
 export * from "./dialog";
 export * from "./tag";
+export * from "./popover";
+export * from "./checkbox";

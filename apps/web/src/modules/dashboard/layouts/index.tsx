@@ -2,7 +2,9 @@ import * as Page from "@components/layout/page";
 import { Outlet, createFileRoute } from "@tanstack/react-router";
 import { DashboardNavigation } from "../components/dashboard-navigation";
 
-export const Route = createFileRoute("/_authorized/_has-organization/$organizationSlug/_index")({
+export const Route = createFileRoute(
+  "/_authorized/_has-organization/$organizationSlug/_index",
+)({
   component: RouteComponent,
 });
 
@@ -11,7 +13,11 @@ function RouteComponent() {
 
   return (
     <Page.Root>
-      <DashboardNavigation user={user} organizationSlug={organization.slug} />
+      <DashboardNavigation
+        user={user}
+        organizationSlug={organization.slug}
+        organizationId={organization.id}
+      />
       <Outlet />
     </Page.Root>
   );

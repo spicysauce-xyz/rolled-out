@@ -1,21 +1,114 @@
+import { GroupBy } from "@components/group-by";
 import * as Page from "@components/layout/page";
 import * as Transition from "@components/transition";
+import type { SuccessResponse, api } from "@lib/api";
 import { updatesQuery } from "@lib/api/queries";
 import { useCreateUpdateMutation } from "@modules/dashboard/hooks/useCreateUpdateMutation";
 import { Breadcrumbs } from "@modules/shared/components/breadcrumbs";
 import { LinkButton, Text } from "@mono/ui";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import type { InferResponseType } from "hono";
 import { PlusIcon } from "lucide-react";
 import { P, match } from "ts-pattern";
+import { UpdateEntry, UpdatesList } from "../../components/update-list";
+import { ArchivedUpdate } from "./components/archived-update";
+import { ArchivedUpdatesButton } from "./components/archived-updates-button";
+import { DraftUpdate } from "./components/draft-update";
+import { GroupDivider } from "./components/group-divider";
+import { PublishedUpdate } from "./components/published-update";
+import { ScheduledUpdate } from "./components/scheduled-update";
 import { UpdatesEmpty } from "./components/updates-empty";
-import { UpdatesList } from "./components/updates-list";
+import { useArchivedPosts } from "./hooks/useArchivedPosts";
+
+type Update = SuccessResponse<
+  InferResponseType<
+    (typeof api.organizations)[":organizationId"]["posts"]["$get"]
+  >
+>[number];
 
 export const Route = createFileRoute(
-  "/_authorized/_has-organization/$organizationSlug/_index/updates",
+  "/_authorized/_has-organization/$organizationSlug/_index/",
 )({
   component: RouteComponent,
 });
+
+const PageSkeleton = () => {
+  return (
+    <UpdatesList.Root>
+      <GroupDivider.Skeleton />
+      {new Array(10).fill(null).map((_, index) => (
+        // biome-ignore lint/suspicious/noArrayIndexKey: could be used as key
+        <div className="flex w-full" key={index}>
+          <UpdateEntry.Skeleton />
+        </div>
+      ))}
+    </UpdatesList.Root>
+  );
+};
+
+interface UpdateByStatusProps {
+  data: Update;
+}
+
+const UpdateByStatus: React.FC<UpdateByStatusProps> = ({ data }) => {
+  const { organization } = Route.useRouteContext();
+
+  return (
+    <div className="flex w-full" key={data.id}>
+      {data.status === "draft" && (
+        <DraftUpdate
+          {...data}
+          organizationSlug={organization.slug}
+          organizationId={organization.id}
+        />
+      )}
+      {data.status === "scheduled" && <ScheduledUpdate {...data} />}
+      {data.status === "published" && <PublishedUpdate {...data} />}
+      {data.status === "archived" && (
+        <ArchivedUpdate
+          {...data}
+          organizationSlug={organization.slug}
+          organizationId={organization.id}
+        />
+      )}
+    </div>
+  );
+};
+
+interface ListProps {
+  data: Update[];
+}
+
+const List = ({ data }: ListProps) => {
+  const archivedPosts = useArchivedPosts(data);
+
+  return (
+    <UpdatesList.Root>
+      <GroupBy
+        data={data}
+        field="status"
+        divider={(status) => <GroupDivider status={status} />}
+        visible={(status) => {
+          if (status === "archived") {
+            return archivedPosts.isOpen;
+          }
+
+          return true;
+        }}
+      >
+        {(update) => <UpdateByStatus data={update} />}
+      </GroupBy>
+      {archivedPosts.buttonVisible && (
+        <ArchivedUpdatesButton
+          count={archivedPosts.count}
+          isOpen={archivedPosts.isOpen}
+          onClick={archivedPosts.toggle}
+        />
+      )}
+    </UpdatesList.Root>
+  );
+};
 
 function RouteComponent() {
   const navigate = useNavigate();
@@ -56,7 +149,7 @@ function RouteComponent() {
           {match(postsQuery)
             .with({ isPending: true }, () => (
               <Transition.Item key="skeleton">
-                <UpdatesList.Skeleton />
+                <PageSkeleton />
               </Transition.Item>
             ))
             .with({ isError: true }, ({ error }) => (
@@ -82,11 +175,7 @@ function RouteComponent() {
             )
             .otherwise(({ data }) => (
               <Transition.Item key="list">
-                <UpdatesList
-                  data={data}
-                  organizationSlug={organizationSlug}
-                  organizationId={organization.id}
-                />
+                <List data={data} />
               </Transition.Item>
             ))}
         </Transition.Root>

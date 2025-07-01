@@ -1,4 +1,4 @@
-import { Clickable, Tag, Text, Tooltip } from "@mono/ui";
+import { Clickable, Skeleton, Tag, Text, Tooltip } from "@mono/ui";
 import { cn } from "@mono/ui/utils";
 import { format } from "date-fns";
 import React from "react";
@@ -164,13 +164,48 @@ const UpdateEntryDate: React.FC<UpdateEntryDateProps> = ({ date, label }) => {
   );
 };
 
-export {
-  UpdateEntryRoot as Root,
-  UpdateEntryGroup as Group,
-  UpdateNumber as Number,
-  UpdateEntryTitle as Title,
-  UpdateEntryTags as Tags,
-  UpdateEntryMeta as Meta,
-  UpdateEntryEditors as Editors,
-  UpdateEntryDate as Date,
+const UpdatesListSkeleton: React.FC = () => {
+  return (
+    <UpdateEntryRoot>
+      <UpdateEntryGroup>
+        <Skeleton.Root className="h-5 w-8 rounded-xs" />
+        <Skeleton.Root
+          className="h-5 rounded-xs"
+          style={{ width: Math.random() * 200 + 100 }}
+        />
+      </UpdateEntryGroup>
+      <UpdateEntryGroup className="flex-1">
+        <Skeleton.Root className="h-5 w-10 rounded-xs" />
+        <Skeleton.Root className="h-5 w-12 rounded-xs" />
+      </UpdateEntryGroup>
+      <UpdateEntryMeta>
+        <Skeleton.Root className="h-5 w-34 rounded-xs" />
+        <Skeleton.Root className="h-5 w-22 rounded-xs" />
+        <Skeleton.Root className="h-5 w-11 rounded-xs" />
+      </UpdateEntryMeta>
+      <Skeleton.Root className="mx-2 h-5 w-5 rounded-xs" />
+    </UpdateEntryRoot>
+  );
+};
+
+export const UpdateEntry = {
+  Root: UpdateEntryRoot,
+  Group: UpdateEntryGroup,
+  Number: UpdateNumber,
+  Title: UpdateEntryTitle,
+  Tags: UpdateEntryTags,
+  Meta: UpdateEntryMeta,
+  Editors: UpdateEntryEditors,
+  Date: UpdateEntryDate,
+  Skeleton: UpdatesListSkeleton,
+};
+
+const UpdatesListRoot: React.FC<React.PropsWithChildren> = ({ children }) => {
+  return (
+    <div className="flex flex-col divide-y divide-neutral-100">{children}</div>
+  );
+};
+
+export const UpdatesList = {
+  Root: UpdatesListRoot,
 };

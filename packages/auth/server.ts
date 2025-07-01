@@ -1,5 +1,10 @@
 import * as BetterAuth from "better-auth";
-import { magicLink, organization } from "better-auth/plugins";
+import {
+  type Member,
+  type Organization,
+  magicLink,
+  organization,
+} from "better-auth/plugins";
 
 interface Params {
   domain: string;
@@ -15,6 +20,10 @@ interface Params {
     url: string;
     token: string;
   }) => Promise<void>;
+  afterOrganizationCreate?: (
+    organization: Organization,
+    member: Member,
+  ) => Promise<void>;
 }
 
 export const createServerAuth = (
@@ -68,6 +77,10 @@ export const createServerAuth = (
     plugins: [
       organization({
         sendInvitationEmail: params.sendInvitationEmail,
+        organizationCreation: {
+          afterCreate: async ({ organization, member }) =>
+            params.afterOrganizationCreate?.(organization, member),
+        },
       }),
       magicLink({
         sendMagicLink: params.sendMagicLinkEmail ?? (async () => {}),

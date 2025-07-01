@@ -1,5 +1,6 @@
 import { Config } from "@config";
 import { Database } from "@database";
+import { BoardsService } from "@domain/board";
 import { Email } from "@email";
 import { createServerAuth, drizzleAdapter } from "@mono/auth/server";
 
@@ -29,6 +30,14 @@ export const auth = createServerAuth({
       props: {
         link: data.url,
       },
+    });
+  },
+  afterOrganizationCreate: async (_, member) => {
+    await BoardsService.createBoard(member, {
+      name: "Main Board",
+      symbol: "house",
+      slug: "main",
+      tags: [],
     });
   },
 });

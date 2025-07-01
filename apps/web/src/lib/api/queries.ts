@@ -103,3 +103,69 @@ export const organizationTagsQuery = (organizationId: string) =>
       return json.data;
     },
   });
+
+export const boardsQuery = (organizationId: string) =>
+  queryOptions({
+    queryKey: ["boards", organizationId],
+    queryFn: async ({ queryKey }) => {
+      const response = await api.organizations[":organizationId"].boards.$get({
+        param: {
+          organizationId: queryKey[1],
+        },
+      });
+
+      const json = await response.json();
+
+      if (!json.success) {
+        throw json.error;
+      }
+
+      return json.data;
+    },
+  });
+
+export const boardQuery = (organizationId: string, boardId: string) =>
+  queryOptions({
+    queryKey: ["board", organizationId, boardId],
+    queryFn: async ({ queryKey }) => {
+      const response = await api.organizations[":organizationId"].boards[
+        ":id"
+      ].$get({
+        param: {
+          organizationId: queryKey[1],
+          id: queryKey[2],
+        },
+      });
+
+      const json = await response.json();
+
+      if (!json.success) {
+        throw json.error;
+      }
+
+      return json.data;
+    },
+  });
+
+export const boardPostsQuery = (organizationId: string, boardId: string) =>
+  queryOptions({
+    queryKey: ["boardPosts", organizationId, boardId],
+    queryFn: async ({ queryKey }) => {
+      const response = await api.organizations[":organizationId"].boards[
+        ":id"
+      ].posts.$get({
+        param: {
+          organizationId: queryKey[1],
+          id: queryKey[2],
+        },
+      });
+
+      const json = await response.json();
+
+      if (!json.success) {
+        throw json.error;
+      }
+
+      return json.data;
+    },
+  });
