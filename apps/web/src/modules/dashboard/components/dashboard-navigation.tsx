@@ -55,6 +55,7 @@ export const DashboardNavigation: React.FC<DashboardNavigationProps> = ({
               params={{ organizationSlug }}
               label="Updates"
               icon={BellIcon}
+              activeOptions={{ exact: true }}
             />
             <Sidebar.NavLink
               to="/$organizationSlug/contacts"
