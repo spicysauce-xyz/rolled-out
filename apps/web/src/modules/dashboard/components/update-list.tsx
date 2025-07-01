@@ -81,15 +81,23 @@ const UpdateEntryTags: React.FC<UpdateEntryTagsProps> = ({
   );
 };
 
-const UpdateEntryMeta: React.FC<React.PropsWithChildren> = ({ children }) => {
+interface UpdateEntryMetaProps {
+  className?: string;
+}
+
+const UpdateEntryMeta: React.FC<
+  React.PropsWithChildren<UpdateEntryMetaProps>
+> = ({ children, className }) => {
   return (
     <Tooltip.Provider>
-      <div className="flex items-center gap-2">
+      <div
+        className={cn("flex items-center gap-2 text-neutral-500", className)}
+      >
         {React.Children.toArray(children).map((item, index) => (
           // biome-ignore lint/suspicious/noArrayIndexKey: there is no other way to get the key. or maybe I'm wrong
           <React.Fragment key={index}>
             {index > 0 && (
-              <Text.Root size="sm" color="muted">
+              <Text.Root size="sm" className="text-inherit">
                 ·
               </Text.Root>
             )}
@@ -178,7 +186,7 @@ const UpdatesListSkeleton: React.FC = () => {
         <Skeleton.Root className="h-5 w-10 rounded-xs" />
         <Skeleton.Root className="h-5 w-12 rounded-xs" />
       </UpdateEntryGroup>
-      <UpdateEntryMeta>
+      <UpdateEntryMeta className="text-neutral-200">
         <Skeleton.Root className="h-5 w-34 rounded-xs" />
         <Skeleton.Root className="h-5 w-22 rounded-xs" />
         <Skeleton.Root className="h-5 w-11 rounded-xs" />
