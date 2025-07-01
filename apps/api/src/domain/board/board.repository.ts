@@ -31,19 +31,14 @@ export const BoardsRepository = {
       Database.query.board.findFirst({
         where: and(eq(schema.board.id, id), eq(schema.board.organizationId, organizationId)),
         with: {
-          tags: true,
+          tags: {
+            with: {
+              tag: true,
+            },
+          },
         },
       }),
       (error) => new Error("Failed to get board by id", { cause: error }),
-    );
-  },
-
-  findBoardBySlug: async (slug: string, organizationId: string) => {
-    return ResultAsync.fromPromise(
-      Database.query.board.findFirst({
-        where: and(eq(schema.board.slug, slug), eq(schema.board.organizationId, organizationId)),
-      }),
-      (error) => new Error("Failed to get board by slug", { cause: error }),
     );
   },
 

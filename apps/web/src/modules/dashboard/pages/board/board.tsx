@@ -3,12 +3,14 @@ import * as Transition from "@components/transition";
 import { boardPostsQuery, boardQuery } from "@lib/api/queries";
 import { Breadcrumbs } from "@modules/shared/components/breadcrumbs";
 import { EditBoardDialog } from "@modules/shared/components/edit-board-dialog";
-import { LinkButton } from "@mono/ui";
+import { Button, LinkButton, Tag, Text } from "@mono/ui";
 import { useDisclosure } from "@mono/ui/hooks";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { tryCatch } from "@utils/promise";
-import { SettingsIcon } from "lucide-react";
+import { BookOpenIcon, SettingsIcon } from "lucide-react";
+// @ts-expect-error https://github.com/lucide-icons/lucide/issues/2867
+import { DynamicIcon, type IconName } from "lucide-react/dynamic.mjs";
 import { P, match } from "ts-pattern";
 import { UpdateEntry, UpdatesList } from "../../components/update-list";
 import { BoardUpdate } from "./components/board-update";
@@ -88,7 +90,51 @@ function RouteComponent() {
                   key="empty"
                   className="flex flex-1 flex-col items-center justify-center pb-13"
                 >
-                  no data
+                  <div className="flex flex-col items-center gap-6">
+                    <DynamicIcon
+                      name={board.symbol as IconName}
+                      className="size-10 fill-neutral-50 stroke-neutral-500"
+                    />
+                    <div className="flex flex-col items-center gap-1">
+                      <Text.Root weight="medium">{board.name}</Text.Root>
+                      <Text.Root
+                        size="sm"
+                        color="muted"
+                        className="max-w-96 text-balance text-center"
+                      >
+                        No updates here yet. Only published updates with one of
+                        the following tags will appear on this board:
+                      </Text.Root>
+                    </div>
+                    <div className="flex flex-wrap justify-center gap-2">
+                      {board.tags.map(({ tag }) => (
+                        <Tag.Root
+                          key={tag.id}
+                          className="h-7.5 rounded-sm px-2"
+                        >
+                          {tag.label}
+                        </Tag.Root>
+                      ))}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Button.Root variant="secondary" size="sm">
+                        <Button.Icon>
+                          <BookOpenIcon />
+                        </Button.Icon>
+                        Learn more
+                      </Button.Root>
+                      <Button.Root
+                        variant="secondary"
+                        size="sm"
+                        onClick={editBoardDialog.open}
+                      >
+                        <Button.Icon>
+                          <SettingsIcon />
+                        </Button.Icon>
+                        Update Settings
+                      </Button.Root>
+                    </div>
+                  </div>
                 </Transition.Item>
               ),
             )

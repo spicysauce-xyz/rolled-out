@@ -46,22 +46,6 @@ export const BoardsService = {
     return okAsync(board);
   },
 
-  getBoardBySlug: async (member: { organizationId: string }, slug: string) => {
-    const result = await BoardsRepository.findBoardBySlug(slug, member.organizationId);
-
-    if (result.isErr()) {
-      return errAsync(result.error);
-    }
-
-    const board = result.value;
-
-    if (!board) {
-      return errAsync(new Error("Board not found"));
-    }
-
-    return okAsync(board);
-  },
-
   getBoardsFromOrganization: async (member: { organizationId: string }) => {
     return BoardsRepository.findBoardsByOrganization(member.organizationId);
   },
