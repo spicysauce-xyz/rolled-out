@@ -1,10 +1,10 @@
 import { Database, schema } from "@database";
 import { and, desc, eq, exists, sql } from "drizzle-orm";
-import { ResultAsync } from "neverthrow";
+import { ResultAsync, err, ok } from "neverthrow";
 import { DatabaseError } from "pg";
 
 export const BoardsRepository = {
-  createBoard: async (data: typeof schema.board.$inferInsert) => {
+  createBoard: (data: typeof schema.board.$inferInsert) => {
     return ResultAsync.fromPromise(
       Database.insert(schema.board)
         .values({
@@ -23,10 +23,16 @@ export const BoardsRepository = {
 
         return new Error("Failed to create board", { cause: error });
       },
-    );
+    ).andThen((board) => {
+      if (!board.length) {
+        return err(new Error("Failed to create board"));
+      }
+
+      return ok(board[0]);
+    });
   },
 
-  findBoardById: async (id: string, organizationId: string) => {
+  findBoardById: (id: string, organizationId: string) => {
     return ResultAsync.fromPromise(
       Database.query.board.findFirst({
         where: and(eq(schema.board.id, id), eq(schema.board.organizationId, organizationId)),
@@ -39,10 +45,16 @@ export const BoardsRepository = {
         },
       }),
       (error) => new Error("Failed to get board by id", { cause: error }),
-    );
+    ).andThen((board) => {
+      if (!board) {
+        return err(new Error("Board not found"));
+      }
+
+      return ok(board);
+    });
   },
 
-  findBoardsByOrganization: async (organizationId: string) => {
+  findBoardsByOrganization: (organizationId: string) => {
     return ResultAsync.fromPromise(
       Database.select({
         id: schema.board.id,
@@ -62,7 +74,7 @@ export const BoardsRepository = {
     );
   },
 
-  findBoardPosts: async (organizationId: string, boardId: string) => {
+  findBoardPosts: (organizationId: string, boardId: string) => {
     return ResultAsync.fromPromise(
       Database.query.post.findMany({
         columns: {
@@ -114,13 +126,19 @@ export const BoardsRepository = {
     );
   },
 
-  updateBoard: async (id: string, organizationId: string, data: Partial<typeof schema.board.$inferInsert>) => {
+  updateBoard: (id: string, organizationId: string, data: Partial<typeof schema.board.$inferInsert>) => {
     return ResultAsync.fromPromise(
       Database.update(schema.board)
         .set({ ...data, updatedAt: new Date() })
         .where(and(eq(schema.board.id, id), eq(schema.board.organizationId, organizationId)))
         .returning(),
       (error) => new Error("Failed to update board", { cause: error }),
-    );
+    ).andThen((result) => {
+      if (result.length === 0) {
+        return err(new Error("Board not found"));
+      }
+
+      return ok(result[0]);
+    });
   },
 };

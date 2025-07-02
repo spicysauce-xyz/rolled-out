@@ -1,8 +1,9 @@
 import { Config } from "@config";
 import { Database } from "@database";
-import { BoardsService } from "@domain/board";
 import { Email } from "@email";
+import { Emitter } from "@events";
 import { createServerAuth, drizzleAdapter } from "@mono/auth/server";
+import { OrganizationCreatedEvent } from "./auth.events";
 
 export const auth = createServerAuth({
   baseURL: Config.self.base,
@@ -32,12 +33,7 @@ export const auth = createServerAuth({
       },
     });
   },
-  afterOrganizationCreate: async (_, member) => {
-    await BoardsService.createBoard(member, {
-      name: "Main Board",
-      symbol: "house",
-      slug: "main",
-      tags: [],
-    });
+  afterOrganizationCreate: async (organization, member) => {
+    await Emitter.emitAsync(OrganizationCreatedEvent.eventName, new OrganizationCreatedEvent(organization, member));
   },
 });

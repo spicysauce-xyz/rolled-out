@@ -1,7 +1,9 @@
 import { organizationFactory } from "@domain/organizaiton/organization.factory";
+import { Emitter } from "@events";
 import { zValidator } from "@hono/zod-validator";
 import { notOk, ok } from "@utils/network";
 import { z } from "zod";
+import { BoardCreatedEvent, BoardUpdatedEvent } from "./board.events";
 import { BoardsService } from "./board.service";
 
 export const BoardHandler = organizationFactory
@@ -9,13 +11,10 @@ export const BoardHandler = organizationFactory
   .get("/", async (c) => {
     const member = c.get("member");
 
-    const boardsResult = await BoardsService.getBoardsFromOrganization(member);
-
-    if (boardsResult.isErr()) {
-      return notOk(c, { message: boardsResult.error.message }, 500);
-    }
-
-    return ok(c, boardsResult.value);
+    return BoardsService.getBoardsFromOrganization(member).match(
+      (boards) => ok(c, boards),
+      (error) => notOk(c, { message: error.message }, 500),
+    );
   })
 
   .post(
@@ -33,13 +32,14 @@ export const BoardHandler = organizationFactory
       const member = c.get("member");
       const body = c.req.valid("json");
 
-      const boardResult = await BoardsService.createBoard(member, body);
-
-      if (boardResult.isErr()) {
-        return notOk(c, { message: boardResult.error.message }, 500);
-      }
-
-      return ok(c, boardResult.value);
+      return BoardsService.createBoard(member, body)
+        .andThen((board) =>
+          Emitter.emitAsync(BoardCreatedEvent.eventName, new BoardCreatedEvent(board, body.tags || [])),
+        )
+        .match(
+          (result) => ok(c, result.board),
+          (error) => notOk(c, { message: error.message }, 500),
+        );
     },
   )
 
@@ -47,26 +47,10 @@ export const BoardHandler = organizationFactory
     const boardId = c.req.param("id");
     const member = c.get("member");
 
-    const boardResult = await BoardsService.getBoardById(member, boardId);
-
-    if (boardResult.isErr()) {
-      return notOk(c, { message: boardResult.error.message }, 500);
-    }
-
-    return ok(c, boardResult.value);
-  })
-
-  .get("/:id/posts", zValidator("param", z.object({ id: z.string().uuid() })), async (c) => {
-    const boardId = c.req.param("id");
-    const member = c.get("member");
-
-    const postsResult = await BoardsService.getBoardPosts(member, boardId);
-
-    if (postsResult.isErr()) {
-      return notOk(c, { message: postsResult.error.message }, 500);
-    }
-
-    return ok(c, postsResult.value);
+    return BoardsService.getBoardById(member, boardId).match(
+      (board) => ok(c, board),
+      (error) => notOk(c, { message: error.message }, 500),
+    );
   })
 
   .put(
@@ -85,12 +69,23 @@ export const BoardHandler = organizationFactory
       const member = c.get("member");
       const body = c.req.valid("json");
 
-      const boardResult = await BoardsService.updateBoard(member, boardId, body);
-
-      if (boardResult.isErr()) {
-        return notOk(c, { message: boardResult.error.message }, 500);
-      }
-
-      return ok(c, boardResult.value);
+      return BoardsService.updateBoard(member, boardId, body)
+        .andThen((board) =>
+          Emitter.emitAsync(BoardUpdatedEvent.eventName, new BoardUpdatedEvent(board, body.tags || [])),
+        )
+        .match(
+          (result) => ok(c, result.board),
+          (error) => notOk(c, { message: error.message }, 500),
+        );
     },
-  );
+  )
+
+  .get("/:id/posts", zValidator("param", z.object({ id: z.string().uuid() })), async (c) => {
+    const boardId = c.req.param("id");
+    const member = c.get("member");
+
+    return BoardsService.getBoardPosts(member, boardId).match(
+      (posts) => ok(c, posts),
+      (error) => notOk(c, { message: error.message }, 500),
+    );
+  });

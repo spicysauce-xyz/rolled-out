@@ -5,7 +5,7 @@ import { DatabaseError } from "pg";
 import { TagRepository } from "./tag.repository";
 
 export const TagService = {
-  createTag: async (member: { organizationId: string }, label: string) => {
+  createTag: (member: { organizationId: string }, label: string) => {
     return ResultAsync.fromPromise(
       Database.insert(schema.tag).values({ label, organizationId: member.organizationId }).returning(),
       (error) => {
@@ -18,7 +18,7 @@ export const TagService = {
       },
     );
   },
-  getTags: async (member: { organizationId: string }) => {
+  getTags: (member: { organizationId: string }) => {
     return ResultAsync.fromPromise(
       Database.select({
         id: schema.tag.id,
@@ -34,7 +34,7 @@ export const TagService = {
       (error) => new Error("Failed to get tags", { cause: error }),
     );
   },
-  connectTagsToBoard: async (organizationId: string, board: { id: string; organizationId: string }, tags: string[]) => {
+  connectTagsToBoard: (organizationId: string, board: { id: string; organizationId: string }, tags: string[]) => {
     if (board.organizationId !== organizationId) {
       return errAsync(new Error("Board does not belong to organization"));
     }
@@ -42,7 +42,10 @@ export const TagService = {
     return ResultAsync.fromPromise(
       Database.transaction(async (tx) => {
         await TagRepository.deleteBoardTags(board.id, { tx });
-        await TagRepository.insertBoardTags(board.id, tags, { tx });
+
+        if (tags.length > 0) {
+          await TagRepository.insertBoardTags(board.id, tags, { tx });
+        }
       }),
       (error) => new Error("Failed to connect tags to board", { cause: error }),
     );
