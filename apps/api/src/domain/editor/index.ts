@@ -1,1 +1,1 @@
-export { EditorRepository } from "./editor.repository";
+import "./editor.subscriptions";

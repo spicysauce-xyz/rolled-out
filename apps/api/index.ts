@@ -1,16 +1,17 @@
 import "dotenv/config";
 import { Config } from "@config";
 import { AssetsHandler } from "@domain/assets";
+import { AuthHandler, authMiddleware } from "@domain/auth";
 import { BoardHandler } from "@domain/board";
-import { organizationMiddleware } from "@domain/organizaiton/organization.middleware";
+import { organizationMiddleware } from "@domain/organizaiton";
+import { PostHandler } from "@domain/post";
 import { PublicHandler } from "@domain/public";
 import { TagHandler } from "@domain/tag";
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
-import { AuthHandler, authMiddleware } from "./src/domain/auth";
-import { PostHandler } from "./src/domain/post";
+import "@domain/editor";
 
 export const app = new Hono()
   .use(async (_, next) => {
