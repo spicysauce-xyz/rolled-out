@@ -1,10 +1,11 @@
-import { Confirmer } from "@components/feedback/confirmer";
+import { Confirmer } from "@components/confirmer";
 import { UpdateEntry } from "@modules/dashboard/components/update-list";
 import { useUnarchiveUpdateMutation } from "@modules/dashboard/hooks/use-unarchive-update-mutation";
-import { DropdownMenu, IconButton } from "@mono/ui";
+import { Clickable, DropdownMenu, IconButton, Text } from "@mono/ui";
 import { Link } from "@tanstack/react-router";
 import { ArchiveIcon, EllipsisVerticalIcon } from "lucide-react";
 import type React from "react";
+import { useMemo, useState } from "react";
 
 interface ArchivedUpdateProps {
   order: number;
@@ -98,4 +99,52 @@ export const ArchivedUpdate: React.FC<ArchivedUpdateProps> = ({
       </Link>
     </UpdateEntry.Root>
   );
+};
+
+interface ArchivedUpdatesButtonProps {
+  count: number;
+  isOpen: boolean;
+  onClick: () => void;
+}
+
+export const ArchivedUpdatesButton: React.FC<ArchivedUpdatesButtonProps> = ({
+  count,
+  isOpen,
+  onClick,
+}) => {
+  return (
+    <Clickable.Root
+      className="flex items-center justify-center gap-2 rounded-none px-6 py-4"
+      onClick={onClick}
+      variant="tertiary"
+    >
+      {isOpen ? (
+        <Text.Root className="text-center" color="muted" size="sm">
+          Click here to hide archived updates
+        </Text.Root>
+      ) : (
+        <Text.Root className="text-center" color="muted" size="sm">
+          You have {count} archived update{count === 1 ? "" : "s"}. Click here
+          to view them
+        </Text.Root>
+      )}
+    </Clickable.Root>
+  );
+};
+
+export const useArchivedUpdates = (data: { status: string }[]) => {
+  const [archivedVisible, setArchivedVisible] = useState(false);
+
+  const count = useMemo(() => {
+    return data.filter((post) => post.status === "archived").length;
+  }, [data]);
+
+  const allPostsAreArchived = data.length > 0 && data.length === count;
+
+  return {
+    count,
+    isOpen: allPostsAreArchived || archivedVisible,
+    toggle: () => setArchivedVisible((v) => !v),
+    buttonVisible: count > 0 && !allPostsAreArchived,
+  };
 };

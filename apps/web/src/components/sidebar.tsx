@@ -1,4 +1,4 @@
-import { config } from "@config";
+import { config } from "@lib/config";
 import { Clickable, ScrollArea, Text } from "@mono/ui";
 import { cn } from "@mono/ui/utils";
 import { Link, type LinkComponentProps } from "@tanstack/react-router";

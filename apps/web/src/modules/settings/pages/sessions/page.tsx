@@ -1,5 +1,5 @@
 import { Card } from "@components/card";
-import { Confirmer } from "@components/feedback/confirmer";
+import { Confirmer } from "@components/confirmer";
 import { Transition } from "@components/transition";
 import { sessionsQuery } from "@lib/api/queries";
 import type { authClient } from "@lib/auth";

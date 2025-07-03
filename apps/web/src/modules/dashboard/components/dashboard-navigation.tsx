@@ -1,8 +1,8 @@
-import { Sidebar } from "@components/layout/sidebar";
+import { Sidebar } from "@components/sidebar";
 import { Transition } from "@components/transition";
 import { boardsQuery } from "@lib/api/queries";
 import type { authClient } from "@lib/auth";
-import { NewBoardDialog } from "@modules/shared/components/new-board-dialog";
+import { NewBoardDialog } from "@modules/dashboard/pages/board/components/new-board-dialog";
 import { NotificationsList } from "@modules/shared/components/notifications-list";
 import { UserMenu } from "@modules/shared/components/user-menu";
 import { Clickable, IconButton, Skeleton, Text } from "@mono/ui";

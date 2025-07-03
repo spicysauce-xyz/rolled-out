@@ -1,12 +1,12 @@
 import { Button, Text } from "@mono/ui";
 import { BellIcon, BookOpenIcon, PlusIcon } from "lucide-react";
 
-interface UpdatesEmptyProps {
+interface EmptyProps {
   onCreatePost: () => void;
   isCreatingPost: boolean;
 }
 
-export const UpdatesEmpty: React.FC<UpdatesEmptyProps> = ({
+export const Empty: React.FC<EmptyProps> = ({
   onCreatePost,
   isCreatingPost,
 }) => {

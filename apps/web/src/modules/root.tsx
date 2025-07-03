@@ -1,4 +1,4 @@
-import { Confirmer } from "@components/feedback/confirmer";
+import { Confirmer } from "@components/confirmer";
 import { Transition } from "@components/transition";
 import { Toaster } from "@mono/ui";
 import styles from "@styles/global.css?url";

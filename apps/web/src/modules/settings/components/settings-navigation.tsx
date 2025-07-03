@@ -1,4 +1,4 @@
-import { Sidebar } from "@components/layout/sidebar";
+import { Sidebar } from "@components/sidebar";
 import type { authClient } from "@lib/auth";
 import { NotificationsList } from "@modules/shared/components/notifications-list";
 import { UserMenu } from "@modules/shared/components/user-menu";

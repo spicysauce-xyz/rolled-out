@@ -3,8 +3,8 @@ import { Button, Input, Text } from "@mono/ui";
 import { createFileRoute } from "@tanstack/react-router";
 import { MailIcon } from "lucide-react";
 import { z } from "zod";
-import { useSendMagicLinkMutation } from "../hooks/useSendMagicLinkMutation";
-import { useSocialLoginMutation } from "../hooks/useSocialLoginMutation";
+import { useSendMagicLinkMutation } from "../hooks/use-send-magic-link-mutation";
+import { useSocialLoginMutation } from "../hooks/use-social-login-mutation";
 
 export const Route = createFileRoute("/_guest-only/login")({
   component: Login,

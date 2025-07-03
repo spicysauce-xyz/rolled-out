@@ -1,4 +1,4 @@
-import { Confirmer } from "@components/feedback/confirmer";
+import { Confirmer } from "@components/confirmer";
 import { UpdateEntry } from "@modules/dashboard/components/update-list";
 
 import { useArchiveUpdateMutation } from "@modules/dashboard/hooks/use-archive-update-mutation";

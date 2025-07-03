@@ -1,4 +1,4 @@
-import { getServerConfig } from "@config";
+import { getServerConfig } from "@lib/config";
 import {
   createStartHandler,
   defaultStreamHandler,

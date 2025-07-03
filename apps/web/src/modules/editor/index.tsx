@@ -1,5 +1,5 @@
-import { Confirmer } from "@components/feedback/confirmer";
-import { Page } from "@components/layout/page";
+import { Confirmer } from "@components/confirmer";
+import { Page } from "@components/page";
 import { Transition } from "@components/transition";
 import { api } from "@lib/api";
 import { useGoBack } from "@modules/dashboard/hooks/use-go-back";

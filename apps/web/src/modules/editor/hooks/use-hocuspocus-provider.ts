@@ -1,5 +1,5 @@
-import { config } from "@config";
 import { HocuspocusProvider } from "@hocuspocus/provider";
+import { config } from "@lib/config";
 import { useEffect, useRef, useState } from "react";
 import type * as Y from "yjs";
 

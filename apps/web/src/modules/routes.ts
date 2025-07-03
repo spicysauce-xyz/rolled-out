@@ -1,21 +1,21 @@
-import auth from "@modules/auth";
-import dashboard from "@modules/dashboard";
+import auth from "@modules/auth/router";
+import dashboard from "@modules/dashboard/router";
 import onboarding from "@modules/onboarding";
-import settings from "@modules/settings";
+import settings from "@modules/settings/router";
 import { index, layout, rootRoute, route } from "@tanstack/virtual-file-routes";
 
 export const routes = rootRoute("root.tsx", [
-  layout("auth/layouts/guest-only.tsx", auth),
-  layout("auth/layouts/authorized.tsx", [
+  layout("auth/guards/guest-only.tsx", auth),
+  layout("auth/guards/authorized.tsx", [
     route("/onboarding", onboarding),
-    layout("dashboard/layouts/has-organization.tsx", [
-      index("dashboard/pages/splash.tsx"),
+    layout("dashboard/guards/has-organization.tsx", [
+      index("dashboard/pages/index/page.tsx"),
       route(
         "/$organizationSlug",
-        "dashboard/layouts/selected-organization.tsx",
+        "dashboard/guards/selected-organization.tsx",
         [
-          layout("dashboard/layouts/index.tsx", dashboard),
-          route("/settings", "settings/layouts/index.tsx", settings),
+          layout("dashboard/layout.tsx", dashboard),
+          route("/settings", "settings/layout.tsx", settings),
           route("/editor/$id", "editor/index.tsx"),
         ]
       ),

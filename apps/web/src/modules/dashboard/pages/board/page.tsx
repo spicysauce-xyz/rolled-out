@@ -1,8 +1,8 @@
-import { Page } from "@components/layout/page";
+import { Page } from "@components/page";
 import { Transition } from "@components/transition";
 import { boardPostsQuery, boardQuery } from "@lib/api/queries";
-import { Breadcrumbs } from "@modules/shared/components/breadcrumbs";
-import { EditBoardDialog } from "@modules/shared/components/edit-board-dialog";
+import { Breadcrumbs } from "@modules/dashboard/components/breadcrumbs";
+import { EditBoardDialog } from "@modules/dashboard/pages/board/components/edit-board-dialog";
 import { Button, LinkButton, Tag, Text } from "@mono/ui";
 import { useDisclosure } from "@mono/ui/hooks";
 import { useQuery } from "@tanstack/react-query";
@@ -16,7 +16,7 @@ import { UpdateEntry, UpdatesList } from "../../components/update-list";
 import { BoardUpdate } from "./components/board-update";
 
 export const Route = createFileRoute(
-  "/_authorized/_has-organization/$organizationSlug/_index/boards/$id"
+  "/_authorized/_has-organization/$organizationSlug/_layout/boards/$id"
 )({
   beforeLoad: async ({ params, context }) => {
     const board = await tryCatch(

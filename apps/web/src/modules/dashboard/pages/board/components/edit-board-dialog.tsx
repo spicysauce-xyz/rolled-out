@@ -12,8 +12,8 @@ import {
   // @ts-expect-error https://github.com/lucide-icons/lucide/issues/2867
 } from "lucide-react/dynamic.mjs";
 import { z } from "zod";
+import { TagSelect } from "../../../components/tag-select";
 import { useUpdateBoardMutation } from "../hooks/use-update-board-mutation";
-import { TagSelect } from "./tag-select";
 
 const Content: React.FC<
   Pick<EditBoardDialogProps, "board" | "onOpenChange">

@@ -1,9 +1,9 @@
-import { Page } from "@components/layout/page";
+import { Page } from "@components/page";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
-import { DashboardNavigation } from "../components/dashboard-navigation";
+import { DashboardNavigation } from "./components/dashboard-navigation";
 
 export const Route = createFileRoute(
-  "/_authorized/_has-organization/$organizationSlug/_index"
+  "/_authorized/_has-organization/$organizationSlug/_layout"
 )({
   component: RouteComponent,
 });

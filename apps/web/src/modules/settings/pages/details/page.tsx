@@ -1,7 +1,7 @@
 import { Card } from "@components/card";
-import { FileUpload } from "@components/file-upload";
 import { organizationQuery } from "@lib/api/queries";
 import useAppForm from "@lib/form";
+import { FileUpload } from "@modules/shared/components/file-upload";
 import { Avatar, Button, Input, Label, Text } from "@mono/ui";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, useRouter } from "@tanstack/react-router";

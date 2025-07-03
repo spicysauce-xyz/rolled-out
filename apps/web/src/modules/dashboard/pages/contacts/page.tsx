@@ -1,9 +1,9 @@
-import { Page } from "@components/layout/page";
-import { Breadcrumbs } from "@modules/shared/components/breadcrumbs";
+import { Page } from "@components/page";
+import { Breadcrumbs } from "@modules/dashboard/components/breadcrumbs";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute(
-  "/_authorized/_has-organization/$organizationSlug/_index/analytics"
+  "/_authorized/_has-organization/$organizationSlug/_layout/contacts"
 )({
   component: RouteComponent,
 });
@@ -14,9 +14,9 @@ function RouteComponent() {
   return (
     <Page.Wrapper>
       <Page.Header className="justify-between">
-        <Breadcrumbs organization={organization} page="Dashboard" />
+        <Breadcrumbs organization={organization} page="Contacts" />
       </Page.Header>
-      <Page.Content>Analytics</Page.Content>
+      <Page.Content>Contacts</Page.Content>
     </Page.Wrapper>
   );
 }

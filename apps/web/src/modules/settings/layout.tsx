@@ -1,7 +1,7 @@
-import { Page } from "@components/layout/page";
-import { Breadcrumbs } from "@modules/shared/components/breadcrumbs";
+import { Page } from "@components/page";
+import { Breadcrumbs } from "@modules/dashboard/components/breadcrumbs";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
-import { SettingsNavigation } from "../components/settings-navigation";
+import { SettingsNavigation } from "./components/settings-navigation";
 
 export const Route = createFileRoute(
   "/_authorized/_has-organization/$organizationSlug/settings"

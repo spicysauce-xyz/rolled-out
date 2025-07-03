@@ -1,4 +1,4 @@
-import { Confirmer } from "@components/feedback/confirmer";
+import { Confirmer } from "@components/confirmer";
 import type { authClient } from "@lib/auth";
 import { useLogoutMutation } from "@modules/auth/hooks/use-logout-mutation";
 import { Avatar, Clickable, DropdownMenu, Text } from "@mono/ui";

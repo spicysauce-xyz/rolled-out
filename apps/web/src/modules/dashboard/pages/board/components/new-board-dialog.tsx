@@ -9,8 +9,8 @@ import {
 import { useEffect } from "react";
 import slugify from "slugify";
 import { z } from "zod";
+import { TagSelect } from "../../../components/tag-select";
 import { useCreateBoardMutation } from "../hooks/use-create-board-mutation";
-import { TagSelect } from "./tag-select";
 
 interface NewBoardDialogProps {
   isOpen: boolean;

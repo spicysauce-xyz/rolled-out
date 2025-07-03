@@ -1,4 +1,4 @@
-import { Confirmer } from "@components/feedback/confirmer";
+import { Confirmer } from "@components/confirmer";
 import { useHasPermission } from "@modules/shared/hooks/use-has-permission";
 import { Button, DropdownMenu } from "@mono/ui";
 import { EllipsisVerticalIcon, Trash2Icon } from "lucide-react";
