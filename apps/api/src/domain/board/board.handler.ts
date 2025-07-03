@@ -1,6 +1,6 @@
 import { organizationFactory } from "@domain/organizaiton/organization.factory";
 import { Emitter } from "@events";
-import { zValidator } from "@hono/zod-validator";
+import { validator } from "@lib/validator";
 import { notOk, ok } from "@utils/network";
 import { z } from "zod";
 import { BoardCreatedEvent, BoardUpdatedEvent } from "./board.events";
@@ -19,7 +19,7 @@ export const BoardHandler = organizationFactory
 
   .post(
     "/",
-    zValidator(
+    validator(
       "json",
       z.object({
         name: z.string().trim().min(1),
@@ -46,23 +46,20 @@ export const BoardHandler = organizationFactory
     }
   )
 
-  .get(
-    "/:id",
-    zValidator("param", z.object({ id: z.string().uuid() })),
-    (c) => {
-      const boardId = c.req.param("id");
-      const member = c.get("member");
+  .get("/:id", validator("param", z.object({ id: z.string().uuid() })), (c) => {
+    const boardId = c.req.param("id");
+    const member = c.get("member");
 
-      return BoardsService.getBoardById(member, boardId).match(
-        (board) => ok(c, board),
-        (error) => notOk(c, { message: error.message }, 500)
-      );
-    }
-  )
+    return BoardsService.getBoardById(member, boardId).match(
+      (board) => ok(c, board),
+      (error) => notOk(c, { message: error.message }, 500)
+    );
+  })
 
   .put(
     "/:id",
-    zValidator(
+    validator("param", z.object({ id: z.string().uuid() })),
+    validator(
       "json",
       z.object({
         name: z.string().optional(),
@@ -92,7 +89,7 @@ export const BoardHandler = organizationFactory
 
   .get(
     "/:id/posts",
-    zValidator("param", z.object({ id: z.string().uuid() })),
+    validator("param", z.object({ id: z.string().uuid() })),
     (c) => {
       const boardId = c.req.param("id");
       const member = c.get("member");

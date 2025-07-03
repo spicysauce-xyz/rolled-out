@@ -58,7 +58,7 @@ export const TagInput: React.FC<TagInputProps> = ({ provider }) => {
         search: z
           .string()
           .trim()
-          .min(3, "Tag must be at least 3 characters long")
+          .min(1, "Tag must be at least 3 characters long")
           .max(20, "Tag must be less than 20 characters long"),
       }),
     },

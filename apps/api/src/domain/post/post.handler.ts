@@ -1,6 +1,6 @@
 import { organizationFactory } from "@domain/organizaiton/organization.factory";
 import { Emitter } from "@events";
-import { zValidator } from "@hono/zod-validator";
+import { validator } from "@lib/validator";
 import { notOk, ok } from "@utils/network";
 import { z } from "zod";
 import { PostCreatedEvent } from "./post.events";
@@ -19,7 +19,7 @@ export const PostHandler = organizationFactory
 
   .post(
     "/",
-    zValidator("json", z.object({ title: z.string().optional() })),
+    validator("json", z.object({ title: z.string().optional() })),
     (c) => {
       const member = c.get("member");
 
@@ -37,7 +37,7 @@ export const PostHandler = organizationFactory
     }
   )
 
-  .get("/:id", (c) => {
+  .get("/:id", validator("param", z.object({ id: z.string().uuid() })), (c) => {
     const postId = c.req.param("id");
     const member = c.get("member");
 
@@ -47,32 +47,52 @@ export const PostHandler = organizationFactory
     );
   })
 
-  .post("/:id/publish", (c) => {
-    const postId = c.req.param("id");
-    const member = c.get("member");
+  .post(
+    "/:id/publish",
+    validator("param", z.object({ id: z.string().uuid() })),
+    (c) => {
+      const postId = c.req.param("id");
+      const member = c.get("member");
 
-    return PostsService.updatePostStatusById(member, postId, "published").match(
-      (post) => ok(c, post),
-      (error) => notOk(c, { message: error.message }, 500)
-    );
-  })
+      return PostsService.updatePostStatusById(
+        member,
+        postId,
+        "published"
+      ).match(
+        (post) => ok(c, post),
+        (error) => notOk(c, { message: error.message }, 500)
+      );
+    }
+  )
 
-  .post("/:id/archive", (c) => {
-    const postId = c.req.param("id");
-    const member = c.get("member");
+  .post(
+    "/:id/archive",
+    validator("param", z.object({ id: z.string().uuid() })),
+    (c) => {
+      const postId = c.req.param("id");
+      const member = c.get("member");
 
-    return PostsService.updatePostStatusById(member, postId, "archived").match(
-      (post) => ok(c, post),
-      (error) => notOk(c, { message: error.message }, 500)
-    );
-  })
+      return PostsService.updatePostStatusById(
+        member,
+        postId,
+        "archived"
+      ).match(
+        (post) => ok(c, post),
+        (error) => notOk(c, { message: error.message }, 500)
+      );
+    }
+  )
 
-  .post("/:id/unarchive", (c) => {
-    const postId = c.req.param("id");
-    const member = c.get("member");
+  .post(
+    "/:id/unarchive",
+    validator("param", z.object({ id: z.string().uuid() })),
+    (c) => {
+      const postId = c.req.param("id");
+      const member = c.get("member");
 
-    return PostsService.updatePostStatusById(member, postId, "draft").match(
-      (post) => ok(c, post),
-      (error) => notOk(c, { message: error.message }, 500)
-    );
-  });
+      return PostsService.updatePostStatusById(member, postId, "draft").match(
+        (post) => ok(c, post),
+        (error) => notOk(c, { message: error.message }, 500)
+      );
+    }
+  );
