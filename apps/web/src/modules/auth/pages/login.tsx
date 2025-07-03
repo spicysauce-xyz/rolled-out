@@ -59,7 +59,7 @@ function Login() {
         >
           <form.Field name="email">
             {(field) => (
-              <form.FieldContainer>
+              <form.FieldContainer errors={field.state.meta.errors}>
                 <Input.Root isInvalid={field.state.meta.errors.length > 0}>
                   <Input.Wrapper>
                     <Input.Icon>
@@ -76,11 +76,6 @@ function Login() {
                     />
                   </Input.Wrapper>
                 </Input.Root>
-                {field.state.meta.errors.length ? (
-                  <Text.Root className="text-danger-500" size="sm">
-                    {field.state.meta.errors[0]?.message}
-                  </Text.Root>
-                ) : null}
               </form.FieldContainer>
             )}
           </form.Field>

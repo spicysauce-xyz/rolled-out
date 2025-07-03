@@ -2,7 +2,7 @@ import { SymbolPicker } from "@components/symbol-picker";
 import type { api, SuccessResponse } from "@lib/api";
 import { boardQuery } from "@lib/api/queries";
 import useAppForm from "@lib/form";
-import { Button, Clickable, Dialog, Input, Label, Text } from "@mono/ui";
+import { Button, Clickable, Dialog, Input, Label } from "@mono/ui";
 import { useDisclosure } from "@mono/ui/hooks";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
@@ -80,7 +80,7 @@ const Content: React.FC<
         <div className="flex flex-col gap-4">
           <form.Field name="symbol">
             {(field) => (
-              <form.FieldContainer>
+              <form.FieldContainer errors={field.state.meta.errors}>
                 <Label.Root>
                   Symbol
                   <Label.Asterisk />
@@ -111,7 +111,7 @@ const Content: React.FC<
           </form.Field>
           <form.Field name="name">
             {(field) => (
-              <form.FieldContainer>
+              <form.FieldContainer errors={field.state.meta.errors}>
                 <Label.Root>
                   Name
                   <Label.Asterisk />
@@ -132,17 +132,12 @@ const Content: React.FC<
                     />
                   </Input.Wrapper>
                 </Input.Root>
-                {field.state.meta.errors.length ? (
-                  <Text.Root className="text-danger-500" size="sm">
-                    {field.state.meta.errors[0]?.message}
-                  </Text.Root>
-                ) : null}
               </form.FieldContainer>
             )}
           </form.Field>
           <form.Field name="slug">
             {(field) => (
-              <form.FieldContainer>
+              <form.FieldContainer errors={field.state.meta.errors}>
                 <Label.Root>
                   Slug
                   <Label.Asterisk />
@@ -163,17 +158,12 @@ const Content: React.FC<
                     />
                   </Input.Wrapper>
                 </Input.Root>
-                {field.state.meta.errors.length ? (
-                  <Text.Root className="text-danger-500" size="sm">
-                    {field.state.meta.errors[0]?.message}
-                  </Text.Root>
-                ) : null}
               </form.FieldContainer>
             )}
           </form.Field>
           <form.Field name="tags">
             {(field) => (
-              <form.FieldContainer>
+              <form.FieldContainer errors={field.state.meta.errors}>
                 <Label.Root>
                   Tags
                   <Label.Asterisk />

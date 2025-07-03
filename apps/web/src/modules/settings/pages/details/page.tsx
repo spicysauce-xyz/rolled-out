@@ -146,7 +146,7 @@ function RouteComponent() {
           </form.Field>
           <form.Field name="name">
             {(field) => (
-              <form.FieldContainer>
+              <form.FieldContainer errors={field.state.meta.errors}>
                 <Label.Root>
                   Name
                   <Label.Asterisk />
@@ -169,11 +169,6 @@ function RouteComponent() {
                     />
                   </Input.Wrapper>
                 </Input.Root>
-                {field.state.meta.errors.length ? (
-                  <Text.Root className="text-danger-500" size="sm">
-                    {field.state.meta.errors[0]?.message}
-                  </Text.Root>
-                ) : null}
               </form.FieldContainer>
             )}
           </form.Field>
@@ -205,7 +200,7 @@ function RouteComponent() {
             }}
           >
             {(field) => (
-              <form.FieldContainer>
+              <form.FieldContainer errors={field.state.meta.errors}>
                 <Label.Root>
                   Slug
                   <Label.Asterisk />
@@ -234,11 +229,6 @@ function RouteComponent() {
                       )}
                   </Input.Wrapper>
                 </Input.Root>
-                {field.state.meta.errors.length ? (
-                  <Text.Root className="text-danger-500" size="sm">
-                    {field.state.meta.errors[0]?.message}
-                  </Text.Root>
-                ) : null}
               </form.FieldContainer>
             )}
           </form.Field>

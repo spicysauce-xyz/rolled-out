@@ -35,9 +35,7 @@ export const TagService = {
         postsCount: countDistinct(schema.post.id),
       })
         .from(schema.tag)
-        .where(
-          eq(schema.tag.organizationId, member.organizationId)
-        )
+        .where(eq(schema.tag.organizationId, member.organizationId))
         .leftJoin(schema.postTag, eq(schema.tag.id, schema.postTag.tagId))
         .leftJoin(
           schema.post,

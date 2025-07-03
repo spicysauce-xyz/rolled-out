@@ -1,6 +1,6 @@
 import { SymbolPicker } from "@components/symbol-picker";
 import useAppForm from "@lib/form";
-import { Button, Clickable, Dialog, Input, Label, Text } from "@mono/ui";
+import { Button, Clickable, Dialog, Input, Label } from "@mono/ui";
 import { useDisclosure } from "@mono/ui/hooks";
 import {
   DynamicIcon,
@@ -87,7 +87,7 @@ export const NewBoardDialog: React.FC<NewBoardDialogProps> = ({
           <div className="flex flex-col gap-4">
             <form.Field name="symbol">
               {(field) => (
-                <form.FieldContainer>
+                <form.FieldContainer errors={field.state.meta.errors}>
                   <Label.Root>
                     Symbol
                     <Label.Asterisk />
@@ -136,7 +136,7 @@ export const NewBoardDialog: React.FC<NewBoardDialogProps> = ({
               name="name"
             >
               {(field) => (
-                <form.FieldContainer>
+                <form.FieldContainer errors={field.state.meta.errors}>
                   <Label.Root>
                     Name
                     <Label.Asterisk />
@@ -157,17 +157,12 @@ export const NewBoardDialog: React.FC<NewBoardDialogProps> = ({
                       />
                     </Input.Wrapper>
                   </Input.Root>
-                  {field.state.meta.errors.length ? (
-                    <Text.Root className="text-danger-500" size="sm">
-                      {field.state.meta.errors[0]?.message}
-                    </Text.Root>
-                  ) : null}
                 </form.FieldContainer>
               )}
             </form.Field>
             <form.Field name="slug">
               {(field) => (
-                <form.FieldContainer>
+                <form.FieldContainer errors={field.state.meta.errors}>
                   <Label.Root>
                     Slug
                     <Label.Asterisk />
@@ -188,17 +183,12 @@ export const NewBoardDialog: React.FC<NewBoardDialogProps> = ({
                       />
                     </Input.Wrapper>
                   </Input.Root>
-                  {field.state.meta.errors.length ? (
-                    <Text.Root className="text-danger-500" size="sm">
-                      {field.state.meta.errors[0]?.message}
-                    </Text.Root>
-                  ) : null}
                 </form.FieldContainer>
               )}
             </form.Field>
             <form.Field name="tags">
               {(field) => (
-                <form.FieldContainer>
+                <form.FieldContainer errors={field.state.meta.errors}>
                   <Label.Root>
                     Tags
                     <Label.Asterisk />

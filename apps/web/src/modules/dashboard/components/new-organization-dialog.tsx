@@ -1,7 +1,7 @@
 import useAppForm from "@lib/form";
 import { useCreateOrganizationMutation } from "@modules/dashboard/hooks/use-create-organization-mutation";
 import { useCheckSlugMutation } from "@modules/settings/pages/details/hooks/use-check-slug-mutation";
-import { Button, Dialog, Input, Label, Text } from "@mono/ui";
+import { Button, Dialog, Input, Label } from "@mono/ui";
 import { useNavigate } from "@tanstack/react-router";
 import { Loader2Icon } from "lucide-react";
 import { useEffect } from "react";
@@ -104,7 +104,7 @@ export const NewOrganizationDialog: React.FC<NewOrganizationDialogProps> = ({
               name="name"
             >
               {(field) => (
-                <form.FieldContainer>
+                <form.FieldContainer errors={field.state.meta.errors}>
                   <Label.Root>
                     Name
                     <Label.Asterisk />
@@ -125,11 +125,6 @@ export const NewOrganizationDialog: React.FC<NewOrganizationDialogProps> = ({
                       />
                     </Input.Wrapper>
                   </Input.Root>
-                  {field.state.meta.errors.length ? (
-                    <Text.Root className="text-danger-500" size="sm">
-                      {field.state.meta.errors[0]?.message}
-                    </Text.Root>
-                  ) : null}
                 </form.FieldContainer>
               )}
             </form.Field>
@@ -157,7 +152,7 @@ export const NewOrganizationDialog: React.FC<NewOrganizationDialogProps> = ({
               }}
             >
               {(field) => (
-                <form.FieldContainer>
+                <form.FieldContainer errors={field.state.meta.errors}>
                   <Label.Root>
                     Slug
                     <Label.Asterisk />
@@ -184,11 +179,6 @@ export const NewOrganizationDialog: React.FC<NewOrganizationDialogProps> = ({
                         )}
                     </Input.Wrapper>
                   </Input.Root>
-                  {field.state.meta.errors.length ? (
-                    <Text.Root className="text-danger-500" size="sm">
-                      {field.state.meta.errors[0]?.message}
-                    </Text.Root>
-                  ) : null}
                 </form.FieldContainer>
               )}
             </form.Field>

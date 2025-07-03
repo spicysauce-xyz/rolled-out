@@ -109,7 +109,7 @@ export const TagInput: React.FC<TagInputProps> = ({ provider }) => {
     >
       <form.Field name="search">
         {(field) => (
-          <form.FieldContainer>
+          <form.FieldContainer errors={field.state.meta.errors}>
             <Input.Root
               className="relative"
               isDisabled={createTagMutation.isPending}
@@ -197,11 +197,6 @@ export const TagInput: React.FC<TagInputProps> = ({ provider }) => {
                 </div>
               )}
             </Input.Root>
-            {field.state.meta.errors.length ? (
-              <Text.Root className="text-danger-500" size="sm">
-                {field.state.meta.errors[0]?.message}
-              </Text.Root>
-            ) : null}
           </form.FieldContainer>
         )}
       </form.Field>

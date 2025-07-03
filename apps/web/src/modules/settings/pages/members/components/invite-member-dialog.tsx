@@ -76,7 +76,7 @@ export const InviteMemberDialog: React.FC<InviteMemberDialogProps> = ({
           <div className="flex w-full flex-col gap-4">
             <form.Field name="email">
               {(field) => (
-                <form.FieldContainer className="flex-1">
+                <form.FieldContainer errors={field.state.meta.errors}>
                   <Label.Root htmlFor={field.name}>
                     Email
                     <Label.Asterisk />
@@ -94,11 +94,6 @@ export const InviteMemberDialog: React.FC<InviteMemberDialogProps> = ({
                       />
                     </Input.Wrapper>
                   </Input.Root>
-                  {field.state.meta.errors.length ? (
-                    <Text.Root className="text-danger-500" size="sm">
-                      {field.state.meta.errors[0]?.message}
-                    </Text.Root>
-                  ) : null}
                 </form.FieldContainer>
               )}
             </form.Field>
