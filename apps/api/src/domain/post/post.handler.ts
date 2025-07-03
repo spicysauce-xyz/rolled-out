@@ -1,7 +1,9 @@
 import { organizationFactory } from "@domain/organizaiton/organization.factory";
+import { Emitter } from "@events";
 import { zValidator } from "@hono/zod-validator";
 import { notOk, ok } from "@utils/network";
 import { z } from "zod";
+import { PostCreatedEvent } from "./post.events";
 import { PostsService } from "./post.service";
 
 export const PostHandler = organizationFactory
@@ -21,10 +23,17 @@ export const PostHandler = organizationFactory
     (c) => {
       const member = c.get("member");
 
-      return PostsService.createPost(member).match(
-        (post) => ok(c, post),
-        (error) => notOk(c, { message: error.message }, 500)
-      );
+      return PostsService.createPost(member)
+        .andThrough((post) =>
+          Emitter.emitAsync(
+            PostCreatedEvent.eventName,
+            new PostCreatedEvent(post, member)
+          )
+        )
+        .match(
+          (post) => ok(c, post),
+          (error) => notOk(c, { message: error.message }, 500)
+        );
     }
   )
 

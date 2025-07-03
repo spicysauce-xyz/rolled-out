@@ -3,7 +3,7 @@ import { notOk } from "@utils/network";
 import { and, eq } from "drizzle-orm";
 import { organizationFactory } from "./organization.factory";
 
-export const memberMiddleware = organizationFactory.createMiddleware(
+export const organizationMiddleware = organizationFactory.createMiddleware(
   async (c, next) => {
     const user = c.get("user");
     const organizationId = c.req.param("organizationId");

@@ -2,7 +2,7 @@ import "dotenv/config";
 import { Config } from "@config";
 import { AssetsHandler } from "@domain/assets";
 import { BoardHandler } from "@domain/board";
-import { memberMiddleware } from "@domain/organizaiton/member.middleware";
+import { organizationMiddleware } from "@domain/organizaiton/organization.middleware";
 import { PublicHandler } from "@domain/public";
 import { TagHandler } from "@domain/tag";
 import { serve } from "@hono/node-server";
@@ -35,7 +35,7 @@ export const app = new Hono()
     "/organizations/:organizationId",
     new Hono()
       .use(authMiddleware({ required: true }))
-      .use(memberMiddleware)
+      .use(organizationMiddleware)
       .route("/posts", PostHandler)
       .route("/tags", TagHandler)
       .route("/boards", BoardHandler)

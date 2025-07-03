@@ -1,5 +1,4 @@
 import type { schema } from "@database";
-import { EditorRepository } from "@domain/editor";
 import { okAsync } from "neverthrow";
 import { PostsRepository } from "./post.repository";
 
@@ -11,18 +10,15 @@ export const PostsService = {
       "order" | "title" | "organizationId"
     >
   ) => {
-    return PostsRepository.getPostsCount(member.organizationId)
-      .andThen(([{ count }]) =>
+    return PostsRepository.getPostsCount(member.organizationId).andThen(
+      ([{ count }]) =>
         PostsRepository.createPost({
           ...(data ?? {}),
           title: "Untitled Update",
           order: count + 1,
           organizationId: member.organizationId,
         })
-      )
-      .andThrough((post) =>
-        EditorRepository.createEditor(post.id, member.userId)
-      );
+    );
   },
 
   getPostById: (member: { organizationId: string }, id: string) => {
