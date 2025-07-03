@@ -1,6 +1,7 @@
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { Config } from "@config";
+import { ResultAsync } from "neverthrow";
 
 const client = new S3Client({
   region: "auto",
@@ -18,6 +19,9 @@ export const S3 = {
       Key: fileName,
     });
 
-    return getSignedUrl(client, command, { expiresIn: 60 });
+    return ResultAsync.fromPromise(
+      getSignedUrl(client, command, { expiresIn: 60 }),
+      (error) => new Error("Failed to create upload url", { cause: error })
+    );
   },
 };
