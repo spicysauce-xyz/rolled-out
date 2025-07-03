@@ -1,5 +1,5 @@
 import { Database, schema } from "@database";
-import { countDistinct, desc, eq } from "drizzle-orm";
+import { and, countDistinct, desc, eq } from "drizzle-orm";
 import { err, errAsync, ok, ResultAsync } from "neverthrow";
 import { DatabaseError } from "pg";
 import { TagRepository } from "./tag.repository";
@@ -35,9 +35,17 @@ export const TagService = {
         postsCount: countDistinct(schema.post.id),
       })
         .from(schema.tag)
-        .where(eq(schema.tag.organizationId, member.organizationId))
+        .where(
+          eq(schema.tag.organizationId, member.organizationId)
+        )
         .leftJoin(schema.postTag, eq(schema.tag.id, schema.postTag.tagId))
-        .leftJoin(schema.post, eq(schema.postTag.postId, schema.post.id))
+        .leftJoin(
+          schema.post,
+          and(
+            eq(schema.postTag.postId, schema.post.id),
+            eq(schema.post.status, "published")
+          )
+        )
         .groupBy(schema.tag.id)
         .orderBy(desc(schema.tag.createdAt)),
       (error) => new Error("Failed to get tags", { cause: error })
