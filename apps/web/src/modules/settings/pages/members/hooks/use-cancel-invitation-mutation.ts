@@ -3,20 +3,13 @@ import { authClient } from "@lib/auth";
 import { Toaster } from "@mono/ui";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export const useUpdateMemberRoleMutation = () => {
+export const useCancelInvitationMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: {
-      memberId: string;
-      organizationId: string;
-      // TODO: Update member types here
-      role: "member" | "admin" | "owner";
-    }) => {
-      const response = await authClient.organization.updateMemberRole({
-        organizationId: data.organizationId,
-        memberId: data.memberId,
-        role: data.role,
+    mutationFn: async (data: { invitationId: string }) => {
+      const response = await authClient.organization.cancelInvitation({
+        invitationId: data.invitationId,
       });
 
       if (response.error) {
@@ -26,18 +19,18 @@ export const useUpdateMemberRoleMutation = () => {
       return response.data;
     },
     onMutate: () => {
-      return { toastId: Toaster.loading("Updating member role...") };
+      return { toastId: Toaster.loading("Cancelling invitation...") };
     },
     onSuccess: async (data, __, context) => {
       await queryClient.invalidateQueries(
-        organizationQuery(data.organizationId),
+        organizationQuery(data.organizationId)
       );
 
-      Toaster.success("Member role updated", { id: context.toastId });
+      Toaster.success("Invitation cancelled", { id: context.toastId });
     },
     onError: (error, __, context) => {
       if (context) {
-        Toaster.error("Failed to update member role", {
+        Toaster.error("Failed to cancel invitation", {
           description: error.message,
           id: context?.toastId,
         });

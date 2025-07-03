@@ -16,7 +16,7 @@ export const app = new Hono()
   .use(async (_, next) => {
     if (process.env.NODE_ENV !== "production") {
       await new Promise((resolve) =>
-        setTimeout(resolve, Math.random() * 1000 + 250),
+        setTimeout(resolve, Math.random() * 1000 + 250)
       );
     }
     await next();
@@ -27,7 +27,7 @@ export const app = new Hono()
     cors({
       origin: [Config.client.base],
       credentials: true,
-    }),
+    })
   )
   .route("/auth", AuthHandler)
   .route("/assets", AssetsHandler)
@@ -38,7 +38,7 @@ export const app = new Hono()
       .use(memberMiddleware)
       .route("/posts", PostHandler)
       .route("/tags", TagHandler)
-      .route("/boards", BoardHandler),
+      .route("/boards", BoardHandler)
   );
 
 serve(
@@ -48,5 +48,5 @@ serve(
   },
   () => {
     console.log("Server is running on port 4000");
-  },
+  }
 );

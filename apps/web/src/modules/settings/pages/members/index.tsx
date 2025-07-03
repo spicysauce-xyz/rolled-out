@@ -1,7 +1,7 @@
-import * as Card from "@components/card";
-import * as Transition from "@components/transition";
+import { Card } from "@components/card";
+import { Transition } from "@components/transition";
 import { organizationQuery } from "@lib/api/queries";
-import { useHasPermission } from "@modules/shared/hooks/useHasPermission";
+import { useHasPermission } from "@modules/shared/hooks/use-has-permission";
 import { Button } from "@mono/ui";
 import { useDisclosure } from "@mono/ui/hooks";
 import { useQuery } from "@tanstack/react-query";
@@ -12,7 +12,7 @@ import { InviteMemberDialog } from "./components/invite-member-dialog";
 import { MembersList } from "./components/members-list";
 
 export const Route = createFileRoute(
-  "/_authorized/_has-organization/$organizationSlug/settings/members",
+  "/_authorized/_has-organization/$organizationSlug/settings/members"
 )({
   component: RouteComponent,
 });
@@ -54,10 +54,10 @@ function RouteComponent() {
               </Transition.Item>
             ))
             .otherwise(({ data }) => (
-              <Transition.Item key="list" className="flex flex-col gap-4">
+              <Transition.Item className="flex flex-col gap-4" key="list">
                 <MembersList
-                  members={[...data.members, ...data.invitations]}
                   currentUserId={user.id}
+                  members={[...data.members, ...data.invitations]}
                   organizationId={data.id}
                 />
               </Transition.Item>
@@ -67,8 +67,8 @@ function RouteComponent() {
       {inviteMemberPermission.hasPermission && (
         <Card.Footer>
           <Button.Root
-            onClick={inviteMemberDialog.open}
             isDisabled={organizationData.isPending}
+            onClick={inviteMemberDialog.open}
             variant="secondary"
           >
             <Button.Icon>
@@ -77,9 +77,9 @@ function RouteComponent() {
             Invite Member
           </Button.Root>
           <InviteMemberDialog
-            organizationId={organization.id}
             isOpen={inviteMemberDialog.isOpen}
             onOpenChange={inviteMemberDialog.setOpen}
+            organizationId={organization.id}
           />
         </Card.Footer>
       )}

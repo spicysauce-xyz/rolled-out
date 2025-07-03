@@ -18,17 +18,17 @@ const SidebarRoot = React.forwardRef<HTMLDivElement, SidebarProps>(
   ({ children, className, ...props }, ref) => {
     return (
       <div
-        ref={ref}
         className={cn(
           "flex h-full flex-col border-neutral-100 border-r",
-          className,
+          className
         )}
+        ref={ref}
         {...props}
       >
         {children}
       </div>
     );
-  },
+  }
 );
 
 type SidebarGroupProps = React.HTMLAttributes<HTMLDivElement> & {
@@ -39,13 +39,13 @@ const SidebarGroup = React.forwardRef<HTMLDivElement, SidebarGroupProps>(
   ({ children, className, label, ...props }, ref) => {
     return (
       <div
-        ref={ref}
         className={cn("flex flex-col gap-1 px-2", className)}
+        ref={ref}
         {...props}
       >
         {label && (
           <div className="flex h-9 items-center px-2">
-            <Text.Root size="sm" weight="medium" className="text-neutral-400">
+            <Text.Root className="text-neutral-400" size="sm" weight="medium">
               {label}
             </Text.Root>
           </div>
@@ -53,7 +53,7 @@ const SidebarGroup = React.forwardRef<HTMLDivElement, SidebarGroupProps>(
         {children}
       </div>
     );
-  },
+  }
 );
 
 const SidebarFill = React.forwardRef<
@@ -61,7 +61,7 @@ const SidebarFill = React.forwardRef<
   React.HTMLAttributes<HTMLDivElement>
 >(({ children, className, ...props }, ref) => {
   return (
-    <div ref={ref} className={cn("min-h-4 flex-1", className)} {...props}>
+    <div className={cn("min-h-4 flex-1", className)} ref={ref} {...props}>
       {children}
     </div>
   );
@@ -90,17 +90,17 @@ const SidebarNavLink = React.forwardRef<HTMLAnchorElement, SidebarNavLinkProps>(
     return (
       <Clickable.Root
         asChild
-        variant="tertiary"
         className="flex h-9 items-center border-0 px-2 hover:bg-neutral-100 focus-visible:bg-neutral-100"
+        variant="tertiary"
       >
         <Link ref={ref} {...props}>
           <Clickable.Icon className="mr-2 group-data-[status=active]/clickable-root:text-neutral-900">
             {iconNode}
           </Clickable.Icon>
           <Text.Root
-            weight="medium"
-            size="sm"
             className="text-inherit transition-colors group-data-[status=active]/clickable-root:text-neutral-900"
+            size="sm"
+            weight="medium"
           >
             {label}
           </Text.Root>
@@ -108,7 +108,7 @@ const SidebarNavLink = React.forwardRef<HTMLAnchorElement, SidebarNavLinkProps>(
         </Link>
       </Clickable.Root>
     );
-  },
+  }
 );
 
 const SidebarButton = React.forwardRef<
@@ -122,18 +122,18 @@ const SidebarButton = React.forwardRef<
 
   return (
     <Clickable.Root
-      variant="tertiary"
       className="flex h-9 items-center border-0 px-2 hover:bg-neutral-100 focus-visible:bg-neutral-100"
       ref={ref}
+      variant="tertiary"
       {...props}
     >
       <Clickable.Icon className="mr-2 group-data-[status=active]/clickable-root:text-neutral-900">
         <Icon />
       </Clickable.Icon>
       <Text.Root
-        weight="medium"
-        size="sm"
         className="text-inherit transition-colors group-data-[status=active]/clickable-root:text-neutral-900"
+        size="sm"
+        weight="medium"
       >
         {label}
       </Text.Root>
@@ -152,17 +152,17 @@ const SidebarLink = React.forwardRef<HTMLAnchorElement, SidebarLinkProps>(
     return (
       <Clickable.Root
         asChild
-        variant="tertiary"
         className="flex h-9 items-center border-0 px-2"
+        variant="tertiary"
       >
         <a ref={ref} {...props}>
           <Clickable.Icon className="mr-2">
             <Icon />
           </Clickable.Icon>
           <Text.Root
-            weight="medium"
-            size="sm"
             className="text-inherit transition-colors"
+            size="sm"
+            weight="medium"
           >
             {label}
           </Text.Root>
@@ -173,7 +173,7 @@ const SidebarLink = React.forwardRef<HTMLAnchorElement, SidebarLinkProps>(
         </a>
       </Clickable.Root>
     );
-  },
+  }
 );
 
 const SidebarHeader = React.forwardRef<
@@ -182,11 +182,11 @@ const SidebarHeader = React.forwardRef<
 >(({ children, className, ...props }, ref) => {
   return (
     <div
-      ref={ref}
       className={cn(
         "flex items-center justify-between gap-2 border-neutral-100 border-b p-4",
-        className,
+        className
       )}
+      ref={ref}
       {...props}
     >
       {children}
@@ -200,8 +200,8 @@ const SidebarLogo = React.forwardRef<
 >(({ children, className, ...props }, ref) => {
   return (
     <div
-      ref={ref}
       className={cn("flex items-center gap-2", className)}
+      ref={ref}
       {...props}
     >
       <ScrollTextIcon className="size-4 stroke-2 stroke-neutral-900" />
@@ -217,7 +217,7 @@ const SidebarVersion = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof Text.Root>
 >(({ children, className, ...props }, ref) => {
   return (
-    <Text.Root ref={ref} size="xs" color="muted" {...props} asChild>
+    <Text.Root color="muted" ref={ref} size="xs" {...props} asChild>
       <a
         href={`https://github.com/spicysauce-xyz/rolled-out/releases/tag/${config.version}`}
         rel="noreferrer"
@@ -235,8 +235,8 @@ const SidebarFooter = React.forwardRef<
 >(({ children, className, ...props }, ref) => {
   return (
     <div
-      ref={ref}
       className={cn("border-neutral-100 border-t p-4", className)}
+      ref={ref}
       {...props}
     >
       {children}
@@ -255,16 +255,16 @@ const SidebarScrollArea: React.FC<React.PropsWithChildren> = ({ children }) => {
   );
 };
 
-export {
-  SidebarRoot as Root,
-  SidebarGroup as Group,
-  SidebarFill as Fill,
-  SidebarNavLink as NavLink,
-  SidebarLink as Link,
-  SidebarButton as Button,
-  SidebarHeader as Header,
-  SidebarLogo as Logo,
-  SidebarVersion as Version,
-  SidebarFooter as Footer,
-  SidebarScrollArea as ScrollArea,
+export const Sidebar = {
+  Root: SidebarRoot,
+  Group: SidebarGroup,
+  Fill: SidebarFill,
+  NavLink: SidebarNavLink,
+  Link: SidebarLink,
+  Button: SidebarButton,
+  Header: SidebarHeader,
+  Logo: SidebarLogo,
+  Version: SidebarVersion,
+  Footer: SidebarFooter,
+  ScrollArea: SidebarScrollArea,
 };

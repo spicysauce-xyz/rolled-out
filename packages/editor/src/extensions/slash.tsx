@@ -17,9 +17,9 @@ import {
 } from "lucide-react";
 import { forwardRef, useImperativeHandle, useState } from "react";
 import tippy, {
-  type Props,
-  type Instance,
   type GetReferenceClientRect,
+  type Instance,
+  type Props,
 } from "tippy.js";
 
 interface SlashCommandMenuRef {
@@ -68,23 +68,23 @@ const SlashCommandMenu = forwardRef<
     <div className="flex-col gap-px rounded-xl border border-neutral-100 bg-white p-2 shadow-xl">
       {items.map((item, index) => (
         <Clickable.Root
-          key={item.title}
-          variant="tertiary"
-          onMouseEnter={() => setSelectedIndex(index)}
           className={cn(
             "w-full items-center gap-2 p-2",
-            selectedIndex === index && "bg-neutral-50 text-neutral-600",
+            selectedIndex === index && "bg-neutral-50 text-neutral-600"
           )}
+          key={item.title}
+          onMouseEnter={() => setSelectedIndex(index)}
+          variant="tertiary"
         >
           <Clickable.Icon
             className={cn(
               "size-5",
-              selectedIndex === index && "text-neutral-500",
+              selectedIndex === index && "text-neutral-500"
             )}
           >
             <item.icon />
           </Clickable.Icon>
-          <Text.Root size="sm" weight="medium" className="text-inherit">
+          <Text.Root className="text-inherit" size="sm" weight="medium">
             {item.title}
           </Text.Root>
         </Clickable.Root>
@@ -107,7 +107,7 @@ export const Slash = Extension.create({
         }: {
           editor: Editor;
           range: Range;
-          props: { command: (props: { editor: Editor; range: Range }) => void };
+          props: { command: (data: { editor: Editor; range: Range }) => void };
         }) => {
           props.command({ editor, range });
         },
@@ -198,7 +198,7 @@ export const Slash = Extension.create({
                 return;
               }
 
-              // @ts-ignore
+              // @ts-expect-error
               popup = tippy("body", {
                 getReferenceClientRect: props.clientRect,
                 appendTo: () => document.body,
@@ -230,7 +230,7 @@ export const Slash = Extension.create({
                 return false;
               }
 
-              // @ts-ignore
+              // @ts-expect-error
               return component?.ref?.onKeyDown(props);
             },
             onExit: () => {

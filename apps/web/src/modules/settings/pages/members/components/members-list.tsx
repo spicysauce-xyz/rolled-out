@@ -4,7 +4,7 @@ import { formatDistance } from "date-fns";
 import _ from "lodash";
 import { useMemo } from "react";
 import { InvitationMenu } from "./invite-menu";
-import * as MemberEntry from "./member-entry";
+import { MemberEntry } from "./member-entry";
 import { MemberMenu } from "./member-menu";
 
 interface MemberProps {
@@ -24,9 +24,9 @@ const Member: React.FC<MemberProps> = ({
     <MemberEntry.Root key={data.id}>
       <MemberEntry.Group>
         <MemberEntry.Avatar
-          name={data.user.name}
           email={data.user.email}
           image={data.user.image}
+          name={data.user.name}
         >
           {isCurrentUser && <MemberEntry.AvatarBadge label="You" />}
         </MemberEntry.Avatar>
@@ -51,9 +51,15 @@ interface InvitationProps {
 
 const Invitation: React.FC<InvitationProps> = ({ data, organizationId }) => {
   const statusColor = useMemo(() => {
-    if (data.status === "pending") return "warning";
-    if (data.status === "accepted") return "success";
-    if (["rejected", "canceled"].includes(data.status)) return "danger";
+    if (data.status === "pending") {
+      return "warning";
+    }
+    if (data.status === "accepted") {
+      return "success";
+    }
+    if (["rejected", "canceled"].includes(data.status)) {
+      return "danger";
+    }
     return "muted";
   }, [data.status]);
 
@@ -64,7 +70,7 @@ const Invitation: React.FC<InvitationProps> = ({ data, organizationId }) => {
         <MemberEntry.Content>
           <MemberEntry.Heading>{data.email}</MemberEntry.Heading>
           <MemberEntry.Subheading>
-            <Text.Root size="xs" color={statusColor} asChild>
+            <Text.Root asChild color={statusColor} size="xs">
               <span>{_.capitalize(data.status)} Invitation</span>
             </Text.Root>{" "}
             · Expires in {formatDistance(data.expiresAt, new Date())}
@@ -89,7 +95,9 @@ export const MembersList: React.FC<MembersListProps> & {
 } = ({ members, currentUserId, organizationId }) => {
   const filteredMembers = useMemo(() => {
     return members.filter((member) => {
-      if ("userId" in member) return true;
+      if ("userId" in member) {
+        return true;
+      }
       return member.status === "pending";
     });
   }, [members]);
@@ -98,9 +106,9 @@ export const MembersList: React.FC<MembersListProps> & {
     if ("userId" in member) {
       return (
         <Member
-          key={member.id}
-          data={member}
           currentUserId={currentUserId}
+          data={member}
+          key={member.id}
           organizationId={organizationId}
         />
       );
@@ -108,8 +116,8 @@ export const MembersList: React.FC<MembersListProps> & {
 
     return (
       <Invitation
-        key={member.id}
         data={member}
+        key={member.id}
         organizationId={organizationId}
       />
     );
@@ -119,7 +127,7 @@ export const MembersList: React.FC<MembersListProps> & {
 MembersList.Skeleton = () => {
   return (
     <div className="flex flex-col gap-4">
-      {new Array(5).fill(null).map((_, index) => (
+      {new Array(5).fill(null).map((__, index) => (
         // biome-ignore lint/suspicious/noArrayIndexKey: could be used as key
         <div className="flex items-center gap-2" key={index}>
           <Skeleton.Root className="size-10 rounded-md" />

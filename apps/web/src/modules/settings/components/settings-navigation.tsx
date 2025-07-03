@@ -1,4 +1,4 @@
-import * as Sidebar from "@components/layout/sidebar";
+import { Sidebar } from "@components/layout/sidebar";
 import type { authClient } from "@lib/auth";
 import { NotificationsList } from "@modules/shared/components/notifications-list";
 import { UserMenu } from "@modules/shared/components/user-menu";
@@ -27,11 +27,11 @@ export const SettingsNavigation: React.FC<SettingsNavigationProps> = ({
     <Sidebar.Root className="hidden w-64 bg-neutral-50 sm:flex">
       <Sidebar.Header>
         <Clickable.Root
-          className="items-center gap-2 border-0"
           asChild
+          className="items-center gap-2 border-0"
           variant="tertiary"
         >
-          <Link to="/$organizationSlug" params={{ organizationSlug }}>
+          <Link params={{ organizationSlug }} to="/$organizationSlug">
             <Clickable.Icon>
               <ArrowLeftIcon />
             </Clickable.Icon>
@@ -46,36 +46,36 @@ export const SettingsNavigation: React.FC<SettingsNavigationProps> = ({
         <div className="flex flex-col gap-4">
           <Sidebar.Group label="Account">
             <Sidebar.NavLink
-              to="/$organizationSlug/settings/profile"
-              params={{ organizationSlug }}
-              label="Profile"
               icon={User2Icon}
+              label="Profile"
+              params={{ organizationSlug }}
+              to="/$organizationSlug/settings/profile"
             />
             <Sidebar.NavLink
-              to="/$organizationSlug/settings/sessions"
-              params={{ organizationSlug }}
-              label="Devices & Sessions"
               icon={SmartphoneIcon}
+              label="Devices & Sessions"
+              params={{ organizationSlug }}
+              to="/$organizationSlug/settings/sessions"
             />
           </Sidebar.Group>
           <Sidebar.Group label={organizationName}>
             <Sidebar.NavLink
-              to="/$organizationSlug/settings/details"
-              params={{ organizationSlug }}
-              label="Details"
               icon={NotebookTextIcon}
+              label="Details"
+              params={{ organizationSlug }}
+              to="/$organizationSlug/settings/details"
             />
             <Sidebar.NavLink
-              to="/$organizationSlug/settings/members"
-              params={{ organizationSlug }}
-              label="Members"
               icon={Users2}
+              label="Members"
+              params={{ organizationSlug }}
+              to="/$organizationSlug/settings/members"
             />
           </Sidebar.Group>
         </div>
       </Sidebar.ScrollArea>
       <Sidebar.Footer className="flex gap-1 p-2">
-        <UserMenu user={user} organizationSlug={organizationSlug} />
+        <UserMenu organizationSlug={organizationSlug} user={user} />
         <NotificationsList />
       </Sidebar.Footer>
     </Sidebar.Root>

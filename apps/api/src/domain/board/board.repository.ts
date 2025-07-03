@@ -1,6 +1,6 @@
 import { Database, schema } from "@database";
 import { and, desc, eq, exists, sql } from "drizzle-orm";
-import { ResultAsync, err, ok } from "neverthrow";
+import { err, ok, ResultAsync } from "neverthrow";
 import { DatabaseError } from "pg";
 
 export const BoardsRepository = {
@@ -15,14 +15,15 @@ export const BoardsRepository = {
         })
         .returning(),
       (error) => {
-        if (error instanceof DatabaseError) {
-          if (error.constraint === "board_slug_unique") {
-            return new Error("Board slug already taken", { cause: error });
-          }
+        if (
+          error instanceof DatabaseError &&
+          error.constraint === "board_slug_unique"
+        ) {
+          return new Error("Board slug already taken", { cause: error });
         }
 
         return new Error("Failed to create board", { cause: error });
-      },
+      }
     ).andThen((board) => {
       if (!board.length) {
         return err(new Error("Failed to create board"));
@@ -35,7 +36,10 @@ export const BoardsRepository = {
   findBoardById: (id: string, organizationId: string) => {
     return ResultAsync.fromPromise(
       Database.query.board.findFirst({
-        where: and(eq(schema.board.id, id), eq(schema.board.organizationId, organizationId)),
+        where: and(
+          eq(schema.board.id, id),
+          eq(schema.board.organizationId, organizationId)
+        ),
         with: {
           tags: {
             with: {
@@ -44,7 +48,7 @@ export const BoardsRepository = {
           },
         },
       }),
-      (error) => new Error("Failed to get board by id", { cause: error }),
+      (error) => new Error("Failed to get board by id", { cause: error })
     ).andThen((board) => {
       if (!board) {
         return err(new Error("Board not found"));
@@ -61,16 +65,28 @@ export const BoardsRepository = {
         name: schema.board.name,
         symbol: schema.board.symbol,
         createdAt: schema.board.createdAt,
-        postCount: sql<number>`count(distinct ${schema.post.id})::int`.as("post_count"),
+        postCount: sql<number>`count(distinct ${schema.post.id})::int`.as(
+          "post_count"
+        ),
       })
         .from(schema.board)
         .leftJoin(schema.boardTag, eq(schema.boardTag.boardId, schema.board.id))
-        .leftJoin(schema.postTag, eq(schema.postTag.tagId, schema.boardTag.tagId))
-        .leftJoin(schema.post, and(eq(schema.post.id, schema.postTag.postId), eq(schema.post.status, "published")))
+        .leftJoin(
+          schema.postTag,
+          eq(schema.postTag.tagId, schema.boardTag.tagId)
+        )
+        .leftJoin(
+          schema.post,
+          and(
+            eq(schema.post.id, schema.postTag.postId),
+            eq(schema.post.status, "published")
+          )
+        )
         .where(eq(schema.board.organizationId, organizationId))
         .groupBy(schema.board.id)
         .orderBy(desc(schema.board.createdAt)),
-      (error) => new Error("Failed to get boards from organization", { cause: error }),
+      (error) =>
+        new Error("Failed to get boards from organization", { cause: error })
     );
   },
 
@@ -116,23 +132,40 @@ export const BoardsRepository = {
           exists(
             Database.select()
               .from(schema.postTag)
-              .innerJoin(schema.boardTag, eq(schema.postTag.tagId, schema.boardTag.tagId))
-              .where(and(eq(schema.postTag.postId, schema.post.id), eq(schema.boardTag.boardId, boardId))),
-          ),
+              .innerJoin(
+                schema.boardTag,
+                eq(schema.postTag.tagId, schema.boardTag.tagId)
+              )
+              .where(
+                and(
+                  eq(schema.postTag.postId, schema.post.id),
+                  eq(schema.boardTag.boardId, boardId)
+                )
+              )
+          )
         ),
         orderBy: [desc(schema.post.updatedAt)],
       }),
-      (error) => new Error("Failed to get posts for board", { cause: error }),
+      (error) => new Error("Failed to get posts for board", { cause: error })
     );
   },
 
-  updateBoard: (id: string, organizationId: string, data: Partial<typeof schema.board.$inferInsert>) => {
+  updateBoard: (
+    id: string,
+    organizationId: string,
+    data: Partial<typeof schema.board.$inferInsert>
+  ) => {
     return ResultAsync.fromPromise(
       Database.update(schema.board)
         .set({ ...data, updatedAt: new Date() })
-        .where(and(eq(schema.board.id, id), eq(schema.board.organizationId, organizationId)))
+        .where(
+          and(
+            eq(schema.board.id, id),
+            eq(schema.board.organizationId, organizationId)
+          )
+        )
         .returning(),
-      (error) => new Error("Failed to update board", { cause: error }),
+      (error) => new Error("Failed to update board", { cause: error })
     ).andThen((result) => {
       if (result.length === 0) {
         return err(new Error("Board not found"));

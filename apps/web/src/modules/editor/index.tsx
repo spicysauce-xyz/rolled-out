@@ -1,20 +1,20 @@
-import * as Confirmer from "@components/feedback/confirmer";
-import * as Page from "@components/layout/page";
-import * as Transition from "@components/transition";
+import { Confirmer } from "@components/feedback/confirmer";
+import { Page } from "@components/layout/page";
+import { Transition } from "@components/transition";
 import { api } from "@lib/api";
-import { useGoBack } from "@modules/dashboard/hooks/useGoBack";
-import { usePublishUpdateMutation } from "@modules/dashboard/hooks/usePublishUpdateMutation";
+import { useGoBack } from "@modules/dashboard/hooks/use-go-back";
+import { usePublishUpdateMutation } from "@modules/dashboard/hooks/use-publish-update-mutation";
 import { Editor } from "@mono/editor";
 import { Button, IconButton, Skeleton, Text } from "@mono/ui";
 import { createFileRoute, redirect, useParams } from "@tanstack/react-router";
 import { tryCatch } from "@utils/promise";
 import { ArrowLeftIcon, ClockIcon, SendIcon } from "lucide-react";
-import { ConnectedPeers } from "./components/ConnectedPeers";
-import { EditorTags } from "./components/EditorTags";
-import { useHocuspocusProvider } from "./hooks/useHocuspocusProvider";
+import { ConnectedPeers } from "./components/connected-peers";
+import { EditorTags } from "./components/editor-tags";
+import { useHocuspocusProvider } from "./hooks/use-hocuspocus-provider";
 
 export const Route = createFileRoute(
-  "/_authorized/_has-organization/$organizationSlug/editor/$id",
+  "/_authorized/_has-organization/$organizationSlug/editor/$id"
 )({
   component: RouteComponent,
   beforeLoad: async ({ context, params }) => {
@@ -33,12 +33,12 @@ export const Route = createFileRoute(
 
           return json.data;
         },
-      }),
+      })
     );
 
     if (!post) {
       throw redirect({
-        to: "/$organizationSlug/updates",
+        to: "/$organizationSlug",
         params: { organizationSlug: context.organization.slug },
       });
     }
@@ -52,7 +52,7 @@ function RouteComponent() {
   const { organization, user } = Route.useRouteContext();
 
   const handleGoBack = useGoBack({
-    to: "/$organizationSlug/updates",
+    to: "/$organizationSlug",
     params: { organizationSlug },
   });
 
@@ -68,7 +68,9 @@ function RouteComponent() {
       },
     });
 
-    if (!confirmed) return;
+    if (!confirmed) {
+      return;
+    }
 
     await publishPostMutation.mutateAsync(
       {
@@ -77,7 +79,7 @@ function RouteComponent() {
       },
       {
         onSuccess: handleGoBack,
-      },
+      }
     );
   };
 
@@ -88,7 +90,7 @@ function RouteComponent() {
       <Page.Wrapper>
         <Page.Header>
           <div className="flex items-center gap-4">
-            <IconButton.Root variant="secondary" onClick={handleGoBack}>
+            <IconButton.Root onClick={handleGoBack} variant="secondary">
               <IconButton.Icon>
                 <ArrowLeftIcon />
               </IconButton.Icon>
@@ -97,8 +99,8 @@ function RouteComponent() {
               <Transition.Root>
                 {hocuspocus.isReady ? (
                   <Transition.Item
-                    key="title"
                     className="flex items-center gap-4"
+                    key="title"
                   >
                     <Text.Root size="sm" weight="medium">
                       {hocuspocus.title || "Untitled Update"}
@@ -114,14 +116,14 @@ function RouteComponent() {
               <Transition.Root>
                 {hocuspocus.isReady && hocuspocus.hasUnsyncedChanges && (
                   <Transition.Item key="sync-status">
-                    <Text.Root size="xs" color="muted">
+                    <Text.Root color="muted" size="xs">
                       Syncing...
                     </Text.Root>
                   </Transition.Item>
                 )}
                 {hocuspocus.isReady && !hocuspocus.hasUnsyncedChanges && (
                   <Transition.Item key="synced">
-                    <Text.Root size="xs" color="muted">
+                    <Text.Root color="muted" size="xs">
                       Synced
                     </Text.Root>
                   </Transition.Item>
@@ -143,15 +145,15 @@ function RouteComponent() {
               )}
             </Transition.Root>
             <div className="flex items-center gap-2">
-              <Button.Root variant="secondary" isDisabled={!hocuspocus.isReady}>
+              <Button.Root isDisabled={!hocuspocus.isReady} variant="secondary">
                 <Button.Icon>
                   <ClockIcon />
                 </Button.Icon>
                 Schedule
               </Button.Root>
               <Button.Root
-                isLoading={publishPostMutation.isPending}
                 isDisabled={!hocuspocus.isReady}
+                isLoading={publishPostMutation.isPending}
                 onClick={handlePublish}
               >
                 <Button.Icon>
@@ -165,7 +167,7 @@ function RouteComponent() {
         <Page.Content className="mx-auto flex w-full max-w-180 flex-1 flex-col">
           <Transition.Root>
             {hocuspocus.isReady ? (
-              <Transition.Item key="editor" className="flex flex-1">
+              <Transition.Item className="flex flex-1" key="editor">
                 <Editor.Root provider={hocuspocus.provider} user={{ ...user }}>
                   <Editor.Content />
                   <Editor.BubbleMenu />

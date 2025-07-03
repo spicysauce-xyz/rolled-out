@@ -8,10 +8,10 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouteContext } from "@tanstack/react-router";
 import { SearchIcon } from "lucide-react";
 import { useCallback, useMemo, useRef } from "react";
-import { P, match } from "ts-pattern";
+import { match, P } from "ts-pattern";
 import { z } from "zod";
-import { useCreateTagMutation } from "../hooks/useCreateTagMutation";
-import { useDocumentTagManager } from "../hooks/useDocumentTagManager";
+import { useCreateTagMutation } from "../hooks/use-create-tag-mutation";
+import { useDocumentTagManager } from "../hooks/use-document-tag-manager";
 import type { Tag } from "../types";
 
 interface TagInputProps {
@@ -21,14 +21,14 @@ interface TagInputProps {
 const useFilteredTags = (
   search: string,
   organizationTags: Tag[],
-  currentTags: [string, string][],
+  currentTags: [string, string][]
 ) => {
   return useMemo(() => {
     return organizationTags
       .filter(
         (tag) =>
           tag.label.toLowerCase().includes(search.toLowerCase()) &&
-          !currentTags.some(([id]) => id === tag.id),
+          !currentTags.some(([id]) => id === tag.id)
       )
       .slice(0, 3);
   }, [currentTags, search, organizationTags]);
@@ -40,7 +40,7 @@ export const TagInput: React.FC<TagInputProps> = ({ provider }) => {
   });
 
   const { data: organizationTags } = useQuery(
-    organizationTagsQuery(organization.id),
+    organizationTagsQuery(organization.id)
   );
 
   const tagManager = useDocumentTagManager(provider);
@@ -48,15 +48,6 @@ export const TagInput: React.FC<TagInputProps> = ({ provider }) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const createTagMutation = useCreateTagMutation();
-
-  const handleClickTag = useCallback(
-    (tag: Tag) => {
-      form.setFieldValue("search", "");
-      tagManager.add(tag);
-      inputRef.current?.focus();
-    },
-    [tagManager],
-  );
 
   const form = useAppForm({
     defaultValues: {
@@ -87,7 +78,7 @@ export const TagInput: React.FC<TagInputProps> = ({ provider }) => {
               inputRef.current?.focus();
             });
           },
-        },
+        }
       );
     },
   });
@@ -97,7 +88,16 @@ export const TagInput: React.FC<TagInputProps> = ({ provider }) => {
   const availableTags = useFilteredTags(
     search,
     organizationTags ?? [],
-    tagManager.tags,
+    tagManager.tags
+  );
+
+  const handleClickTag = useCallback(
+    (tag: Tag) => {
+      form.setFieldValue("search", "");
+      tagManager.add(tag);
+      inputRef.current?.focus();
+    },
+    [tagManager, form.setFieldValue]
   );
 
   return (
@@ -120,14 +120,14 @@ export const TagInput: React.FC<TagInputProps> = ({ provider }) => {
                   <SearchIcon />
                 </Input.Icon>
                 <Input.Field
-                  ref={inputRef}
+                  autoComplete="off"
                   id={field.name}
                   name={field.name}
-                  value={field.state.value}
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
                   placeholder="Search or create a tag"
-                  autoComplete="off"
+                  ref={inputRef}
+                  value={field.state.value}
                 />
               </Input.Wrapper>
               {field.state.value.length >= 3 && (
@@ -135,7 +135,7 @@ export const TagInput: React.FC<TagInputProps> = ({ provider }) => {
                   className={cn(
                     "-right-px -left-px absolute top-[calc(100%+0.5rem)] z-10 flex-col items-center gap-1 rounded-md border border-neutral-200 bg-white p-2 shadow-lg",
                     "fade-out-0 hidden animate-out",
-                    "group-focus-within/input-root:fade-in-0 group-focus-within/input-root:pointer-events-auto group-focus-within/input-root:flex group-focus-within/input-root:animate-in",
+                    "group-focus-within/input-root:fade-in-0 group-focus-within/input-root:pointer-events-auto group-focus-within/input-root:flex group-focus-within/input-root:animate-in"
                   )}
                 >
                   {match(availableTags)
@@ -150,25 +150,25 @@ export const TagInput: React.FC<TagInputProps> = ({ provider }) => {
 
                           return (
                             <Clickable.Root
-                              variant="tertiary"
-                              key={tag.id}
-                              type="button"
                               className={tagClassName.root({
                                 className:
                                   "h-9 w-full justify-start border-0 bg-white",
                               })}
+                              key={tag.id}
                               onClick={() => handleClickTag(tag)}
+                              type="button"
+                              variant="tertiary"
                             >
                               <Text.Root
+                                className={tagClassName.text()}
                                 size="sm"
                                 weight="medium"
-                                className={tagClassName.text()}
                               >
                                 {tag.label}
                               </Text.Root>
                             </Clickable.Root>
                           );
-                        }),
+                        })
                     )
                     .otherwise(() => {
                       const tagColor = TagComponent.getTagColor(search);
@@ -178,9 +178,9 @@ export const TagInput: React.FC<TagInputProps> = ({ provider }) => {
 
                       return (
                         <Text.Root
-                          size="xs"
-                          color="muted"
                           className="text-balance text-center"
+                          color="muted"
+                          size="xs"
                         >
                           No tags found. Press Enter to create{" "}
                           <span
@@ -198,7 +198,7 @@ export const TagInput: React.FC<TagInputProps> = ({ provider }) => {
               )}
             </Input.Root>
             {field.state.meta.errors.length ? (
-              <Text.Root size="sm" className="text-danger-500">
+              <Text.Root className="text-danger-500" size="sm">
                 {field.state.meta.errors[0]?.message}
               </Text.Root>
             ) : null}

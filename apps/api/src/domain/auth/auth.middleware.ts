@@ -18,7 +18,9 @@ type AuthMiddlewareParams<R extends boolean> = {
   required: R;
 };
 
-export const authMiddleware = <R extends boolean>(params: AuthMiddlewareParams<R>) => {
+export const authMiddleware = <R extends boolean>(
+  params: AuthMiddlewareParams<R>
+) => {
   return createMiddleware<AuthMiddleware<R>>(async (c, next) => {
     const session = await auth.api.getSession({ headers: c.req.raw.headers });
 

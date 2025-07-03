@@ -1,9 +1,9 @@
-import * as Confirmer from "@components/feedback/confirmer";
-import { useHasPermission } from "@modules/shared/hooks/useHasPermission";
+import { Confirmer } from "@components/feedback/confirmer";
+import { useHasPermission } from "@modules/shared/hooks/use-has-permission";
 import { Button, DropdownMenu } from "@mono/ui";
 import { EllipsisVerticalIcon, Trash2Icon } from "lucide-react";
 import { useCallback } from "react";
-import { useCancelInvitationMutation } from "../hooks/useCancelInvitationMutation";
+import { useCancelInvitationMutation } from "../hooks/use-cancel-invitation-mutation";
 
 interface InvitationMenuProps {
   invitation: { id: string; email: string };
@@ -33,7 +33,9 @@ export const InvitationMenu = ({
       },
     });
 
-    if (!confirmed) return;
+    if (!confirmed) {
+      return;
+    }
 
     await cancelInvitationMutation.mutateAsync({
       invitationId: invitation.id,

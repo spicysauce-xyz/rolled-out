@@ -4,10 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 
 export const useSendMagicLinkMutation = () =>
   useMutation({
-    mutationFn: async (data: {
-      email: string;
-      callbackURL: string;
-    }) => {
+    mutationFn: async (data: { email: string; callbackURL: string }) => {
       const response = await authClient.signIn.magicLink({
         email: data.email,
         callbackURL: data.callbackURL,

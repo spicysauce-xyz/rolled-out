@@ -1,8 +1,8 @@
-import * as BetterAuth from "better-auth";
+import { type Adapter, type BetterAuthOptions, betterAuth } from "better-auth";
 import {
   type Member,
-  type Organization,
   magicLink,
+  type Organization,
   organization,
 } from "better-auth/plugins";
 
@@ -10,7 +10,7 @@ interface Params {
   domain: string;
   baseURL: string;
   basePath: string;
-  database: (options: BetterAuth.BetterAuthOptions) => BetterAuth.Adapter;
+  database: (options: BetterAuthOptions) => Adapter;
   trustedOrigins: string[];
   sendInvitationEmail?: (data: {
     invitation: { email: string; role: string };
@@ -20,16 +20,16 @@ interface Params {
     url: string;
     token: string;
   }) => Promise<void>;
-  afterOrganizationCreate?: (
-    organization: Organization,
-    member: Member,
-  ) => Promise<void>;
+  afterOrganizationCreate?: (data: {
+    organization: Organization;
+    member: Member;
+  }) => Promise<void>;
 }
 
 export const createServerAuth = (
-  params: Params,
-): ReturnType<typeof BetterAuth.betterAuth> =>
-  BetterAuth.betterAuth({
+  params: Params
+): ReturnType<typeof betterAuth> =>
+  betterAuth({
     baseURL: params.baseURL,
     basePath: params.basePath,
     database: params.database,
@@ -78,12 +78,15 @@ export const createServerAuth = (
       organization({
         sendInvitationEmail: params.sendInvitationEmail,
         organizationCreation: {
-          afterCreate: async ({ organization, member }) =>
-            params.afterOrganizationCreate?.(organization, member),
+          afterCreate: async (data) => params.afterOrganizationCreate?.(data),
         },
       }),
       magicLink({
-        sendMagicLink: params.sendMagicLinkEmail ?? (async () => {}),
+        sendMagicLink:
+          params.sendMagicLinkEmail ??
+          (() => {
+            return;
+          }),
       }),
     ],
     rateLimit: {

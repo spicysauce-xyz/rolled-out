@@ -1,12 +1,16 @@
-import * as AvatarPrimitive from "@radix-ui/react-avatar";
-import * as React from "react";
+import {
+  Fallback as RadixAvatarFallback,
+  Image as RadixAvatarImage,
+  Root as RadixAvatarRoot,
+} from "@radix-ui/react-avatar";
+import React from "react";
 import type { VariantProps } from "tailwind-variants";
 import { cn, tv } from "../../utils";
 import { Text } from "../text";
 
 const avatarVariants = tv({
   slots: {
-    root: "relative flex shrink-0 rounded-md overflow-clip bg-neutral-100",
+    root: "relative flex shrink-0 overflow-clip rounded-md bg-neutral-100",
   },
   variants: {
     size: {
@@ -28,49 +32,45 @@ const avatarVariants = tv({
 
 type AvatarSharedProps = VariantProps<typeof avatarVariants>;
 
-type AvatarProps = React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Root> &
+type AvatarProps = React.ComponentPropsWithoutRef<typeof RadixAvatarRoot> &
   AvatarSharedProps;
 
 const AvatarRoot = React.forwardRef<
-  React.ElementRef<typeof AvatarPrimitive.Root>,
+  React.ElementRef<typeof RadixAvatarRoot>,
   AvatarProps
 >(({ className, size, ...props }, ref) => {
   const { root } = avatarVariants({ size });
 
   return (
-    <AvatarPrimitive.Root
-      ref={ref}
-      {...props}
-      className={root({ className })}
-    />
+    <RadixAvatarRoot ref={ref} {...props} className={root({ className })} />
   );
 });
 
 const AvatarImage = React.forwardRef<
-  React.ElementRef<typeof AvatarPrimitive.Image>,
-  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Image>
+  React.ElementRef<typeof RadixAvatarImage>,
+  React.ComponentPropsWithoutRef<typeof RadixAvatarImage>
 >(({ className, ...props }, ref) => (
-  <AvatarPrimitive.Image
-    ref={ref}
+  <RadixAvatarImage
     className={cn(
       "fade-in-0 aspect-square h-full w-full animate-in rounded-[inherit] object-cover object-center transition-opacity",
-      className,
+      className
     )}
+    ref={ref}
     {...props}
   />
 ));
 
 const AvatarFallback = React.forwardRef<
-  React.ElementRef<typeof AvatarPrimitive.Fallback>,
-  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Fallback>
+  React.ElementRef<typeof RadixAvatarFallback>,
+  React.ComponentPropsWithoutRef<typeof RadixAvatarFallback>
 >(({ className, ...props }, ref) => (
-  <Text.Root asChild weight="medium" size="sm">
-    <AvatarPrimitive.Fallback
-      ref={ref}
+  <Text.Root asChild size="sm" weight="medium">
+    <RadixAvatarFallback
       className={cn(
         "flex h-full w-full items-center justify-center rounded-[inherit] border border-neutral-100 bg-neutral-50 uppercase",
-        className,
+        className
       )}
+      ref={ref}
       {...props}
     />
   </Text.Root>

@@ -25,18 +25,18 @@ const getClientConfig = () => {
 };
 
 const formatConfig = (
-  config:
+  rawConfig:
     | ReturnType<typeof getServerConfig>
-    | ReturnType<typeof getClientConfig>,
+    | ReturnType<typeof getClientConfig>
 ) => {
   return {
-    version: config.version,
-    apiUrl: config.api,
-    authUrl: `${config.api}/auth`,
-    hocusUrl: new URL(config.hocus).origin.replace("http", "ws"),
+    version: rawConfig.version,
+    apiUrl: rawConfig.api,
+    authUrl: `${rawConfig.api}/auth`,
+    hocusUrl: new URL(rawConfig.hocus).origin.replace("http", "ws"),
   };
 };
 
 export const config = formatConfig(
-  import.meta.env.SSR ? getServerConfig() : getClientConfig(),
+  import.meta.env.SSR ? getServerConfig() : getClientConfig()
 );

@@ -1,7 +1,8 @@
 import { Config } from "@config";
+// biome-ignore lint/performance/noNamespaceImport: i might fix this later
 import * as schema from "@mono/db";
 import type { ExtractTablesWithRelations } from "drizzle-orm";
-import { type NodePgQueryResultHKT, drizzle } from "drizzle-orm/node-postgres";
+import { drizzle, type NodePgQueryResultHKT } from "drizzle-orm/node-postgres";
 import type { PgTransaction } from "drizzle-orm/pg-core";
 
 export const Database = drizzle({

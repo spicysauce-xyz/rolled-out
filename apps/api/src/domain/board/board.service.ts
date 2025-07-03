@@ -4,7 +4,7 @@ import { BoardsRepository } from "./board.repository";
 export const BoardsService = {
   createBoard: (
     member: { organizationId: string },
-    data: Pick<typeof schema.board.$inferInsert, "name" | "symbol" | "slug">,
+    data: Pick<typeof schema.board.$inferInsert, "name" | "symbol" | "slug">
   ) => {
     return BoardsRepository.createBoard({
       ...(data ?? {}),
@@ -26,7 +26,11 @@ export const BoardsService = {
     return BoardsRepository.findBoardPosts(member.organizationId, boardId);
   },
 
-  updateBoard: (member: { organizationId: string }, id: string, data: Partial<typeof schema.board.$inferInsert>) => {
+  updateBoard: (
+    member: { organizationId: string },
+    id: string,
+    data: Partial<typeof schema.board.$inferInsert>
+  ) => {
     return BoardsRepository.updateBoard(id, member.organizationId, data);
   },
 };

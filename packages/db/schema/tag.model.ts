@@ -18,5 +18,5 @@ export const tag = pgTable(
       .notNull()
       .defaultNow(),
   },
-  (tag) => [unique().on(tag.organizationId, tag.label)],
+  (table) => [unique().on(table.organizationId, table.label)]
 );

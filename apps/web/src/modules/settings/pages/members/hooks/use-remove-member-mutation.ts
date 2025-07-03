@@ -20,10 +20,7 @@ export const useRemoveMemberMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: {
-      memberId: string;
-      organizationId: string;
-    }) => {
+    mutationFn: async (data: { memberId: string; organizationId: string }) => {
       const response = await authClient.organization.removeMember({
         organizationId: data.organizationId,
         memberIdOrEmail: data.memberId,
@@ -40,7 +37,7 @@ export const useRemoveMemberMutation = () => {
     },
     onSuccess: async (data, __, context) => {
       await queryClient.invalidateQueries(
-        organizationQuery(data.organizationId),
+        organizationQuery(data.organizationId)
       );
 
       Toaster.success("Member removed", { id: context.toastId });

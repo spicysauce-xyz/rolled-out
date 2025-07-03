@@ -1,14 +1,13 @@
+import { getServerConfig } from "@config";
 import {
   createStartHandler,
   defaultStreamHandler,
 } from "@tanstack/react-start/server";
-
-import { getServerConfig } from "@config";
 import { createRouter } from "./router";
 
 // Create a custom stream handler that injects the config
 const customStreamHandler = async (
-  context: Parameters<typeof defaultStreamHandler>[0],
+  context: Parameters<typeof defaultStreamHandler>[0]
 ) => {
   const configScript = `
     <script>

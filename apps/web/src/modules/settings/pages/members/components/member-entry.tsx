@@ -9,8 +9,8 @@ const MemberEntryRoot = forwardRef<
 >(({ children, className, ...props }, ref) => {
   return (
     <div
-      ref={ref}
       className={cn("group flex items-start justify-between gap-4", className)}
+      ref={ref}
       {...props}
     >
       {children}
@@ -24,8 +24,8 @@ const MemberEntryGroup = forwardRef<
 >(({ children, className, ...props }, ref) => {
   return (
     <div
-      ref={ref}
       className={cn("flex items-center gap-2", className)}
+      ref={ref}
       {...props}
     >
       {children}
@@ -45,20 +45,23 @@ const MemberEntryAvatar = forwardRef<
   MemberEntryAvatarProps
 >(({ children, name, email, image, className, ...props }, ref) => {
   const fallback = useMemo(() => {
-    if (name)
+    if (name) {
       return name
         .toUpperCase()
         .split(" ")
         .map((n) => n[0])
         .slice(0, 2)
         .join("");
-    if (email) return email[0].toUpperCase();
+    }
+    if (email) {
+      return email[0].toUpperCase();
+    }
     return "";
   }, [name, email]);
 
   return (
     <div className="relative">
-      <Avatar.Root ref={ref} className={className} {...props}>
+      <Avatar.Root className={className} ref={ref} {...props}>
         <Avatar.Image src={image} />
         <Avatar.Fallback>{fallback}</Avatar.Fallback>
       </Avatar.Root>
@@ -78,11 +81,11 @@ const MemberEntryAvatarBadge = forwardRef<
 >(({ children, label, className, ...props }, ref) => {
   return (
     <div
-      ref={ref}
       className={cn(
         "-right-1.5 -top-1.5 absolute flex items-center justify-center rounded-full bg-accent-500 px-0.75 text-[8px] text-white",
-        className,
+        className
       )}
+      ref={ref}
       {...props}
     >
       {label}
@@ -96,8 +99,8 @@ const MemberEntryContent = forwardRef<
 >(({ children, className, ...props }, ref) => {
   return (
     <div
-      ref={ref}
       className={cn("flex flex-col gap-0.5", className)}
+      ref={ref}
       {...props}
     >
       {children}
@@ -111,10 +114,10 @@ const MemberEntryHeading = forwardRef<
 >(({ children, className, ...props }, ref) => {
   return (
     <Text.Root
+      className={className}
+      ref={ref}
       size="sm"
       weight="medium"
-      ref={ref}
-      className={className}
       {...props}
     >
       {children}
@@ -128,10 +131,10 @@ const MemberEntrySubheading = forwardRef<
 >(({ children, className, ...props }, ref) => {
   return (
     <Text.Root
-      size="xs"
+      className={className}
       color="muted"
       ref={ref}
-      className={className}
+      size="xs"
       {...props}
     >
       {children}
@@ -139,12 +142,12 @@ const MemberEntrySubheading = forwardRef<
   );
 });
 
-export {
-  MemberEntryRoot as Root,
-  MemberEntryGroup as Group,
-  MemberEntryAvatar as Avatar,
-  MemberEntryAvatarBadge as AvatarBadge,
-  MemberEntryContent as Content,
-  MemberEntryHeading as Heading,
-  MemberEntrySubheading as Subheading,
+export const MemberEntry = {
+  Root: MemberEntryRoot,
+  Group: MemberEntryGroup,
+  Avatar: MemberEntryAvatar,
+  AvatarBadge: MemberEntryAvatarBadge,
+  Content: MemberEntryContent,
+  Heading: MemberEntryHeading,
+  Subheading: MemberEntrySubheading,
 };

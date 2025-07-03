@@ -4,7 +4,7 @@ export class OrganizationCreatedEvent {
   static readonly eventName = "organization.created";
 
   constructor(
-    public readonly organization: Organization,
-    public readonly member: Member,
+    readonly organization: Organization,
+    readonly member: Member
   ) {}
 }

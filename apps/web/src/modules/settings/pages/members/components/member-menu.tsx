@@ -1,11 +1,11 @@
-import * as Confirmer from "@components/feedback/confirmer";
-import { useHasPermission } from "@modules/shared/hooks/useHasPermission";
+import { Confirmer } from "@components/feedback/confirmer";
+import { useHasPermission } from "@modules/shared/hooks/use-has-permission";
 import { Button, DropdownMenu, Text } from "@mono/ui";
 import _ from "lodash";
 import { EllipsisVerticalIcon, Trash2Icon, UserCog2Icon } from "lucide-react";
 import { useCallback } from "react";
-import { useRemoveMemberMutation } from "../hooks/useRemoveMemberMutation";
-import { useUpdateMemberRoleMutation } from "../hooks/useUpdateMemberRoleMutation";
+import { useRemoveMemberMutation } from "../hooks/use-remove-member-mutation";
+import { useUpdateMemberRoleMutation } from "../hooks/use-update-member-role-mutation";
 
 interface MemberMenuProps {
   member: { id: string; user: { name: string }; role: string };
@@ -32,7 +32,9 @@ export const MemberMenu = ({ member, organizationId }: MemberMenuProps) => {
       },
     });
 
-    if (!confirmed) return;
+    if (!confirmed) {
+      return;
+    }
 
     await removeMemberMutation.mutateAsync({
       organizationId,
@@ -54,7 +56,9 @@ export const MemberMenu = ({ member, organizationId }: MemberMenuProps) => {
         description: `Are you sure you want to update ${member.user.name}'s role to ${role}?`,
       });
 
-      if (!confirmed) return;
+      if (!confirmed) {
+        return;
+      }
 
       await updateMemberRoleMutation.mutateAsync({
         organizationId,
@@ -62,7 +66,7 @@ export const MemberMenu = ({ member, organizationId }: MemberMenuProps) => {
         role,
       });
     },
-    [member, organizationId, updateMemberRoleMutation],
+    [member, organizationId, updateMemberRoleMutation]
   );
 
   if (deleteMemberPermission.isPending || updateMemberPermission.isPending) {
@@ -70,8 +74,10 @@ export const MemberMenu = ({ member, organizationId }: MemberMenuProps) => {
   }
 
   if (
-    !deleteMemberPermission.hasPermission &&
-    !updateMemberPermission.hasPermission
+    !(
+      deleteMemberPermission.hasPermission ||
+      updateMemberPermission.hasPermission
+    )
   ) {
     return null;
   }
@@ -99,10 +105,10 @@ export const MemberMenu = ({ member, organizationId }: MemberMenuProps) => {
             </DropdownMenu.SubTrigger>
             <DropdownMenu.SubContent>
               <DropdownMenu.RadioGroup
-                value={member.role}
                 onValueChange={(value) => {
                   handleUpdateMemberRole(value as "member" | "admin" | "owner");
                 }}
+                value={member.role}
               >
                 {["owner", "admin", "member"].map((role) => (
                   <DropdownMenu.RadioItem key={role} value={role}>

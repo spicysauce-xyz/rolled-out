@@ -142,11 +142,14 @@
   --color-misc-6-900: oklch(0.359 0.144 278.697);
   --color-misc-6-950: oklch(0.257 0.09 281.288);
 
-
-  --font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-sans:
+    ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol", "Noto Color Emoji";
   --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  
+  --font-mono:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
+
   --spacing: 0.25rem;
 
   --breakpoint-sm: 40rem;
@@ -208,14 +211,28 @@
   --color-black: black;
 
   --shadow-xs: 0px 1px 2px 0px oklch(0.13 0.028 261.692 / 0.05);
-  --shadow-sm: 0px 1px 2px -1px oklch(0.13 0.028 261.692 / 0.1), 0px 1px 3px 0px oklch(0.13 0.028 261.692 / 0.1);
-  --shadow-md: 0px 2px 4px -2px oklch(0.13 0.028 261.692 / 0.06), 0px 4px 6px -1px oklch(0.13 0.028 261.692 / 0.1);
-  --shadow-lg: 0px 2px 2px -1px oklch(0.13 0.028 261.692 / 0.04), 0px 4px 6px -2px oklch(0.13 0.028 261.692 / 0.03), 0px 12px 16px -4px oklch(0.13 0.028 261.692 / 0.08);
-  --shadow-xl: 0px 3px 3px -1.5px oklch(0.13 0.028 261.692 / 0.04), 0px 8px 8px -4px oklch(0.13 0.028 261.692 / 0.03), 0px 20px 24px -4px oklch(0.13 0.028 261.692 / 0.08);
-  --shadow-2xl: 0px 4px 4px -2px oklch(0.13 0.028 261.692 / 0.04), 0px 24px 48px -12px oklch(0.13 0.028 261.692 / 0.18);
-  --shadow-3xl: 0px 5px 5px -2.5px oklch(0.13 0.028 261.692 / 0.04), 0px 32px 64px -12px oklch(0.13 0.028 261.692 / 0.14);
+  --shadow-sm:
+    0px 1px 2px -1px oklch(0.13 0.028 261.692 / 0.1), 0px 1px 3px 0px
+    oklch(0.13 0.028 261.692 / 0.1);
+  --shadow-md:
+    0px 2px 4px -2px oklch(0.13 0.028 261.692 / 0.06), 0px 4px 6px -1px
+    oklch(0.13 0.028 261.692 / 0.1);
+  --shadow-lg:
+    0px 2px 2px -1px oklch(0.13 0.028 261.692 / 0.04), 0px 4px 6px -2px oklch(
+      0.13 0.028 261.692 / 0.03
+    ), 0px 12px 16px -4px oklch(0.13 0.028 261.692 / 0.08);
+  --shadow-xl:
+    0px 3px 3px -1.5px oklch(0.13 0.028 261.692 / 0.04), 0px 8px 8px -4px oklch(
+      0.13 0.028 261.692 / 0.03
+    ), 0px 20px 24px -4px oklch(0.13 0.028 261.692 / 0.08);
+  --shadow-2xl:
+    0px 4px 4px -2px oklch(0.13 0.028 261.692 / 0.04), 0px 24px 48px -12px
+    oklch(0.13 0.028 261.692 / 0.18);
+  --shadow-3xl:
+    0px 5px 5px -2.5px oklch(0.13 0.028 261.692 / 0.04), 0px 32px 64px -12px
+    oklch(0.13 0.028 261.692 / 0.14);
 
-  --inset-shadow-default: inset 0 1px 2px rgba(255, 255, 255, 0.2); 
+  --inset-shadow-default: inset 0 1px 2px rgba(255, 255, 255, 0.2);
 
   --animate-spin: spin 1s linear infinite;
   --animate-pulse: pulse 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
@@ -251,5 +268,3 @@
   --default-transition-duration: 150ms;
   --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
-
-

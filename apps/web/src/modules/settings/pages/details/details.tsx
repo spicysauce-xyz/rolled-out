@@ -1,4 +1,4 @@
-import * as Card from "@components/card";
+import { Card } from "@components/card";
 import { FileUpload } from "@components/file-upload";
 import { organizationQuery } from "@lib/api/queries";
 import useAppForm from "@lib/form";
@@ -8,11 +8,11 @@ import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { Loader2Icon, SaveIcon } from "lucide-react";
 import { match } from "ts-pattern";
 import { z } from "zod";
-import { useCheckSlugMutation } from "./hooks/useCheckSlugMutation";
-import { useUpdateOrganizationMutation } from "./hooks/useUpdateOrganizationMutation";
+import { useCheckSlugMutation } from "./hooks/use-check-slug-mutation";
+import { useUpdateOrganizationMutation } from "./hooks/use-update-organization-mutation";
 
 export const Route = createFileRoute(
-  "/_authorized/_has-organization/$organizationSlug/settings/details",
+  "/_authorized/_has-organization/$organizationSlug/settings/details"
 )({
   component: RouteComponent,
 });
@@ -71,7 +71,7 @@ function RouteComponent() {
               await router.invalidate({ sync: true });
             }
           },
-        },
+        }
       );
     },
   });
@@ -98,11 +98,11 @@ function RouteComponent() {
               <form.FieldContainer>
                 <Label.Root>Avatar</Label.Root>
                 <FileUpload
-                  type="logo"
                   id={field.name}
                   onUploadComplete={(url) => {
                     field.setValue(url);
                   }}
+                  type="logo"
                 >
                   {({ id }, state) => (
                     <label htmlFor={id}>
@@ -118,16 +118,16 @@ function RouteComponent() {
                                   style={{ top: `${progress}%` }}
                                 />
                               </div>
-                            ),
+                            )
                           )
                           .otherwise(() => (
                             <>
                               <Avatar.Image src={field.state.value || ""} />
                               <div className="absolute inset-0 flex items-center justify-center bg-white/10 opacity-0 backdrop-blur-sm transition-all group-hover:opacity-100">
                                 <Text.Root
+                                  className="text-white"
                                   size="xs"
                                   weight="medium"
-                                  className="text-white"
                                 >
                                   Update
                                 </Text.Root>
@@ -153,24 +153,24 @@ function RouteComponent() {
                 </Label.Root>
                 <Input.Root
                   className="w-full"
-                  isInvalid={field.state.meta.errors.length > 0}
                   isDisabled={
                     isOrganizationQueryPending || form.state.isSubmitting
                   }
+                  isInvalid={field.state.meta.errors.length > 0}
                 >
                   <Input.Wrapper>
                     <Input.Field
                       id={field.name}
                       name={field.name}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
                       placeholder="Acme Inc."
                       value={field.state.value}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      onBlur={field.handleBlur}
                     />
                   </Input.Wrapper>
                 </Input.Root>
                 {field.state.meta.errors.length ? (
-                  <Text.Root size="sm" className="text-danger-500">
+                  <Text.Root className="text-danger-500" size="sm">
                     {field.state.meta.errors[0]?.message}
                   </Text.Root>
                 ) : null}
@@ -179,8 +179,8 @@ function RouteComponent() {
           </form.Field>
 
           <form.Field
-            name="slug"
             asyncDebounceMs={500}
+            name="slug"
             validators={{
               onChangeAsync: async ({ value }) => {
                 let isSlugAvailable = false;
@@ -212,19 +212,19 @@ function RouteComponent() {
                 </Label.Root>
                 <Input.Root
                   className="w-full"
-                  isInvalid={field.state.meta.errors.length > 0}
                   isDisabled={
                     isOrganizationQueryPending || form.state.isSubmitting
                   }
+                  isInvalid={field.state.meta.errors.length > 0}
                 >
                   <Input.Wrapper>
                     <Input.Field
                       id={field.name}
                       name={field.name}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
                       placeholder="acme-inc"
                       value={field.state.value}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      onBlur={field.handleBlur}
                     />
                     {field.state.meta.isValidating &&
                       !field.form.state.isSubmitting && (
@@ -235,7 +235,7 @@ function RouteComponent() {
                   </Input.Wrapper>
                 </Input.Root>
                 {field.state.meta.errors.length ? (
-                  <Text.Root size="sm" className="text-danger-500">
+                  <Text.Root className="text-danger-500" size="sm">
                     {field.state.meta.errors[0]?.message}
                   </Text.Root>
                 ) : null}
@@ -254,9 +254,9 @@ function RouteComponent() {
             {({ isSubmitting, isDirty, canSubmit }) => (
               <div className="flex gap-2">
                 <Button.Root
-                  type="submit"
+                  isDisabled={!(canSubmit && isDirty)}
                   isLoading={isSubmitting}
-                  isDisabled={!canSubmit || !isDirty}
+                  type="submit"
                 >
                   <Button.Icon>
                     <SaveIcon />
@@ -265,10 +265,10 @@ function RouteComponent() {
                 </Button.Root>
                 {isDirty && (
                   <Button.Root
+                    isDisabled={isSubmitting}
+                    onClick={() => form.reset()}
                     type="button"
                     variant="tertiary"
-                    onClick={() => form.reset()}
-                    isDisabled={isSubmitting}
                   >
                     Discard
                   </Button.Root>

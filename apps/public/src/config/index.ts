@@ -19,15 +19,15 @@ const getClientConfig = () => {
 };
 
 const formatConfig = (
-  config:
+  rawConfig:
     | ReturnType<typeof getServerConfig>
-    | ReturnType<typeof getClientConfig>,
+    | ReturnType<typeof getClientConfig>
 ) => {
   return {
-    apiUrl: config.api,
+    apiUrl: rawConfig.api,
   };
 };
 
 export const config = formatConfig(
-  import.meta.env.SSR ? getServerConfig() : getClientConfig(),
+  import.meta.env.SSR ? getServerConfig() : getClientConfig()
 );

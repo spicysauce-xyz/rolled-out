@@ -9,7 +9,9 @@ export const useDocumentTagManager = (provider?: HocuspocusProvider) => {
   useEffect(() => {
     const ydoc = provider?.document;
 
-    if (!ydoc) return;
+    if (!ydoc) {
+      return;
+    }
 
     const yTags = ydoc.getMap<string>("update:tags");
 
@@ -22,7 +24,9 @@ export const useDocumentTagManager = (provider?: HocuspocusProvider) => {
     (tag: { id: string; label: string }) => {
       const ydoc = provider?.document;
 
-      if (!ydoc) return;
+      if (!ydoc) {
+        return;
+      }
 
       const yDocTags = ydoc.getMap<string>(KEY);
 
@@ -30,14 +34,16 @@ export const useDocumentTagManager = (provider?: HocuspocusProvider) => {
         yDocTags.set(tag.id, tag.label);
       });
     },
-    [provider],
+    [provider]
   );
 
   const remove = useCallback(
     (tagId: string) => {
       const ydoc = provider?.document;
 
-      if (!ydoc) return;
+      if (!ydoc) {
+        return;
+      }
 
       const yTags = ydoc.getMap<string>(KEY);
 
@@ -45,7 +51,7 @@ export const useDocumentTagManager = (provider?: HocuspocusProvider) => {
         yTags.delete(tagId);
       });
     },
-    [provider],
+    [provider]
   );
 
   return { tags: Object.entries(tags), add, remove };

@@ -1,9 +1,9 @@
-import * as Page from "@components/layout/page";
+import { Page } from "@components/layout/page";
 import { Breadcrumbs } from "@modules/shared/components/breadcrumbs";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute(
-  "/_authorized/_has-organization/$organizationSlug/_index/contacts",
+  "/_authorized/_has-organization/$organizationSlug/_index/contacts"
 )({
   component: RouteComponent,
 });

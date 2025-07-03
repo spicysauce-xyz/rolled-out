@@ -8,16 +8,16 @@ export const linkButtonVariants = tv({
   slots: {
     root: [
       // base
-      "group/link-button-root inline-flex relative overflow-hidden select-none font-weight-500",
+      "group/link-button-root relative inline-flex select-none overflow-hidden font-weight-500",
       // hover
       "transition-[color]",
       // focus
-      "focus-visible:outline-none ring-2 focus-visible:ring-offset-1 rounded-xs ring-transparent focus-visible:ring-accent-500",
+      "rounded-xs ring-2 ring-transparent focus-visible:outline-none focus-visible:ring-accent-500 focus-visible:ring-offset-1",
     ],
-    content: ["flex flex-1 gap-1 items-center whitespace-nowrap"],
+    content: ["flex flex-1 items-center gap-1 whitespace-nowrap"],
     icon: [
       // base
-      "flex size-4 shrink-0 items-center justify-center [&>svg]:w-full [&>svg]:h-full",
+      "flex size-4 shrink-0 items-center justify-center [&>svg]:h-full [&>svg]:w-full",
       // hover
       "transition-colors",
     ],
@@ -203,7 +203,7 @@ export type LinkButtonRootProps = Omit<LinkButtonSharedProps, "disabled"> &
 const LinkButtonRoot = React.forwardRef<HTMLButtonElement, LinkButtonRootProps>(
   (
     { children, color, size, asChild, className, isDisabled, ...rest },
-    forwardedRef,
+    forwardedRef
   ) => {
     const Component = asChild ? Slot : "button";
     const { root, content } = linkButtonVariants({
@@ -223,18 +223,20 @@ const LinkButtonRoot = React.forwardRef<HTMLButtonElement, LinkButtonRootProps>(
         <Component
           ref={forwardedRef}
           {...rest}
+          className={root({ class: className })}
           disabled={isDisabled}
           onClick={(...args) => {
-            if (isDisabled) return;
+            if (isDisabled) {
+              return;
+            }
             rest.onClick?.(...args);
           }}
-          className={root({ class: className })}
         >
           <div className={content()}>{children}</div>
         </Component>
       </LinkButtonContext.Provider>
     );
-  },
+  }
 );
 
 type LinkButtonIconProps = React.HTMLAttributes<HTMLDivElement> & AsChildProp;
@@ -258,7 +260,7 @@ const LinkButtonIcon = React.forwardRef<HTMLDivElement, LinkButtonIconProps>(
         {children}
       </Component>
     );
-  },
+  }
 );
 
 export { LinkButtonRoot as Root, LinkButtonIcon as Icon };

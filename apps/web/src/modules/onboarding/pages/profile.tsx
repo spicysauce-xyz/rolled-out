@@ -1,6 +1,6 @@
 import { authClient } from "@lib/auth";
 import useAppForm from "@lib/form";
-import { useSession } from "@modules/auth/hooks/useSession";
+import { useSession } from "@modules/auth/hooks/use-session";
 import { Button, Input, Label, Toaster } from "@mono/ui";
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
@@ -44,7 +44,7 @@ function RouteComponent() {
               to: "/onboarding/organization",
             });
           },
-        },
+        }
       );
     },
   });
@@ -54,11 +54,11 @@ function RouteComponent() {
       <div className="flex w-full flex-1 flex-col items-center justify-center gap-6 p-6 sm:max-w-108">
         <div className="flex-1" />
         <form
+          className="flex w-full flex-col gap-6"
           onSubmit={(e) => {
             e.preventDefault();
             form.handleSubmit();
           }}
-          className="flex w-full flex-col gap-6"
         >
           <form.Field name="name">
             {(field) => (
@@ -78,10 +78,10 @@ function RouteComponent() {
                     <Input.Field
                       id={field.name}
                       name={field.name}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
                       placeholder="John Doe"
                       value={field.state.value}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      onBlur={field.handleBlur}
                     />
                   </Input.Wrapper>
                 </Input.Root>
@@ -98,17 +98,17 @@ function RouteComponent() {
             {({ isSubmitting, isDirty, isFieldsValid }) => (
               <div className="flex justify-between gap-2">
                 <Button.Root
+                  isDisabled={isSubmitting}
                   type="button"
                   variant="secondary"
-                  isDisabled={isSubmitting}
                 >
                   Skip
                 </Button.Root>
                 <Button.Root
-                  type="submit"
                   color="accent"
+                  isDisabled={!(isDirty && isFieldsValid)}
                   isLoading={isSubmitting}
-                  isDisabled={!isDirty || !isFieldsValid}
+                  type="submit"
                 >
                   Create Organization
                   <Button.Icon>

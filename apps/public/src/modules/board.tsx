@@ -53,7 +53,7 @@ function RouteComponent() {
             <ScrollTextIcon className="size-4 text-neutral-900" />
           </div>
           <div className="flex items-center gap-2">
-            <Button.Root variant="tertiary" className="!text-neutral-900">
+            <Button.Root className="!text-neutral-900" variant="tertiary">
               <Button.Icon className="!text-neutral-900">
                 <CircleIcon />
               </Button.Icon>
@@ -93,7 +93,7 @@ function RouteComponent() {
                 )}
                 <div className="flex flex-wrap justify-end gap-2">
                   {post.tags.map(({ tag }) => (
-                    <Tag.Root key={tag.id} className="h-7.5 rounded-sm px-2">
+                    <Tag.Root className="h-7.5 rounded-sm px-2" key={tag.id}>
                       {tag.label}
                     </Tag.Root>
                   ))}
@@ -103,11 +103,12 @@ function RouteComponent() {
             <div className="w-full max-w-180 border-neutral-100 border-x">
               <div
                 className={cn(editorContentClassName, "p-6")}
+                // biome-ignore lint/security/noDangerouslySetInnerHtml: ok this is bad, will think about it
                 dangerouslySetInnerHTML={{ __html: post.contentHTML }}
               />
               <div className="flex w-full items-center justify-between border-neutral-100 border-t p-6">
                 <div className="flex flex-col gap-0.5">
-                  <Text.Root size="xs" color="muted">
+                  <Text.Root color="muted" size="xs">
                     Published by:
                   </Text.Root>
                   <div className="flex items-center gap-2">
@@ -127,13 +128,13 @@ function RouteComponent() {
                   </div>
                 </div>
                 <div className="flex gap-2">
-                  <Button.Root variant="secondary" color="success">
+                  <Button.Root color="success" variant="secondary">
                     <Button.Icon>
                       <ThumbsUpIcon />
                     </Button.Icon>
                     12
                   </Button.Root>
-                  <Button.Root variant="secondary" color="danger">
+                  <Button.Root color="danger" variant="secondary">
                     <Button.Icon>
                       <ThumbsDownIcon />
                     </Button.Icon>

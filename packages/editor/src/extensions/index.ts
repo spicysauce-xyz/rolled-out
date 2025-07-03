@@ -53,7 +53,7 @@ export const extensions = [
         "Mod-b": () =>
           onlyInAllowedNodesForMarks(
             this.editor,
-            this.editor.commands.toggleBold,
+            this.editor.commands.toggleBold
           ),
       };
     },
@@ -64,7 +64,7 @@ export const extensions = [
         "Mod-i": () =>
           onlyInAllowedNodesForMarks(
             this.editor,
-            this.editor.commands.toggleItalic,
+            this.editor.commands.toggleItalic
           ),
       };
     },
@@ -75,7 +75,7 @@ export const extensions = [
         "Mod-s": () =>
           onlyInAllowedNodesForMarks(
             this.editor,
-            this.editor.commands.toggleStrike,
+            this.editor.commands.toggleStrike
           ),
       };
     },
@@ -86,7 +86,7 @@ export const extensions = [
         "Mod-u": () =>
           onlyInAllowedNodesForMarks(
             this.editor,
-            this.editor.commands.toggleUnderline,
+            this.editor.commands.toggleUnderline
           ),
       };
     },
@@ -97,7 +97,7 @@ export const extensions = [
         "Mod-e": () =>
           onlyInAllowedNodesForMarks(
             this.editor,
-            this.editor.commands.toggleCode,
+            this.editor.commands.toggleCode
           ),
       };
     },

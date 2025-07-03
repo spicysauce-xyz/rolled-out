@@ -1,5 +1,4 @@
-import { createContext, forwardRef } from "react";
-import React from "react";
+import React, { createContext, forwardRef } from "react";
 import type { VariantProps } from "tailwind-variants";
 import { tv } from "../../utils";
 import { Text } from "../text";
@@ -8,7 +7,7 @@ const inputVariants = tv({
   slots: {
     root: [
       // base
-      "group/input-root flex rounded-md border border-neutral-200 bg-white shadow-xs tracking-tight",
+      "group/input-root flex rounded-md border border-neutral-200 bg-white tracking-tight shadow-xs",
       // transition
       "transition-all",
       // hover
@@ -18,7 +17,7 @@ const inputVariants = tv({
     ],
     wrapper: [
       // base
-      "group/input-wrapper flex-1 h-full flex items-center cursor-text",
+      "group/input-wrapper flex h-full flex-1 cursor-text items-center",
       // transition
       "transition-all",
     ],
@@ -37,7 +36,7 @@ const inputVariants = tv({
       "shrink-0 select-none text-neutral-500",
     ],
     icon: [
-      "shrink-0 select-none text-neutral-500 size-4 flex items-center justify-center",
+      "flex size-4 shrink-0 select-none items-center justify-center text-neutral-500",
     ],
     divider: [
       // base
@@ -57,14 +56,14 @@ const inputVariants = tv({
         wrapper: ["gap-2 px-2.5"],
         field: ["text-sm"],
         icon: "first:mr-0.5 last:ml-0.5",
-        text: "first:mr-0.5 last:ml-0.5 text-sm",
+        text: "text-sm first:mr-0.5 last:ml-0.5",
       },
       md: {
         root: ["h-10"],
         wrapper: ["gap-2 px-3"],
         field: ["text-sm"],
         icon: "first:mr-1 last:ml-1",
-        text: "first:mr-1 last:ml-1 text-sm",
+        text: "text-sm first:mr-1 last:ml-1",
       },
       lg: {
         root: ["h-11"],
@@ -100,10 +99,10 @@ const inputVariants = tv({
     disabled: {
       true: {
         root: [
-          "hover:border-neutral-200 bg-neutral-50 select-none shadow-none",
+          "select-none bg-neutral-50 shadow-none hover:border-neutral-200",
         ],
         wrapper: ["cursor-not-allowed"],
-        field: ["text-neutral-400 cursor-not-allowed"],
+        field: ["cursor-not-allowed text-neutral-400"],
         text: ["text-neutral-400"],
         icon: ["text-neutral-400"],
         divider: ["group-hover/input-root:bg-neutral-200"],
@@ -141,7 +140,7 @@ const InputRoot = forwardRef<HTMLInputElement, InputRootProps>(
         <div ref={ref} {...props} className={root({ className })} />
       </InputContext.Provider>
     );
-  },
+  }
 );
 
 type InputWrapperProps = React.HTMLAttributes<HTMLLabelElement>;
@@ -155,7 +154,7 @@ const InputWrapper = forwardRef<HTMLLabelElement, InputWrapperProps>(
       // biome-ignore lint/a11y/noLabelWithoutControl: input is wrapped in a label when used
       <label ref={ref} {...props} className={wrapper({ className })} />
     );
-  },
+  }
 );
 
 type InputFieldProps = React.InputHTMLAttributes<HTMLInputElement>;
@@ -169,11 +168,11 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
       <input
         ref={ref}
         {...props}
-        disabled={disabled}
         className={field({ className })}
+        disabled={disabled}
       />
     );
-  },
+  }
 );
 
 type InputTextProps = Omit<React.HTMLAttributes<HTMLParagraphElement>, "color">;
@@ -184,7 +183,7 @@ const InputText = forwardRef<HTMLParagraphElement, InputTextProps>(
     const { text } = inputVariants({ size, invalid, disabled });
 
     return <Text.Root ref={ref} {...props} className={text({ className })} />;
-  },
+  }
 );
 
 type InputIconProps = React.HTMLAttributes<HTMLDivElement>;
@@ -195,7 +194,7 @@ const InputIcon = forwardRef<HTMLDivElement, InputIconProps>(
     const { icon } = inputVariants({ size, invalid, disabled });
 
     return <div ref={ref} {...props} className={icon({ className })} />;
-  },
+  }
 );
 
 type InputDividerProps = React.HTMLAttributes<HTMLDivElement>;
@@ -206,7 +205,7 @@ const InputDivider = forwardRef<HTMLDivElement, InputDividerProps>(
     const { divider } = inputVariants({ size, invalid, disabled });
 
     return <div ref={ref} {...props} className={divider({ className })} />;
-  },
+  }
 );
 
 export {

@@ -1,7 +1,7 @@
-import { Outlet, createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authorized/_has-organization/")({
-  beforeLoad: async ({ context }) => {
+  beforeLoad: ({ context }) => {
     throw redirect({
       to: "/$organizationSlug",
       params: {

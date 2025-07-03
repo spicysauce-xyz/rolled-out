@@ -9,13 +9,13 @@ export const NotificationsList = () => {
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
         <IconButton.Root
-          variant="tertiary"
-          color={hasUnreadNotifications ? "accent" : "neutral"}
           className={cn(
             "shrink-0",
-            !hasUnreadNotifications && "hover:bg-neutral-100",
+            !hasUnreadNotifications && "hover:bg-neutral-100"
           )}
+          color={hasUnreadNotifications ? "accent" : "neutral"}
           size="sm"
+          variant="tertiary"
         >
           <IconButton.Icon>
             {hasUnreadNotifications ? (
@@ -26,7 +26,7 @@ export const NotificationsList = () => {
           </IconButton.Icon>
         </IconButton.Root>
       </DropdownMenu.Trigger>
-      <DropdownMenu.Content side="right" align="end">
+      <DropdownMenu.Content align="end" side="right">
         <DropdownMenu.Item>
           <span>Notifications</span>
         </DropdownMenu.Item>

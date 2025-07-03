@@ -1,24 +1,24 @@
-import * as LabelPrimitives from "@radix-ui/react-label";
-import * as React from "react";
+import { Root as RadixLabelRoot } from "@radix-ui/react-label";
+import React from "react";
 import { cn } from "../../utils";
 import { Text } from "../text";
 
 const LabelRoot = React.forwardRef<
-  React.ComponentRef<typeof LabelPrimitives.Root>,
-  React.ComponentPropsWithoutRef<typeof LabelPrimitives.Root> & {
+  React.ComponentRef<typeof RadixLabelRoot>,
+  React.ComponentPropsWithoutRef<typeof RadixLabelRoot> & {
     disabled?: boolean;
   }
 >(({ className, disabled, ...rest }, ref) => {
   return (
     <Text.Root asChild size="sm" weight="medium">
-      <LabelPrimitives.Root
-        ref={ref}
+      <RadixLabelRoot
+        aria-disabled={disabled}
         className={cn(
           "group cursor-pointer",
           "flex items-center gap-px",
-          className,
+          className
         )}
-        aria-disabled={disabled}
+        ref={ref}
         {...rest}
       />
     </Text.Root>
@@ -43,7 +43,7 @@ function LabelSub({
   ...rest
 }: React.HTMLAttributes<HTMLSpanElement>) {
   return (
-    <Text.Root asChild size="sm" color="muted" className={className}>
+    <Text.Root asChild className={className} color="muted" size="sm">
       <span {...rest}>{children}</span>
     </Text.Root>
   );

@@ -18,7 +18,7 @@ type AuthMiddlewareParams<R extends boolean> = {
 };
 
 export const authMiddleware = <R extends boolean>(
-  params: AuthMiddlewareParams<R>,
+  params: AuthMiddlewareParams<R>
 ) => {
   return createMiddleware<AuthMiddleware<R>>(async (c, next) => {
     const session = await auth.api.getSession({ headers: c.req.raw.headers });
@@ -30,7 +30,7 @@ export const authMiddleware = <R extends boolean>(
             success: false,
             error: { message: "Unauthorized", code: "UNAUTHORIZED" },
           },
-          401,
+          401
         );
       }
 

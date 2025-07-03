@@ -1,32 +1,49 @@
 import { Database, schema } from "@database";
 import { and, count, eq, sql } from "drizzle-orm";
-import { ResultAsync } from "neverthrow";
+import { err, ok, ResultAsync } from "neverthrow";
 
 export const PostsRepository = {
-  getPostsCount: async (organizationId: string) => {
+  getPostsCount: (organizationId: string) => {
     return ResultAsync.fromPromise(
-      Database.select({ count: count() }).from(schema.post).where(eq(schema.post.organizationId, organizationId)),
-      (error) => new Error("Failed to get posts count", { cause: error }),
+      Database.select({ count: count() })
+        .from(schema.post)
+        .where(eq(schema.post.organizationId, organizationId)),
+      (error) => new Error("Failed to get posts count", { cause: error })
     );
   },
 
-  createPost: async (data: typeof schema.post.$inferInsert) => {
+  createPost: (data: typeof schema.post.$inferInsert) => {
     return ResultAsync.fromPromise(
       Database.insert(schema.post).values(data).returning(),
-      (error) => new Error("Failed to create post", { cause: error }),
-    );
+      (error) => new Error("Failed to create post", { cause: error })
+    ).andThen(([post]) => {
+      if (!post) {
+        return err(new Error("Post not created"));
+      }
+
+      return ok(post);
+    });
   },
 
-  findPostById: async (id: string, organizationId: string) => {
+  findPostById: (id: string, organizationId: string) => {
     return ResultAsync.fromPromise(
       Database.query.post.findFirst({
-        where: and(eq(schema.post.id, id), eq(schema.post.organizationId, organizationId)),
+        where: and(
+          eq(schema.post.id, id),
+          eq(schema.post.organizationId, organizationId)
+        ),
       }),
-      (error) => new Error("Failed to get post by id", { cause: error }),
-    );
+      (error) => new Error("Failed to get post by id", { cause: error })
+    ).andThen((post) => {
+      if (!post) {
+        return err(new Error("Post not found"));
+      }
+
+      return ok(post);
+    });
   },
 
-  findPostsByOrganization: async (organizationId: string) => {
+  findPostsByOrganization: (organizationId: string) => {
     return ResultAsync.fromPromise(
       Database.query.post.findMany({
         columns: {
@@ -78,22 +95,42 @@ export const PostsRepository = {
         END DESC`,
         ],
       }),
-      (error) => new Error("Failed to get posts from organization", { cause: error }),
+      (error) =>
+        new Error("Failed to get posts from organization", { cause: error })
     );
   },
 
-  updatePostStatus: async (id: string, organizationId: string, status: "published" | "archived" | "draft") => {
+  updatePostStatus: (
+    id: string,
+    organizationId: string,
+    status: "published" | "archived" | "draft"
+  ) => {
     return ResultAsync.fromPromise(
       Database.update(schema.post)
         .set({
           status,
-          ...(status === "published" ? { status, publishedAt: new Date() } : {}),
+          ...(status === "published"
+            ? { status, publishedAt: new Date() }
+            : {}),
           ...(status === "archived" ? { status, archivedAt: new Date() } : {}),
-          ...(status === "draft" ? { status, publishedAt: null, archivedAt: null } : {}),
+          ...(status === "draft"
+            ? { status, publishedAt: null, archivedAt: null }
+            : {}),
         })
-        .where(and(eq(schema.post.id, id), eq(schema.post.organizationId, organizationId)))
+        .where(
+          and(
+            eq(schema.post.id, id),
+            eq(schema.post.organizationId, organizationId)
+          )
+        )
         .returning(),
-      (error) => new Error("Failed to update post status", { cause: error }),
-    );
+      (error) => new Error("Failed to update post status", { cause: error })
+    ).andThen(([post]) => {
+      if (!post) {
+        return err(new Error("Post not found"));
+      }
+
+      return ok(post);
+    });
   },
 };

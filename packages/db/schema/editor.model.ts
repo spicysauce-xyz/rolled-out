@@ -20,5 +20,5 @@ export const editor = pgTable(
       .notNull()
       .defaultNow(),
   },
-  (editor) => [unique().on(editor.postId, editor.userId)],
+  (table) => [unique().on(table.postId, table.userId)]
 );

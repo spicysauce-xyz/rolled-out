@@ -16,30 +16,24 @@ export const TagHandler = organizationFactory
           .min(3, "Tag must be at least 3 characters long")
           .max(20, "Tag must be less than 20 characters long"),
       }),
-      handleValidationError,
+      handleValidationError
     ),
-    async (c) => {
+    (c) => {
       const member = c.get("member");
 
       const { label } = c.req.valid("json");
 
-      const tagResult = await TagService.createTag(member, label);
-
-      if (tagResult.isErr()) {
-        return notOk(c, { message: tagResult.error.message }, 500);
-      }
-
-      return ok(c, tagResult.value);
-    },
+      return TagService.createTag(member, label).match(
+        (tag) => ok(c, tag),
+        (error) => notOk(c, { message: error.message }, 500)
+      );
+    }
   )
-  .get("/", async (c) => {
+  .get("/", (c) => {
     const member = c.get("member");
 
-    const tagsResult = await TagService.getTags(member);
-
-    if (tagsResult.isErr()) {
-      return notOk(c, { message: tagsResult.error.message }, 500);
-    }
-
-    return ok(c, tagsResult.value);
+    return TagService.getTags(member).match(
+      (tags) => ok(c, tags),
+      (error) => notOk(c, { message: error.message }, 500)
+    );
   });

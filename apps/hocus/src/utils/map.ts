@@ -1,7 +1,7 @@
 export const addUserIdToEditorsMap = (
   map: Map<string, Set<string>>,
   documentName: string,
-  userId: string,
+  userId: string
 ) => {
   if (!map.has(documentName)) {
     map.set(documentName, new Set());

@@ -30,8 +30,8 @@ export const PublishedUpdate: React.FC<PublishedUpdateProps> = ({
         <UpdateEntry.Title title={title} />
       </UpdateEntry.Group>
       <UpdateEntry.Tags
-        tags={tags.map(({ tag }) => tag.label)}
         className="flex-1"
+        tags={tags.map(({ tag }) => tag.label)}
       />
       <UpdateEntry.Meta>
         <Tooltip.Root>
@@ -40,9 +40,9 @@ export const PublishedUpdate: React.FC<PublishedUpdateProps> = ({
               <EyeIcon className="size-4 text-neutral-500" />
               <Text.Root
                 className="decoration-dashed underline-offset-2 group-hover:underline"
+                color="muted"
                 size="sm"
                 weight="medium"
-                color="muted"
               >
                 2,847
               </Text.Root>
@@ -58,9 +58,9 @@ export const PublishedUpdate: React.FC<PublishedUpdateProps> = ({
               <MailIcon className="size-4 text-neutral-500" />
               <Text.Root
                 className="decoration-dashed underline-offset-2 group-hover:underline"
+                color="muted"
                 size="sm"
                 weight="medium"
-                color="muted"
               >
                 1,293
               </Text.Root>
@@ -76,9 +76,9 @@ export const PublishedUpdate: React.FC<PublishedUpdateProps> = ({
               <MousePointer2 className="size-4 text-neutral-500" />
               <Text.Root
                 className="decoration-dashed underline-offset-2 group-hover:underline"
+                color="muted"
                 size="sm"
                 weight="medium"
-                color="muted"
               >
                 4.8%
               </Text.Root>
@@ -95,7 +95,7 @@ export const PublishedUpdate: React.FC<PublishedUpdateProps> = ({
           <UpdateEntry.Date date={publishedAt} label="Published on" />
         )}
       </UpdateEntry.Meta>
-      <IconButton.Root size="sm" variant="tertiary" className="-my-2">
+      <IconButton.Root className="-my-2" size="sm" variant="tertiary">
         <IconButton.Icon>
           <EllipsisVerticalIcon />
         </IconButton.Icon>

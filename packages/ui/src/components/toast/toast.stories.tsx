@@ -73,7 +73,7 @@ export const Default: Story = {
                 description: "Loading finished",
                 id,
               }),
-            2000,
+            2000
           );
         }}
       >

@@ -1,6 +1,6 @@
-import * as Confirmer from "@components/feedback/confirmer";
+import { Confirmer } from "@components/feedback/confirmer";
 import type { authClient } from "@lib/auth";
-import { useLogoutMutation } from "@modules/auth/hooks/useLogoutMutation";
+import { useLogoutMutation } from "@modules/auth/hooks/use-logout-mutation";
 import { Avatar, Clickable, DropdownMenu, Text } from "@mono/ui";
 import { Link } from "@tanstack/react-router";
 import {
@@ -32,7 +32,9 @@ export const UserMenu: React.FC<UserMenuProps> = ({
       },
     });
 
-    if (!confirmed) return;
+    if (!confirmed) {
+      return;
+    }
 
     await logoutMutation.mutateAsync();
   };
@@ -46,7 +48,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({
         >
           <div className="flex items-center gap-2">
             <User2Icon className="size-4 stroke-neutral-900" />
-            <Text.Root weight="medium" size="sm">
+            <Text.Root size="sm" weight="medium">
               {user.name}
             </Text.Root>
           </div>
@@ -55,7 +57,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({
           </Clickable.Icon>
         </Clickable.Root>
       </DropdownMenu.Trigger>
-      <DropdownMenu.Content side="right" align="end">
+      <DropdownMenu.Content align="end" side="right">
         <div className="flex items-center gap-2 px-4 py-2">
           <Avatar.Root>
             <Avatar.Image src={user.image || ""} />
@@ -69,10 +71,10 @@ export const UserMenu: React.FC<UserMenuProps> = ({
             </Avatar.Fallback>
           </Avatar.Root>
           <div className="flex flex-col items-start gap-0.5">
-            <Text.Root weight="medium" size="sm">
+            <Text.Root size="sm" weight="medium">
               {user.name}
             </Text.Root>
-            <Text.Root size="xs" color="muted">
+            <Text.Root color="muted" size="xs">
               {user.email}
             </Text.Root>
           </div>
@@ -80,8 +82,8 @@ export const UserMenu: React.FC<UserMenuProps> = ({
         <DropdownMenu.Separator />
         <DropdownMenu.Item asChild>
           <Link
-            to="/$organizationSlug/settings/profile"
             params={{ organizationSlug }}
+            to="/$organizationSlug/settings/profile"
           >
             <DropdownMenu.ItemIcon>
               <SettingsIcon />

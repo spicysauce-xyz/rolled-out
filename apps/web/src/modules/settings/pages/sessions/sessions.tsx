@@ -1,10 +1,10 @@
-import * as Card from "@components/card";
-import * as Confirmer from "@components/feedback/confirmer";
-import * as Transition from "@components/transition";
+import { Card } from "@components/card";
+import { Confirmer } from "@components/feedback/confirmer";
+import { Transition } from "@components/transition";
 import { sessionsQuery } from "@lib/api/queries";
 import type { authClient } from "@lib/auth";
-import { useLogoutMutation } from "@modules/auth/hooks/useLogoutMutation";
-import { useSession } from "@modules/auth/hooks/useSession";
+import { useLogoutMutation } from "@modules/auth/hooks/use-logout-mutation";
+import { useSession } from "@modules/auth/hooks/use-session";
 import { Button, Skeleton, Text } from "@mono/ui";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
@@ -18,11 +18,11 @@ import {
 } from "lucide-react";
 import { match } from "ts-pattern";
 import { UAParser } from "ua-parser-js";
-import { useTerminateOtherSessionsMutation } from "./hooks/useTerminateOtherSessionsMutation";
-import { useTerminateSessionMutation } from "./hooks/useTerminateSessionMutation";
+import { useTerminateOtherSessionsMutation } from "./hooks/use-terminate-other-sessions-mutation";
+import { useTerminateSessionMutation } from "./hooks/use-terminate-session-mutation";
 
 export const Route = createFileRoute(
-  "/_authorized/_has-organization/$organizationSlug/settings/sessions",
+  "/_authorized/_has-organization/$organizationSlug/settings/sessions"
 )({
   component: RouteComponent,
 });
@@ -36,7 +36,7 @@ function RouteComponent() {
   const terminateSessionMutation = useTerminateSessionMutation();
 
   const handleTerminateSession = async (
-    session: (typeof authClient.$Infer.Session)["session"],
+    session: (typeof authClient.$Infer.Session)["session"]
   ) => {
     const parser = new UAParser(session.userAgent || "");
     const browser = parser.getBrowser();
@@ -47,7 +47,7 @@ function RouteComponent() {
       description: (
         <>
           Are you sure you want to terminate{" "}
-          <Text.Root size="sm" weight="medium" asChild>
+          <Text.Root asChild size="sm" weight="medium">
             <span>
               {browser.name} on {os.name} ({os.version})
             </span>
@@ -62,7 +62,9 @@ function RouteComponent() {
       },
     });
 
-    if (!confirmed) return;
+    if (!confirmed) {
+      return;
+    }
 
     await terminateSessionMutation.mutateAsync({
       sessionToken: session.token,
@@ -83,7 +85,9 @@ function RouteComponent() {
       },
     });
 
-    if (!confirmed) return;
+    if (!confirmed) {
+      return;
+    }
 
     await terminateOtherSessionsMutation.mutateAsync();
   };
@@ -99,7 +103,9 @@ function RouteComponent() {
       },
     });
 
-    if (!confirmed) return;
+    if (!confirmed) {
+      return;
+    }
 
     await logoutMutation.mutateAsync();
   };
@@ -136,7 +142,7 @@ function RouteComponent() {
               </Transition.Item>
             ))
             .otherwise(({ data }) => (
-              <Transition.Item key="list" className="flex flex-col gap-4">
+              <Transition.Item className="flex flex-col gap-4" key="list">
                 {data.map((session) => {
                   const parser = new UAParser(session.userAgent || "");
                   const browser = parser.getBrowser();
@@ -174,15 +180,15 @@ function RouteComponent() {
                           <Text.Root size="sm" weight="medium">
                             {browser.name} on {os.name} ({os.version})
                           </Text.Root>
-                          <Text.Root size="xs" color="muted">
+                          <Text.Root color="muted" size="xs">
                             Logged in on {format(session.createdAt, "MMM d")}
                           </Text.Root>
                         </div>
                       </div>
                       {isCurrentSession ? (
                         <Button.Root
-                          onClick={handleLogout}
                           className="opacity-0 transition-[background-color,border-color,opacity] group-hover:opacity-100"
+                          onClick={handleLogout}
                           variant="tertiary"
                         >
                           <Button.Icon>
@@ -192,8 +198,8 @@ function RouteComponent() {
                         </Button.Root>
                       ) : (
                         <Button.Root
-                          onClick={() => handleTerminateSession(session)}
                           className="opacity-0 transition-[background-color,border-color,opacity] group-hover:opacity-100"
+                          onClick={() => handleTerminateSession(session)}
                           variant="tertiary"
                         >
                           <Button.Icon>
@@ -212,9 +218,9 @@ function RouteComponent() {
       {sessionsData.data && sessionsData.data.length > 1 && (
         <Card.Footer>
           <Button.Root
-            variant="secondary"
             color="danger"
             onClick={handleTerminateOtherSessions}
+            variant="secondary"
           >
             <Button.Icon>
               <BanIcon />

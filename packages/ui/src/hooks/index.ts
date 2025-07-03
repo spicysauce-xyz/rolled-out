@@ -1,2 +1,2 @@
-export * from "./useDisclosure";
-export * from "./useScreenBreakpoint";
+export * from "./use-disclosure";
+export * from "./use-screen-breakpoint";

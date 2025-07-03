@@ -1,6 +1,6 @@
 import useAppForm from "@lib/form";
-import { useCreateOrganizationMutation } from "@modules/dashboard/hooks/useCreateOrganizationMutation";
-import { useCheckSlugMutation } from "@modules/settings/pages/details/hooks/useCheckSlugMutation";
+import { useCreateOrganizationMutation } from "@modules/dashboard/hooks/use-create-organization-mutation";
+import { useCheckSlugMutation } from "@modules/settings/pages/details/hooks/use-check-slug-mutation";
 import { Button, Input, Label, Text } from "@mono/ui";
 import { createFileRoute } from "@tanstack/react-router";
 import { ArrowRightIcon, Loader2Icon } from "lucide-react";
@@ -44,7 +44,7 @@ function RouteComponent() {
               },
             });
           },
-        },
+        }
       );
     },
   });
@@ -54,15 +54,14 @@ function RouteComponent() {
       <div className="flex w-full flex-1 flex-col items-center justify-center gap-6 p-6 sm:max-w-96">
         <div className="flex-1" />
         <form
+          className="flex w-full flex-1 flex-col gap-6"
           onSubmit={(e) => {
             e.preventDefault();
             form.handleSubmit();
           }}
-          className="flex w-full flex-1 flex-col gap-6"
         >
           <div className="flex flex-col gap-4">
             <form.Field
-              name="name"
               listeners={{
                 onChange: ({ value }) => {
                   const slugState = form.getFieldMeta("slug");
@@ -76,12 +75,13 @@ function RouteComponent() {
                         .replace(/\s+/g, "-"),
                       {
                         dontUpdateMeta: true,
-                      },
+                      }
                     );
                     form.validateField("slug", "change");
                   }
                 },
               }}
+              name="name"
             >
               {(field) => (
                 <form.FieldContainer>
@@ -97,15 +97,15 @@ function RouteComponent() {
                       <Input.Field
                         id={field.name}
                         name={field.name}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
                         placeholder="Acme Inc."
                         value={field.state.value}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        onBlur={field.handleBlur}
                       />
                     </Input.Wrapper>
                   </Input.Root>
                   {field.state.meta.errors.length ? (
-                    <Text.Root size="sm" className="text-danger-500">
+                    <Text.Root className="text-danger-500" size="sm">
                       {field.state.meta.errors[0]?.message}
                     </Text.Root>
                   ) : null}
@@ -114,8 +114,8 @@ function RouteComponent() {
             </form.Field>
 
             <form.Field
-              name="slug"
               asyncDebounceMs={500}
+              name="slug"
               validators={{
                 onChangeAsync: async ({ value }) => {
                   let isSlugAvailable = false;
@@ -149,10 +149,10 @@ function RouteComponent() {
                       <Input.Field
                         id={field.name}
                         name={field.name}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
                         placeholder="acme-inc"
                         value={field.state.value}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        onBlur={field.handleBlur}
                       />
                       {field.state.meta.isValidating &&
                         !field.form.state.isSubmitting && (
@@ -163,7 +163,7 @@ function RouteComponent() {
                     </Input.Wrapper>
                   </Input.Root>
                   {field.state.meta.errors.length ? (
-                    <Text.Root size="sm" className="text-danger-500">
+                    <Text.Root className="text-danger-500" size="sm">
                       {field.state.meta.errors[0]?.message}
                     </Text.Root>
                   ) : null}
@@ -181,10 +181,10 @@ function RouteComponent() {
             {({ isSubmitting, isDirty, isFieldsValid }) => (
               <div className="flex justify-end gap-2">
                 <Button.Root
-                  type="submit"
                   color="accent"
+                  isDisabled={!(isDirty && isFieldsValid)}
                   isLoading={isSubmitting}
-                  isDisabled={!isDirty || !isFieldsValid}
+                  type="submit"
                 >
                   Save & Continue
                   <Button.Icon>

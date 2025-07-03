@@ -1,4 +1,4 @@
-import type { SuccessResponse, api } from "@lib/api";
+import type { api, SuccessResponse } from "@lib/api";
 import type { InferResponseType } from "hono";
 
 export type Tag = SuccessResponse<

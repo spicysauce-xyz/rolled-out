@@ -1,5 +1,5 @@
-import * as Page from "@components/layout/page";
-import * as Transition from "@components/transition";
+import { Page } from "@components/layout/page";
+import { Transition } from "@components/transition";
 import { boardPostsQuery, boardQuery } from "@lib/api/queries";
 import { Breadcrumbs } from "@modules/shared/components/breadcrumbs";
 import { EditBoardDialog } from "@modules/shared/components/edit-board-dialog";
@@ -11,18 +11,18 @@ import { tryCatch } from "@utils/promise";
 import { BookOpenIcon, SettingsIcon } from "lucide-react";
 // @ts-expect-error https://github.com/lucide-icons/lucide/issues/2867
 import { DynamicIcon, type IconName } from "lucide-react/dynamic.mjs";
-import { P, match } from "ts-pattern";
+import { match, P } from "ts-pattern";
 import { UpdateEntry, UpdatesList } from "../../components/update-list";
 import { BoardUpdate } from "./components/board-update";
 
 export const Route = createFileRoute(
-  "/_authorized/_has-organization/$organizationSlug/_index/boards/$id",
+  "/_authorized/_has-organization/$organizationSlug/_index/boards/$id"
 )({
   beforeLoad: async ({ params, context }) => {
     const board = await tryCatch(
       context.queryClient.ensureQueryData(
-        boardQuery(context.organization.id, params.id),
-      ),
+        boardQuery(context.organization.id, params.id)
+      )
     );
 
     if (board.error || !board.data) {
@@ -58,9 +58,9 @@ function RouteComponent() {
           Settings
         </LinkButton.Root>
         <EditBoardDialog
+          board={board}
           isOpen={editBoardDialog.isOpen}
           onOpenChange={editBoardDialog.setOpen}
-          board={board}
         />
       </Page.Header>
       <Page.Content className="flex-1 gap-0 p-0">
@@ -87,20 +87,20 @@ function RouteComponent() {
               () => (
                 // TODO: Empty state
                 <Transition.Item
-                  key="empty"
                   className="flex flex-1 flex-col items-center justify-center pb-13"
+                  key="empty"
                 >
                   <div className="flex flex-col items-center gap-6">
                     <DynamicIcon
-                      name={board.symbol as IconName}
                       className="size-10 fill-neutral-50 stroke-neutral-500"
+                      name={board.symbol as IconName}
                     />
                     <div className="flex flex-col items-center gap-1">
                       <Text.Root weight="medium">{board.name}</Text.Root>
                       <Text.Root
-                        size="sm"
-                        color="muted"
                         className="max-w-96 text-balance text-center"
+                        color="muted"
+                        size="sm"
                       >
                         No updates here yet. Only published updates with one of
                         the following tags will appear on this board:
@@ -109,24 +109,24 @@ function RouteComponent() {
                     <div className="flex flex-wrap justify-center gap-2">
                       {board.tags.map(({ tag }) => (
                         <Tag.Root
-                          key={tag.id}
                           className="h-7.5 rounded-sm px-2"
+                          key={tag.id}
                         >
                           {tag.label}
                         </Tag.Root>
                       ))}
                     </div>
                     <div className="flex items-center gap-2">
-                      <Button.Root variant="secondary" size="sm">
+                      <Button.Root size="sm" variant="secondary">
                         <Button.Icon>
                           <BookOpenIcon />
                         </Button.Icon>
                         Learn more
                       </Button.Root>
                       <Button.Root
-                        variant="secondary"
-                        size="sm"
                         onClick={editBoardDialog.open}
+                        size="sm"
+                        variant="secondary"
                       >
                         <Button.Icon>
                           <SettingsIcon />
@@ -136,7 +136,7 @@ function RouteComponent() {
                     </div>
                   </div>
                 </Transition.Item>
-              ),
+              )
             )
             .otherwise(() => (
               <Transition.Item key="list">

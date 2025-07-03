@@ -22,8 +22,8 @@ export const BoardUpdate: React.FC<BoardUpdateProps> = ({
         <UpdateEntry.Title title={title} />
       </UpdateEntry.Group>
       <UpdateEntry.Tags
-        tags={tags.map(({ tag }) => tag.label)}
         className="flex-1"
+        tags={tags.map(({ tag }) => tag.label)}
       />
       <UpdateEntry.Meta>
         {editors.length > 0 && <UpdateEntry.Editors editors={editors} />}

@@ -1,33 +1,16 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
-  "vcs": {
-    "enabled": false,
-    "clientKind": "git",
-    "useIgnoreFile": false
-  },
+  "$schema": "https://biomejs.dev/schemas/2.0.6/schema.json",
+  "extends": ["ultracite"],
   "files": {
-    "ignoreUnknown": false
-  },
-  "formatter": {
-    "enabled": true,
-    "formatWithErrors": true,
-    "indentStyle": "space",
-    "indentWidth": 2
-  },
-  "organizeImports": {
-    "enabled": true
+    "includes": ["**", "!**/generated/**"]
   },
   "linter": {
-    "ignore": ["**/node_modules/**", "**/*.gen.ts", "**/generated/**"],
-    "enabled": true,
     "rules": {
-      "recommended": true,
-      "correctness": {
-        "noUnusedImports": "error",
-        "noUnusedVariables": "error"
+      "style": {
+        "noParameterProperties": "off"
       },
-      "nursery": {
-        "useSortedClasses": "warn"
+      "suspicious": {
+        "noConsole": "off"
       }
     }
   },
@@ -39,18 +22,6 @@
   },
   "css": {
     "formatter": { "enabled": false },
-    "linter": { "enabled": false },
-    "parser": {
-      "cssModules": false,
-      "allowWrongLineComments": false
-    }
-  },
-  "overrides": [
-    {
-      "include": ["apps/api/src/**/*.ts"],
-      "formatter": {
-        "lineWidth": 120
-      }
-    }
-  ]
+    "linter": { "enabled": false }
+  }
 }

@@ -4,9 +4,14 @@
   "type": "module",
   "private": true,
   "devDependencies": {
-    "@biomejs/biome": "1.9.4",
+    "@biomejs/biome": "2.0.6",
     "concurrently": "^9.1.2",
-    "turbo": "^2.5.0"
+    "turbo": "^2.5.0",
+    "ultracite": "5.0.29"
+  },
+  "scripts": {
+    "lint": "ultracite lint",
+    "format": "ultracite format"
   },
   "peerDependencies": {
     "typescript": "5.8.2"

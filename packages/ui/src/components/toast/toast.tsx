@@ -63,25 +63,26 @@ const ToasterRoot = ({ ...props }: ToasterProps) => {
   return (
     <Sonner
       className="group/toast"
-      position="bottom-center"
       icons={{
         close: (
           <div className="flex size-9 shrink-0 items-center justify-center text-neutral-200 transition-all hover:text-white">
             <XIcon className="size-4" />
           </div>
         ),
-        success: <ToastIcon variant="success" icon={CheckCircle2Icon} />,
-        error: <ToastIcon variant="error" icon={XCircleIcon} />,
-        warning: <ToastIcon variant="warning" icon={AlertCircleIcon} />,
-        info: <ToastIcon variant="neutral" icon={InfoIcon} />,
+        success: <ToastIcon icon={CheckCircle2Icon} variant="success" />,
+        error: <ToastIcon icon={XCircleIcon} variant="error" />,
+        warning: <ToastIcon icon={AlertCircleIcon} variant="warning" />,
+        info: <ToastIcon icon={InfoIcon} variant="neutral" />,
         loading: (
           <ToastIcon
-            variant="neutral"
-            icon={Loader2Icon}
             className="animate-spin"
+            icon={Loader2Icon}
+            variant="neutral"
           />
         ),
       }}
+      offset={24}
+      position="bottom-center"
       toastOptions={{
         unstyled: true,
         closeButton: true,
@@ -95,7 +96,6 @@ const ToasterRoot = ({ ...props }: ToasterProps) => {
           content: "flex flex-col gap-0.5",
         },
       }}
-      offset={24}
       {...props}
     />
   );

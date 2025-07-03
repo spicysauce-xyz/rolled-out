@@ -17,30 +17,42 @@ export const BubbleMenu: React.FC = () => {
   const { editor } = useCurrentEditor();
 
   const shouldShow = (args: { editor: Editor }) => {
-    if (!args.editor) return false;
-    if (args.editor.state.selection.empty) return false;
-    if (args.editor.isActive("paragraph")) return true;
+    if (!args.editor) {
+      return false;
+    }
+    if (args.editor.state.selection.empty) {
+      return false;
+    }
+    if (args.editor.isActive("paragraph")) {
+      return true;
+    }
     return false;
   };
 
   const shouldShowLinkMenu = (args: { editor: Editor }) => {
-    if (!args.editor) return false;
-    if (args.editor.state.selection.empty) return false;
-    if (args.editor.isActive("link")) return true;
+    if (!args.editor) {
+      return false;
+    }
+    if (args.editor.state.selection.empty) {
+      return false;
+    }
+    if (args.editor.isActive("link")) {
+      return true;
+    }
     return false;
   };
 
   return (
     <>
       <BubbleMenuTiptap
-        shouldShow={shouldShow}
         editor={editor}
+        shouldShow={shouldShow}
         tippyOptions={{ duration: 150 }}
       >
         <ButtonGroup.Root
-          size="sm"
           className="shadow-xl"
           onClick={(e) => e.stopPropagation()}
+          size="sm"
         >
           <ButtonGroup.Item
             isActive={editor?.isActive("bold")}
@@ -114,18 +126,19 @@ export const BubbleMenu: React.FC = () => {
         </ButtonGroup.Root>
       </BubbleMenuTiptap>
       <BubbleMenuTiptap
+        className="bg-red-500"
+        editor={editor}
         pluginKey="link-menu"
         shouldShow={shouldShowLinkMenu}
-        editor={editor}
-        className="bg-red-500"
         tippyOptions={{ duration: 150, placement: "bottom" }}
       >
-        {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
+        {/** biome-ignore lint/a11y/useKeyWithClickEvents: i might need to fix this */}
+        {/** biome-ignore lint/a11y/noStaticElementInteractions: i might need to fix this */}
         <div
+          className="flex flex-col gap-2 rounded-xl border border-neutral-200 bg-white p-4 shadow-xl"
           onClick={(e) => {
             e.stopPropagation();
           }}
-          className="flex flex-col gap-2 rounded-xl border border-neutral-200 bg-white p-4 shadow-xl"
         >
           <Label.Root>Link</Label.Root>
           <Input.Root size="sm">
@@ -134,10 +147,10 @@ export const BubbleMenu: React.FC = () => {
                 <LinkIcon />
               </Input.Icon>
               <Input.Field
-                value={editor?.getAttributes("link").href || ""}
                 onChange={(e) => {
                   editor?.chain().setLink({ href: e.target.value }).run();
                 }}
+                value={editor?.getAttributes("link").href || ""}
               />
             </Input.Wrapper>
           </Input.Root>

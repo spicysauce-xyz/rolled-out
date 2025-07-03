@@ -12,7 +12,10 @@ const ee = new EventEmitter2({
 });
 
 const Emitter = {
-  on: <T = unknown>(eventName: string, callback: (payload: T) => ResultAsync<unknown, unknown>) => {
+  on: <T = unknown>(
+    eventName: string,
+    callback: (payload: T) => ResultAsync<unknown, unknown>
+  ) => {
     ee.on(eventName, callback);
   },
   emitAsync: <T = unknown>(eventName: string, payload: T) =>

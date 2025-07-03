@@ -247,7 +247,7 @@ export const WithAvatars: Story = {
                 <Text.Root size="sm" weight="medium">
                   Shadcn
                 </Text.Root>
-                <Text.Root size="xs" color="muted">
+                <Text.Root color="muted" size="xs">
                   @shadcn
                 </Text.Root>
               </div>
@@ -265,7 +265,7 @@ export const WithAvatars: Story = {
                 <Text.Root size="sm" weight="medium">
                   John Doe
                 </Text.Root>
-                <Text.Root size="xs" color="muted">
+                <Text.Root color="muted" size="xs">
                   @johndoe
                 </Text.Root>
               </div>
@@ -283,7 +283,7 @@ export const WithAvatars: Story = {
                 <Text.Root size="sm" weight="medium">
                   Jane Doe
                 </Text.Root>
-                <Text.Root size="xs" color="muted">
+                <Text.Root color="muted" size="xs">
                   @janedoe
                 </Text.Root>
               </div>

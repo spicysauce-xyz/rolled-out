@@ -4,11 +4,11 @@ import React from "react";
 
 const pageVariants = tv({
   slots: {
-    root: "h-svh w-full flex items-start",
+    root: "flex h-svh w-full items-start",
     wrapper:
-      "flex flex-1 h-full flex-col overflow-hidden bg-white border-neutral-100",
-    header: "p-4 px-6 flex justify-between gap-6 border-b border-neutral-100",
-    content: "h-full px-6 py-6 gap-8 grid",
+      "flex h-full flex-1 flex-col overflow-hidden border-neutral-100 bg-white",
+    header: "flex justify-between gap-6 border-neutral-100 border-b p-4 px-6",
+    content: "grid h-full gap-8 px-6 py-6",
   },
 });
 
@@ -18,8 +18,8 @@ const PageRoot = React.forwardRef<HTMLDivElement, PageRootProps>(
   ({ className, ...props }, ref) => {
     const { root } = pageVariants();
 
-    return <div ref={ref} className={root({ className })} {...props} />;
-  },
+    return <div className={root({ className })} ref={ref} {...props} />;
+  }
 );
 
 type PageWrapperProps = React.HTMLAttributes<HTMLDivElement>;
@@ -28,8 +28,8 @@ const PageWrapper = React.forwardRef<HTMLDivElement, PageWrapperProps>(
   ({ className, ...props }, ref) => {
     const { wrapper } = pageVariants();
 
-    return <div ref={ref} className={wrapper({ className })} {...props} />;
-  },
+    return <div className={wrapper({ className })} ref={ref} {...props} />;
+  }
 );
 
 type PageHeaderProps = React.HTMLAttributes<HTMLDivElement>;
@@ -38,8 +38,8 @@ const PageHeader = React.forwardRef<HTMLDivElement, PageHeaderProps>(
   ({ className, ...props }, ref) => {
     const { header } = pageVariants();
 
-    return <div ref={ref} className={header({ className })} {...props} />;
-  },
+    return <div className={header({ className })} ref={ref} {...props} />;
+  }
 );
 
 type PageContentProps = React.HTMLAttributes<HTMLDivElement>;
@@ -54,16 +54,16 @@ const PageContent = React.forwardRef<HTMLDivElement, PageContentProps>(
           <ScrollArea.Thumb />
         </ScrollArea.Scrollbar>
         <ScrollArea.Viewport className="flex-1">
-          <div ref={ref} className={content({ className })} {...props} />
+          <div className={content({ className })} ref={ref} {...props} />
         </ScrollArea.Viewport>
       </ScrollArea.Root>
     );
-  },
+  }
 );
 
-export {
-  PageRoot as Root,
-  PageWrapper as Wrapper,
-  PageHeader as Header,
-  PageContent as Content,
+export const Page = {
+  Root: PageRoot,
+  Wrapper: PageWrapper,
+  Header: PageHeader,
+  Content: PageContent,
 };

@@ -1,5 +1,5 @@
 import { XIcon } from "lucide-react";
-import * as React from "react";
+import React from "react";
 import { Drawer as DrawerPrimitive } from "vaul";
 import { useScreenBreakpoint } from "../../hooks";
 import { cn } from "../../utils";
@@ -36,8 +36,8 @@ const DrawerCloseX = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Close>
 >(({ className, ...props }, ref) => (
   <DrawerPrimitive.Close
-    ref={ref}
     className={cn("absolute top-2.5 right-2.5 z-60", className)}
+    ref={ref}
     {...props}
     asChild
   >
@@ -54,8 +54,8 @@ const DrawerOverlay = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Overlay>
 >(({ className, ...props }, ref) => (
   <DrawerPrimitive.Overlay
-    ref={ref}
     className={cn("fixed inset-0 z-50 animate-in bg-neutral-900/25", className)}
+    ref={ref}
     {...props}
   />
 ));
@@ -67,11 +67,11 @@ const DrawerBody = React.forwardRef<
   <DrawerPortal>
     <DrawerOverlay />
     <DrawerPrimitive.Content
-      ref={ref}
       className={cn(
         "fixed top-12 right-0 bottom-0 z-50 flex h-auto max-w-screen flex-col bg-white shadow-xl max-sm:left-0 max-sm:rounded-t-xl sm:top-0",
-        className,
+        className
       )}
+      ref={ref}
       {...props}
     >
       {children}
@@ -88,7 +88,7 @@ const DrawerContent = React.forwardRef<
       <ScrollArea.Thumb />
     </ScrollArea.Scrollbar>
     <ScrollArea.Viewport>
-      <div ref={ref} className={cn("p-6", className)} {...props}>
+      <div className={cn("p-6", className)} ref={ref} {...props}>
         {children}
       </div>
     </ScrollArea.Viewport>
@@ -103,7 +103,7 @@ const DrawerHeader = ({
   <div
     className={cn(
       "relative flex flex-col gap-1 border-neutral-100 border-b p-6",
-      className,
+      className
     )}
     {...props}
   >
@@ -118,7 +118,7 @@ const DrawerFooter = ({
   <div
     className={cn(
       "mt-auto flex flex-col-reverse gap-4 border-neutral-200 border-t p-6 sm:flex-row",
-      className,
+      className
     )}
     {...props}
   />
@@ -128,8 +128,8 @@ const DrawerTitle = React.forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Title>,
   React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Title>
 >(({ className, children, ...props }, ref) => (
-  <Text.Root size="lg" weight="medium" asChild>
-    <DrawerPrimitive.Title ref={ref} className={className} {...props}>
+  <Text.Root asChild size="lg" weight="medium">
+    <DrawerPrimitive.Title className={className} ref={ref} {...props}>
       {children}
     </DrawerPrimitive.Title>
   </Text.Root>
@@ -139,8 +139,8 @@ const DrawerDescription = React.forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Description>,
   React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Description>
 >(({ className, ...props }, ref) => (
-  <Text.Root color="muted" size="sm" asChild>
-    <DrawerPrimitive.Description ref={ref} className={className} {...props} />
+  <Text.Root asChild color="muted" size="sm">
+    <DrawerPrimitive.Description className={className} ref={ref} {...props} />
   </Text.Root>
 ));
 

@@ -1,9 +1,9 @@
 import { relations } from "drizzle-orm";
-import { boardTag } from "./board-tag.model";
 import { board } from "./board.model";
+import { boardTag } from "./board-tag.model";
 import { editor } from "./editor.model";
-import { postTag } from "./post-tag.model";
 import { post } from "./post.model";
+import { postTag } from "./post-tag.model";
 import { tag } from "./tag.model";
 import { user } from "./user.model";
 

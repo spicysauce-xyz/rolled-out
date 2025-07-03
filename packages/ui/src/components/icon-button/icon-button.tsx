@@ -9,20 +9,20 @@ export const iconButtonVariants = tv({
   slots: {
     root: [
       // base
-      "group/button-root inline-flex relative overflow-hidden select-none",
+      "group/button-root relative inline-flex select-none overflow-hidden",
       // hover
       "transition-[background-color,border-color]",
       // focus
-      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-accent-500 ring-transparent",
+      "ring-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2",
       // active
-      "active:shadow-none active:inset-shadow-transparent",
+      "active:inset-shadow-transparent active:shadow-none",
     ],
     content: [
-      "flex flex-1 gap-2 items-center justify-center whitespace-nowrap",
+      "flex flex-1 items-center justify-center gap-2 whitespace-nowrap",
     ],
     icon: [
       // base
-      "flex shrink-0 items-center justify-center [&>svg]:w-full [&>svg]:h-full",
+      "flex shrink-0 items-center justify-center [&>svg]:h-full [&>svg]:w-full",
       // hover
       "transition-colors",
     ],
@@ -37,10 +37,10 @@ export const iconButtonVariants = tv({
     },
     variant: {
       filled: {
-        root: ["border shadow-xs inset-shadow-default"],
+        root: ["inset-shadow-default border shadow-xs"],
       },
       secondary: {
-        root: ["border shadow-xs inset-shadow-default bg-white"],
+        root: ["inset-shadow-default border bg-white shadow-xs"],
       },
       tertiary: {
         root: ["border border-transparent"],
@@ -81,11 +81,11 @@ export const iconButtonVariants = tv({
       variant: "filled",
       class: {
         root: [
-          "bg-neutral-900 border-neutral-900",
+          "border-neutral-900 bg-neutral-900",
           // hover
-          "hover:bg-neutral-950 hover:border-neutral-950",
+          "hover:border-neutral-950 hover:bg-neutral-950",
           // focus
-          "focus-visible:bg-neutral-950 focus-visible:border-neutral-950",
+          "focus-visible:border-neutral-950 focus-visible:bg-neutral-950",
         ],
         icon: [
           "text-neutral-200",
@@ -101,11 +101,11 @@ export const iconButtonVariants = tv({
       variant: "filled",
       class: {
         root: [
-          "bg-accent-500 border-accent-500",
+          "border-accent-500 bg-accent-500",
           // hover
-          "hover:bg-accent-600 hover:border-accent-600",
+          "hover:border-accent-600 hover:bg-accent-600",
           // focus
-          "focus-visible:bg-accent-600 focus-visible:border-accent-600",
+          "focus-visible:border-accent-600 focus-visible:bg-accent-600",
         ],
         icon: [
           "text-accent-200",
@@ -121,11 +121,11 @@ export const iconButtonVariants = tv({
       variant: "filled",
       class: {
         root: [
-          "bg-danger-500 border-danger-500",
+          "border-danger-500 bg-danger-500",
           // hover
-          "hover:bg-danger-600 hover:border-danger-600",
+          "hover:border-danger-600 hover:bg-danger-600",
           // focus
-          "focus-visible:bg-danger-600 focus-visible:border-danger-600",
+          "focus-visible:border-danger-600 focus-visible:bg-danger-600",
         ],
         icon: [
           "text-danger-200",
@@ -141,11 +141,11 @@ export const iconButtonVariants = tv({
       variant: "filled",
       class: {
         root: [
-          "bg-warning-500 border-warning-500",
+          "border-warning-500 bg-warning-500",
           // hover
-          "hover:bg-warning-600 hover:border-warning-600",
+          "hover:border-warning-600 hover:bg-warning-600",
           // focus
-          "focus-visible:bg-warning-600 focus-visible:border-warning-600",
+          "focus-visible:border-warning-600 focus-visible:bg-warning-600",
         ],
         icon: [
           "text-warning-200",
@@ -161,11 +161,11 @@ export const iconButtonVariants = tv({
       variant: "filled",
       class: {
         root: [
-          "bg-success-500 border-success-500",
+          "border-success-500 bg-success-500",
           // hover
-          "hover:bg-success-600 hover:border-success-600",
+          "hover:border-success-600 hover:bg-success-600",
           // focus
-          "focus-visible:bg-success-600 focus-visible:border-success-600",
+          "focus-visible:border-success-600 focus-visible:bg-success-600",
         ],
         icon: [
           "text-success-200",
@@ -181,11 +181,11 @@ export const iconButtonVariants = tv({
       variant: "secondary",
       class: {
         root: [
-          "bg-white border-neutral-200",
+          "border-neutral-200 bg-white",
           // hover
-          "hover:bg-neutral-50 hover:border-neutral-300",
+          "hover:border-neutral-300 hover:bg-neutral-50",
           // focus
-          "focus-visible:bg-neutral-50 focus-visible:border-neutral-300",
+          "focus-visible:border-neutral-300 focus-visible:bg-neutral-50",
         ],
         icon: [
           "text-neutral-400",
@@ -201,11 +201,11 @@ export const iconButtonVariants = tv({
       variant: "secondary",
       class: {
         root: [
-          "bg-white border-accent-200",
+          "border-accent-200 bg-white",
           // hover
-          "hover:bg-accent-50 hover:border-accent-300",
+          "hover:border-accent-300 hover:bg-accent-50",
           // focus
-          "focus-visible:bg-accent-50 focus-visible:border-accent-300",
+          "focus-visible:border-accent-300 focus-visible:bg-accent-50",
         ],
         icon: [
           "text-accent-400",
@@ -221,11 +221,11 @@ export const iconButtonVariants = tv({
       variant: "secondary",
       class: {
         root: [
-          "bg-white border-danger-200",
+          "border-danger-200 bg-white",
           // hover
-          "hover:bg-danger-50 hover:border-danger-300",
+          "hover:border-danger-300 hover:bg-danger-50",
           // focus
-          "focus-visible:bg-danger-50 focus-visible:border-danger-300",
+          "focus-visible:border-danger-300 focus-visible:bg-danger-50",
         ],
         icon: [
           "text-danger-400",
@@ -241,11 +241,11 @@ export const iconButtonVariants = tv({
       variant: "secondary",
       class: {
         root: [
-          "bg-white border-warning-200",
+          "border-warning-200 bg-white",
           // hover
-          "hover:bg-warning-50 hover:border-warning-300",
+          "hover:border-warning-300 hover:bg-warning-50",
           // focus
-          "focus-visible:bg-warning-50 focus-visible:border-warning-300",
+          "focus-visible:border-warning-300 focus-visible:bg-warning-50",
         ],
         icon: [
           "text-warning-400",
@@ -261,11 +261,11 @@ export const iconButtonVariants = tv({
       variant: "secondary",
       class: {
         root: [
-          "bg-white border-success-200",
+          "border-success-200 bg-white",
           // hover
-          "hover:bg-success-50 hover:border-success-300",
+          "hover:border-success-300 hover:bg-success-50",
           // focus
-          "focus-visible:bg-success-50 focus-visible:border-success-300",
+          "focus-visible:border-success-300 focus-visible:bg-success-50",
         ],
         icon: [
           "text-success-400",
@@ -283,9 +283,9 @@ export const iconButtonVariants = tv({
       class: {
         root: [
           // hover
-          "hover:bg-neutral-50 hover:border-neutral-50",
+          "hover:border-neutral-50 hover:bg-neutral-50",
           // focus
-          "focus-visible:bg-neutral-50 focus-visible:border-neutral-50",
+          "focus-visible:border-neutral-50 focus-visible:bg-neutral-50",
         ],
         icon: [
           "text-neutral-400",
@@ -302,9 +302,9 @@ export const iconButtonVariants = tv({
       class: {
         root: [
           // hover
-          "hover:bg-accent-50 hover:border-accent-50",
+          "hover:border-accent-50 hover:bg-accent-50",
           // focus
-          "focus-visible:bg-accent-50 focus-visible:border-accent-50",
+          "focus-visible:border-accent-50 focus-visible:bg-accent-50",
         ],
         icon: [
           "text-accent-400",
@@ -321,9 +321,9 @@ export const iconButtonVariants = tv({
       class: {
         root: [
           // hover
-          "hover:bg-danger-50 hover:border-danger-50",
+          "hover:border-danger-50 hover:bg-danger-50",
           // focus
-          "focus-visible:bg-danger-50 focus-visible:border-danger-50",
+          "focus-visible:border-danger-50 focus-visible:bg-danger-50",
         ],
         icon: [
           "text-danger-400",
@@ -340,9 +340,9 @@ export const iconButtonVariants = tv({
       class: {
         root: [
           // hover
-          "hover:bg-warning-50 hover:border-warning-50",
+          "hover:border-warning-50 hover:bg-warning-50",
           // focus
-          "focus-visible:bg-warning-50 focus-visible:border-warning-50",
+          "focus-visible:border-warning-50 focus-visible:bg-warning-50",
         ],
         icon: [
           "text-warning-400",
@@ -359,9 +359,9 @@ export const iconButtonVariants = tv({
       class: {
         root: [
           // hover
-          "hover:bg-success-50 hover:border-success-50",
+          "hover:border-success-50 hover:bg-success-50",
           // focus
-          "focus-visible:bg-success-50 focus-visible:border-success-50",
+          "focus-visible:border-success-50 focus-visible:bg-success-50",
         ],
         icon: [
           "text-success-400",
@@ -378,11 +378,11 @@ export const iconButtonVariants = tv({
       variant: "filled",
       class: {
         root: [
-          "bg-neutral-50 border-neutral-200 shadow-none inset-shadow-transparent",
+          "inset-shadow-transparent border-neutral-200 bg-neutral-50 shadow-none",
           // hover
-          "hover:bg-neutral-50 hover:border-neutral-200",
+          "hover:border-neutral-200 hover:bg-neutral-50",
           // focus
-          "focus-visible:bg-neutral-50 focus-visible:border-neutral-200",
+          "focus-visible:border-neutral-200 focus-visible:bg-neutral-50",
         ],
         icon: [
           "text-neutral-400",
@@ -399,11 +399,11 @@ export const iconButtonVariants = tv({
       variant: "secondary",
       class: {
         root: [
-          "bg-neutral-50 border-neutral-50 shadow-none inset-shadow-transparent",
+          "inset-shadow-transparent border-neutral-50 bg-neutral-50 shadow-none",
           // hover
-          "hover:bg-neutral-50 hover:border-neutral-50",
+          "hover:border-neutral-50 hover:bg-neutral-50",
           // focus
-          "focus-visible:bg-neutral-50 focus-visible:border-neutral-50",
+          "focus-visible:border-neutral-50 focus-visible:bg-neutral-50",
         ],
         icon: [
           "text-neutral-400",
@@ -420,11 +420,11 @@ export const iconButtonVariants = tv({
       variant: "tertiary",
       class: {
         root: [
-          "shadow-none inset-shadow-transparent",
+          "inset-shadow-transparent shadow-none",
           // hover
-          "hover:bg-transparent hover:border-transparent",
+          "hover:border-transparent hover:bg-transparent",
           // focus
-          "focus-visible:bg-transparent focus-visible:border-transparent",
+          "focus-visible:border-transparent focus-visible:bg-transparent",
         ],
         icon: [
           "text-neutral-400",
@@ -468,7 +468,7 @@ const IconButtonRoot = React.forwardRef<HTMLButtonElement, IconButtonRootProps>(
       isDisabled,
       ...rest
     },
-    forwardedRef,
+    forwardedRef
   ) => {
     const Component = asChild ? Slot : "button";
     const { root, content } = iconButtonVariants({
@@ -492,12 +492,14 @@ const IconButtonRoot = React.forwardRef<HTMLButtonElement, IconButtonRootProps>(
         <Component
           ref={forwardedRef}
           {...rest}
+          className={root({ class: className })}
           disabled={isDisabled || isLoading}
           onClick={(...args) => {
-            if (isDisabled || isLoading) return;
+            if (isDisabled || isLoading) {
+              return;
+            }
             rest.onClick?.(...args);
           }}
-          className={root({ class: className })}
         >
           {isLoading && (
             <div className="absolute inset-0 flex items-center justify-center">
@@ -510,7 +512,7 @@ const IconButtonRoot = React.forwardRef<HTMLButtonElement, IconButtonRootProps>(
         </Component>
       </IconButtonContext.Provider>
     );
-  },
+  }
 );
 
 type IconButtonIconProps = React.HTMLAttributes<HTMLDivElement> & AsChildProp;
@@ -536,7 +538,7 @@ const IconButtonIcon = React.forwardRef<HTMLDivElement, IconButtonIconProps>(
         {children}
       </Component>
     );
-  },
+  }
 );
 
 export { IconButtonRoot as Root, IconButtonIcon as Icon };

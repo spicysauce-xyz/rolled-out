@@ -45,17 +45,17 @@ function Login() {
           <Text.Root size="lg" weight="medium">
             Sign in to your account
           </Text.Root>
-          <Text.Root size="sm" color="muted" className="px-6 text-center">
+          <Text.Root className="px-6 text-center" color="muted" size="sm">
             If you don't have an account, we will create one for you.
           </Text.Root>
         </div>
         <form
+          className="flex w-full flex-col gap-4"
+          noValidate
           onSubmit={(e) => {
             e.preventDefault();
             form.handleSubmit();
           }}
-          className="flex w-full flex-col gap-4"
-          noValidate
         >
           <form.Field name="email">
             {(field) => (
@@ -68,16 +68,16 @@ function Login() {
                     <Input.Field
                       id={field.name}
                       name={field.name}
-                      value={field.state.value}
                       onBlur={field.handleBlur}
-                      type="email"
                       onChange={(e) => field.handleChange(e.target.value)}
                       placeholder="john.doe@example.com"
+                      type="email"
+                      value={field.state.value}
                     />
                   </Input.Wrapper>
                 </Input.Root>
                 {field.state.meta.errors.length ? (
-                  <Text.Root size="sm" className="text-danger-500">
+                  <Text.Root className="text-danger-500" size="sm">
                     {field.state.meta.errors[0]?.message}
                   </Text.Root>
                 ) : null}
@@ -92,11 +92,11 @@ function Login() {
           >
             {({ isSubmitting, isFieldsValid }) => (
               <Button.Root
-                type="submit"
                 className="w-full"
                 color="accent"
-                isLoading={isSubmitting}
                 isDisabled={!isFieldsValid}
+                isLoading={isSubmitting}
+                type="submit"
               >
                 Send Magic Link
               </Button.Root>
@@ -105,37 +105,37 @@ function Login() {
         </form>
         <div className="relative h-px w-full bg-neutral-100">
           <Text.Root
+            className="-translate-x-1/2 -translate-y-1/2 absolute top-1/2 left-1/2 bg-neutral-50 px-2"
             color="muted"
             size="sm"
-            className="-translate-x-1/2 -translate-y-1/2 absolute top-1/2 left-1/2 bg-neutral-50 px-2"
           >
             or
           </Text.Root>
         </div>
         <div className="flex w-full flex-col gap-4">
           <Button.Root
+            className="w-full"
+            color="neutral"
+            isDisabled={socialLoginMutation.isPending}
             isLoading={
               socialLoginMutation.isPending &&
               socialLoginMutation.variables.provider === "google"
             }
-            isDisabled={socialLoginMutation.isPending}
             onClick={() => handleSocialLogin("google")}
-            color="neutral"
             variant="secondary"
-            className="w-full"
           >
             Continue with Google
           </Button.Root>
           <Button.Root
+            className="w-full"
+            color="neutral"
+            isDisabled={socialLoginMutation.isPending}
             isLoading={
               socialLoginMutation.isPending &&
               socialLoginMutation.variables.provider === "github"
             }
-            isDisabled={socialLoginMutation.isPending}
             onClick={() => handleSocialLogin("github")}
-            color="neutral"
             variant="secondary"
-            className="w-full"
           >
             Continue with GitHub
           </Button.Root>

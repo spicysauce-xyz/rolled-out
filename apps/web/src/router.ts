@@ -15,7 +15,7 @@ export const createRouter = () => {
       defaultPendingMinMs: 0,
       defaultPendingMs: 0,
     }),
-    queryClient,
+    queryClient
   );
 };
 

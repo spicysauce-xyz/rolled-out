@@ -22,7 +22,7 @@ interface FileUploadProps {
     options: {
       id: string;
     },
-    state: FileUploadState,
+    state: FileUploadState
   ) => React.ReactNode;
 }
 
@@ -62,7 +62,9 @@ export const FileUpload: React.FC<FileUploadProps> = ({
     const maxSize = limit * 1024 * 1024;
     const file = e.target.files?.[0];
 
-    if (!file) return;
+    if (!file) {
+      return;
+    }
 
     if (file.size > maxSize) {
       Toaster.error("The file is too large", {
@@ -84,9 +86,9 @@ export const FileUpload: React.FC<FileUploadProps> = ({
         xhr.open("PUT", uploadUrl, true);
         xhr.setRequestHeader("Content-Type", file.type);
 
-        xhr.upload.onprogress = (e) => {
-          if (e.lengthComputable) {
-            const percent = (e.loaded / e.total) * 100;
+        xhr.upload.onprogress = (progressEvent) => {
+          if (progressEvent.lengthComputable) {
+            const percent = (progressEvent.loaded / progressEvent.total) * 100;
             setProgress(percent);
           }
         };
@@ -160,14 +162,14 @@ export const FileUpload: React.FC<FileUploadProps> = ({
         {
           id,
         },
-        externalState,
+        externalState
       )}
       <input
-        id={id}
-        type="file"
-        onChange={handleFileChange}
-        className="hidden"
         accept={accept ?? "image/*"}
+        className="hidden"
+        id={id}
+        onChange={handleFileChange}
+        type="file"
       />
     </>
   );

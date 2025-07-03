@@ -12,5 +12,5 @@ export const boardTag = pgTable(
       .references(() => tag.id, { onDelete: "cascade" })
       .notNull(),
   },
-  (boardTag) => [primaryKey({ columns: [boardTag.boardId, boardTag.tagId] })],
+  (table) => [primaryKey({ columns: [table.boardId, table.tagId] })]
 );

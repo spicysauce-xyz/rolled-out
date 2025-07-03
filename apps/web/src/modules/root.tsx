@@ -1,17 +1,17 @@
-import * as Confirmer from "@components/feedback/confirmer";
-import * as Transition from "@components/transition";
+import { Confirmer } from "@components/feedback/confirmer";
+import { Transition } from "@components/transition";
 import { Toaster } from "@mono/ui";
 import styles from "@styles/global.css?url";
 import type { QueryClient } from "@tanstack/react-query";
 import {
+  createRootRouteWithContext,
   HeadContent,
   Outlet,
   Scripts,
-  createRootRouteWithContext,
   useRouterState,
 } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
+import { useEffect, useState } from "react";
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
@@ -68,8 +68,8 @@ function RootComponent() {
       <Transition.Root>
         {isLoading && (
           <Transition.Item
-            key="loader"
             className="fixed inset-0 z-50 h-svh w-screen bg-white"
+            key="loader"
             transition={{
               duration: 0.3,
             }}
@@ -86,6 +86,7 @@ function RootComponent() {
 function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
   return (
     <html lang="en">
+      {/** biome-ignore lint/style/noHeadElement: head is required */}
       <head>
         <HeadContent />
       </head>

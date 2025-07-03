@@ -1,12 +1,11 @@
-import * as Sidebar from "@components/layout/sidebar";
-import * as Transition from "@components/transition";
+import { Sidebar } from "@components/layout/sidebar";
+import { Transition } from "@components/transition";
 import { boardsQuery } from "@lib/api/queries";
 import type { authClient } from "@lib/auth";
 import { NewBoardDialog } from "@modules/shared/components/new-board-dialog";
 import { NotificationsList } from "@modules/shared/components/notifications-list";
 import { UserMenu } from "@modules/shared/components/user-menu";
-import { Clickable, IconButton, Skeleton } from "@mono/ui";
-import { Text } from "@mono/ui";
+import { Clickable, IconButton, Skeleton, Text } from "@mono/ui";
 import { useDisclosure } from "@mono/ui/hooks";
 import { cn } from "@mono/ui/utils";
 import { useQuery } from "@tanstack/react-query";
@@ -51,24 +50,24 @@ export const DashboardNavigation: React.FC<DashboardNavigationProps> = ({
         <div className="flex flex-col gap-4">
           <Sidebar.Group>
             <Sidebar.NavLink
-              to="/$organizationSlug"
-              params={{ organizationSlug }}
-              label="Updates"
+              activeOptions={{ exact: true }}
               icon={BellIcon}
-              activeOptions={{ exact: true }}
+              label="Updates"
+              params={{ organizationSlug }}
+              to="/$organizationSlug"
             />
             <Sidebar.NavLink
-              to="/$organizationSlug/contacts"
-              params={{ organizationSlug }}
-              label="Subscribers"
               icon={MailIcon}
+              label="Subscribers"
+              params={{ organizationSlug }}
+              to="/$organizationSlug/contacts"
             />
             <Sidebar.NavLink
-              to="/$organizationSlug/analytics"
-              params={{ organizationSlug }}
-              label="Analytics"
-              icon={LineChartIcon}
               activeOptions={{ exact: true }}
+              icon={LineChartIcon}
+              label="Analytics"
+              params={{ organizationSlug }}
+              to="/$organizationSlug/analytics"
             />
           </Sidebar.Group>
           <Sidebar.Group label="Boards">
@@ -81,8 +80,8 @@ export const DashboardNavigation: React.FC<DashboardNavigationProps> = ({
               {match(boardsData)
                 .with({ isPending: true }, () => (
                   <Transition.Item
-                    key="loader"
                     className="flex flex-col gap-1 px-2"
+                    key="loader"
                   >
                     <Skeleton.Root className="h-9 w-full" />
                     <Skeleton.Root className="h-9 w-full" />
@@ -90,26 +89,26 @@ export const DashboardNavigation: React.FC<DashboardNavigationProps> = ({
                   </Transition.Item>
                 ))
                 .with({ isError: true }, ({ refetch, isRefetching }) => (
-                  <Transition.Item key="error" className="flex flex-col gap-1">
+                  <Transition.Item className="flex flex-col gap-1" key="error">
                     <div className="flex h-9 items-center gap-2 pl-2">
                       <AlertTriangleIcon className="size-4 stroke-danger-500" />
                       <div className="flex flex-1 flex-col">
-                        <Text.Root size="sm" weight="medium" color="danger">
+                        <Text.Root color="danger" size="sm" weight="medium">
                           Failed to load boards
                         </Text.Root>
                       </div>
                       <IconButton.Root
-                        variant="tertiary"
-                        color="neutral"
                         className="shrink-0 hover:bg-neutral-100 focus-visible:bg-neutral-100"
-                        size="sm"
+                        color="neutral"
                         onClick={() => refetch()}
+                        size="sm"
+                        variant="tertiary"
                       >
                         <IconButton.Icon>
                           <RefreshCwIcon
                             className={cn(
                               "size-4",
-                              isRefetching && "animate-spin",
+                              isRefetching && "animate-spin"
                             )}
                           />
                         </IconButton.Icon>
@@ -118,18 +117,18 @@ export const DashboardNavigation: React.FC<DashboardNavigationProps> = ({
                   </Transition.Item>
                 ))
                 .otherwise(({ data }) => (
-                  <Transition.Item key="boards" className="flex flex-col gap-1">
+                  <Transition.Item className="flex flex-col gap-1" key="boards">
                     {data.map((board) => (
                       <Sidebar.NavLink
-                        key={board.id}
-                        to="/$organizationSlug/boards/$id"
-                        params={{ organizationSlug, id: board.id }}
-                        label={board.name}
                         iconName={board.symbol as IconName}
+                        key={board.id}
+                        label={board.name}
+                        params={{ organizationSlug, id: board.id }}
+                        to="/$organizationSlug/boards/$id"
                       >
                         {board.postCount > 0 && (
                           <Clickable.Icon className="ml-auto">
-                            <Text.Root size="sm" className="text-inherit">
+                            <Text.Root className="text-inherit" size="sm">
                               {board.postCount}
                             </Text.Root>
                           </Clickable.Icon>
@@ -137,8 +136,8 @@ export const DashboardNavigation: React.FC<DashboardNavigationProps> = ({
                       </Sidebar.NavLink>
                     ))}
                     <Sidebar.Button
-                      label="New Board"
                       icon={PlusIcon}
+                      label="New Board"
                       onClick={newBoardDialog.open}
                     />
                   </Transition.Item>
@@ -147,28 +146,28 @@ export const DashboardNavigation: React.FC<DashboardNavigationProps> = ({
           </Sidebar.Group>
           <Sidebar.Group>
             <Sidebar.NavLink
-              to="/$organizationSlug/settings/details"
-              params={{ organizationSlug }}
-              label="Settings"
               icon={SettingsIcon}
+              label="Settings"
+              params={{ organizationSlug }}
+              to="/$organizationSlug/settings/details"
             />
             <Sidebar.NavLink
-              to="/$organizationSlug/settings/details"
-              params={{ organizationSlug }}
-              label="Preview"
               icon={ExternalLinkIcon}
+              label="Preview"
+              params={{ organizationSlug }}
+              to="/$organizationSlug/settings/details"
             />
           </Sidebar.Group>
         </div>
         <Sidebar.Fill />
         <Sidebar.Group>
-          <Sidebar.Link href="#" label="Feedback" icon={MessageCircleIcon} />
-          <Sidebar.Link href="#" label="Changelog" icon={ListIcon} />
-          <Sidebar.Link href="#" label="Support" icon={HelpCircleIcon} />
+          <Sidebar.Link href="#" icon={MessageCircleIcon} label="Feedback" />
+          <Sidebar.Link href="#" icon={ListIcon} label="Changelog" />
+          <Sidebar.Link href="#" icon={HelpCircleIcon} label="Support" />
         </Sidebar.Group>
       </Sidebar.ScrollArea>
       <Sidebar.Footer className="flex gap-1 p-2">
-        <UserMenu user={user} organizationSlug={organizationSlug} />
+        <UserMenu organizationSlug={organizationSlug} user={user} />
         <NotificationsList />
       </Sidebar.Footer>
     </Sidebar.Root>

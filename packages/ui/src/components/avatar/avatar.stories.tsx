@@ -21,7 +21,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: ({ ...args }) => (
     <Avatar.Root {...args}>
-      <Avatar.Image src="https://github.com/shadcn.png" alt="@shadcn" />
+      <Avatar.Image alt="@shadcn" src="https://github.com/shadcn.png" />
       <Avatar.Fallback>CN</Avatar.Fallback>
     </Avatar.Root>
   ),
@@ -30,7 +30,7 @@ export const Default: Story = {
 export const Fallback: Story = {
   render: ({ ...args }) => (
     <Avatar.Root {...args}>
-      <Avatar.Image src="broken-link" alt="@shadcn" />
+      <Avatar.Image alt="@shadcn" src="broken-link" />
       <Avatar.Fallback>CN</Avatar.Fallback>
     </Avatar.Root>
   ),

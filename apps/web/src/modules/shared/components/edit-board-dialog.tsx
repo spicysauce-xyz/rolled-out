@@ -1,5 +1,5 @@
 import { SymbolPicker } from "@components/symbol-picker";
-import type { SuccessResponse, api } from "@lib/api";
+import type { api, SuccessResponse } from "@lib/api";
 import { boardQuery } from "@lib/api/queries";
 import useAppForm from "@lib/form";
 import { Button, Clickable, Dialog, Input, Label, Text } from "@mono/ui";
@@ -12,7 +12,7 @@ import {
   // @ts-expect-error https://github.com/lucide-icons/lucide/issues/2867
 } from "lucide-react/dynamic.mjs";
 import { z } from "zod";
-import { useUpdateBoardMutation } from "../hooks/useUpdateBoardMutation";
+import { useUpdateBoardMutation } from "../hooks/use-update-board-mutation";
 import { TagSelect } from "./tag-select";
 
 const Content: React.FC<
@@ -41,7 +41,7 @@ const Content: React.FC<
         tags: z.array(z.string().uuid()),
       }),
     },
-    onSubmit: async ({ value }) => {
+    onSubmit: ({ value }) => {
       updateBoardMutation.mutate(
         {
           id: board.id,
@@ -57,7 +57,7 @@ const Content: React.FC<
 
             onOpenChange(false);
           },
-        },
+        }
       );
     },
   });
@@ -87,23 +87,23 @@ const Content: React.FC<
                 </Label.Root>
                 <div className="flex items-start">
                   <Clickable.Root
-                    type="button"
-                    variant="secondary"
                     className="flex size-10 items-center justify-center"
                     onClick={symbolPicker.toggle}
+                    type="button"
+                    variant="secondary"
                   >
                     <DynamicIcon
-                      name={field.state.value}
                       className="size-4 stroke-neutral-900"
+                      name={field.state.value}
                     />
                   </Clickable.Root>
                   <SymbolPicker
-                    side="right"
                     align="start"
                     isOpen={symbolPicker.isOpen}
-                    onOpenChange={symbolPicker.setOpen}
-                    value={field.state.value}
                     onChange={field.handleChange}
+                    onOpenChange={symbolPicker.setOpen}
+                    side="right"
+                    value={field.state.value}
                   />
                 </div>
               </form.FieldContainer>
@@ -118,22 +118,22 @@ const Content: React.FC<
                 </Label.Root>
                 <Input.Root
                   className="w-full"
-                  isInvalid={field.state.meta.errors.length > 0}
                   isDisabled={form.state.isSubmitting}
+                  isInvalid={field.state.meta.errors.length > 0}
                 >
                   <Input.Wrapper>
                     <Input.Field
                       id={field.name}
                       name={field.name}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
                       placeholder="Mobile Updates"
                       value={field.state.value}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      onBlur={field.handleBlur}
                     />
                   </Input.Wrapper>
                 </Input.Root>
                 {field.state.meta.errors.length ? (
-                  <Text.Root size="sm" className="text-danger-500">
+                  <Text.Root className="text-danger-500" size="sm">
                     {field.state.meta.errors[0]?.message}
                   </Text.Root>
                 ) : null}
@@ -149,22 +149,22 @@ const Content: React.FC<
                 </Label.Root>
                 <Input.Root
                   className="w-full"
-                  isInvalid={field.state.meta.errors.length > 0}
                   isDisabled={form.state.isSubmitting}
+                  isInvalid={field.state.meta.errors.length > 0}
                 >
                   <Input.Wrapper>
                     <Input.Field
                       id={field.name}
                       name={field.name}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
                       placeholder="mobile-updates"
                       value={field.state.value}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      onBlur={field.handleBlur}
                     />
                   </Input.Wrapper>
                 </Input.Root>
                 {field.state.meta.errors.length ? (
-                  <Text.Root size="sm" className="text-danger-500">
+                  <Text.Root className="text-danger-500" size="sm">
                     {field.state.meta.errors[0]?.message}
                   </Text.Root>
                 ) : null}
@@ -179,9 +179,9 @@ const Content: React.FC<
                   <Label.Asterisk />
                 </Label.Root>
                 <TagSelect
+                  onChange={field.handleChange}
                   organizationId={board.organizationId}
                   value={field.state.value}
-                  onChange={field.handleChange}
                 />
               </form.FieldContainer>
             )}
@@ -199,9 +199,9 @@ const Content: React.FC<
           >
             {({ isDirty, canSubmit }) => (
               <Button.Root
-                type="submit"
+                isDisabled={!(canSubmit && isDirty)}
                 isLoading={updateBoardMutation.isPending}
-                isDisabled={!canSubmit || !isDirty}
+                type="submit"
               >
                 Update Board
               </Button.Root>
@@ -231,7 +231,7 @@ export const EditBoardDialog: React.FC<EditBoardDialogProps> = ({
   board,
 }) => {
   return (
-    <Dialog.Root open={isOpen} onOpenChange={onOpenChange}>
+    <Dialog.Root onOpenChange={onOpenChange} open={isOpen}>
       <Dialog.Content className="max-w-120">
         <Content board={board} onOpenChange={onOpenChange} />
       </Dialog.Content>

@@ -13,16 +13,16 @@ export const ArchivedUpdatesButton: React.FC<ArchivedUpdatesButtonProps> = ({
 }) => {
   return (
     <Clickable.Root
-      variant="tertiary"
       className="flex items-center justify-center gap-2 rounded-none px-6 py-4"
       onClick={onClick}
+      variant="tertiary"
     >
       {isOpen ? (
-        <Text.Root size="sm" color="muted" className="text-center">
+        <Text.Root className="text-center" color="muted" size="sm">
           Click here to hide archived updates
         </Text.Root>
       ) : (
-        <Text.Root size="sm" color="muted" className="text-center">
+        <Text.Root className="text-center" color="muted" size="sm">
           You have {count} archived update{count === 1 ? "" : "s"}. Click here
           to view them
         </Text.Root>

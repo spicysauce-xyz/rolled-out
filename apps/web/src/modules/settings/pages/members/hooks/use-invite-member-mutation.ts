@@ -3,15 +3,26 @@ import { authClient } from "@lib/auth";
 import { Toaster } from "@mono/ui";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export const useCancelInvitationMutation = () => {
+interface UseInviteMemberMutationProps {
+  onSuccess?: () => void;
+}
+
+export const useInviteMemberMutation = (
+  args?: UseInviteMemberMutationProps
+) => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (data: {
-      invitationId: string;
+      email: string;
+      organizationId: string;
+      // TODO: Update member types here
+      role: "member" | "admin" | "owner";
     }) => {
-      const response = await authClient.organization.cancelInvitation({
-        invitationId: data.invitationId,
+      const response = await authClient.organization.inviteMember({
+        organizationId: data.organizationId,
+        email: data.email,
+        role: data.role,
       });
 
       if (response.error) {
@@ -21,18 +32,20 @@ export const useCancelInvitationMutation = () => {
       return response.data;
     },
     onMutate: () => {
-      return { toastId: Toaster.loading("Cancelling invitation...") };
+      return { toastId: Toaster.loading("Inviting member...") };
     },
     onSuccess: async (data, __, context) => {
       await queryClient.invalidateQueries(
-        organizationQuery(data.organizationId),
+        organizationQuery(data.organizationId)
       );
 
-      Toaster.success("Invitation cancelled", { id: context.toastId });
+      args?.onSuccess?.();
+
+      Toaster.success("Member invited", { id: context.toastId });
     },
     onError: (error, __, context) => {
       if (context) {
-        Toaster.error("Failed to cancel invitation", {
+        Toaster.error("Failed to invite member", {
           description: error.message,
           id: context?.toastId,
         });

@@ -12,8 +12,8 @@ const UpdateEntryRoot: React.FC<UpdateEntryProps> = ({
 }) => {
   return (
     <Clickable.Root
-      variant="tertiary"
       className="flex w-full items-start justify-between gap-6 rounded-none border-0 px-6 py-4"
+      variant="tertiary"
       {...props}
     >
       {children}
@@ -40,7 +40,7 @@ interface UpdateEntryNumberProps {
 const UpdateNumber: React.FC<UpdateEntryNumberProps> = ({ number }) => {
   return (
     <div className="flex items-center gap-2">
-      <Text.Root size="sm" color="muted">
+      <Text.Root color="muted" size="sm">
         #{number.toString().padStart(3, "0")}
       </Text.Root>
     </div>
@@ -97,7 +97,7 @@ const UpdateEntryMeta: React.FC<
           // biome-ignore lint/suspicious/noArrayIndexKey: there is no other way to get the key. or maybe I'm wrong
           <React.Fragment key={index}>
             {index > 0 && (
-              <Text.Root size="sm" className="text-inherit">
+              <Text.Root className="text-inherit" size="sm">
                 ·
               </Text.Root>
             )}
@@ -126,9 +126,9 @@ const UpdateEntryEditors: React.FC<UpdateEntryEditorsProps> = ({ editors }) => {
         <Tooltip.Trigger asChild>
           {otherEditors.length > 0 && (
             <Text.Root
-              size="sm"
-              color="muted"
               className="decoration-dashed underline-offset-2 hover:underline"
+              color="muted"
+              size="sm"
             >
               {" "}
               and {otherEditors.length} other
@@ -156,9 +156,9 @@ const UpdateEntryDate: React.FC<UpdateEntryDateProps> = ({ date, label }) => {
     <Tooltip.Root>
       <Tooltip.Trigger>
         <Text.Root
-          size="sm"
-          color="muted"
           className="decoration-dashed underline-offset-2 hover:underline"
+          color="muted"
+          size="sm"
         >
           {format(date, "MMM d")}
         </Text.Root>

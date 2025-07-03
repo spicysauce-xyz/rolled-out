@@ -20,5 +20,5 @@ export const board = pgTable(
       .notNull()
       .defaultNow(),
   },
-  (table) => [unique("board_slug_unique").on(table.slug)],
+  (table) => [unique("board_slug_unique").on(table.slug)]
 );

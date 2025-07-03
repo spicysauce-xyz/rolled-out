@@ -1,24 +1,32 @@
-import * as DialogPrimitive from "@radix-ui/react-dialog";
+import {
+  Close as RadixDialogClose,
+  Content as RadixDialogContent,
+  Description as RadixDialogDescription,
+  Overlay as RadixDialogOverlay,
+  Portal as RadixDialogPortal,
+  Root as RadixDialogRoot,
+  Title as RadixDialogTitle,
+  Trigger as RadixDialogTrigger,
+} from "@radix-ui/react-dialog";
 import { XIcon } from "lucide-react";
-import * as React from "react";
+import React from "react";
 import { cn } from "../../utils/cn";
 import { IconButton } from "../icon-button";
 import { Text } from "../text";
 
-const DialogRoot = DialogPrimitive.Root;
+const DialogRoot = RadixDialogRoot;
 
-const DialogTrigger = DialogPrimitive.Trigger;
+const DialogTrigger = RadixDialogTrigger;
 
-const DialogPortal = DialogPrimitive.Portal;
+const DialogPortal = RadixDialogPortal;
 
-const DialogClose = DialogPrimitive.Close;
+const DialogClose = RadixDialogClose;
 
 const DialogOverlay = React.forwardRef<
-  React.ElementRef<typeof DialogPrimitive.Overlay>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
+  React.ElementRef<typeof RadixDialogOverlay>,
+  React.ComponentPropsWithoutRef<typeof RadixDialogOverlay>
 >(({ className, ...props }, ref) => (
-  <DialogPrimitive.Overlay
-    ref={ref}
+  <RadixDialogOverlay
     className={cn(
       // base
       "fixed inset-0 z-50 bg-neutral-900/25",
@@ -28,20 +36,20 @@ const DialogOverlay = React.forwardRef<
       "data-[state=open]:fade-in-0 data-[state=open]:animate-in",
       // closed
       "data-[state=closed]:fade-out-0 data-[state=closed]:animate-out",
-      className,
+      className
     )}
+    ref={ref}
     {...props}
   />
 ));
 
 const DialogContent = React.forwardRef<
-  React.ElementRef<typeof DialogPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
+  React.ElementRef<typeof RadixDialogContent>,
+  React.ComponentPropsWithoutRef<typeof RadixDialogContent>
 >(({ className, children, ...props }, ref) => (
   <DialogPortal>
     <DialogOverlay />
-    <DialogPrimitive.Content
-      ref={ref}
+    <RadixDialogContent
       className={cn(
         // base
         "-translate-x-1/2 -translate-y-1/2 fixed top-1/2 left-1/2 z-50 flex w-full max-w-160 flex-col gap-6 rounded-xl bg-white p-6 shadow-xl outline-none",
@@ -51,23 +59,24 @@ const DialogContent = React.forwardRef<
         "fade-in-0 slide-in-from-top-4 animate-in",
         // closed
         "data-[state=closed]:fade-out-0 data-[state=closed]:slide-out-to-top-4 data-[state=closed]:animate-out",
-        className,
+        className
       )}
+      ref={ref}
       {...props}
     >
       {children}
-      <DialogPrimitive.Close asChild>
+      <RadixDialogClose asChild>
         <IconButton.Root
-          variant="tertiary"
-          size="sm"
           className="absolute top-2.5 right-2.5"
+          size="sm"
+          variant="tertiary"
         >
           <IconButton.Icon>
             <XIcon />
           </IconButton.Icon>
         </IconButton.Root>
-      </DialogPrimitive.Close>
-    </DialogPrimitive.Content>
+      </RadixDialogClose>
+    </RadixDialogContent>
   </DialogPortal>
 ));
 
@@ -85,7 +94,7 @@ const DialogFooter = ({
   <div
     className={cn(
       "flex flex-row gap-2 border-neutral-100 border-t pt-6",
-      className,
+      className
     )}
     {...props}
   />
@@ -95,30 +104,30 @@ const DialogTitle = React.forwardRef<
   React.ElementRef<typeof Text.Root>,
   React.ComponentPropsWithoutRef<typeof Text.Root>
 >(({ className, ...props }, ref) => (
-  <DialogPrimitive.Title asChild>
+  <RadixDialogTitle asChild>
     <Text.Root
+      className={className}
       ref={ref}
       size="lg"
       weight="medium"
-      className={className}
       {...props}
     />
-  </DialogPrimitive.Title>
+  </RadixDialogTitle>
 ));
 
 const DialogDescription = React.forwardRef<
   React.ElementRef<typeof Text.Root>,
   React.ComponentPropsWithoutRef<typeof Text.Root>
 >(({ className, ...props }, ref) => (
-  <DialogPrimitive.Description asChild>
+  <RadixDialogDescription asChild>
     <Text.Root
+      className={className}
+      color="muted"
       ref={ref}
       size="sm"
-      color="muted"
-      className={className}
       {...props}
     />
-  </DialogPrimitive.Description>
+  </RadixDialogDescription>
 ));
 
 export {

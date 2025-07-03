@@ -21,8 +21,9 @@ import { cors } from "hono/cors";
 const editorsMap = new Map<string, Set<string>>();
 
 const hocuspocus = new Hocuspocus({
-  onChange: async ({ documentName, context }) => {
-    addUserIdToEditorsMap(editorsMap, documentName, context.user.id);
+  // @ts-expect-error no need to have promise here
+  onChange: ({ documentName, context }) => {
+    return addUserIdToEditorsMap(editorsMap, documentName, context.user.id);
   },
   extensions: [
     new Logger(),
@@ -54,7 +55,7 @@ const hocuspocus = new Hocuspocus({
         if (tags.length) {
           await insertPostTagsByDocumentName(
             documentName,
-            tags.map(({ id }) => id),
+            tags.map(({ id }) => id)
           );
         }
       },
@@ -82,7 +83,7 @@ hocusApp.get(
         hocuspocus.handleConnection(ws.raw, c.req.raw, { user });
       },
     };
-  }),
+  })
 );
 
 const hocusServer = serve(
@@ -97,7 +98,7 @@ const hocusServer = serve(
       configuration: hocuspocus.configuration,
       port: info.port,
     });
-  },
+  }
 );
 
 injectWebSocket(hocusServer);

@@ -12,9 +12,7 @@ interface EmailPayload<T> {
 
 export const Email = {
   async sendMagicLinkEmail(
-    payload: EmailPayload<
-      React.ComponentPropsWithoutRef<typeof MagicLinkEmail>
-    >,
+    payload: EmailPayload<React.ComponentPropsWithoutRef<typeof MagicLinkEmail>>
   ) {
     const response = await resend.emails.send({
       from: `Rolled Out <magic@${Config.resend.domain}>`,

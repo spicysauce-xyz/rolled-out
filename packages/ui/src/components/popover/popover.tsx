@@ -1,17 +1,23 @@
-import * as PopoverPrimitive from "@radix-ui/react-popover";
+import {
+  Anchor as RadixPopoverAnchor,
+  Content as RadixPopoverContent,
+  Portal as RadixPopoverPortal,
+  Root as RadixPopoverRoot,
+  Trigger as RadixPopoverTrigger,
+} from "@radix-ui/react-popover";
 import type React from "react";
 import { cn } from "../../utils";
 
 function PopoverRoot({
   ...props
-}: React.ComponentProps<typeof PopoverPrimitive.Root>) {
-  return <PopoverPrimitive.Root {...props} />;
+}: React.ComponentProps<typeof RadixPopoverRoot>) {
+  return <RadixPopoverRoot {...props} />;
 }
 
 function PopoverTrigger({
   ...props
-}: React.ComponentProps<typeof PopoverPrimitive.Trigger>) {
-  return <PopoverPrimitive.Trigger {...props} />;
+}: React.ComponentProps<typeof RadixPopoverTrigger>) {
+  return <RadixPopoverTrigger {...props} />;
 }
 
 function PopoverContent({
@@ -19,15 +25,12 @@ function PopoverContent({
   align = "center",
   sideOffset = 4,
   ...props
-}: React.ComponentProps<typeof PopoverPrimitive.Content>) {
+}: React.ComponentProps<typeof RadixPopoverContent>) {
   return (
-    <PopoverPrimitive.Portal>
-      <PopoverPrimitive.Content
+    <RadixPopoverPortal>
+      <RadixPopoverContent
         align={align}
-        sideOffset={4}
         arrowPadding={12}
-        hideWhenDetached
-        collisionPadding={8}
         className={cn(
           "z-50 max-h-[var(--radix-popover-content-available-height)] rounded-xl border border-neutral-100 bg-white p-2 shadow-lg",
           // transition
@@ -42,18 +45,21 @@ function PopoverContent({
           "data-[side=right]:slide-in-from-left-1 data-[side=right]:data-[state=closed]:slide-out-to-left-1",
           // animation bottom
           "data-[side=bottom]:slide-in-from-top-1 data-[side=bottom]:data-[state=closed]:slide-out-to-top-1",
-          className,
+          className
         )}
+        collisionPadding={8}
+        hideWhenDetached
+        sideOffset={4}
         {...props}
       />
-    </PopoverPrimitive.Portal>
+    </RadixPopoverPortal>
   );
 }
 
 function PopoverAnchor({
   ...props
-}: React.ComponentProps<typeof PopoverPrimitive.Anchor>) {
-  return <PopoverPrimitive.Anchor data-slot="popover-anchor" {...props} />;
+}: React.ComponentProps<typeof RadixPopoverAnchor>) {
+  return <RadixPopoverAnchor data-slot="popover-anchor" {...props} />;
 }
 
 export {

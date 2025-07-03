@@ -1,4 +1,5 @@
 import {
+  customType,
   integer,
   pgTable,
   text,
@@ -6,7 +7,6 @@ import {
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
-import { customType } from "drizzle-orm/pg-core";
 import { organization } from "./organization.model";
 
 export const bytea = customType<{

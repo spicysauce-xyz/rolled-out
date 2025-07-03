@@ -1,10 +1,9 @@
-import * as Confirmer from "@components/feedback/confirmer";
+import { Confirmer } from "@components/feedback/confirmer";
 import { UpdateEntry } from "@modules/dashboard/components/update-list";
-import { useUnarchiveUpdateMutation } from "@modules/dashboard/hooks/useUnarchiveUpdateMutation";
+import { useUnarchiveUpdateMutation } from "@modules/dashboard/hooks/use-unarchive-update-mutation";
 import { DropdownMenu, IconButton } from "@mono/ui";
 import { Link } from "@tanstack/react-router";
-import { ArchiveIcon } from "lucide-react";
-import { EllipsisVerticalIcon } from "lucide-react";
+import { ArchiveIcon, EllipsisVerticalIcon } from "lucide-react";
 import type React from "react";
 
 interface ArchivedUpdateProps {
@@ -56,16 +55,16 @@ export const ArchivedUpdate: React.FC<ArchivedUpdateProps> = ({
   return (
     <UpdateEntry.Root asChild>
       <Link
-        to="/$organizationSlug/editor/$id"
         params={{ organizationSlug, id }}
+        to="/$organizationSlug/editor/$id"
       >
         <UpdateEntry.Group>
           <UpdateEntry.Number number={order} />
           <UpdateEntry.Title title={title} />
         </UpdateEntry.Group>
         <UpdateEntry.Tags
-          tags={tags.map(({ tag }) => tag.label)}
           className="flex-1"
+          tags={tags.map(({ tag }) => tag.label)}
         />
         <UpdateEntry.Meta>
           {editors.length > 0 && <UpdateEntry.Editors editors={editors} />}
@@ -74,19 +73,19 @@ export const ArchivedUpdate: React.FC<ArchivedUpdateProps> = ({
         </UpdateEntry.Meta>
         <DropdownMenu.Root>
           <DropdownMenu.Trigger asChild>
-            <IconButton.Root size="sm" variant="tertiary" className="-my-2">
+            <IconButton.Root className="-my-2" size="sm" variant="tertiary">
               <IconButton.Icon>
                 <EllipsisVerticalIcon />
               </IconButton.Icon>
             </IconButton.Root>
           </DropdownMenu.Trigger>
           <DropdownMenu.Content
-            side="bottom"
             align="end"
             onClick={(e: React.MouseEvent) => {
               e.stopPropagation();
               e.preventDefault();
             }}
+            side="bottom"
           >
             <DropdownMenu.Item onClick={handleUnarchiveUpdate}>
               <DropdownMenu.ItemIcon>

@@ -1,22 +1,31 @@
 import { Database, schema } from "@database";
 import { countDistinct, desc, eq } from "drizzle-orm";
-import { ResultAsync, errAsync } from "neverthrow";
+import { err, errAsync, ok, ResultAsync } from "neverthrow";
 import { DatabaseError } from "pg";
 import { TagRepository } from "./tag.repository";
 
 export const TagService = {
   createTag: (member: { organizationId: string }, label: string) => {
     return ResultAsync.fromPromise(
-      Database.insert(schema.tag).values({ label, organizationId: member.organizationId }).returning(),
+      Database.insert(schema.tag)
+        .values({ label, organizationId: member.organizationId })
+        .returning(),
       (error) => {
-        if (error instanceof DatabaseError) {
-          if (error.constraint === "tag_organization_id_label_unique") {
-            return new Error("Tag already exists", { cause: error });
-          }
+        if (
+          error instanceof DatabaseError &&
+          error.constraint === "tag_organization_id_label_unique"
+        ) {
+          return new Error("Tag already exists", { cause: error });
         }
         return new Error("Failed to create tag", { cause: error });
-      },
-    );
+      }
+    ).andThen(([tag]) => {
+      if (!tag) {
+        return err(new Error("Tag not created"));
+      }
+
+      return ok(tag);
+    });
   },
   getTags: (member: { organizationId: string }) => {
     return ResultAsync.fromPromise(
@@ -31,10 +40,14 @@ export const TagService = {
         .leftJoin(schema.post, eq(schema.postTag.postId, schema.post.id))
         .groupBy(schema.tag.id)
         .orderBy(desc(schema.tag.createdAt)),
-      (error) => new Error("Failed to get tags", { cause: error }),
+      (error) => new Error("Failed to get tags", { cause: error })
     );
   },
-  connectTagsToBoard: (organizationId: string, board: { id: string; organizationId: string }, tags: string[]) => {
+  connectTagsToBoard: (
+    organizationId: string,
+    board: { id: string; organizationId: string },
+    tags: string[]
+  ) => {
     if (board.organizationId !== organizationId) {
       return errAsync(new Error("Board does not belong to organization"));
     }
@@ -47,7 +60,7 @@ export const TagService = {
           await TagRepository.insertBoardTags(board.id, tags, { tx });
         }
       }),
-      (error) => new Error("Failed to connect tags to board", { cause: error }),
+      (error) => new Error("Failed to connect tags to board", { cause: error })
     );
   },
 };

@@ -10,31 +10,47 @@ import z from "zod";
 
 export const AssetsHandler = new Hono()
   .use(authMiddleware({ required: true }))
-  .post("/avatar", zValidator("query", z.object({ type: z.string() })), async (c) => {
-    const filename = uuidv4();
+  .post(
+    "/avatar",
+    zValidator("query", z.object({ type: z.string() })),
+    async (c) => {
+      const filename = uuidv4();
 
-    const uploadUrlResult = await ResultAsync.fromPromise(
-      S3.createUploadUrl(filename),
-      (error) => new Error("Failed to create upload url", { cause: error }),
-    );
+      const uploadUrlResult = await ResultAsync.fromPromise(
+        S3.createUploadUrl(filename),
+        (error) => new Error("Failed to create upload url", { cause: error })
+      );
 
-    if (uploadUrlResult.isErr()) {
-      return notOk(c, { message: uploadUrlResult.error.message }, 500);
+      if (uploadUrlResult.isErr()) {
+        return notOk(c, { message: uploadUrlResult.error.message }, 500);
+      }
+
+      return ok(c, {
+        uploadUrl: uploadUrlResult.value,
+        filename,
+        url: `${Config.s3.assetsBase}/${filename}`,
+      });
     }
+  )
+  .post(
+    "/logo",
+    zValidator("query", z.object({ type: z.string() })),
+    async (c) => {
+      const filename = uuidv4();
 
-    return ok(c, { uploadUrl: uploadUrlResult.value, filename, url: `${Config.s3.assetsBase}/${filename}` });
-  })
-  .post("/logo", zValidator("query", z.object({ type: z.string() })), async (c) => {
-    const filename = uuidv4();
+      const uploadUrlResult = await ResultAsync.fromPromise(
+        S3.createUploadUrl(filename),
+        (error) => new Error("Failed to create upload url", { cause: error })
+      );
 
-    const uploadUrlResult = await ResultAsync.fromPromise(
-      S3.createUploadUrl(filename),
-      (error) => new Error("Failed to create upload url", { cause: error }),
-    );
+      if (uploadUrlResult.isErr()) {
+        return notOk(c, { message: uploadUrlResult.error.message }, 500);
+      }
 
-    if (uploadUrlResult.isErr()) {
-      return notOk(c, { message: uploadUrlResult.error.message }, 500);
+      return ok(c, {
+        uploadUrl: uploadUrlResult.value,
+        filename,
+        url: `${Config.s3.assetsBase}/${filename}`,
+      });
     }
-
-    return ok(c, { uploadUrl: uploadUrlResult.value, filename, url: `${Config.s3.assetsBase}/${filename}` });
-  });
+  );

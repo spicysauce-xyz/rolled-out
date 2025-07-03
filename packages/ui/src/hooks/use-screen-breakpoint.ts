@@ -34,7 +34,7 @@ export const useScreenBreakpoint = (data: UseScreenBreakpointProps) => {
         matchMedia.removeEventListener("change", callback);
       };
     },
-    [query],
+    [query]
   );
 
   const getSnapshot = () => {

@@ -14,7 +14,7 @@ export interface ConnectedPeer {
 }
 
 export const useHocuspocusProvider = (
-  documentName: string,
+  documentName: string
 ):
   | { isReady: false }
   | {
@@ -31,7 +31,9 @@ export const useHocuspocusProvider = (
   const [hasUnsyncedChanges, setHasUnsyncedChanges] = useState(false);
 
   useEffect(() => {
-    if (providerRef.current) return;
+    if (providerRef.current) {
+      return;
+    }
 
     providerRef.current = new HocuspocusProvider({
       url: config.hocusUrl,
@@ -53,7 +55,9 @@ export const useHocuspocusProvider = (
   }, [documentName]);
 
   useEffect(() => {
-    if (!providerRef.current) return;
+    if (!providerRef.current) {
+      return;
+    }
 
     const provider = providerRef.current;
 
@@ -72,9 +76,8 @@ export const useHocuspocusProvider = (
 
       if (yContent.length) {
         const titleNode = (yContent.get(0) as Y.XmlElement).get(0);
-        const title = titleNode.toString();
 
-        setTitle(title ?? "");
+        setTitle(titleNode.toString() ?? "");
       }
     };
 

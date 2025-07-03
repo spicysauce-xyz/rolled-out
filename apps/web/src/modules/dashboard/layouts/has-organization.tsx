@@ -1,5 +1,5 @@
 import { organizationsQuery } from "@lib/api/queries";
-import { Outlet, createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { tryCatch } from "@utils/promise";
 
 export const Route = createFileRoute("/_authorized/_has-organization")({
@@ -12,12 +12,12 @@ export const Route = createFileRoute("/_authorized/_has-organization")({
     }
 
     let organizations = context.queryClient.getQueryData(
-      organizationsQuery().queryKey,
+      organizationsQuery().queryKey
     );
 
     if (!organizations) {
       const { data: freshOrganizations } = await tryCatch(
-        context.queryClient.ensureQueryData(organizationsQuery()),
+        context.queryClient.ensureQueryData(organizationsQuery())
       );
 
       organizations = freshOrganizations ?? undefined;

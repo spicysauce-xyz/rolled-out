@@ -1,4 +1,4 @@
-import * as Card from "@components/card";
+import { Card } from "@components/card";
 import { FileUpload } from "@components/file-upload";
 import { sessionQuery } from "@lib/api/queries";
 import useAppForm from "@lib/form";
@@ -8,10 +8,10 @@ import { createFileRoute } from "@tanstack/react-router";
 import { MailIcon, SaveIcon, UserIcon } from "lucide-react";
 import { match } from "ts-pattern";
 import { z } from "zod";
-import { useUpdateUserMutation } from "./hooks/useUpdateUserMutation";
+import { useUpdateUserMutation } from "./hooks/use-update-user-mutation";
 
 export const Route = createFileRoute(
-  "/_authorized/_has-organization/$organizationSlug/settings/profile",
+  "/_authorized/_has-organization/$organizationSlug/settings/profile"
 )({
   component: RouteComponent,
 });
@@ -32,10 +32,10 @@ function RouteComponent() {
           session: initialSession,
         },
       }),
-    },
+    }
   );
 
-  const user = sessionQueryData?.data.user;
+  const user = sessionQueryData?.data?.user;
 
   const form = useAppForm({
     defaultValues: {
@@ -82,11 +82,11 @@ function RouteComponent() {
               <form.FieldContainer>
                 <Label.Root>Avatar</Label.Root>
                 <FileUpload
-                  type="avatar"
                   id={field.name}
                   onUploadComplete={(url) => {
                     field.setValue(url);
                   }}
+                  type="avatar"
                 >
                   {({ id }, state) => (
                     <label htmlFor={id}>
@@ -102,16 +102,16 @@ function RouteComponent() {
                                   style={{ top: `${progress}%` }}
                                 />
                               </div>
-                            ),
+                            )
                           )
                           .otherwise(() => (
                             <>
                               <Avatar.Image src={field.state.value || ""} />
                               <div className="absolute inset-0 flex items-center justify-center bg-white/10 opacity-0 backdrop-blur-sm transition-all group-hover:opacity-100">
                                 <Text.Root
+                                  className="text-white"
                                   size="xs"
                                   weight="medium"
-                                  className="text-white"
                                 >
                                   Update
                                 </Text.Root>
@@ -137,8 +137,8 @@ function RouteComponent() {
                 </Label.Root>
                 <Input.Root
                   className="w-full"
-                  isInvalid={field.state.meta.errors.length > 0}
                   isDisabled={isSessionQueryPending || form.state.isSubmitting}
+                  isInvalid={field.state.meta.errors.length > 0}
                 >
                   <Input.Wrapper>
                     <Input.Icon>
@@ -147,10 +147,10 @@ function RouteComponent() {
                     <Input.Field
                       id={field.name}
                       name={field.name}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
                       placeholder="John Doe"
                       value={field.state.value}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      onBlur={field.handleBlur}
                     />
                   </Input.Wrapper>
                 </Input.Root>
@@ -184,9 +184,9 @@ function RouteComponent() {
             {({ isSubmitting, isDirty, isFieldsValid }) => (
               <div className="flex gap-2">
                 <Button.Root
-                  type="submit"
+                  isDisabled={!(isDirty && isFieldsValid)}
                   isLoading={isSubmitting}
-                  isDisabled={!isDirty || !isFieldsValid}
+                  type="submit"
                 >
                   <Button.Icon>
                     <SaveIcon />
@@ -195,10 +195,10 @@ function RouteComponent() {
                 </Button.Root>
                 {isDirty && (
                   <Button.Root
+                    isDisabled={isSubmitting}
+                    onClick={() => form.reset()}
                     type="button"
                     variant="tertiary"
-                    onClick={() => form.reset()}
-                    isDisabled={isSubmitting}
                   >
                     Discard
                   </Button.Root>

@@ -12,8 +12,11 @@ const client = new S3Client({
 });
 
 export const S3 = {
-  createUploadUrl: async (fileName: string) => {
-    const command = new PutObjectCommand({ Bucket: Config.s3.bucketName, Key: fileName });
+  createUploadUrl: (fileName: string) => {
+    const command = new PutObjectCommand({
+      Bucket: Config.s3.bucketName,
+      Key: fileName,
+    });
 
     return getSignedUrl(client, command, { expiresIn: 60 });
   },

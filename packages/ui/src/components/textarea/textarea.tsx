@@ -1,5 +1,4 @@
-import { createContext, forwardRef } from "react";
-import React from "react";
+import React, { createContext, forwardRef } from "react";
 import type { VariantProps } from "tailwind-variants";
 import { tv } from "../../utils";
 
@@ -7,7 +6,7 @@ const textareaVariants = tv({
   slots: {
     root: [
       // base
-      "group/textarea-root flex rounded-md border border-neutral-200 shadow-xs tracking-tight",
+      "group/textarea-root flex rounded-md border border-neutral-200 tracking-tight shadow-xs",
       // transition
       "transition-all",
       // hover
@@ -17,7 +16,7 @@ const textareaVariants = tv({
     ],
     wrapper: [
       // base
-      "group/textarea-wrapper flex-1 h-full flex items-center cursor-text",
+      "group/textarea-wrapper flex h-full flex-1 cursor-text items-center",
       // transition
       "transition-all",
     ],
@@ -64,10 +63,10 @@ const textareaVariants = tv({
     disabled: {
       true: {
         root: [
-          "hover:border-neutral-200 bg-neutral-50 select-none shadow-none",
+          "select-none bg-neutral-50 shadow-none hover:border-neutral-200",
         ],
         wrapper: ["cursor-not-allowed"],
-        field: ["text-neutral-400 cursor-not-allowed"],
+        field: ["cursor-not-allowed text-neutral-400"],
       },
     },
   },
@@ -102,7 +101,7 @@ const TextareaRoot = forwardRef<HTMLDivElement, TextareaRootProps>(
         <div ref={ref} {...props} className={root({ className })} />
       </TextareaContext.Provider>
     );
-  },
+  }
 );
 
 type TextareaWrapperProps = React.HTMLAttributes<HTMLLabelElement>;
@@ -116,7 +115,7 @@ const TextareaWrapper = forwardRef<HTMLLabelElement, TextareaWrapperProps>(
       // biome-ignore lint/a11y/noLabelWithoutControl: textarea is wrapped in a label when used
       <label ref={ref} {...props} className={wrapper({ className })} />
     );
-  },
+  }
 );
 
 type TextareaFieldProps = React.TextareaHTMLAttributes<HTMLTextAreaElement>;
@@ -130,11 +129,11 @@ const TextareaField = forwardRef<HTMLTextAreaElement, TextareaFieldProps>(
       <textarea
         ref={ref}
         {...props}
-        disabled={disabled}
         className={field({ className })}
+        disabled={disabled}
       />
     );
-  },
+  }
 );
 
 export {

@@ -25,7 +25,7 @@ export const Simple: Story = {
     <div className="w-64">
       <Input.Root {...args}>
         <Input.Wrapper>
-          <Input.Field type="tel" placeholder="Simple Input" />
+          <Input.Field placeholder="Simple Input" type="tel" />
         </Input.Wrapper>
       </Input.Root>
     </div>
@@ -41,7 +41,7 @@ export const WithIcon: Story = {
           <Input.Icon>
             <PhoneIcon />
           </Input.Icon>
-          <Input.Field type="tel" placeholder="+1 (555) 123-4567" />
+          <Input.Field placeholder="+1 (555) 123-4567" type="tel" />
         </Input.Wrapper>
       </Input.Root>
     </div>
@@ -55,7 +55,7 @@ export const WithLabel: Story = {
       <Input.Root {...args}>
         <Input.Wrapper>
           <Input.Text>+1</Input.Text>
-          <Input.Field type="tel" placeholder="(555) 123-4567" />
+          <Input.Field placeholder="(555) 123-4567" type="tel" />
         </Input.Wrapper>
       </Input.Root>
     </div>

@@ -3,17 +3,14 @@ import { updatesQuery } from "@lib/api/queries";
 import { Toaster } from "@mono/ui";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export const usePublishUpdateMutation = () => {
+export const useUnarchiveUpdateMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (args: {
-      organizationId: string;
-      id: string;
-    }) => {
+    mutationFn: async (args: { organizationId: string; id: string }) => {
       const response = await api.organizations[":organizationId"].posts[
         ":id"
-      ].publish.$post({
+      ].unarchive.$post({
         param: {
           organizationId: args.organizationId,
           id: args.id,
@@ -29,18 +26,18 @@ export const usePublishUpdateMutation = () => {
       return json.data;
     },
     onMutate: () => {
-      return { toastId: Toaster.loading("Publishing update...") };
+      return { toastId: Toaster.loading("Unarchiving update...") };
     },
     onSuccess: async (update, _, context) => {
-      await queryClient.refetchQueries(updatesQuery(update.organizationId));
+      await queryClient.invalidateQueries(updatesQuery(update.organizationId));
 
-      Toaster.success("Update published", {
+      Toaster.success("Update unarchived", {
         id: context.toastId,
       });
     },
     onError: (error, _, context) => {
       if (context) {
-        Toaster.error("Error publishing update", {
+        Toaster.error("Error unarchiving update", {
           description: error.message,
           id: context.toastId,
         });

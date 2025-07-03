@@ -14,7 +14,13 @@ export const auth = createServerAuth({
   domain: `.${Config.client.domain.split(".").slice(-2).join(".")}`,
   trustedOrigins: [Config.client.base],
   sendInvitationEmail: async (data) => {
-    console.log("Invitation email sent to", data.invitation.email, data.invitation.role);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    console.log(
+      "Invitation email sent to",
+      data.invitation.email,
+      data.invitation.role
+    );
     // TODO: Implement invitation email template
     // TODO: Throw proper error (return error json) if email fails to send
     return;
@@ -33,7 +39,10 @@ export const auth = createServerAuth({
       },
     });
   },
-  afterOrganizationCreate: async (organization, member) => {
-    await Emitter.emitAsync(OrganizationCreatedEvent.eventName, new OrganizationCreatedEvent(organization, member));
+  afterOrganizationCreate: async (data) => {
+    await Emitter.emitAsync(
+      OrganizationCreatedEvent.eventName,
+      new OrganizationCreatedEvent(data.organization, data.member)
+    );
   },
 });

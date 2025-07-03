@@ -8,17 +8,17 @@ export const clickableVariants = tv({
   slots: {
     root: [
       // base
-      "group/clickable-root flex overflow-hidden select-none rounded-md",
+      "group/clickable-root flex select-none overflow-hidden rounded-md",
       // hover
       "transition-[background-color,border-color]",
       // focus
-      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ring-transparent focus-visible:ring-accent-500",
+      "ring-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2",
       // active
-      "active:shadow-none active:inset-shadow-transparent",
+      "active:inset-shadow-transparent active:shadow-none",
     ],
     icon: [
       // base
-      "flex size-4 shrink-0 items-center justify-center [&>svg]:w-full [&>svg]:h-full",
+      "flex size-4 shrink-0 items-center justify-center [&>svg]:h-full [&>svg]:w-full",
       // hover
       "transition-colors",
     ],
@@ -33,10 +33,10 @@ export const clickableVariants = tv({
     },
     variant: {
       filled: {
-        root: ["border shadow-xs inset-shadow-default"],
+        root: ["inset-shadow-default border shadow-xs"],
       },
       secondary: {
-        root: ["border shadow-xs inset-shadow-default bg-white"],
+        root: ["inset-shadow-default border bg-white shadow-xs"],
       },
       tertiary: {
         root: ["border border-transparent"],
@@ -60,11 +60,11 @@ export const clickableVariants = tv({
       variant: "filled",
       class: {
         root: [
-          "bg-neutral-900 text-white border-neutral-900",
+          "border-neutral-900 bg-neutral-900 text-white",
           // hover
-          "hover:bg-neutral-950 hover:border-neutral-950",
+          "hover:border-neutral-950 hover:bg-neutral-950",
           // focus
-          "focus-visible:bg-neutral-950 focus-visible:border-neutral-950",
+          "focus-visible:border-neutral-950 focus-visible:bg-neutral-950",
         ],
         icon: [
           "text-neutral-200",
@@ -80,9 +80,9 @@ export const clickableVariants = tv({
       variant: "filled",
       class: {
         root: [
-          "bg-accent-500 text-white border-accent-500",
+          "border-accent-500 bg-accent-500 text-white",
           // hover
-          "hover:bg-accent-600 hover:border-accent-600",
+          "hover:border-accent-600 hover:bg-accent-600",
           // focus
           "focus-visible:border-accent-600 focus-visible:bg-accent-600",
         ],
@@ -100,11 +100,11 @@ export const clickableVariants = tv({
       variant: "filled",
       class: {
         root: [
-          "bg-danger-500 text-white border-danger-500",
+          "border-danger-500 bg-danger-500 text-white",
           // hover
-          "hover:bg-danger-600 hover:border-danger-600",
+          "hover:border-danger-600 hover:bg-danger-600",
           // focus
-          "focus-visible:bg-danger-600 focus-visible:border-danger-600",
+          "focus-visible:border-danger-600 focus-visible:bg-danger-600",
         ],
         icon: [
           "text-danger-200",
@@ -120,11 +120,11 @@ export const clickableVariants = tv({
       variant: "filled",
       class: {
         root: [
-          "bg-warning-500 text-white border-warning-500",
+          "border-warning-500 bg-warning-500 text-white",
           // hover
-          "hover:bg-warning-600 hover:border-warning-600",
+          "hover:border-warning-600 hover:bg-warning-600",
           // focus
-          "focus-visible:bg-warning-600 focus-visible:border-warning-600",
+          "focus-visible:border-warning-600 focus-visible:bg-warning-600",
         ],
         icon: [
           "text-warning-200",
@@ -140,11 +140,11 @@ export const clickableVariants = tv({
       variant: "filled",
       class: {
         root: [
-          "bg-success-500 text-white border-success-500",
+          "border-success-500 bg-success-500 text-white",
           // hover
-          "hover:bg-success-600 hover:border-success-600",
+          "hover:border-success-600 hover:bg-success-600",
           // focus
-          "focus-visible:bg-success-600 focus-visible:border-success-600",
+          "focus-visible:border-success-600 focus-visible:bg-success-600",
         ],
         icon: [
           "text-success-200",
@@ -160,11 +160,11 @@ export const clickableVariants = tv({
       variant: "secondary",
       class: {
         root: [
-          "bg-white text-neutral-500 border-neutral-200",
+          "border-neutral-200 bg-white text-neutral-500",
           // hover
-          "hover:bg-neutral-50 hover:text-neutral-600 hover:border-neutral-300",
+          "hover:border-neutral-300 hover:bg-neutral-50 hover:text-neutral-600",
           // focus
-          "focus-visible:bg-neutral-50 focus-visible:text-neutral-600 focus-visible:border-neutral-200",
+          "focus-visible:border-neutral-200 focus-visible:bg-neutral-50 focus-visible:text-neutral-600",
         ],
         icon: [
           "text-neutral-400",
@@ -180,11 +180,11 @@ export const clickableVariants = tv({
       variant: "secondary",
       class: {
         root: [
-          "bg-white text-accent-500 border-accent-200",
+          "border-accent-200 bg-white text-accent-500",
           // hover
-          "hover:bg-accent-50 hover:text-accent-600 hover:border-accent-300",
+          "hover:border-accent-300 hover:bg-accent-50 hover:text-accent-600",
           // focus
-          "focus-visible:bg-accent-50 focus-visible:text-accent-600 focus-visible:border-accent-300",
+          "focus-visible:border-accent-300 focus-visible:bg-accent-50 focus-visible:text-accent-600",
         ],
         icon: [
           "text-accent-400",
@@ -200,11 +200,11 @@ export const clickableVariants = tv({
       variant: "secondary",
       class: {
         root: [
-          "bg-white text-danger-500 border-danger-200",
+          "border-danger-200 bg-white text-danger-500",
           // hover
-          "hover:bg-danger-50 hover:text-danger-600 hover:border-danger-300",
+          "hover:border-danger-300 hover:bg-danger-50 hover:text-danger-600",
           // focus
-          "focus-visible:bg-danger-50 focus-visible:text-danger-600 focus-visible:border-danger-300",
+          "focus-visible:border-danger-300 focus-visible:bg-danger-50 focus-visible:text-danger-600",
         ],
         icon: [
           "text-danger-400",
@@ -220,11 +220,11 @@ export const clickableVariants = tv({
       variant: "secondary",
       class: {
         root: [
-          "bg-white text-warning-500 border-warning-200",
+          "border-warning-200 bg-white text-warning-500",
           // hover
-          "hover:bg-warning-50 hover:text-warning-600 hover:border-warning-300",
+          "hover:border-warning-300 hover:bg-warning-50 hover:text-warning-600",
           // focus
-          "focus-visible:bg-warning-50 focus-visible:text-warning-600 focus-visible:border-warning-300",
+          "focus-visible:border-warning-300 focus-visible:bg-warning-50 focus-visible:text-warning-600",
         ],
         icon: [
           "text-warning-400",
@@ -240,11 +240,11 @@ export const clickableVariants = tv({
       variant: "secondary",
       class: {
         root: [
-          "bg-white text-success-500 border-success-200",
+          "border-success-200 bg-white text-success-500",
           // hover
-          "hover:bg-success-50 hover:text-success-600 hover:border-success-300",
+          "hover:border-success-300 hover:bg-success-50 hover:text-success-600",
           // focus
-          "focus-visible:bg-success-50 focus-visible:text-success-600 focus-visible:border-success-300",
+          "focus-visible:border-success-300 focus-visible:bg-success-50 focus-visible:text-success-600",
         ],
         icon: [
           "text-success-400",
@@ -263,9 +263,9 @@ export const clickableVariants = tv({
         root: [
           "text-neutral-500",
           // hover
-          "hover:bg-neutral-50 hover:border-neutral-50 hover:text-neutral-600",
+          "hover:border-neutral-50 hover:bg-neutral-50 hover:text-neutral-600",
           // focus
-          "focus-visible:bg-neutral-50 focus-visible:border-neutral-50 focus-visible:text-neutral-600",
+          "focus-visible:border-neutral-50 focus-visible:bg-neutral-50 focus-visible:text-neutral-600",
         ],
         icon: [
           "text-neutral-400",
@@ -283,9 +283,9 @@ export const clickableVariants = tv({
         root: [
           "text-accent-500",
           // hover
-          "hover:bg-accent-50 hover:border-accent-50 hover:text-accent-600",
+          "hover:border-accent-50 hover:bg-accent-50 hover:text-accent-600",
           // focus
-          "focus-visible:bg-accent-50 focus-visible:border-accent-50 focus-visible:text-accent-600",
+          "focus-visible:border-accent-50 focus-visible:bg-accent-50 focus-visible:text-accent-600",
         ],
         icon: [
           "text-accent-400",
@@ -303,9 +303,9 @@ export const clickableVariants = tv({
         root: [
           "text-danger-500",
           // hover
-          "hover:bg-danger-50 hover:border-danger-50 hover:text-danger-600",
+          "hover:border-danger-50 hover:bg-danger-50 hover:text-danger-600",
           // focus
-          "focus-visible:bg-danger-50 focus-visible:border-danger-50 focus-visible:text-danger-600",
+          "focus-visible:border-danger-50 focus-visible:bg-danger-50 focus-visible:text-danger-600",
         ],
         icon: [
           "text-danger-400",
@@ -323,9 +323,9 @@ export const clickableVariants = tv({
         root: [
           "text-warning-500",
           // hover
-          "hover:bg-warning-50 hover:border-warning-50 hover:text-warning-600",
+          "hover:border-warning-50 hover:bg-warning-50 hover:text-warning-600",
           // focus
-          "focus-visible:bg-warning-50 focus-visible:border-warning-50 focus-visible:text-warning-600",
+          "focus-visible:border-warning-50 focus-visible:bg-warning-50 focus-visible:text-warning-600",
         ],
         icon: [
           "text-warning-400",
@@ -343,9 +343,9 @@ export const clickableVariants = tv({
         root: [
           "text-success-500",
           // hover
-          "hover:bg-success-50 hover:border-success-50 hover:text-success-600",
+          "hover:border-success-50 hover:bg-success-50 hover:text-success-600",
           // focus
-          "focus-visible:bg-success-50 focus-visible:border-success-50 focus-visible:text-success-600",
+          "focus-visible:border-success-50 focus-visible:bg-success-50 focus-visible:text-success-600",
         ],
         icon: [
           "text-success-400",
@@ -361,11 +361,11 @@ export const clickableVariants = tv({
       variant: "filled",
       class: {
         root: [
-          "bg-neutral-50 border-neutral-200 text-neutral-400 shadow-none inset-shadow-transparent",
+          "inset-shadow-transparent border-neutral-200 bg-neutral-50 text-neutral-400 shadow-none",
           // hover
-          "hover:bg-neutral-50 hover:border-neutral-200 hover:text-neutral-400",
+          "hover:border-neutral-200 hover:bg-neutral-50 hover:text-neutral-400",
           // focus
-          "focus-visible:bg-neutral-50 focus-visible:border-neutral-200 focus-visible:text-neutral-400",
+          "focus-visible:border-neutral-200 focus-visible:bg-neutral-50 focus-visible:text-neutral-400",
         ],
         icon: [
           "text-neutral-400",
@@ -381,11 +381,11 @@ export const clickableVariants = tv({
       variant: "secondary",
       class: {
         root: [
-          "bg-neutral-50 border-neutral-50 text-neutral-400 shadow-none inset-shadow-transparent",
+          "inset-shadow-transparent border-neutral-50 bg-neutral-50 text-neutral-400 shadow-none",
           // hover
-          "hover:bg-neutral-50 hover:border-neutral-50 hover:text-neutral-400",
+          "hover:border-neutral-50 hover:bg-neutral-50 hover:text-neutral-400",
           // focus
-          "focus-visible:bg-neutral-50 focus-visible:border-neutral-50 focus-visible:text-neutral-400",
+          "focus-visible:border-neutral-50 focus-visible:bg-neutral-50 focus-visible:text-neutral-400",
         ],
         icon: [
           "text-neutral-400",
@@ -401,11 +401,11 @@ export const clickableVariants = tv({
       variant: "tertiary",
       class: {
         root: [
-          "text-neutral-400 shadow-none inset-shadow-transparent",
+          "inset-shadow-transparent text-neutral-400 shadow-none",
           // hover
-          "hover:bg-transparent hover:border-transparent hover:text-neutral-400",
+          "hover:border-transparent hover:bg-transparent hover:text-neutral-400",
           // focus
-          "focus-visible:bg-transparent focus-visible:border-transparent focus-visible:text-neutral-400",
+          "focus-visible:border-transparent focus-visible:bg-transparent focus-visible:text-neutral-400",
         ],
         icon: [
           "text-neutral-400",
@@ -437,7 +437,7 @@ export type ClickableRootProps = Omit<ClickableSharedProps, "disabled"> &
 const ClickableRoot = React.forwardRef<HTMLButtonElement, ClickableRootProps>(
   (
     { children, color, variant, asChild, className, isDisabled, ...rest },
-    forwardedRef,
+    forwardedRef
   ) => {
     const Component = asChild ? Slot : "button";
     const { root } = clickableVariants({
@@ -457,18 +457,20 @@ const ClickableRoot = React.forwardRef<HTMLButtonElement, ClickableRootProps>(
         <Component
           ref={forwardedRef}
           {...rest}
+          className={root({ class: className })}
           disabled={isDisabled}
           onClick={(...args) => {
-            if (isDisabled) return;
+            if (isDisabled) {
+              return;
+            }
             rest.onClick?.(...args);
           }}
-          className={root({ class: className })}
         >
           {children}
         </Component>
       </ClickableContext.Provider>
     );
-  },
+  }
 );
 
 type ClickableIconProps = React.HTMLAttributes<HTMLDivElement> & AsChildProp;
@@ -492,7 +494,7 @@ const ClickableIcon = React.forwardRef<HTMLDivElement, ClickableIconProps>(
         {children}
       </Component>
     );
-  },
+  }
 );
 
 export { ClickableRoot as Root, ClickableIcon as Icon };

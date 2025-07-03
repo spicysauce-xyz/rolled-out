@@ -34,7 +34,7 @@ const confirm = (payload: Omit<Confirm, "id" | "resolve" | "dismissed">) => {
   const promise = new Promise<boolean>((resolve) => {
     confirmStore.setState((state) => ({
       confirms: [
-        ...state.confirms.filter((confirm) => !confirm.dismissed),
+        ...state.confirms.filter((c) => !c.dismissed),
         {
           id,
           title: payload.title,
@@ -68,17 +68,18 @@ const ConfirmAlert: React.FC<Confirm> = ({
   const [open, setOpen] = useState(true);
   const [phraseConfirm, setPhraseConfirm] = useState("");
 
-  const handleOpenChange = (open: boolean) => {
-    if (!open) {
+  const handleOpenChange = (value: boolean) => {
+    if (!value) {
       setOpen(false);
 
       confirmStore.setState((state) =>
         produce(state, (draft) => {
-          const confirm = draft.confirms.find((confirm) => confirm.id === id);
-          if (confirm) {
-            confirm.dismissed = true;
+          const data = draft.confirms.find((c) => c.id === id);
+
+          if (data) {
+            data.dismissed = true;
           }
-        }),
+        })
       );
 
       if (!resolvedRef.current) {
@@ -89,31 +90,31 @@ const ConfirmAlert: React.FC<Confirm> = ({
 
   if (isMobileScreen) {
     return (
-      <Drawer.Root open={open} onOpenChange={handleOpenChange}>
+      <Drawer.Root onOpenChange={handleOpenChange} open={open}>
         <Drawer.Body className="top-auto">
           <Drawer.Header className={cn(!phrase && "border-b-0")}>
             <Drawer.Title>{title}</Drawer.Title>
             <Drawer.Description>{description}</Drawer.Description>
             <Drawer.CloseX />
           </Drawer.Header>
-          <form onSubmit={(e) => e.preventDefault()} className="flex flex-col">
+          <form className="flex flex-col" onSubmit={(e) => e.preventDefault()}>
             {!!phrase && (
               <Drawer.Content>
                 <div className="flex flex-col gap-2">
-                  <Text.Root size="sm" color="muted">
+                  <Text.Root color="muted" size="sm">
                     Type{" "}
-                    <Text.Root weight="medium" size="sm" asChild>
+                    <Text.Root asChild size="sm" weight="medium">
                       <span>{phrase}</span>
                     </Text.Root>{" "}
                     to confirm
                   </Text.Root>
-                  <Input.Root size="sm" className="w-full">
+                  <Input.Root className="w-full" size="sm">
                     <Input.Wrapper>
                       <Input.Field
                         autoFocus
-                        type="text"
-                        placeholder={phrase}
                         onChange={(e) => setPhraseConfirm(e.target.value)}
+                        placeholder={phrase}
+                        type="text"
                       />
                     </Input.Wrapper>
                   </Input.Root>
@@ -122,13 +123,12 @@ const ConfirmAlert: React.FC<Confirm> = ({
             )}
             <Drawer.Footer>
               <Drawer.Close asChild>
-                <Button.Root variant="secondary" size="sm">
+                <Button.Root size="sm" variant="secondary">
                   Cancel
                 </Button.Root>
               </Drawer.Close>
               <Drawer.Close asChild>
                 <Button.Root
-                  type="submit"
                   autoFocus
                   color={action?.color}
                   isDisabled={!!phrase && phraseConfirm !== phrase}
@@ -136,6 +136,7 @@ const ConfirmAlert: React.FC<Confirm> = ({
                     resolvedRef.current = true;
                     resolve(true);
                   }}
+                  type="submit"
                 >
                   {action?.icon && (
                     <Button.Icon>
@@ -153,32 +154,32 @@ const ConfirmAlert: React.FC<Confirm> = ({
   }
 
   return (
-    <AlertDialog.Root open={open} onOpenChange={handleOpenChange}>
+    <AlertDialog.Root onOpenChange={handleOpenChange} open={open}>
       <AlertDialog.Content>
         <AlertDialog.Header>
           <AlertDialog.Title>{title}</AlertDialog.Title>
           <AlertDialog.Description>{description}</AlertDialog.Description>
         </AlertDialog.Header>
         <form
-          onSubmit={(e) => e.preventDefault()}
           className="flex flex-col sm:gap-4"
+          onSubmit={(e) => e.preventDefault()}
         >
           {!!phrase && (
             <div className="flex flex-col gap-2 border-neutral-100 border-y py-4">
-              <Text.Root size="sm" color="muted">
+              <Text.Root color="muted" size="sm">
                 Type{" "}
-                <Text.Root weight="medium" size="sm" asChild>
+                <Text.Root asChild size="sm" weight="medium">
                   <span>{phrase}</span>
                 </Text.Root>{" "}
                 to confirm
               </Text.Root>
-              <Input.Root size="sm" className="w-full">
+              <Input.Root className="w-full" size="sm">
                 <Input.Wrapper>
                   <Input.Field
                     autoFocus
-                    type="text"
-                    placeholder={phrase}
                     onChange={(e) => setPhraseConfirm(e.target.value)}
+                    placeholder={phrase}
+                    type="text"
                   />
                 </Input.Wrapper>
               </Input.Root>
@@ -187,7 +188,6 @@ const ConfirmAlert: React.FC<Confirm> = ({
           <AlertDialog.Footer>
             <AlertDialog.Cancel type="button">Cancel</AlertDialog.Cancel>
             <AlertDialog.Action
-              type="submit"
               autoFocus
               color={action?.color}
               isDisabled={!!phrase && phraseConfirm !== phrase}
@@ -195,6 +195,7 @@ const ConfirmAlert: React.FC<Confirm> = ({
                 resolvedRef.current = true;
                 resolve(true);
               }}
+              type="submit"
             >
               {action?.icon && (
                 <Button.Icon>
@@ -218,4 +219,7 @@ const ConfirmerRoot = () => {
   ));
 };
 
-export { ConfirmerRoot as Root, confirm };
+export const Confirmer = {
+  Root: ConfirmerRoot,
+  confirm,
+};

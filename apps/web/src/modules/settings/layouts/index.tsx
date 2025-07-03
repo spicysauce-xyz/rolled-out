@@ -1,13 +1,13 @@
-import * as Page from "@components/layout/page";
+import { Page } from "@components/layout/page";
 import { Breadcrumbs } from "@modules/shared/components/breadcrumbs";
-import { Outlet, createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { SettingsNavigation } from "../components/settings-navigation";
 
-export const Route = createFileRoute("/_authorized/_has-organization/$organizationSlug/settings")(
-  {
-    component: RouteComponent,
-  },
-);
+export const Route = createFileRoute(
+  "/_authorized/_has-organization/$organizationSlug/settings"
+)({
+  component: RouteComponent,
+});
 
 function RouteComponent() {
   const { organization, user } = Route.useRouteContext();
@@ -15,9 +15,9 @@ function RouteComponent() {
   return (
     <Page.Root>
       <SettingsNavigation
-        user={user}
-        organizationSlug={organization.slug}
         organizationName={organization.name}
+        organizationSlug={organization.slug}
+        user={user}
       />
       <Page.Wrapper>
         <Page.Header>

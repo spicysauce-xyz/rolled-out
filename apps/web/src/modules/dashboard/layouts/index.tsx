@@ -1,9 +1,9 @@
-import * as Page from "@components/layout/page";
-import { Outlet, createFileRoute } from "@tanstack/react-router";
+import { Page } from "@components/layout/page";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { DashboardNavigation } from "../components/dashboard-navigation";
 
 export const Route = createFileRoute(
-  "/_authorized/_has-organization/$organizationSlug/_index",
+  "/_authorized/_has-organization/$organizationSlug/_index"
 )({
   component: RouteComponent,
 });
@@ -14,9 +14,9 @@ function RouteComponent() {
   return (
     <Page.Root>
       <DashboardNavigation
-        user={user}
-        organizationSlug={organization.slug}
         organizationId={organization.id}
+        organizationSlug={organization.slug}
+        user={user}
       />
       <Outlet />
     </Page.Root>

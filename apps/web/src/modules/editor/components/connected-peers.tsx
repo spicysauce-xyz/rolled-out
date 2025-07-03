@@ -1,6 +1,6 @@
 import { Avatar } from "@mono/ui";
 import { cn } from "@mono/ui/utils";
-import type { ConnectedPeer } from "../hooks/useHocuspocusProvider";
+import type { ConnectedPeer } from "../hooks/use-hocuspocus-provider";
 
 interface ConnectedPeersProps {
   connectedPeers: ConnectedPeer[];
@@ -12,7 +12,9 @@ export const ConnectedPeers: React.FC<ConnectedPeersProps> = ({
   return (
     <div className="flex items-center gap-2">
       {connectedPeers.map((peer) => {
-        if (!peer.user) return null;
+        if (!peer.user) {
+          return null;
+        }
 
         return (
           <div className="relative" key={peer.clientId}>
@@ -25,7 +27,7 @@ export const ConnectedPeers: React.FC<ConnectedPeersProps> = ({
                 className={cn(
                   "h-full w-full rounded-full",
                   peer.status === "online" && "bg-success-500",
-                  peer.status === "away" && "bg-warning-500",
+                  peer.status === "away" && "bg-warning-500"
                 )}
               />
             </div>

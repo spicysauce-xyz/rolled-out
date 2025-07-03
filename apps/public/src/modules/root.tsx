@@ -2,10 +2,10 @@ import styles from "@styles/global.css?url";
 import type { QueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import {
+  createRootRouteWithContext,
   HeadContent,
   Outlet,
   Scripts,
-  createRootRouteWithContext,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { getHost, getSubdomainFromHost } from "@utils/domain";
@@ -75,6 +75,7 @@ function RootComponent() {
 function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
   return (
     <html lang="en">
+      {/** biome-ignore lint/style/noHeadElement: actually needed */}
       <head>
         <HeadContent />
       </head>

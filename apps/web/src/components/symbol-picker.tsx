@@ -21,13 +21,13 @@ const Content = ({ onIconClick }: ContentProps) => {
 
   const filteredIconNames = useMemo(() => {
     return iconNames.filter((icon: IconName) =>
-      icon.toLowerCase().includes(search.toLowerCase()),
+      icon.toLowerCase().includes(search.toLowerCase())
     );
   }, [search]);
 
   const chunks = useMemo(
     () => _.chunk(filteredIconNames, 6),
-    [filteredIconNames],
+    [filteredIconNames]
   );
 
   const rowVirtualizer = useVirtualizer({
@@ -42,25 +42,25 @@ const Content = ({ onIconClick }: ContentProps) => {
         <Input.Root size="sm">
           <Input.Wrapper>
             <Input.Field
-              value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search for an icon"
+              value={search}
             />
           </Input.Wrapper>
         </Input.Root>
       </div>
       <div className="flex h-64 max-h-64 flex-col">
         <ScrollArea.Root>
-          <ScrollArea.Viewport ref={viewportRef} className="p-2 pb-0">
+          <ScrollArea.Viewport className="p-2 pb-0" ref={viewportRef}>
             {chunks.length === 0 ? (
               <div className="flex flex-1 items-center justify-center">
                 <Text.Root
-                  size="sm"
                   className="text-balance text-center"
                   color="muted"
+                  size="sm"
                 >
                   No results found for{" "}
-                  <Text.Root size="sm" asChild>
+                  <Text.Root asChild size="sm">
                     <span>"{search}"</span>
                   </Text.Root>
                   . Try a different search
@@ -68,11 +68,12 @@ const Content = ({ onIconClick }: ContentProps) => {
               </div>
             ) : (
               <div
-                style={{ height: `${rowVirtualizer.getTotalSize()}px` }}
                 className="relative"
+                style={{ height: `${rowVirtualizer.getTotalSize()}px` }}
               >
                 {rowVirtualizer.getVirtualItems().map((virtualItem) => (
                   <div
+                    className="flex justify-start gap-2 pb-2"
                     key={virtualItem.key}
                     style={{
                       position: "absolute",
@@ -82,14 +83,13 @@ const Content = ({ onIconClick }: ContentProps) => {
                       height: `${virtualItem.size}px`,
                       transform: `translateY(${virtualItem.start}px)`,
                     }}
-                    className="flex justify-start gap-2 pb-2"
                   >
                     {chunks[virtualItem.index].map((icon: IconName) => (
                       <Clickable.Root
-                        key={icon}
-                        variant="tertiary"
                         className="flex aspect-square h-full items-center justify-center"
+                        key={icon}
                         onClick={() => onIconClick(icon)}
+                        variant="tertiary"
                       >
                         <Clickable.Icon>
                           <DynamicIcon
@@ -134,7 +134,7 @@ export const SymbolPicker: React.FC<SymbolPickerProps> = ({
   };
 
   return (
-    <Popover.Root open={isOpen} onOpenChange={onOpenChange}>
+    <Popover.Root onOpenChange={onOpenChange} open={isOpen}>
       <Popover.Anchor />
       <Popover.Content
         {...contentProps}

@@ -1,5 +1,5 @@
 import { sessionQuery } from "@lib/api/queries";
-import { Outlet, createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { tryCatch } from "@utils/promise";
 
 export const Route = createFileRoute("/_authorized")({
@@ -9,13 +9,13 @@ export const Route = createFileRoute("/_authorized")({
 
     if (!session) {
       const { data: freshSessionData } = await tryCatch(
-        context.queryClient.ensureQueryData(sessionQuery()),
+        context.queryClient.ensureQueryData(sessionQuery())
       );
 
       session = freshSessionData ?? undefined;
     }
 
-    if (!session?.data?.session || !session?.data?.user) {
+    if (!(session?.data?.session && session?.data?.user)) {
       throw redirect({
         to: "/login",
         search: {

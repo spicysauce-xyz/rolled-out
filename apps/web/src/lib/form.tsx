@@ -7,7 +7,7 @@ const FieldContainer = forwardRef<
   React.HTMLAttributes<HTMLDivElement>
 >(({ children, className, ...props }, ref) => {
   return (
-    <div ref={ref} className={cn("flex flex-col gap-2", className)} {...props}>
+    <div className={cn("flex flex-col gap-2", className)} ref={ref} {...props}>
       {children}
     </div>
   );

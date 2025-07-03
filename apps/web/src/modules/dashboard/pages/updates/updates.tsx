@@ -1,16 +1,16 @@
 import { GroupBy } from "@components/group-by";
-import * as Page from "@components/layout/page";
-import * as Transition from "@components/transition";
-import type { SuccessResponse, api } from "@lib/api";
+import { Page } from "@components/layout/page";
+import { Transition } from "@components/transition";
+import type { api, SuccessResponse } from "@lib/api";
 import { updatesQuery } from "@lib/api/queries";
-import { useCreateUpdateMutation } from "@modules/dashboard/hooks/useCreateUpdateMutation";
+import { useCreateUpdateMutation } from "@modules/dashboard/hooks/use-create-update-mutation";
 import { Breadcrumbs } from "@modules/shared/components/breadcrumbs";
 import { LinkButton, Text } from "@mono/ui";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import type { InferResponseType } from "hono";
 import { PlusIcon } from "lucide-react";
-import { P, match } from "ts-pattern";
+import { match, P } from "ts-pattern";
 import { UpdateEntry, UpdatesList } from "../../components/update-list";
 import { ArchivedUpdate } from "./components/archived-update";
 import { ArchivedUpdatesButton } from "./components/archived-updates-button";
@@ -19,7 +19,7 @@ import { GroupDivider } from "./components/group-divider";
 import { PublishedUpdate } from "./components/published-update";
 import { ScheduledUpdate } from "./components/scheduled-update";
 import { UpdatesEmpty } from "./components/updates-empty";
-import { useArchivedPosts } from "./hooks/useArchivedPosts";
+import { useArchivedPosts } from "./hooks/use-archived-posts";
 
 type Update = SuccessResponse<
   InferResponseType<
@@ -28,7 +28,7 @@ type Update = SuccessResponse<
 >[number];
 
 export const Route = createFileRoute(
-  "/_authorized/_has-organization/$organizationSlug/_index/",
+  "/_authorized/_has-organization/$organizationSlug/_index/"
 )({
   component: RouteComponent,
 });
@@ -59,8 +59,8 @@ const UpdateByStatus: React.FC<UpdateByStatusProps> = ({ data }) => {
       {data.status === "draft" && (
         <DraftUpdate
           {...data}
-          organizationSlug={organization.slug}
           organizationId={organization.id}
+          organizationSlug={organization.slug}
         />
       )}
       {data.status === "scheduled" && <ScheduledUpdate {...data} />}
@@ -68,8 +68,8 @@ const UpdateByStatus: React.FC<UpdateByStatusProps> = ({ data }) => {
       {data.status === "archived" && (
         <ArchivedUpdate
           {...data}
-          organizationSlug={organization.slug}
           organizationId={organization.id}
+          organizationSlug={organization.slug}
         />
       )}
     </div>
@@ -87,8 +87,8 @@ const List = ({ data }: ListProps) => {
     <UpdatesList.Root>
       <GroupBy
         data={data}
-        field="status"
         divider={(status) => <GroupDivider status={status} />}
+        field="status"
         visible={(status) => {
           if (status === "archived") {
             return archivedPosts.isOpen;
@@ -124,7 +124,7 @@ function RouteComponent() {
       onSuccess: (post) => {
         navigate({
           to: "/$organizationSlug/editor/$id",
-          params: { id: post.id, organizationSlug: organizationSlug },
+          params: { id: post.id, organizationSlug },
         });
       },
     });
@@ -163,15 +163,15 @@ function RouteComponent() {
               { isSuccess: true, data: P.when((posts) => posts.length === 0) },
               () => (
                 <Transition.Item
-                  key="empty"
                   className="flex flex-1 flex-col items-center justify-center pb-13"
+                  key="empty"
                 >
                   <UpdatesEmpty
-                    onCreatePost={handleCreatePost}
                     isCreatingPost={createPostMutation.isPending}
+                    onCreatePost={handleCreatePost}
                   />
                 </Transition.Item>
-              ),
+              )
             )
             .otherwise(({ data }) => (
               <Transition.Item key="list">

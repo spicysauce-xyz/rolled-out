@@ -1,6 +1,6 @@
 import useAppForm from "@lib/form";
-import { useCreateOrganizationMutation } from "@modules/dashboard/hooks/useCreateOrganizationMutation";
-import { useCheckSlugMutation } from "@modules/settings/pages/details/hooks/useCheckSlugMutation";
+import { useCreateOrganizationMutation } from "@modules/dashboard/hooks/use-create-organization-mutation";
+import { useCheckSlugMutation } from "@modules/settings/pages/details/hooks/use-check-slug-mutation";
 import { Button, Dialog, Input, Label, Text } from "@mono/ui";
 import { useNavigate } from "@tanstack/react-router";
 import { Loader2Icon } from "lucide-react";
@@ -53,7 +53,7 @@ export const NewOrganizationDialog: React.FC<NewOrganizationDialogProps> = ({
 
             onOpenChange(false);
           },
-        },
+        }
       );
     },
   });
@@ -65,7 +65,7 @@ export const NewOrganizationDialog: React.FC<NewOrganizationDialogProps> = ({
   }, [isOpen, form]);
 
   return (
-    <Dialog.Root open={isOpen} onOpenChange={onOpenChange}>
+    <Dialog.Root onOpenChange={onOpenChange} open={isOpen}>
       <Dialog.Content className="max-w-120">
         <Dialog.Header>
           <Dialog.Title>New Organization</Dialog.Title>
@@ -82,7 +82,6 @@ export const NewOrganizationDialog: React.FC<NewOrganizationDialogProps> = ({
         >
           <div className="flex flex-col gap-4">
             <form.Field
-              name="name"
               listeners={{
                 onChange: ({ value }) => {
                   const slugState = form.getFieldMeta("slug");
@@ -96,12 +95,13 @@ export const NewOrganizationDialog: React.FC<NewOrganizationDialogProps> = ({
                         .replace(/\s+/g, "-"),
                       {
                         dontUpdateMeta: true,
-                      },
+                      }
                     );
                     form.validateField("slug", "change");
                   }
                 },
               }}
+              name="name"
             >
               {(field) => (
                 <form.FieldContainer>
@@ -111,22 +111,22 @@ export const NewOrganizationDialog: React.FC<NewOrganizationDialogProps> = ({
                   </Label.Root>
                   <Input.Root
                     className="w-full"
-                    isInvalid={field.state.meta.errors.length > 0}
                     isDisabled={form.state.isSubmitting}
+                    isInvalid={field.state.meta.errors.length > 0}
                   >
                     <Input.Wrapper>
                       <Input.Field
                         id={field.name}
                         name={field.name}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
                         placeholder="Acme Inc."
                         value={field.state.value}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        onBlur={field.handleBlur}
                       />
                     </Input.Wrapper>
                   </Input.Root>
                   {field.state.meta.errors.length ? (
-                    <Text.Root size="sm" className="text-danger-500">
+                    <Text.Root className="text-danger-500" size="sm">
                       {field.state.meta.errors[0]?.message}
                     </Text.Root>
                   ) : null}
@@ -135,8 +135,8 @@ export const NewOrganizationDialog: React.FC<NewOrganizationDialogProps> = ({
             </form.Field>
 
             <form.Field
-              name="slug"
               asyncDebounceMs={500}
+              name="slug"
               validators={{
                 onChangeAsync: async ({ value }) => {
                   let isSlugAvailable = false;
@@ -164,17 +164,17 @@ export const NewOrganizationDialog: React.FC<NewOrganizationDialogProps> = ({
                   </Label.Root>
                   <Input.Root
                     className="w-full"
-                    isInvalid={field.state.meta.errors.length > 0}
                     isDisabled={form.state.isSubmitting}
+                    isInvalid={field.state.meta.errors.length > 0}
                   >
                     <Input.Wrapper>
                       <Input.Field
                         id={field.name}
                         name={field.name}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
                         placeholder="acme-inc"
                         value={field.state.value}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        onBlur={field.handleBlur}
                       />
                       {field.state.meta.isValidating &&
                         !field.form.state.isSubmitting && (
@@ -185,7 +185,7 @@ export const NewOrganizationDialog: React.FC<NewOrganizationDialogProps> = ({
                     </Input.Wrapper>
                   </Input.Root>
                   {field.state.meta.errors.length ? (
-                    <Text.Root size="sm" className="text-danger-500">
+                    <Text.Root className="text-danger-500" size="sm">
                       {field.state.meta.errors[0]?.message}
                     </Text.Root>
                   ) : null}
@@ -206,9 +206,9 @@ export const NewOrganizationDialog: React.FC<NewOrganizationDialogProps> = ({
             >
               {({ isSubmitting, isDirty, canSubmit }) => (
                 <Button.Root
-                  type="submit"
+                  isDisabled={!(canSubmit && isDirty)}
                   isLoading={isSubmitting}
-                  isDisabled={!canSubmit || !isDirty}
+                  type="submit"
                 >
                   Create Organization
                 </Button.Root>

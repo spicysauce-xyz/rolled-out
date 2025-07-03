@@ -33,17 +33,17 @@ export const EditorRoot: React.FC<React.PropsWithChildren<EditorRootProps>> = ({
         document: provider.document,
       }),
       CollaborationCaret.configure({
-        provider: provider,
+        provider,
         user: {
           id: user.id,
           name: user.name,
           image: user.image,
         },
-        render: (user) => {
+        render: (peer) => {
           const cursor = document.createElement("span");
 
           cursor.classList.add("border-x", "-mx-px", "relative");
-          cursor.setAttribute("style", `border-color: ${user.color}`);
+          cursor.setAttribute("style", `border-color: ${peer.color}`);
 
           const label = document.createElement("div");
 
@@ -60,11 +60,11 @@ export const EditorRoot: React.FC<React.PropsWithChildren<EditorRootProps>> = ({
             "absolute",
             "-top-5",
             "user-select-none",
-            "whitespace-nowrap",
+            "whitespace-nowrap"
           );
 
-          label.setAttribute("style", `background-color: ${user.color}`);
-          label.insertBefore(document.createTextNode(user.name), null);
+          label.setAttribute("style", `background-color: ${peer.color}`);
+          label.insertBefore(document.createTextNode(peer.name), null);
           cursor.insertBefore(label, null);
 
           return cursor;
@@ -83,6 +83,7 @@ export const EditorRoot: React.FC<React.PropsWithChildren<EditorRootProps>> = ({
   return (
     <EditorContext.Provider value={{ editor }}>
       {/* biome-ignore lint/a11y/useKeyWithClickEvents: no need to focus on the editor on key press */}
+      {/* biome-ignore lint/a11y/noStaticElementInteractions: no need to focus on the editor on key press */}
       <div className="flex-1" onClick={handleClickOutside}>
         {children}
       </div>
@@ -114,7 +115,7 @@ export const editorContentClassName = cn(
   // blockquote
   "prose-blockquote:border-neutral-200 prose-blockquote:border-l-4 prose-blockquote:pl-4 prose-blockquote:[&>p]:text-neutral-900 prose-blockquote:[&>p]:not-italic prose-blockquote:[&>p]:before:content-none",
   // lists
-  "prose-li:pl-0 prose-ol:prose-li:marker:text-neutral-900 prose-ol:prose-li:marker:text-sm prose-ul:prose-li:marker:text-neutral-200",
+  "prose-li:pl-0 prose-ol:prose-li:marker:text-neutral-900 prose-ol:prose-li:marker:text-sm prose-ul:prose-li:marker:text-neutral-200"
 );
 
 export const EditorContent: React.FC = () => {
@@ -134,7 +135,8 @@ export const Editor = {
   Content: EditorContent,
   BubbleMenu,
 };
-export type { JSONContent };
+
+export type { JSONContent } from "@tiptap/react";
 
 export const generateHtml = (content: JSONContent) => {
   return generateTiptapHTML(content, extensions);

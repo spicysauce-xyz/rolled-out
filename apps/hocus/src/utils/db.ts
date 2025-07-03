@@ -9,9 +9,9 @@ export const getPostByDocumentName = async (documentName: string) => {
   return post;
 };
 
-export const updatePostByDocumentName = async (
+export const updatePostByDocumentName = (
   documentName: string,
-  data: Pick<typeof schema.post.$inferInsert, "byteContent" | "title">,
+  data: Pick<typeof schema.post.$inferInsert, "byteContent" | "title">
 ) => {
   return Database.update(schema.post)
     .set({
@@ -22,29 +22,29 @@ export const updatePostByDocumentName = async (
     .where(eq(schema.post.id, documentName));
 };
 
-export const upsertEditorsByDocumentName = async (
+export const upsertEditorsByDocumentName = (
   documentName: string,
-  editorsIds: string[],
+  editorsIds: string[]
 ) => {
   return Database.insert(schema.editor)
     .values(
       editorsIds.map((id) => ({
         postId: documentName,
         userId: id,
-      })),
+      }))
     )
     .onConflictDoNothing();
 };
 
-export const deletePostTagsByDocumentName = async (documentName: string) => {
+export const deletePostTagsByDocumentName = (documentName: string) => {
   return Database.delete(schema.postTag).where(
-    eq(schema.postTag.postId, documentName),
+    eq(schema.postTag.postId, documentName)
   );
 };
 
-export const insertPostTagsByDocumentName = async (
+export const insertPostTagsByDocumentName = (
   documentName: string,
-  tagsIds: string[],
+  tagsIds: string[]
 ) => {
   return Database.insert(schema.postTag)
     .values(tagsIds.map((id) => ({ postId: documentName, tagId: id })))

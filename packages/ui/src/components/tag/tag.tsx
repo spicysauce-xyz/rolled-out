@@ -6,7 +6,7 @@ import { Text } from "../text";
 export const tagVariants = tv({
   slots: {
     root: [
-      "flex items-center justify-center rounded-md px-3 h-10 transition-colors",
+      "flex h-10 items-center justify-center rounded-md px-3 transition-colors",
     ],
     text: ["text-inherit"],
   },
@@ -91,8 +91,8 @@ const TagRoot = forwardRef<
   const { root, text } = tagVariants({ color, isInteractive });
 
   return (
-    <div ref={ref} className={cn(root({ className }))} {...props}>
-      <Text.Root size="sm" weight="medium" className={text()}>
+    <div className={cn(root({ className }))} ref={ref} {...props}>
+      <Text.Root className={text()} size="sm" weight="medium">
         {children}
       </Text.Root>
     </div>

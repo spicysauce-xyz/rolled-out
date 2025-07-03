@@ -42,11 +42,11 @@ export const useUpdateBoardMutation = () => {
       await queryClient.refetchQueries(boardsQuery(data.organizationId));
 
       await queryClient.refetchQueries(
-        boardQuery(data.organizationId, data.id),
+        boardQuery(data.organizationId, data.id)
       );
 
       await queryClient.invalidateQueries(
-        boardPostsQuery(data.organizationId, data.id),
+        boardPostsQuery(data.organizationId, data.id)
       );
 
       Toaster.success("Board updated");

@@ -17,7 +17,7 @@ export const routes = rootRoute("root.tsx", [
           layout("dashboard/layouts/index.tsx", dashboard),
           route("/settings", "settings/layouts/index.tsx", settings),
           route("/editor/$id", "editor/index.tsx"),
-        ],
+        ]
       ),
     ]),
   ]),

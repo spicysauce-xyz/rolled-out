@@ -1,6 +1,12 @@
 import { organizationTagsQuery } from "@lib/api/queries";
-import { Clickable, IconButton, Tag, Text, Tooltip } from "@mono/ui";
-import { DropdownMenu } from "@mono/ui";
+import {
+  Clickable,
+  DropdownMenu,
+  IconButton,
+  Tag,
+  Text,
+  Tooltip,
+} from "@mono/ui";
 import { useQuery } from "@tanstack/react-query";
 import { PlusIcon } from "lucide-react";
 import { useMemo } from "react";
@@ -17,7 +23,7 @@ export const TagSelect: React.FC<TagSelectProps> = ({
   onChange,
 }) => {
   const { data: tagsData, isPending } = useQuery(
-    organizationTagsQuery(organizationId),
+    organizationTagsQuery(organizationId)
   );
 
   const tagsMap = useMemo(() => {
@@ -54,18 +60,18 @@ export const TagSelect: React.FC<TagSelectProps> = ({
             </IconButton.Icon>
           </IconButton.Root>
         </DropdownMenu.Trigger>
-        <DropdownMenu.Content className="max-h-64 overflow-auto" align="start">
+        <DropdownMenu.Content align="start" className="max-h-64 overflow-auto">
           {tagsData?.map((tag) => (
             <DropdownMenu.CheckboxItem
-              key={tag.id}
               checked={selectedTagsMap.has(tag.id)}
+              key={tag.id}
               onCheckedChange={(checked) => {
                 handleCheckedChange(tag.id, checked);
               }}
             >
               <div className="flex flex-1 items-center justify-between gap-4">
                 {tag.label}
-                <Text.Root size="sm" color="muted">
+                <Text.Root color="muted" size="sm">
                   {tag.postsCount || ""}
                 </Text.Root>
               </div>
@@ -89,14 +95,14 @@ export const TagSelect: React.FC<TagSelectProps> = ({
             <Tooltip.Root key={tag.id}>
               <Tooltip.Trigger asChild>
                 <Clickable.Root
-                  variant="tertiary"
-                  onClick={() => removeTag(tag.id)}
                   className={tagClassName.root({ className: "border-0" })}
+                  onClick={() => removeTag(tag.id)}
+                  variant="tertiary"
                 >
                   <Text.Root
+                    className={tagClassName.text()}
                     size="sm"
                     weight="medium"
-                    className={tagClassName.text()}
                   >
                     {tag.label}
                   </Text.Root>

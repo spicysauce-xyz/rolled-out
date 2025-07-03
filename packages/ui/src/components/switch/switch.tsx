@@ -1,12 +1,15 @@
-import * as SwitchPrimitives from "@radix-ui/react-switch";
-import * as React from "react";
+import {
+  Root as RadixSwitchRoot,
+  Thumb as RadixSwitchThumb,
+} from "@radix-ui/react-switch";
+import React from "react";
 import { cn } from "../../utils";
 
 const SwitchRoot = React.forwardRef<
-  React.ElementRef<typeof SwitchPrimitives.Root>,
-  React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root>
+  React.ElementRef<typeof RadixSwitchRoot>,
+  React.ComponentPropsWithoutRef<typeof RadixSwitchRoot>
 >(({ className, ...props }, ref) => (
-  <SwitchPrimitives.Root
+  <RadixSwitchRoot
     className={cn(
       // base
       "group/switch-root inline-flex h-6 w-10 shrink-0 cursor-pointer items-center rounded-full border border-neutral-200 p-0.5 shadow-xs",
@@ -30,19 +33,19 @@ const SwitchRoot = React.forwardRef<
       "disabled:data-[state=unchecked]:border-neutral-100 disabled:data-[state=unchecked]:bg-white",
       // disabled checked
       "disabled:data-[state=checked]:border-neutral-100 disabled:data-[state=checked]:bg-neutral-100",
-      className,
+      className
     )}
     {...props}
     ref={ref}
   >
-    <SwitchPrimitives.Thumb
+    <RadixSwitchThumb
       className={cn(
         "pointer-events-none block h-4.5 w-4.5 rounded-full bg-neutral-200 ring-0 transition-transform data-[state=checked]:translate-x-4 data-[state=unchecked]:translate-x-0 data-[state=checked]:bg-white",
         // disabled
-        "group-disabled/switch-root:bg-neutral-100",
+        "group-disabled/switch-root:bg-neutral-100"
       )}
     />
-  </SwitchPrimitives.Root>
+  </RadixSwitchRoot>
 ));
 
 export { SwitchRoot as Root };

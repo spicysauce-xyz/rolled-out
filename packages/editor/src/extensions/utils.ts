@@ -2,7 +2,7 @@ import type { Editor } from "@tiptap/react";
 
 export const onlyInAllowedNodesForMarks = (
   editor: Editor,
-  action: () => boolean,
+  action: () => boolean
 ) => {
   const { $from } = editor.state.selection;
   const parentNode = $from.node($from.depth);

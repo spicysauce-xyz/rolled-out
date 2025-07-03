@@ -3,7 +3,7 @@ import { forwardRef } from "react";
 
 const TransitionRoot: React.FC<React.PropsWithChildren> = ({ children }) => {
   return (
-    <AnimatePresence mode="popLayout" initial={false}>
+    <AnimatePresence initial={false} mode="popLayout">
       {children}
     </AnimatePresence>
   );
@@ -15,14 +15,17 @@ const TransitionItem = forwardRef<
 >(({ ...props }, ref) => {
   return (
     <motion.div
-      ref={ref}
-      initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
+      initial={{ opacity: 0 }}
+      ref={ref}
       transition={{ duration: 0.15 }}
       {...props}
     />
   );
 });
 
-export { TransitionRoot as Root, TransitionItem as Item };
+export const Transition = {
+  Root: TransitionRoot,
+  Item: TransitionItem,
+};

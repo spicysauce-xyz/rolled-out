@@ -57,7 +57,7 @@ export const InviteMemberDialog: React.FC<InviteMemberDialogProps> = ({
   }, [isOpen, form]);
 
   return (
-    <Dialog.Root open={isOpen} onOpenChange={onOpenChange}>
+    <Dialog.Root onOpenChange={onOpenChange} open={isOpen}>
       <Dialog.Content className="max-w-100">
         <Dialog.Header>
           <Dialog.Title>Invite Member</Dialog.Title>
@@ -66,12 +66,12 @@ export const InviteMemberDialog: React.FC<InviteMemberDialogProps> = ({
           </Dialog.Description>
         </Dialog.Header>
         <form
+          className="flex w-full flex-col gap-6"
+          noValidate
           onSubmit={(e) => {
             e.preventDefault();
             form.handleSubmit();
           }}
-          className="flex w-full flex-col gap-6"
-          noValidate
         >
           <div className="flex w-full flex-col gap-4">
             <form.Field name="email">
@@ -86,16 +86,16 @@ export const InviteMemberDialog: React.FC<InviteMemberDialogProps> = ({
                       <Input.Field
                         id={field.name}
                         name={field.name}
-                        value={field.state.value}
                         onBlur={field.handleBlur}
-                        type="email"
                         onChange={(e) => field.handleChange(e.target.value)}
                         placeholder="john.doe@example.com"
+                        type="email"
+                        value={field.state.value}
                       />
                     </Input.Wrapper>
                   </Input.Root>
                   {field.state.meta.errors.length ? (
-                    <Text.Root size="sm" className="text-danger-500">
+                    <Text.Root className="text-danger-500" size="sm">
                       {field.state.meta.errors[0]?.message}
                     </Text.Root>
                   ) : null}
@@ -110,15 +110,15 @@ export const InviteMemberDialog: React.FC<InviteMemberDialogProps> = ({
                     <Label.Asterisk />
                   </Label.Root>
                   <Select.Root
-                    value={field.state.value}
                     onValueChange={(value) =>
                       field.handleChange(value as "member" | "admin" | "owner")
                     }
+                    value={field.state.value}
                   >
                     <Select.Trigger asChild>
                       <Clickable.Root
-                        variant="secondary"
                         className="flex h-10 items-center justify-between px-3"
+                        variant="secondary"
                       >
                         <Select.Value placeholder="Role" />
                         <Clickable.Icon>
@@ -154,8 +154,8 @@ export const InviteMemberDialog: React.FC<InviteMemberDialogProps> = ({
             >
               {({ isSubmitting, isFieldsValid }) => (
                 <Button.Root
-                  type="submit"
                   isDisabled={!isFieldsValid || isSubmitting}
+                  type="submit"
                 >
                   <Button.Icon>
                     <SendIcon />

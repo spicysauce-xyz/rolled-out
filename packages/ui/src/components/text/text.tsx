@@ -92,7 +92,7 @@ type TextProps = React.HTMLAttributes<HTMLParagraphElement> &
 const TextRoot = React.forwardRef<HTMLParagraphElement, TextProps>(
   (
     { children, className, asChild, size, weight, variant, color, ...props },
-    ref,
+    ref
   ) => {
     const Comp = asChild ? Slot : "p";
     const { root } = textVariants({ size, weight, variant, color });
@@ -102,7 +102,7 @@ const TextRoot = React.forwardRef<HTMLParagraphElement, TextProps>(
         {children}
       </Comp>
     );
-  },
+  }
 );
 
 export { TextRoot as Root };

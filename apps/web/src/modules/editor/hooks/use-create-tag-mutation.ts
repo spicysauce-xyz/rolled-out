@@ -6,10 +6,7 @@ export const useCreateTagMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: {
-      organizationId: string;
-      label: string;
-    }) => {
+    mutationFn: async (data: { organizationId: string; label: string }) => {
       const response = await api.organizations[":organizationId"].tags.$post({
         json: {
           label: data.label,
@@ -25,7 +22,7 @@ export const useCreateTagMutation = () => {
         throw json.error;
       }
 
-      return json.data[0];
+      return json.data;
     },
     onMutate: () => {
       return { toastId: Toaster.loading("Creating tag...") };

@@ -9,8 +9,8 @@ import {
 } from "@mono/ui";
 import { useDisclosure } from "@mono/ui/hooks";
 import { TagsIcon } from "lucide-react";
-import { useDocumentTagManager } from "../hooks/useDocumentTagManager";
-import { TagInput } from "./TagInput";
+import { useDocumentTagManager } from "../hooks/use-document-tag-manager";
+import { TagInput } from "./tag-input";
 
 interface TagsDialogProps {
   provider: HocuspocusProvider;
@@ -26,7 +26,7 @@ const TagsDialog: React.FC<TagsDialogProps> = ({
   const tagManager = useDocumentTagManager(provider);
 
   return (
-    <Dialog.Root open={open} onOpenChange={onOpenChange}>
+    <Dialog.Root onOpenChange={onOpenChange} open={open}>
       <Dialog.Content className="max-w-96">
         <Dialog.Header>
           <Dialog.Title>Tags</Dialog.Title>
@@ -49,14 +49,14 @@ const TagsDialog: React.FC<TagsDialogProps> = ({
                   <Tooltip.Root key={tag}>
                     <Tooltip.Trigger asChild>
                       <Clickable.Root
-                        variant="tertiary"
-                        onClick={() => tagManager.remove(tag)}
                         className={tagClassName.root({ className: "border-0" })}
+                        onClick={() => tagManager.remove(tag)}
+                        variant="tertiary"
                       >
                         <Text.Root
+                          className={tagClassName.text()}
                           size="sm"
                           weight="medium"
-                          className={tagClassName.text()}
                         >
                           {value}
                         </Text.Root>
@@ -97,18 +97,18 @@ export const EditorTags: React.FC<EditorTags> = ({ provider }) => {
         </TagComponent.Root>
       ))}
       <Clickable.Root
-        variant="tertiary"
         className="flex size-5 items-center justify-center gap-1 rounded-sm bg-neutral-50 px-1"
         onClick={tagsDialog.open}
+        variant="tertiary"
       >
         <Clickable.Icon>
           <TagsIcon />
         </Clickable.Icon>
       </Clickable.Root>
       <TagsDialog
-        provider={provider}
-        open={tagsDialog.isOpen}
         onOpenChange={tagsDialog.setOpen}
+        open={tagsDialog.isOpen}
+        provider={provider}
       />
     </div>
   );

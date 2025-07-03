@@ -1,4 +1,4 @@
-import * as Transition from "@components/transition";
+import { Transition } from "@components/transition";
 import { organizationsQuery } from "@lib/api/queries";
 import type { authClient } from "@lib/auth";
 import { Avatar, DropdownMenu, LinkButton, Skeleton, Text } from "@mono/ui";
@@ -64,17 +64,17 @@ const OrganizationSelector = ({ organization }: OrganizationSelectorProps) => {
           <Transition.Root>
             {match(organizations)
               .with({ isPending: true }, () => (
-                <Transition.Item key="skeleton" className="flex flex-col gap-1">
+                <Transition.Item className="flex flex-col gap-1" key="skeleton">
                   <Skeleton.Root className="mx-2 h-8.5 w-40 rounded-sm" />
                   <Skeleton.Root className="mx-2 h-8.5 w-40 rounded-sm" />
                   <Skeleton.Root className="mx-2 h-8.5 w-40 rounded-sm" />
                 </Transition.Item>
               ))
               .with({ isError: true }, ({ isRefetching, refetch }) => (
-                <Transition.Item key="error" className="flex flex-col">
+                <Transition.Item className="flex flex-col" key="error">
                   <div className="flex h-9 items-center gap-2 px-4">
                     <AlertTriangleIcon className="size-4 stroke-danger-500" />
-                    <Text.Root size="sm" weight="medium" color="danger">
+                    <Text.Root color="danger" size="sm" weight="medium">
                       Failed to load organizations
                     </Text.Root>
                   </div>
@@ -97,25 +97,25 @@ const OrganizationSelector = ({ organization }: OrganizationSelectorProps) => {
               ))
               .otherwise(({ data }) => {
                 return (
-                  <Transition.Item key="dropdown" className="flex flex-col">
+                  <Transition.Item className="flex flex-col" key="dropdown">
                     <DropdownMenu.RadioGroup
-                      value={organization.slug}
                       onValueChange={(value) =>
                         handleUpdateActiveOrganization(value)
                       }
+                      value={organization.slug}
                     >
-                      {data.map((organization) => (
+                      {data.map((entry) => (
                         <DropdownMenu.RadioItem
-                          key={organization.id}
-                          value={organization.slug}
+                          key={entry.id}
+                          value={entry.slug}
                         >
                           <Avatar.Root className="size-5 rounded-sm">
-                            <Avatar.Image src={organization.logo || ""} />
+                            <Avatar.Image src={entry.logo || ""} />
                             <Avatar.Fallback className="text-xs">
-                              {organization.name[0]}
+                              {entry.name[0]}
                             </Avatar.Fallback>
                           </Avatar.Root>
-                          {organization.name}
+                          {entry.name}
                         </DropdownMenu.RadioItem>
                       ))}
                     </DropdownMenu.RadioGroup>

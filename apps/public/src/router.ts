@@ -12,7 +12,7 @@ export const createRouter = () => {
       context: { queryClient },
       scrollRestoration: true,
     }),
-    queryClient,
+    queryClient
   );
 };
 
