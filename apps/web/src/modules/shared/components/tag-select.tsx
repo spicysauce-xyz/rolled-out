@@ -3,7 +3,6 @@ import {
   Clickable,
   DropdownMenu,
   IconButton,
-  ScrollArea,
   Tag,
   Text,
   Tooltip,
