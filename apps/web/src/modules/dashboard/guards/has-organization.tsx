@@ -11,17 +11,9 @@ export const Route = createFileRoute("/_authorized/_has-organization")({
       });
     }
 
-    let organizations = context.queryClient.getQueryData(
-      organizationsQuery().queryKey
+    const { data: organizations } = await tryCatch(
+      context.queryClient.ensureQueryData(organizationsQuery())
     );
-
-    if (!organizations) {
-      const { data: freshOrganizations } = await tryCatch(
-        context.queryClient.ensureQueryData(organizationsQuery())
-      );
-
-      organizations = freshOrganizations ?? undefined;
-    }
 
     if (!organizations?.length) {
       throw redirect({

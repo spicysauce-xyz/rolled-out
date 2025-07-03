@@ -5,15 +5,9 @@ import { tryCatch } from "@utils/promise";
 export const Route = createFileRoute("/_authorized")({
   component: Outlet,
   beforeLoad: async ({ context, location }) => {
-    let session = context.queryClient.getQueryData(sessionQuery().queryKey);
-
-    if (!session) {
-      const { data: freshSessionData } = await tryCatch(
-        context.queryClient.ensureQueryData(sessionQuery())
-      );
-
-      session = freshSessionData ?? undefined;
-    }
+    const { data: session } = await tryCatch(
+      context.queryClient.ensureQueryData(sessionQuery())
+    );
 
     if (!(session?.data?.session && session?.data?.user)) {
       throw redirect({
