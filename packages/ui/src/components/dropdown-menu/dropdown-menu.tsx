@@ -17,6 +17,7 @@ import {
 import { CheckIcon, ChevronRight } from "lucide-react";
 import React from "react";
 import { cn } from "../../utils";
+import { ScrollArea } from "../scroll-area";
 import { Text } from "../text";
 
 const DropdownMenuRoot = RadixDropdownMenuRoot;
@@ -73,6 +74,7 @@ const DropdownMenuSubContent = React.forwardRef<
     <RadixDropdownMenuSubContent
       alignOffset={-8}
       arrowPadding={12}
+      asChild
       className={cn(
         "z-50 flex max-h-[var(--radix-dropdown-menu-content-available-height)] min-w-48 flex-col gap-px rounded-xl border border-neutral-100 bg-white py-2 shadow-xl",
         // transition
@@ -93,11 +95,19 @@ const DropdownMenuSubContent = React.forwardRef<
       ref={ref}
       sideOffset={16}
       {...props}
-    />
+    >
+      <ScrollArea.Root>
+        <ScrollArea.Viewport className="py-2">
+          {props.children}
+        </ScrollArea.Viewport>
+        <ScrollArea.Scrollbar className="py-2" size="sm">
+          <ScrollArea.Thumb />
+        </ScrollArea.Scrollbar>
+      </ScrollArea.Root>
+    </RadixDropdownMenuSubContent>
   </RadixDropdownMenuPortal>
 ));
 
-// TODO: fix overflow scroll issue
 const DropdownMenuContent = React.forwardRef<
   React.ElementRef<typeof RadixDropdownMenuContent>,
   React.ComponentPropsWithoutRef<typeof RadixDropdownMenuContent>
@@ -105,8 +115,9 @@ const DropdownMenuContent = React.forwardRef<
   <RadixDropdownMenuPortal>
     <RadixDropdownMenuContent
       arrowPadding={12}
+      asChild
       className={cn(
-        "z-50 flex max-h-[var(--radix-dropdown-menu-content-available-height)] flex-col gap-px rounded-xl border border-neutral-100 bg-white py-2 shadow-xl",
+        "z-50 flex max-h-[var(--radix-dropdown-menu-content-available-height)] flex-col gap-px rounded-xl border border-neutral-100 bg-white shadow-xl",
         // transition
         "transition-all",
         // animation
@@ -126,7 +137,16 @@ const DropdownMenuContent = React.forwardRef<
       ref={ref}
       sideOffset={8}
       {...props}
-    />
+    >
+      <ScrollArea.Root>
+        <ScrollArea.Viewport className="py-2">
+          {props.children}
+        </ScrollArea.Viewport>
+        <ScrollArea.Scrollbar className="py-2" size="sm">
+          <ScrollArea.Thumb />
+        </ScrollArea.Scrollbar>
+      </ScrollArea.Root>
+    </RadixDropdownMenuContent>
   </RadixDropdownMenuPortal>
 ));
 
@@ -186,7 +206,7 @@ const DropdownMenuCheckboxItem = React.forwardRef<
       checked={checked}
       className={cn(
         // base
-        "group/dropdown-item relative mx-2 flex h-9 cursor-default select-none items-center gap-2 rounded-sm p-2 outline-none",
+        "group/dropdown-checkbox-item relative mx-2 flex h-9 cursor-default select-none items-center gap-2 rounded-sm p-2 outline-none",
         // transition
         "transition-colors",
         // hover
@@ -200,7 +220,7 @@ const DropdownMenuCheckboxItem = React.forwardRef<
       ref={ref}
       {...props}
     >
-      <div className="relative flex size-4 shrink-0 items-center justify-center overflow-hidden rounded-sm border border-neutral-200 transition-all group-hover/dropdown-item:border-neutral-300 group-data-[state=checked]/dropdown-item:border-accent-500 group-data-[state=checked]/dropdown-item:hover:border-accent-500">
+      <div className="relative flex size-4 shrink-0 items-center justify-center overflow-hidden rounded-sm border border-neutral-200 transition-all group-hover/dropdown-checkbox-item:border-neutral-300 group-data-[state=checked]/dropdown-checkbox-item:border-accent-500 group-data-[state=checked]/dropdown-checkbox-item:hover:border-accent-500">
         <RadixDropdownMenuItemIndicator
           className="group/indicator absolute inset-0 flex items-center justify-center data-[state=checked]:bg-accent-500 data-[state=checked]:text-white"
           forceMount

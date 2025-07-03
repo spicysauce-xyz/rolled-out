@@ -62,29 +62,22 @@ export const TagSelect: React.FC<TagSelectProps> = ({
           </IconButton.Root>
         </DropdownMenu.Trigger>
         <DropdownMenu.Content align="start" asChild className="max-h-64 p-0">
-          <ScrollArea.Root>
-            <ScrollArea.Viewport className="py-2">
-              {tagsData?.map((tag) => (
-                <DropdownMenu.CheckboxItem
-                  checked={selectedTagsMap.has(tag.id)}
-                  key={tag.id}
-                  onCheckedChange={(checked) => {
-                    handleCheckedChange(tag.id, checked);
-                  }}
-                >
-                  <div className="flex flex-1 items-center justify-between gap-4">
-                    {tag.label}
-                    <Text.Root color="muted" size="sm">
-                      {tag.postsCount || ""}
-                    </Text.Root>
-                  </div>
-                </DropdownMenu.CheckboxItem>
-              ))}
-            </ScrollArea.Viewport>
-            <ScrollArea.Scrollbar className="py-2" size="sm">
-              <ScrollArea.Thumb />
-            </ScrollArea.Scrollbar>
-          </ScrollArea.Root>
+          {tagsData?.map((tag) => (
+            <DropdownMenu.CheckboxItem
+              checked={selectedTagsMap.has(tag.id)}
+              key={tag.id}
+              onCheckedChange={(checked) => {
+                handleCheckedChange(tag.id, checked);
+              }}
+            >
+              <div className="flex flex-1 items-center justify-between gap-4">
+                {tag.label}
+                <Text.Root color="muted" size="sm">
+                  {tag.postsCount || ""}
+                </Text.Root>
+              </div>
+            </DropdownMenu.CheckboxItem>
+          ))}
         </DropdownMenu.Content>
       </DropdownMenu.Root>
       <Tooltip.Provider>
