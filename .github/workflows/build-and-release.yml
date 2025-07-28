@@ -17,18 +17,11 @@ jobs:
   release:
     needs: build
     uses: ./.github/workflows/release.yml
-    with:
-      release_tag: ${{ github.event.release.tag_name }}
-      domain: ${{ vars.DOMAIN }}
-      resend_domain: ${{ vars.RESEND_DOMAIN }}
     secrets:
-      DO_HOST: ${{ secrets.DO_HOST }}
-      DO_USER: ${{ secrets.DO_USER }}
-      DO_SSH_KEY: ${{ secrets.DO_SSH_KEY }}
-      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-      S3_ENDPOINT: ${{ secrets.S3_ENDPOINT }}
-      S3_ACCESS_KEY_ID: ${{ secrets.S3_ACCESS_KEY_ID }}
-      S3_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET_ACCESS_KEY }}
-      S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
-      S3_ASSETS_BASE: ${{ secrets.S3_ASSETS_BASE }}
-
+      DEPLOYMENT_API_KEY: ${{ secrets.DEPLOYMENT_API_KEY }}
+      DEPLOYMENT_URL: ${{ secrets.DEPLOYMENT_URL }}
+      DEPLOYMENT_DATABASE_ID: ${{ secrets.DEPLOYMENT_DATABASE_ID }}
+      DEPLOYMENT_API_ID: ${{ secrets.DEPLOYMENT_API_ID }}
+      DEPLOYMENT_WEB_ID: ${{ secrets.DEPLOYMENT_WEB_ID }}
+      DEPLOYMENT_HOCUS_ID: ${{ secrets.DEPLOYMENT_HOCUS_ID }}
+      DEPLOYMENT_PUBLIC_ID: ${{ secrets.DEPLOYMENT_PUBLIC_ID }}
