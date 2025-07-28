@@ -1,0 +1,21 @@
+@layer theme, base, components, utilities;
+
+@import "@mono/ui/theme" layer(theme);
+@import "@mono/ui/plugins";
+
+@import "tailwindcss/preflight" layer(base) source(none);
+@import "tailwindcss/utilities" layer(utilities) source(none);
+
+@source "../pages";
+@source "../components";
+@source "../../../../packages/ui/**/*.{ts,tsx}";
+
+html {
+  font-size: 16px;
+}
+
+body {
+  overscroll-behavior-y: none;
+  font-family: "Inter", sans-serif;
+  @apply selection:bg-accent-200;
+}

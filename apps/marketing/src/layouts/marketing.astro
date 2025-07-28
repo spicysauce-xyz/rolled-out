@@ -1,0 +1,15 @@
+---
+/** biome-ignore-all lint/correctness/noUnusedImports: astro */
+/** biome-ignore-all assist/source/organizeImports: astro */
+import GlobalLayout from "./global.astro";
+import { MarketingHeader } from "../components/marketing/header";
+import { MarketingFooter } from "../components/marketing/footer";
+---
+
+<GlobalLayout>
+  <div class="flex flex-col gap-6">
+    <MarketingHeader />
+    <slot />
+    <MarketingFooter />
+  </div>
+</GlobalLayout>

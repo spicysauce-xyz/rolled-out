@@ -1,0 +1,24 @@
+---
+/** biome-ignore-all lint/correctness/noUnusedImports: astro */
+/** biome-ignore-all assist/source/organizeImports: astro */
+import MarketingLayout from "../layouts/marketing.astro";
+import { LandingSection } from "../components/shared/section";
+import { Text, Button } from "@mono/ui";
+import { JumbotronSection } from "../components/marketing/jumbotron";
+import { ProblemSection } from "../components/marketing/the-problem";
+import { EditorSection } from "../components/marketing/editor";
+import { BoardsSection } from "../components/marketing/boards";
+import { WidgetsSection } from "../components/marketing/widgets";
+import { PricingSection } from "../components/marketing/pricing";
+---
+
+<MarketingLayout>
+  <JumbotronSection />
+  <ProblemSection />
+  <div class="bg-neutral-50 py-6 gap-6 flex flex-col w-full">
+    <EditorSection client:load />
+    <BoardsSection />
+    <WidgetsSection />
+  </div>
+  <PricingSection />
+</MarketingLayout>

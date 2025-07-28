@@ -27,6 +27,9 @@
   "tailwindCSS.experimental.classRegex": [
     ["([\"'`][^\"'`]*.*?[\"'`])", "[\"'`]([^\"'`]*).*?[\"'`]"]
   ],
+  "tailwindCSS.includeLanguages": {
+    "astro": "html"
+  },
   "typescript.tsdk": "node_modules/typescript/lib",
   "[javascript][typescript][javascriptreact][typescriptreact][json][jsonc][css][graphql]": {
     "editor.defaultFormatter": "biomejs.biome"
