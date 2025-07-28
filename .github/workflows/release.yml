@@ -23,7 +23,6 @@ jobs:
 
     steps:
       - name: Deploy Database
-        uses: dokploy/dokploy-action@v1
         run: |
             curl -X 'POST' \
             '${{ secrets.DEPLOYMENT_URL }}/api/trpc/application.deploy' \
@@ -37,7 +36,6 @@ jobs:
             }'
 
       - name: Deploy API
-        uses: dokploy/dokploy-action@v1
         run: |
             curl -X 'POST' \
             '${{ secrets.DEPLOYMENT_URL }}/api/trpc/application.deploy' \
@@ -51,7 +49,6 @@ jobs:
             }'
 
       - name: Deploy Web
-        uses: dokploy/dokploy-action@v1
         run: |
             curl -X 'POST' \
             '${{ secrets.DEPLOYMENT_URL }}/api/trpc/application.deploy' \
@@ -65,7 +62,6 @@ jobs:
             }'
 
       - name: Deploy Hocus
-        uses: dokploy/dokploy-action@v1
         run: |
             curl -X 'POST' \
             '${{ secrets.DEPLOYMENT_URL }}/api/trpc/application.deploy' \
@@ -79,7 +75,6 @@ jobs:
             }'
 
       - name: Deploy Public
-        uses: dokploy/dokploy-action@v1
         run: |
             curl -X 'POST' \
             '${{ secrets.DEPLOYMENT_URL }}/api/trpc/application.deploy' \
