@@ -23,36 +23,71 @@ jobs:
 
     steps:
       - name: Deploy Database
-        uses: benbristow/dokploy-deploy-action@0.0.1
-        with:
-          auth_token: ${{ secrets.DEPLOYMENT_API_KEY }}
-          application_id: ${{ secrets.DEPLOYMENT_DATABASE_ID }}
-          dokploy_url: ${{ secrets.DEPLOYMENT_URL }}
+        uses: dokploy/dokploy-action@v1
+        run: |
+            curl -X 'POST' \
+            '${{ secrets.DEPLOYMENT_URL }}/api/trpc/application.deploy' \
+            -H 'accept: application/json' \
+            -H 'x-api-key: ${{ secrets.DEPLOYMENT_API_KEY }}' \
+            -H 'Content-Type: application/json' \
+            -d '{
+                "json":{
+                    "applicationId": "${{ secrets.DEPLOYMENT_DATABASE_ID }}"
+                }
+            }'
 
       - name: Deploy API
-        uses: benbristow/dokploy-deploy-action@0.0.1
-        with:
-          auth_token: ${{ secrets.DEPLOYMENT_API_KEY }}
-          application_id: ${{ secrets.DEPLOYMENT_API_ID }}
-          dokploy_url: ${{ secrets.DEPLOYMENT_URL }}
+        uses: dokploy/dokploy-action@v1
+        run: |
+            curl -X 'POST' \
+            '${{ secrets.DEPLOYMENT_URL }}/api/trpc/application.deploy' \
+            -H 'accept: application/json' \
+            -H 'x-api-key: ${{ secrets.DEPLOYMENT_API_KEY }}' \
+            -H 'Content-Type: application/json' \
+            -d '{
+                "json":{
+                    "applicationId": "${{ secrets.DEPLOYMENT_API_ID }}"
+                }
+            }'
 
       - name: Deploy Web
-        uses: benbristow/dokploy-deploy-action@0.0.1
-        with:
-          auth_token: ${{ secrets.DEPLOYMENT_API_KEY }}
-          application_id: ${{ secrets.DEPLOYMENT_WEB_ID }}
-          dokploy_url: ${{ secrets.DEPLOYMENT_URL }}
+        uses: dokploy/dokploy-action@v1
+        run: |
+            curl -X 'POST' \
+            '${{ secrets.DEPLOYMENT_URL }}/api/trpc/application.deploy' \
+            -H 'accept: application/json' \
+            -H 'x-api-key: ${{ secrets.DEPLOYMENT_API_KEY }}' \
+            -H 'Content-Type: application/json' \
+            -d '{
+                "json":{
+                    "applicationId": "${{ secrets.DEPLOYMENT_WEB_ID }}"
+                }
+            }'
 
       - name: Deploy Hocus
-        uses: benbristow/dokploy-deploy-action@0.0.1
-        with:
-          auth_token: ${{ secrets.DEPLOYMENT_API_KEY }}
-          application_id: ${{ secrets.DEPLOYMENT_HOCUS_ID }}
-          dokploy_url: ${{ secrets.DEPLOYMENT_URL }}
+        uses: dokploy/dokploy-action@v1
+        run: |
+            curl -X 'POST' \
+            '${{ secrets.DEPLOYMENT_URL }}/api/trpc/application.deploy' \
+            -H 'accept: application/json' \
+            -H 'x-api-key: ${{ secrets.DEPLOYMENT_API_KEY }}' \
+            -H 'Content-Type: application/json' \
+            -d '{
+                "json":{
+                    "applicationId": "${{ secrets.DEPLOYMENT_HOCUS_ID }}"
+                }
+            }'
 
       - name: Deploy Public
-        uses: benbristow/dokploy-deploy-action@0.0.1
-        with:
-          auth_token: ${{ secrets.DEPLOYMENT_API_KEY }}
-          application_id: ${{ secrets.DEPLOYMENT_PUBLIC_ID }}
-          dokploy_url: ${{ secrets.DEPLOYMENT_URL }}
+        uses: dokploy/dokploy-action@v1
+        run: |
+            curl -X 'POST' \
+            '${{ secrets.DEPLOYMENT_URL }}/api/trpc/application.deploy' \
+            -H 'accept: application/json' \
+            -H 'x-api-key: ${{ secrets.DEPLOYMENT_API_KEY }}' \
+            -H 'Content-Type: application/json' \
+            -d '{
+                "json":{
+                    "applicationId": "${{ secrets.DEPLOYMENT_PUBLIC_ID }}"
+                }
+            }'
