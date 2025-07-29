@@ -350,11 +350,11 @@ importers:
         specifier: ^4.17.16
         version: 4.17.18
       '@types/react':
-        specifier: ^18.2.66
-        version: 18.3.23
+        specifier: 'catalog:'
+        version: 19.1.0
       '@types/react-dom':
-        specifier: ^18.2.22
-        version: 18.3.7(@types/react@18.3.23)
+        specifier: 'catalog:'
+        version: 19.1.0(@types/react@19.1.0)
       typescript:
         specifier: 'catalog:'
         version: 5.8.2
@@ -462,7 +462,7 @@ importers:
         version: 3.25.67
       zustand:
         specifier: ^5.0.3
-        version: 5.0.5(@types/react@18.3.23)(immer@10.1.1)(react@19.1.0)(use-sync-external-store@1.5.0(react@19.1.0))
+        version: 5.0.5(@types/react@19.1.0)(immer@10.1.1)(react@19.1.0)(use-sync-external-store@1.5.0(react@19.1.0))
     devDependencies:
       '@tailwindcss/typography':
         specifier: ^0.5.16
@@ -480,11 +480,11 @@ importers:
         specifier: ^4.17.16
         version: 4.17.18
       '@types/react':
-        specifier: ^18.2.66
-        version: 18.3.23
+        specifier: 'catalog:'
+        version: 19.1.0
       '@types/react-dom':
-        specifier: ^18.2.22
-        version: 18.3.7(@types/react@18.3.23)
+        specifier: 'catalog:'
+        version: 19.1.0(@types/react@19.1.0)
       typescript:
         specifier: 'catalog:'
         version: 5.8.2
@@ -4274,11 +4274,6 @@ packages:
 
   '@types/prop-types@15.7.15':
     resolution: {integrity: sha512-F6bEyamV9jKGAFBEmlQnesRPGOQqS2+Uwi0Em15xenOxHaf2hv6L8YCVn3rPdPJOiJfPiCnLIRyvwVaqMY3MIw==}
-
-  '@types/react-dom@18.3.7':
-    resolution: {integrity: sha512-MEe3UeoENYVFXzoXEWsvcpg6ZvlrFNlOQ7EOsvhI3CfAXwzPfO8Qwuxd40nepsYKqyyVQnTdEfv68q91yLcKrQ==}
-    peerDependencies:
-      '@types/react': ^18.0.0
 
   '@types/react-dom@19.1.0':
     resolution: {integrity: sha512-21E2zejNNRtjG4hKIyJz4aWswGEcNFTgttA0bZIRGjj1HA/tbSUxIJnIcYbn98pwJck0cS1bsQhn6eaKqbcFWw==}
@@ -12753,10 +12748,6 @@ snapshots:
 
   '@types/prop-types@15.7.15': {}
 
-  '@types/react-dom@18.3.7(@types/react@18.3.23)':
-    dependencies:
-      '@types/react': 18.3.23
-
   '@types/react-dom@19.1.0(@types/react@19.1.0)':
     dependencies:
       '@types/react': 19.1.0
@@ -17619,9 +17610,9 @@ snapshots:
 
   zod@3.25.67: {}
 
-  zustand@5.0.5(@types/react@18.3.23)(immer@10.1.1)(react@19.1.0)(use-sync-external-store@1.5.0(react@19.1.0)):
+  zustand@5.0.5(@types/react@19.1.0)(immer@10.1.1)(react@19.1.0)(use-sync-external-store@1.5.0(react@19.1.0)):
     optionalDependencies:
-      '@types/react': 18.3.23
+      '@types/react': 19.1.0
       immer: 10.1.1
       react: 19.1.0
       use-sync-external-store: 1.5.0(react@19.1.0)
