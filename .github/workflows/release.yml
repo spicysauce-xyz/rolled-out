@@ -16,6 +16,9 @@ on:
       DEPLOYMENT_HOCUS_ID:
         required: true
       DEPLOYMENT_PUBLIC_ID:
+        required: true
+      DEPLOYMENT_MARKETING_ID:
+        required: true
 
 jobs:
   execute:
@@ -84,5 +87,18 @@ jobs:
             -d '{
                 "json":{
                     "applicationId": "${{ secrets.DEPLOYMENT_PUBLIC_ID }}"
+                }
+            }'
+
+      - name: Deploy Marketing
+        run: |
+            curl -X 'POST' \
+            '${{ secrets.DEPLOYMENT_URL }}/api/trpc/application.deploy' \
+            -H 'accept: application/json' \
+            -H 'x-api-key: ${{ secrets.DEPLOYMENT_API_KEY }}' \
+            -H 'Content-Type: application/json' \
+            -d '{
+                "json":{
+                    "applicationId": "${{ secrets.DEPLOYMENT_MARKETING_ID }}"
                 }
             }'

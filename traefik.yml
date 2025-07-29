@@ -1,4 +1,0 @@
-tls:
-  certificates:
-    - certFile: /certs/rolledout.crt
-      keyFile: /certs/rolledout.key

@@ -40,6 +40,11 @@ jobs:
             build_args: |
               BUILDKIT_PROGRESS=plain
 
+          - image_suffix: marketing
+            dockerfile: ./apps/marketing/Dockerfile.marketing
+            build_args: |
+              BUILDKIT_PROGRESS=plain
+
     permissions:
       contents: read
       packages: write

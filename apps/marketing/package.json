@@ -1,5 +1,5 @@
 {
-  "name": "marketing",
+  "name": "@mono/marketing",
   "type": "module",
   "version": "0.0.1",
   "scripts": {
@@ -9,17 +9,20 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/node": "^9.3.1",
     "@astrojs/react": "^4.3.0",
     "@gsap/react": "^2.1.2",
     "@mono/ui": "workspace:*",
     "@tailwindcss/vite": "^4.1.11",
-    "@types/react": "^19.1.8",
-    "@types/react-dom": "^19.1.6",
     "astro": "^5.11.0",
     "gsap": "^3.13.0",
     "lucide-react": "^0.525.0",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
+    "react": "catalog:",
+    "react-dom": "catalog:",
     "tailwindcss": "^4.1.11"
+  },
+  "devDependencies": {
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:"
   }
 }
