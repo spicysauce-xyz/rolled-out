@@ -1,11 +1,6 @@
 import { UpdateEntry } from "@modules/dashboard/components/update-list";
-import { IconButton, Text, Tooltip } from "@mono/ui";
-import {
-  EllipsisVerticalIcon,
-  EyeIcon,
-  MailIcon,
-  MousePointer2,
-} from "lucide-react";
+import { IconButton } from "@mono/ui";
+import { EllipsisVerticalIcon } from "lucide-react";
 import type React from "react";
 
 interface PublishedUpdateProps {
@@ -33,7 +28,7 @@ export const PublishedUpdate: React.FC<PublishedUpdateProps> = ({
         className="flex-1"
         tags={tags.map(({ tag }) => tag.label)}
       />
-      <UpdateEntry.Meta>
+      {/* <UpdateEntry.Meta>
         <Tooltip.Root>
           <Tooltip.Trigger asChild>
             <div className="group flex items-center gap-1">
@@ -88,7 +83,7 @@ export const PublishedUpdate: React.FC<PublishedUpdateProps> = ({
             <Tooltip.Title>Clickthrough rate</Tooltip.Title>
           </Tooltip.Content>
         </Tooltip.Root>
-      </UpdateEntry.Meta>
+      </UpdateEntry.Meta> */}
       <UpdateEntry.Meta>
         {editors.length > 0 && <UpdateEntry.Editors editors={editors} />}
         {publishedAt && (
