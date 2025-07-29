@@ -58,13 +58,14 @@ export const DashboardNavigation: React.FC<DashboardNavigationProps> = ({
             />
             <Sidebar.NavLink
               icon={MailIcon}
+              isDisabled
               label="Subscribers"
               params={{ organizationSlug }}
               to="/$organizationSlug/contacts"
             />
             <Sidebar.NavLink
-              activeOptions={{ exact: true }}
               icon={LineChartIcon}
+              isDisabled
               label="Analytics"
               params={{ organizationSlug }}
               to="/$organizationSlug/analytics"

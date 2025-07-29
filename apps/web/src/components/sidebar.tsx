@@ -72,10 +72,14 @@ type SidebarNavLinkProps = React.HTMLAttributes<HTMLAnchorElement> &
     icon?: LucideIcon;
     iconName?: IconName;
     label: string;
+    isDisabled?: boolean;
   };
 
 const SidebarNavLink = React.forwardRef<HTMLAnchorElement, SidebarNavLinkProps>(
-  ({ children, className, icon, iconName, label, ...props }, ref) => {
+  (
+    { children, className, icon, iconName, label, isDisabled, ...props },
+    ref
+  ) => {
     let iconNode: React.ReactNode;
 
     if (icon) {
@@ -90,7 +94,8 @@ const SidebarNavLink = React.forwardRef<HTMLAnchorElement, SidebarNavLinkProps>(
     return (
       <Clickable.Root
         asChild
-        className="flex h-9 items-center border-0 px-2 hover:bg-neutral-100 focus-visible:bg-neutral-100"
+        className="flex h-9 items-center border-0 px-2 not-aria-disabled:hover:bg-neutral-100 focus-visible:bg-neutral-100"
+        isDisabled={isDisabled}
         variant="tertiary"
       >
         <Link ref={ref} {...props}>
