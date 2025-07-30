@@ -1,6 +1,7 @@
 import { Config } from "@config";
 import MagicLinkEmail from "@email/templates/magic-link";
 import { Resend } from "resend";
+import MemberInviteEmail from "./templates/member-invite";
 
 const resend = new Resend(Config.resend.apiKey);
 
@@ -19,6 +20,24 @@ export const Email = {
       to: payload.to,
       subject: "Sign in to Rolled Out",
       react: <MagicLinkEmail {...payload.props} />,
+    });
+
+    if (response.error) {
+      throw response.error;
+    }
+
+    return response.data;
+  },
+  async sendMemberInviteEmail(
+    payload: EmailPayload<
+      React.ComponentPropsWithoutRef<typeof MemberInviteEmail>
+    >
+  ) {
+    const response = await resend.emails.send({
+      from: `Rolled Out <invite@${Config.resend.domain}>`,
+      to: payload.to,
+      subject: `You've been invited to join ${payload.props.organizationName} on Rolled Out`,
+      react: <MemberInviteEmail {...payload.props} />,
     });
 
     if (response.error) {

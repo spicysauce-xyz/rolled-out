@@ -1,4 +1,9 @@
-import { type Adapter, type BetterAuthOptions, betterAuth } from "better-auth";
+import {
+  type Adapter,
+  type BetterAuthOptions,
+  betterAuth,
+  type User,
+} from "better-auth";
 import {
   type Member,
   magicLink,
@@ -12,10 +17,12 @@ interface Params {
   basePath: string;
   database: (options: BetterAuthOptions) => Adapter;
   trustedOrigins: string[];
-  sendInvitationEmail?: (data: {
-    invitation: { email: string; role: string };
+  sendInvitationEmail: (data: {
+    inviter: Member & { user: User };
+    email: string;
+    organization: Organization;
   }) => Promise<void>;
-  sendMagicLinkEmail?: (data: {
+  sendMagicLinkEmail: (data: {
     email: string;
     url: string;
     token: string;
@@ -76,17 +83,18 @@ export const createServerAuth = (
     },
     plugins: [
       organization({
-        sendInvitationEmail: params.sendInvitationEmail,
+        sendInvitationEmail: (data) =>
+          params.sendInvitationEmail({
+            inviter: data.inviter,
+            email: data.email,
+            organization: data.organization,
+          }),
         organizationCreation: {
           afterCreate: async (data) => params.afterOrganizationCreate?.(data),
         },
       }),
       magicLink({
-        sendMagicLink:
-          params.sendMagicLinkEmail ??
-          (() => {
-            return;
-          }),
+        sendMagicLink: params.sendMagicLinkEmail,
       }),
     ],
     rateLimit: {

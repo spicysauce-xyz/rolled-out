@@ -14,16 +14,19 @@ export const auth = createServerAuth({
   domain: `.${Config.client.domain.split(".").slice(-2).join(".")}`,
   trustedOrigins: [Config.client.base],
   sendInvitationEmail: async (data) => {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    if (process.env.NODE_ENV !== "production") {
+      console.log("Member invite email sent:", data);
+      return;
+    }
 
-    console.log(
-      "Invitation email sent to",
-      data.invitation.email,
-      data.invitation.role
-    );
-    // TODO: Implement invitation email template
     // TODO: Throw proper error (return error json) if email fails to send
-    return;
+    await Email.sendMemberInviteEmail({
+      to: data.email,
+      props: {
+        inviterName: data.inviter.user.name,
+        organizationName: data.organization.name,
+      },
+    });
   },
   sendMagicLinkEmail: async (data) => {
     if (process.env.NODE_ENV !== "production") {
