@@ -10,6 +10,7 @@ import { UserPlus2Icon } from "lucide-react";
 import { match } from "ts-pattern";
 import { InviteMemberDialog } from "./components/invite-member-dialog";
 import { MembersList } from "./components/members-list";
+import { filterExpiredInvitations } from "./utils";
 
 export const Route = createFileRoute(
   "/_authorized/_has-organization/$organizationSlug/settings/members"
@@ -57,7 +58,10 @@ function RouteComponent() {
               <Transition.Item className="flex flex-col gap-4" key="list">
                 <MembersList
                   currentUserId={user.id}
-                  members={[...data.members, ...data.invitations]}
+                  members={[
+                    ...data.members,
+                    ...filterExpiredInvitations(data.invitations),
+                  ]}
                   organizationId={data.id}
                 />
               </Transition.Item>
