@@ -17,12 +17,12 @@ interface Params {
   basePath: string;
   database: (options: BetterAuthOptions) => Adapter;
   trustedOrigins: string[];
-  sendInvitationEmail: (data: {
+  sendInvitationEmail?: (data: {
     inviter: Member & { user: User };
     email: string;
     organization: Organization;
   }) => Promise<void>;
-  sendMagicLinkEmail: (data: {
+  sendMagicLinkEmail?: (data: {
     email: string;
     url: string;
     token: string;
@@ -83,18 +83,29 @@ export const createServerAuth = (
     },
     plugins: [
       organization({
-        sendInvitationEmail: (data) =>
-          params.sendInvitationEmail({
+        sendInvitationEmail: (data) => {
+          if (!params.sendInvitationEmail) {
+            return new Promise((resolve) => resolve());
+          }
+
+          return params.sendInvitationEmail({
             inviter: data.inviter,
             email: data.email,
             organization: data.organization,
-          }),
+          });
+        },
         organizationCreation: {
           afterCreate: async (data) => params.afterOrganizationCreate?.(data),
         },
       }),
       magicLink({
-        sendMagicLink: params.sendMagicLinkEmail,
+        sendMagicLink: (data) => {
+          if (!params.sendMagicLinkEmail) {
+            return;
+          }
+
+          return params.sendMagicLinkEmail(data);
+        },
       }),
     ],
     rateLimit: {

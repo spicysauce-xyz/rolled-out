@@ -3,6 +3,7 @@ interface RawConfig {
   self: string;
   api: string;
   hocus: string;
+  public: string;
 }
 
 declare global {
@@ -17,6 +18,7 @@ export const getServerConfig = (): RawConfig => {
     self: process.env.SELF ?? "",
     api: process.env.API ?? "",
     hocus: process.env.HOCUS ?? "",
+    public: process.env.PUBLIC ?? "",
   };
 };
 
@@ -34,6 +36,7 @@ const formatConfig = (
     apiUrl: rawConfig.api,
     authUrl: `${rawConfig.api}/auth`,
     hocusUrl: new URL(rawConfig.hocus).origin.replace("http", "ws"),
+    publicUrl: rawConfig.public,
   };
 };
 

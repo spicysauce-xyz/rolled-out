@@ -1,5 +1,6 @@
 import { Sidebar } from "@components/sidebar";
 import type { authClient } from "@lib/auth";
+import { getPublicUrl } from "@modules/dashboard/utils";
 import { NotificationsList } from "@modules/shared/components/notifications-list";
 import { UserMenu } from "@modules/shared/components/user-menu";
 import {
@@ -57,11 +58,12 @@ export const DashboardNavigation: React.FC<DashboardNavigationProps> = ({
             params={{ organizationSlug }}
             to="/$organizationSlug/settings/details"
           />
-          <Sidebar.NavLink
+          <Sidebar.Link
+            href={getPublicUrl(organizationSlug)}
             icon={ExternalLinkIcon}
             label="Preview"
-            params={{ organizationSlug }}
-            to="/$organizationSlug/settings/details"
+            rel="noopener noreferrer"
+            target="_blank"
           />
         </Sidebar.Group>
         {/* <Sidebar.Group label="Boards">
