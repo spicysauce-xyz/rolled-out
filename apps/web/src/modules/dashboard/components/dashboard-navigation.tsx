@@ -1,16 +1,8 @@
 import { Sidebar } from "@components/sidebar";
-import { Transition } from "@components/transition";
-import { boardsQuery } from "@lib/api/queries";
 import type { authClient } from "@lib/auth";
-import { NewBoardDialog } from "@modules/dashboard/pages/board/components/new-board-dialog";
 import { NotificationsList } from "@modules/shared/components/notifications-list";
 import { UserMenu } from "@modules/shared/components/user-menu";
-import { Clickable, IconButton, Skeleton, Text } from "@mono/ui";
-import { useDisclosure } from "@mono/ui/hooks";
-import { cn } from "@mono/ui/utils";
-import { useQuery } from "@tanstack/react-query";
 import {
-  AlertTriangleIcon,
   BellIcon,
   ExternalLinkIcon,
   HelpCircleIcon,
@@ -18,28 +10,18 @@ import {
   ListIcon,
   MailIcon,
   MessageCircleIcon,
-  PlusIcon,
-  RefreshCwIcon,
   SettingsIcon,
 } from "lucide-react";
-// @ts-expect-error https://github.com/lucide-icons/lucide/issues/2867
-import type { IconName } from "lucide-react/dynamic.mjs";
-import { match } from "ts-pattern";
 
 interface DashboardNavigationProps {
   user: (typeof authClient.$Infer.Session)["user"];
   organizationSlug: string;
-  organizationId: string;
 }
 
 export const DashboardNavigation: React.FC<DashboardNavigationProps> = ({
   user,
   organizationSlug,
-  organizationId,
 }) => {
-  const boardsData = useQuery(boardsQuery(organizationId));
-  const newBoardDialog = useDisclosure();
-
   return (
     <Sidebar.Root className="hidden w-64 bg-neutral-50 sm:flex">
       <Sidebar.Header>
@@ -47,31 +29,42 @@ export const DashboardNavigation: React.FC<DashboardNavigationProps> = ({
         <Sidebar.Version />
       </Sidebar.Header>
       <Sidebar.ScrollArea>
-        <div className="flex flex-col gap-4">
-          <Sidebar.Group>
-            <Sidebar.NavLink
-              activeOptions={{ exact: true }}
-              icon={BellIcon}
-              label="Updates"
-              params={{ organizationSlug }}
-              to="/$organizationSlug"
-            />
-            <Sidebar.NavLink
-              icon={MailIcon}
-              isDisabled
-              label="Subscribers"
-              params={{ organizationSlug }}
-              to="/$organizationSlug/contacts"
-            />
-            <Sidebar.NavLink
-              icon={LineChartIcon}
-              isDisabled
-              label="Analytics"
-              params={{ organizationSlug }}
-              to="/$organizationSlug/analytics"
-            />
-          </Sidebar.Group>
-          <Sidebar.Group label="Boards">
+        <Sidebar.Group>
+          <Sidebar.NavLink
+            activeOptions={{ exact: true }}
+            icon={BellIcon}
+            label="Updates"
+            params={{ organizationSlug }}
+            to="/$organizationSlug"
+          />
+          <Sidebar.NavLink
+            icon={MailIcon}
+            isDisabled
+            label="Subscribers"
+            params={{ organizationSlug }}
+            to="/$organizationSlug/contacts"
+          />
+          <Sidebar.NavLink
+            icon={LineChartIcon}
+            isDisabled
+            label="Analytics"
+            params={{ organizationSlug }}
+            to="/$organizationSlug/analytics"
+          />
+          <Sidebar.NavLink
+            icon={SettingsIcon}
+            label="Settings"
+            params={{ organizationSlug }}
+            to="/$organizationSlug/settings/details"
+          />
+          <Sidebar.NavLink
+            icon={ExternalLinkIcon}
+            label="Preview"
+            params={{ organizationSlug }}
+            to="/$organizationSlug/settings/details"
+          />
+        </Sidebar.Group>
+        {/* <Sidebar.Group label="Boards">
             <NewBoardDialog
               isOpen={newBoardDialog.isOpen}
               onOpenChange={newBoardDialog.setOpen}
@@ -144,22 +137,7 @@ export const DashboardNavigation: React.FC<DashboardNavigationProps> = ({
                   </Transition.Item>
                 ))}
             </Transition.Root>
-          </Sidebar.Group>
-          <Sidebar.Group>
-            <Sidebar.NavLink
-              icon={SettingsIcon}
-              label="Settings"
-              params={{ organizationSlug }}
-              to="/$organizationSlug/settings/details"
-            />
-            <Sidebar.NavLink
-              icon={ExternalLinkIcon}
-              label="Preview"
-              params={{ organizationSlug }}
-              to="/$organizationSlug/settings/details"
-            />
-          </Sidebar.Group>
-        </div>
+          </Sidebar.Group> */}
         <Sidebar.Fill />
         <Sidebar.Group>
           <Sidebar.Link href="#" icon={MessageCircleIcon} label="Feedback" />
