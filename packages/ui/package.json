@@ -21,7 +21,7 @@
   },
   "scripts": {
     "build": "pnpm build:module & pnpm build:types",
-    "build:module": "tsup src/**/*.{ts,tsx,css} --format esm --silent",
+    "build:module": "tsup --entry src/components/index.ts --entry src/utils/index.ts --entry src/hooks/index.ts --entry src/theme.css --entry src/plugins.css --format esm --silent",
     "build:types": "tsc --emitDeclarationOnly --declaration"
   },
   "dependencies": {

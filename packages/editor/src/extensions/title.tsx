@@ -1,6 +1,6 @@
 import { Heading } from "@tiptap/extension-heading";
 
-export const Title = Heading.extend({
+export const titleExtension = Heading.extend({
   name: "title",
   group: "block",
   content: "text*",
