@@ -2,6 +2,7 @@ import Blockquote from "@tiptap/extension-blockquote";
 import Bold from "@tiptap/extension-bold";
 import BulletList from "@tiptap/extension-bullet-list";
 import Code from "@tiptap/extension-code";
+import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 import Document from "@tiptap/extension-document";
 import HardBreak from "@tiptap/extension-hard-break";
 import Heading from "@tiptap/extension-heading";
@@ -15,9 +16,12 @@ import Placeholder from "@tiptap/extension-placeholder";
 import Strike from "@tiptap/extension-strike";
 import Text from "@tiptap/extension-text";
 import Underline from "@tiptap/extension-underline";
+import { common, createLowlight } from "lowlight";
 import { Slash } from "./slash";
 import { Title } from "./title";
 import { onlyInAllowedNodesForMarks } from "./utils";
+
+const lowlight = createLowlight(common);
 
 export const extensions = [
   Document.extend({
@@ -35,6 +39,10 @@ export const extensions = [
 
       if (node.type.name === "blockquote") {
         return "Empty quote...";
+      }
+
+      if (node.type.name === "codeBlock") {
+        return "Code block...";
       }
 
       return "Write something or try / for heading, list, etc...";
@@ -105,6 +113,9 @@ export const extensions = [
   Link.configure({
     openOnClick: "whenNotEditable",
     autolink: true,
+  }),
+  CodeBlockLowlight.configure({
+    lowlight,
   }),
   Slash,
   BulletList,

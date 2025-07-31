@@ -1,3 +1,4 @@
+import "highlight.js/styles/atom-one-light.min.css";
 import type { HocuspocusProvider } from "@hocuspocus/provider";
 import { cn } from "@mono/ui/utils";
 import Collaboration from "@tiptap/extension-collaboration";
@@ -111,7 +112,9 @@ export const editorContentClassName = cn(
   // img
   "prose-img:rounded-xl",
   // code
-  "prose-code:rounded-xs prose-code:bg-neutral-100 prose-code:px-1 prose-code:font-mono prose-code:font-weight-400 prose-code:text-md prose-code:before:content-none prose-code:after:content-none",
+  "prose-p:prose-code:rounded-xs prose-p:prose-code:bg-neutral-50 prose-p:prose-code:px-1 prose-code:font-mono prose-code:font-weight-400 prose-code:text-md prose-code:before:content-none prose-code:after:content-none",
+  // code block
+  "prose-pre:my-4 prose-pre:overflow-x-auto prose-pre:whitespace-pre prose-pre:rounded-xl prose-pre:bg-neutral-50 prose-pre:p-4 prose-pre:text-neutral-700 prose-pre:[&_.hljs-comment]:text-neutral-400 prose-pre:[&_.hljs-variable]:text-danger-400",
   // blockquote
   "prose-blockquote:border-neutral-200 prose-blockquote:border-l-4 prose-blockquote:pl-4 prose-blockquote:[&>p]:text-neutral-900 prose-blockquote:[&>p]:not-italic prose-blockquote:[&>p]:before:content-none",
   // lists

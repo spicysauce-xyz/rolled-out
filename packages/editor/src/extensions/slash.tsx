@@ -8,6 +8,7 @@ import {
 } from "@tiptap/react";
 import Suggestion from "@tiptap/suggestion";
 import {
+  CodeIcon,
   Heading2Icon,
   Heading3Icon,
   ListIcon,
@@ -173,6 +174,18 @@ export const Slash = Extension.create({
                 .run();
             },
           },
+          {
+            icon: CodeIcon,
+            title: "Code Block",
+            command: ({ editor, range }: { editor: Editor; range: Range }) => {
+              editor
+                .chain()
+                .focus()
+                .deleteRange(range)
+                .setNode("codeBlock")
+                .run();
+            },
+          },
         ],
         render: () => {
           let component: ReactRenderer | null = null;
@@ -190,7 +203,7 @@ export const Slash = Extension.create({
               const parentNode = selection.$from.node(selection.$from.depth);
               const blockType = parentNode.type.name;
 
-              if (blockType === "title") {
+              if (["title", "codeBlock"].includes(blockType)) {
                 return;
               }
 
