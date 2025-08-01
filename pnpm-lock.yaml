@@ -190,6 +190,9 @@ importers:
       '@mono/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@redis/client':
+        specifier: ^5.7.0
+        version: 5.7.0
       dotenv:
         specifier: ^16.5.0
         version: 16.5.0

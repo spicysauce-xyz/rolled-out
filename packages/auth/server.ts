@@ -17,7 +17,7 @@ interface Params {
   baseURL: string;
   basePath: string;
   database: (options: BetterAuthOptions) => Adapter;
-  secondaryStorage?: SecondaryStorage;
+  secondaryStorage: SecondaryStorage;
   trustedOrigins: string[];
   sendInvitationEmail?: (data: {
     inviter: Member & { user: User };
