@@ -2,6 +2,7 @@ import {
   type Adapter,
   type BetterAuthOptions,
   betterAuth,
+  type SecondaryStorage,
   type User,
 } from "better-auth";
 import {
@@ -16,6 +17,7 @@ interface Params {
   baseURL: string;
   basePath: string;
   database: (options: BetterAuthOptions) => Adapter;
+  secondaryStorage?: SecondaryStorage;
   trustedOrigins: string[];
   sendInvitationEmail?: (data: {
     inviter: Member & { user: User };
@@ -40,6 +42,7 @@ export const createServerAuth = (
     baseURL: params.baseURL,
     basePath: params.basePath,
     database: params.database,
+    secondaryStorage: params.secondaryStorage,
     user: {
       additionalFields: {
         onboarded: {

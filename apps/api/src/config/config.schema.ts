@@ -4,6 +4,7 @@ export const configSchema = z.object({
   SELF: z.string(),
   CLIENT: z.string(),
   DATABASE_URL: z.string(),
+  REDIS_URL: z.string(),
   RESEND_API_KEY: z.string(),
   RESEND_DOMAIN: z.string(),
   S3_ENDPOINT: z.string(),
@@ -29,6 +30,9 @@ const formatConfig = () => {
     },
     database: {
       url: config.DATABASE_URL,
+    },
+    redis: {
+      url: config.REDIS_URL,
     },
     resend: {
       apiKey: config.RESEND_API_KEY,
