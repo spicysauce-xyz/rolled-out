@@ -1,0 +1,1 @@
+export { codeBlockLowlightExtension } from "./extension";
