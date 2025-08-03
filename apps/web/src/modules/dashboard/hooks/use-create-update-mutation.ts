@@ -27,9 +27,11 @@ export const useCreateUpdateMutation = () => {
       return { toastId: Toaster.loading("Creating new draft...") };
     },
     onSuccess: async (post, _, context) => {
-      await queryClient.refetchQueries(updatesQuery(post.organizationId));
-      await queryClient.prefetchQuery(
-        updateQuery(post.organizationId, post.id)
+      await queryClient.invalidateQueries(updatesQuery(post.organizationId));
+
+      queryClient.setQueryData(
+        updateQuery(post.organizationId, post.id).queryKey,
+        post
       );
 
       Toaster.success("Successfully created new draft", {
