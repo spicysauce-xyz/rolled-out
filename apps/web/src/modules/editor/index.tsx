@@ -1,7 +1,7 @@
 import { Confirmer } from "@components/confirmer";
 import { Page } from "@components/page";
 import { Transition } from "@components/transition";
-import { api } from "@lib/api";
+import { updateQuery } from "@lib/api/queries";
 import { useGoBack } from "@modules/dashboard/hooks/use-go-back";
 import { usePublishUpdateMutation } from "@modules/dashboard/hooks/use-publish-update-mutation";
 import { Editor } from "@mono/editor";
@@ -19,21 +19,9 @@ export const Route = createFileRoute(
   component: RouteComponent,
   beforeLoad: async ({ context, params }) => {
     const { data: post } = await tryCatch(
-      context.queryClient.ensureQueryData({
-        queryKey: ["posts", params.id],
-        queryFn: async ({ queryKey: [, id] }) => {
-          const response = await api.organizations[":organizationId"].posts[
-            ":id"
-          ].$get({ param: { id, organizationId: context.organization.id } });
-          const json = await response.json();
-
-          if (!json.success) {
-            throw json.error;
-          }
-
-          return json.data;
-        },
-      })
+      context.queryClient.ensureQueryData(
+        updateQuery(context.organization.id, params.id)
+      )
     );
 
     if (!post) {

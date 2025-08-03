@@ -11,7 +11,7 @@ export const createRouter = () => {
       routeTree,
       context: { queryClient },
       scrollRestoration: true,
-      defaultPreload: "intent",
+      defaultPreload: "viewport",
       defaultPendingMinMs: 0,
       defaultPendingMs: 0,
     }),

@@ -1,5 +1,5 @@
 import { api } from "@lib/api";
-import { updatesQuery } from "@lib/api/queries";
+import { updateQuery, updatesQuery } from "@lib/api/queries";
 import { Toaster } from "@mono/ui";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
@@ -28,6 +28,9 @@ export const useCreateUpdateMutation = () => {
     },
     onSuccess: async (post, _, context) => {
       await queryClient.refetchQueries(updatesQuery(post.organizationId));
+      await queryClient.prefetchQuery(
+        updateQuery(post.organizationId, post.id)
+      );
 
       Toaster.success("Successfully created new draft", {
         id: context.toastId,

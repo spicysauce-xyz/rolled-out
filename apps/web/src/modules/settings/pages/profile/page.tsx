@@ -25,13 +25,13 @@ function RouteComponent() {
   const { data: sessionQueryData, isPending: isSessionQueryPending } = useQuery(
     {
       ...sessionQuery(),
-      initialData: () => ({
+      placeholderData: {
         error: null,
         data: {
           user: initialUser,
           session: initialSession,
         },
-      }),
+      },
     }
   );
 

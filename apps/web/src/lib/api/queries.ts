@@ -84,6 +84,29 @@ export const updatesQuery = (organizationId: string) =>
     },
   });
 
+export const updateQuery = (organizationId: string, updateId: string) =>
+  queryOptions({
+    queryKey: ["update", organizationId, updateId],
+    queryFn: async ({ queryKey }) => {
+      const response = await api.organizations[":organizationId"].posts[
+        ":id"
+      ].$get({
+        param: {
+          organizationId: queryKey[1],
+          id: queryKey[2],
+        },
+      });
+
+      const json = await response.json();
+
+      if (!json.success) {
+        throw json.error;
+      }
+
+      return json.data;
+    },
+  });
+
 export const organizationTagsQuery = (organizationId: string) =>
   queryOptions({
     queryKey: ["tags", organizationId],
