@@ -14,11 +14,7 @@ function RouteComponent() {
 
   return (
     <Page.Root>
-      <SettingsNavigation
-        organizationName={organization.name}
-        organizationSlug={organization.slug}
-        user={user}
-      />
+      <SettingsNavigation organization={organization} user={user} />
       <Page.Wrapper>
         <Page.Header>
           <Breadcrumbs organization={organization} page="Settings" />

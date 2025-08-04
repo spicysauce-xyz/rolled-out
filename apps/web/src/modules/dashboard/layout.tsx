@@ -13,11 +13,7 @@ function RouteComponent() {
 
   return (
     <Page.Root>
-      <DashboardNavigation
-        organizationId={organization.id}
-        organizationSlug={organization.slug}
-        user={user}
-      />
+      <DashboardNavigation organization={organization} user={user} />
       <Outlet />
     </Page.Root>
   );

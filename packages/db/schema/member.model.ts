@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import { pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 import { organization } from "./organization.model";
 import { user } from "./user.model";
@@ -16,3 +17,10 @@ export const member = pgTable("member", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
+
+export const memberRelations = relations(member, ({ one }) => ({
+  organization: one(organization, {
+    fields: [member.organizationId],
+    references: [organization.id],
+  }),
+}));

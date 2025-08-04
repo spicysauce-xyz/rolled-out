@@ -22,6 +22,7 @@ import { Route as dashboardLayoutRouteImport } from './../modules/dashboard/layo
 import { Route as editorIndexRouteImport } from './../modules/editor/index'
 import { Route as settingsPagesSessionsPageRouteImport } from './../modules/settings/pages/sessions/page'
 import { Route as settingsPagesProfilePageRouteImport } from './../modules/settings/pages/profile/page'
+import { Route as settingsPagesOrganizationsPageRouteImport } from './../modules/settings/pages/organizations/page'
 import { Route as settingsPagesMembersPageRouteImport } from './../modules/settings/pages/members/page'
 import { Route as settingsPagesDetailsPageRouteImport } from './../modules/settings/pages/details/page'
 import { Route as settingsPagesSplatPageRouteImport } from './../modules/settings/pages/splat/page'
@@ -96,6 +97,12 @@ const settingsPagesProfilePageRoute =
     path: '/profile',
     getParentRoute: () => settingsLayoutRoute,
   } as any)
+const settingsPagesOrganizationsPageRoute =
+  settingsPagesOrganizationsPageRouteImport.update({
+    id: '/organizations',
+    path: '/organizations',
+    getParentRoute: () => settingsLayoutRoute,
+  } as any)
 const settingsPagesMembersPageRoute =
   settingsPagesMembersPageRouteImport.update({
     id: '/members',
@@ -150,6 +157,7 @@ export interface FileRoutesByFullPath {
   '/$organizationSlug/settings/$': typeof settingsPagesSplatPageRoute
   '/$organizationSlug/settings/details': typeof settingsPagesDetailsPageRoute
   '/$organizationSlug/settings/members': typeof settingsPagesMembersPageRoute
+  '/$organizationSlug/settings/organizations': typeof settingsPagesOrganizationsPageRoute
   '/$organizationSlug/settings/profile': typeof settingsPagesProfilePageRoute
   '/$organizationSlug/settings/sessions': typeof settingsPagesSessionsPageRoute
   '/$organizationSlug/editor/$id': typeof editorIndexRoute
@@ -167,6 +175,7 @@ export interface FileRoutesByTo {
   '/$organizationSlug/settings/$': typeof settingsPagesSplatPageRoute
   '/$organizationSlug/settings/details': typeof settingsPagesDetailsPageRoute
   '/$organizationSlug/settings/members': typeof settingsPagesMembersPageRoute
+  '/$organizationSlug/settings/organizations': typeof settingsPagesOrganizationsPageRoute
   '/$organizationSlug/settings/profile': typeof settingsPagesProfilePageRoute
   '/$organizationSlug/settings/sessions': typeof settingsPagesSessionsPageRoute
   '/$organizationSlug/editor/$id': typeof editorIndexRoute
@@ -190,6 +199,7 @@ export interface FileRoutesById {
   '/_authorized/_has-organization/$organizationSlug/settings/$': typeof settingsPagesSplatPageRoute
   '/_authorized/_has-organization/$organizationSlug/settings/details': typeof settingsPagesDetailsPageRoute
   '/_authorized/_has-organization/$organizationSlug/settings/members': typeof settingsPagesMembersPageRoute
+  '/_authorized/_has-organization/$organizationSlug/settings/organizations': typeof settingsPagesOrganizationsPageRoute
   '/_authorized/_has-organization/$organizationSlug/settings/profile': typeof settingsPagesProfilePageRoute
   '/_authorized/_has-organization/$organizationSlug/settings/sessions': typeof settingsPagesSessionsPageRoute
   '/_authorized/_has-organization/$organizationSlug/editor/$id': typeof editorIndexRoute
@@ -210,6 +220,7 @@ export interface FileRouteTypes {
     | '/$organizationSlug/settings/$'
     | '/$organizationSlug/settings/details'
     | '/$organizationSlug/settings/members'
+    | '/$organizationSlug/settings/organizations'
     | '/$organizationSlug/settings/profile'
     | '/$organizationSlug/settings/sessions'
     | '/$organizationSlug/editor/$id'
@@ -227,6 +238,7 @@ export interface FileRouteTypes {
     | '/$organizationSlug/settings/$'
     | '/$organizationSlug/settings/details'
     | '/$organizationSlug/settings/members'
+    | '/$organizationSlug/settings/organizations'
     | '/$organizationSlug/settings/profile'
     | '/$organizationSlug/settings/sessions'
     | '/$organizationSlug/editor/$id'
@@ -249,6 +261,7 @@ export interface FileRouteTypes {
     | '/_authorized/_has-organization/$organizationSlug/settings/$'
     | '/_authorized/_has-organization/$organizationSlug/settings/details'
     | '/_authorized/_has-organization/$organizationSlug/settings/members'
+    | '/_authorized/_has-organization/$organizationSlug/settings/organizations'
     | '/_authorized/_has-organization/$organizationSlug/settings/profile'
     | '/_authorized/_has-organization/$organizationSlug/settings/sessions'
     | '/_authorized/_has-organization/$organizationSlug/editor/$id'
@@ -353,6 +366,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof settingsPagesProfilePageRouteImport
       parentRoute: typeof settingsLayoutRoute
     }
+    '/_authorized/_has-organization/$organizationSlug/settings/organizations': {
+      id: '/_authorized/_has-organization/$organizationSlug/settings/organizations'
+      path: '/organizations'
+      fullPath: '/$organizationSlug/settings/organizations'
+      preLoaderRoute: typeof settingsPagesOrganizationsPageRouteImport
+      parentRoute: typeof settingsLayoutRoute
+    }
     '/_authorized/_has-organization/$organizationSlug/settings/members': {
       id: '/_authorized/_has-organization/$organizationSlug/settings/members'
       path: '/members'
@@ -427,6 +447,7 @@ interface settingsLayoutRouteChildren {
   settingsPagesSplatPageRoute: typeof settingsPagesSplatPageRoute
   settingsPagesDetailsPageRoute: typeof settingsPagesDetailsPageRoute
   settingsPagesMembersPageRoute: typeof settingsPagesMembersPageRoute
+  settingsPagesOrganizationsPageRoute: typeof settingsPagesOrganizationsPageRoute
   settingsPagesProfilePageRoute: typeof settingsPagesProfilePageRoute
   settingsPagesSessionsPageRoute: typeof settingsPagesSessionsPageRoute
 }
@@ -435,6 +456,7 @@ const settingsLayoutRouteChildren: settingsLayoutRouteChildren = {
   settingsPagesSplatPageRoute: settingsPagesSplatPageRoute,
   settingsPagesDetailsPageRoute: settingsPagesDetailsPageRoute,
   settingsPagesMembersPageRoute: settingsPagesMembersPageRoute,
+  settingsPagesOrganizationsPageRoute: settingsPagesOrganizationsPageRoute,
   settingsPagesProfilePageRoute: settingsPagesProfilePageRoute,
   settingsPagesSessionsPageRoute: settingsPagesSessionsPageRoute,
 }

@@ -16,12 +16,14 @@ import {
 
 interface DashboardNavigationProps {
   user: (typeof authClient.$Infer.Session)["user"];
-  organizationSlug: string;
+  organization: {
+    slug: string;
+  };
 }
 
 export const DashboardNavigation: React.FC<DashboardNavigationProps> = ({
   user,
-  organizationSlug,
+  organization,
 }) => {
   return (
     <Sidebar.Root className="hidden w-64 bg-neutral-50 sm:flex">
@@ -35,31 +37,31 @@ export const DashboardNavigation: React.FC<DashboardNavigationProps> = ({
             activeOptions={{ exact: true }}
             icon={BellIcon}
             label="Updates"
-            params={{ organizationSlug }}
+            params={{ organizationSlug: organization.slug }}
             to="/$organizationSlug"
           />
           <Sidebar.NavLink
             icon={MailIcon}
             isDisabled
             label="Subscribers"
-            params={{ organizationSlug }}
+            params={{ organizationSlug: organization.slug }}
             to="/$organizationSlug/contacts"
           />
           <Sidebar.NavLink
             icon={LineChartIcon}
             isDisabled
             label="Analytics"
-            params={{ organizationSlug }}
+            params={{ organizationSlug: organization.slug }}
             to="/$organizationSlug/analytics"
           />
           <Sidebar.NavLink
             icon={SettingsIcon}
             label="Settings"
-            params={{ organizationSlug }}
+            params={{ organizationSlug: organization.slug }}
             to="/$organizationSlug/settings/details"
           />
           <Sidebar.Link
-            href={getPublicUrl(organizationSlug)}
+            href={getPublicUrl(organization.slug)}
             icon={ExternalLinkIcon}
             label="Preview"
             rel="noopener noreferrer"
@@ -148,7 +150,7 @@ export const DashboardNavigation: React.FC<DashboardNavigationProps> = ({
         </Sidebar.Group>
       </Sidebar.ScrollArea>
       <Sidebar.Footer className="flex gap-1 p-2">
-        <UserMenu organizationSlug={organizationSlug} user={user} />
+        <UserMenu organizationSlug={organization.slug} user={user} />
         <NotificationsList />
       </Sidebar.Footer>
     </Sidebar.Root>

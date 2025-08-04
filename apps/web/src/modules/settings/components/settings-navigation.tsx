@@ -6,6 +6,7 @@ import { Clickable, Text } from "@mono/ui";
 import { Link } from "@tanstack/react-router";
 import {
   ArrowLeftIcon,
+  BuildingIcon,
   NotebookTextIcon,
   SmartphoneIcon,
   User2Icon,
@@ -13,14 +14,16 @@ import {
 } from "lucide-react";
 
 interface SettingsNavigationProps {
-  organizationName: string;
-  organizationSlug: string;
+  organization: {
+    name: string;
+    slug: string;
+    id: string;
+  };
   user: (typeof authClient.$Infer.Session)["user"];
 }
 
 export const SettingsNavigation: React.FC<SettingsNavigationProps> = ({
-  organizationName,
-  organizationSlug,
+  organization,
   user,
 }) => {
   return (
@@ -31,7 +34,10 @@ export const SettingsNavigation: React.FC<SettingsNavigationProps> = ({
           className="items-center gap-2 border-0"
           variant="tertiary"
         >
-          <Link params={{ organizationSlug }} to="/$organizationSlug">
+          <Link
+            params={{ organizationSlug: organization.slug }}
+            to="/$organizationSlug"
+          >
             <Clickable.Icon>
               <ArrowLeftIcon />
             </Clickable.Icon>
@@ -48,34 +54,40 @@ export const SettingsNavigation: React.FC<SettingsNavigationProps> = ({
             <Sidebar.NavLink
               icon={User2Icon}
               label="Profile"
-              params={{ organizationSlug }}
+              params={{ organizationSlug: organization.slug }}
               to="/$organizationSlug/settings/profile"
+            />
+            <Sidebar.NavLink
+              icon={BuildingIcon}
+              label="Organizations"
+              params={{ organizationSlug: organization.slug }}
+              to="/$organizationSlug/settings/organizations"
             />
             <Sidebar.NavLink
               icon={SmartphoneIcon}
               label="Devices & Sessions"
-              params={{ organizationSlug }}
+              params={{ organizationSlug: organization.slug }}
               to="/$organizationSlug/settings/sessions"
             />
           </Sidebar.Group>
-          <Sidebar.Group label={organizationName}>
+          <Sidebar.Group label={organization.name}>
             <Sidebar.NavLink
               icon={NotebookTextIcon}
               label="Details"
-              params={{ organizationSlug }}
+              params={{ organizationSlug: organization.slug }}
               to="/$organizationSlug/settings/details"
             />
             <Sidebar.NavLink
               icon={Users2}
               label="Members"
-              params={{ organizationSlug }}
+              params={{ organizationSlug: organization.slug }}
               to="/$organizationSlug/settings/members"
             />
           </Sidebar.Group>
         </div>
       </Sidebar.ScrollArea>
       <Sidebar.Footer className="flex gap-1 p-2">
-        <UserMenu organizationSlug={organizationSlug} user={user} />
+        <UserMenu organizationSlug={organization.slug} user={user} />
         <NotificationsList />
       </Sidebar.Footer>
     </Sidebar.Root>

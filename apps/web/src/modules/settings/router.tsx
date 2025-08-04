@@ -5,5 +5,6 @@ export default [
   route("/sessions", "settings/pages/sessions/page.tsx"),
   route("/members", "settings/pages/members/page.tsx"),
   route("/details", "settings/pages/details/page.tsx"),
+  route("/organizations", "settings/pages/organizations/page.tsx"),
   route("/$", "settings/pages/splat/page.tsx"),
 ];

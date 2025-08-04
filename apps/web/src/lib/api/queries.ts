@@ -35,7 +35,44 @@ export const organizationsQuery = () =>
   queryOptions({
     queryKey: ["organizations"],
     queryFn: async () => {
-      const response = await authClient.organization.list();
+      const response = await api.organizations.$get();
+
+      const json = await response.json();
+
+      if (!json.success) {
+        throw json.error;
+      }
+
+      return json.data;
+    },
+  });
+
+export const invitationsQuery = () => {
+  return queryOptions({
+    queryKey: ["invitations"],
+    queryFn: async () => {
+      const response = await api.invitations.$get();
+
+      const json = await response.json();
+
+      if (!json.success) {
+        throw json.error;
+      }
+
+      return json.data;
+    },
+  });
+};
+
+export const invitationQuery = (id: string) =>
+  queryOptions({
+    queryKey: ["invitation", id],
+    queryFn: async ({ queryKey }) => {
+      const response = await authClient.organization.getInvitation({
+        query: {
+          id: queryKey[1],
+        },
+      });
 
       if (response.error) {
         throw response.error;
@@ -43,7 +80,6 @@ export const organizationsQuery = () =>
 
       return response.data;
     },
-    staleTime: 1000 * 30,
   });
 
 export const organizationQuery = (id: string) =>

@@ -1,9 +1,12 @@
 import "dotenv/config";
 import { Config } from "@config";
 import { AssetsHandler } from "@domain/assets";
-import { AuthHandler, authMiddleware } from "@domain/auth";
+import { AuthHandler } from "@domain/auth";
 import { BoardHandler } from "@domain/board";
-import { organizationMiddleware } from "@domain/organizaiton";
+import {
+  OrganizationHandler,
+  organizationMiddleware,
+} from "@domain/organizaiton";
 import { PostHandler } from "@domain/post";
 import { PublicHandler } from "@domain/public";
 import { TagHandler } from "@domain/tag";
@@ -12,6 +15,7 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import "@domain/editor";
+import { InvitationHandler } from "@domain/invitation";
 
 export const app = new Hono()
   .use(async (_, next) => {
@@ -32,14 +36,17 @@ export const app = new Hono()
   )
   .route("/auth", AuthHandler)
   .route("/assets", AssetsHandler)
+  .route("/invitations", InvitationHandler)
   .route(
-    "/organizations/:organizationId",
-    new Hono()
-      .use(authMiddleware({ required: true }))
-      .use(organizationMiddleware)
-      .route("/posts", PostHandler)
-      .route("/tags", TagHandler)
-      .route("/boards", BoardHandler)
+    "/organizations",
+    OrganizationHandler.route(
+      "/:organizationId",
+      new Hono()
+        .use(organizationMiddleware)
+        .route("/posts", PostHandler)
+        .route("/tags", TagHandler)
+        .route("/boards", BoardHandler)
+    )
   );
 
 serve(

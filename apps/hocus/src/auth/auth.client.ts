@@ -3,7 +3,7 @@ import { Database } from "@database";
 import { KV } from "@kv";
 import { createServerAuth, drizzleAdapter } from "@mono/auth/server";
 
-export const auth = createServerAuth({
+export const auth: ReturnType<typeof createServerAuth> = createServerAuth({
   baseURL: Config.self.base,
   basePath: "/auth",
   database: drizzleAdapter(Database, {

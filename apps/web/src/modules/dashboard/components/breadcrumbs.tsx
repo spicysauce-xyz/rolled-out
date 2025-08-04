@@ -1,6 +1,5 @@
 import { Transition } from "@components/transition";
 import { organizationsQuery } from "@lib/api/queries";
-import type { authClient } from "@lib/auth";
 import { Avatar, DropdownMenu, LinkButton, Skeleton, Text } from "@mono/ui";
 import { useDisclosure } from "@mono/ui/hooks";
 import { cn } from "@mono/ui/utils";
@@ -17,7 +16,11 @@ import { match } from "ts-pattern";
 import { NewOrganizationDialog } from "./new-organization-dialog";
 
 interface OrganizationSelectorProps {
-  organization: typeof authClient.$Infer.Organization;
+  organization: {
+    name: string;
+    logo: string | null;
+    slug: string;
+  };
 }
 
 const OrganizationSelector = ({ organization }: OrganizationSelectorProps) => {
@@ -141,7 +144,12 @@ const OrganizationSelector = ({ organization }: OrganizationSelectorProps) => {
 };
 
 interface BreadcrumbsProps {
-  organization: typeof authClient.$Infer.Organization;
+  organization: {
+    name: string;
+    logo: string | null;
+    slug: string;
+    id: string;
+  };
   page: string;
 }
 

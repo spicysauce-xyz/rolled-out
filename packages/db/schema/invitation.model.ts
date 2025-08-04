@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import { pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 import { organization } from "./organization.model";
 import { user } from "./user.model";
@@ -19,3 +20,14 @@ export const invitation = pgTable("invitation", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
+
+export const invitationRelations = relations(invitation, ({ one }) => ({
+  organization: one(organization, {
+    fields: [invitation.organizationId],
+    references: [organization.id],
+  }),
+  inviter: one(user, {
+    fields: [invitation.inviterId],
+    references: [user.id],
+  }),
+}));
