@@ -4,6 +4,7 @@ export * from "./board-tag.model";
 export * from "./editor.model";
 export * from "./invitation.model";
 export * from "./member.model";
+export * from "./notification.model";
 export * from "./organization.model";
 export * from "./post.model";
 export * from "./post-tag.model";

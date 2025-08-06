@@ -10,9 +10,7 @@ import { match } from "ts-pattern";
 import { z } from "zod";
 import { useUpdateUserMutation } from "./hooks/use-update-user-mutation";
 
-export const Route = createFileRoute(
-  "/_authorized/_has-organization/$organizationSlug/settings/profile"
-)({
+export const Route = createFileRoute("/_authorized/account/profile")({
   component: RouteComponent,
 });
 

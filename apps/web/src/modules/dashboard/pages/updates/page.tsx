@@ -3,7 +3,7 @@ import { Transition } from "@components/transition";
 import { updatesQuery } from "@lib/api/queries";
 import { Breadcrumbs } from "@modules/dashboard/components/breadcrumbs";
 import { useCreateUpdateMutation } from "@modules/dashboard/hooks/use-create-update-mutation";
-import { LinkButton, Text } from "@mono/ui";
+import { Button, Text } from "@mono/ui";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { PlusIcon } from "lucide-react";
@@ -40,17 +40,21 @@ function RouteComponent() {
 
   return (
     <Page.Wrapper>
-      <Page.Header className="justify-between">
-        <Breadcrumbs organization={organization} page="Updates" />
-        <LinkButton.Root
-          isDisabled={createPostMutation.isPending}
+      <Page.Header className="justify-between py-2">
+        <Breadcrumbs page="Updates" />
+        <Button.Root
+          isLoading={createPostMutation.isPending}
           onClick={handleCreatePost}
+          size="sm"
+          variant="tertiary"
         >
-          <LinkButton.Icon>
+          <Button.Icon>
             <PlusIcon />
-          </LinkButton.Icon>
-          New Update
-        </LinkButton.Root>
+          </Button.Icon>
+          <Text.Root size="sm" weight="medium">
+            New Update
+          </Text.Root>
+        </Button.Root>
       </Page.Header>
       <Page.Content className="flex-1 gap-0 p-0">
         <Transition.Root>

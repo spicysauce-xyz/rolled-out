@@ -2,7 +2,7 @@ import { Database } from "@database";
 import { authMiddleware } from "@domain/auth";
 import { member } from "@mono/db";
 import { notOk, ok } from "@utils/network";
-import { eq } from "drizzle-orm";
+import { asc, eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { ResultAsync } from "neverthrow";
 
@@ -14,6 +14,7 @@ export const OrganizationHandler = new Hono()
     return ResultAsync.fromPromise(
       Database.query.member.findMany({
         where: eq(member.userId, user.id),
+        orderBy: [asc(member.createdAt)],
         columns: {
           role: true,
         },

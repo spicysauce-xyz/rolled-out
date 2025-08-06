@@ -21,9 +21,7 @@ import { UAParser } from "ua-parser-js";
 import { useTerminateOtherSessionsMutation } from "./hooks/use-terminate-other-sessions-mutation";
 import { useTerminateSessionMutation } from "./hooks/use-terminate-session-mutation";
 
-export const Route = createFileRoute(
-  "/_authorized/_has-organization/$organizationSlug/settings/sessions"
-)({
+export const Route = createFileRoute("/_authorized/account/sessions")({
   component: RouteComponent,
 });
 

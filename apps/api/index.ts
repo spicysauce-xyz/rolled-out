@@ -16,6 +16,7 @@ import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import "@domain/editor";
 import { InvitationHandler } from "@domain/invitation";
+import { NotificationHandler } from "@domain/notification";
 
 export const app = new Hono()
   .use(async (_, next) => {
@@ -37,6 +38,7 @@ export const app = new Hono()
   .route("/auth", AuthHandler)
   .route("/assets", AssetsHandler)
   .route("/invitations", InvitationHandler)
+  .route("/notifications", NotificationHandler)
   .route(
     "/organizations",
     OrganizationHandler.route(

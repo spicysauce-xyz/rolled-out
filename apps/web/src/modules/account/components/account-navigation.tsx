@@ -2,22 +2,23 @@ import { Sidebar } from "@components/sidebar";
 import type { authClient } from "@lib/auth";
 import { UserMenu } from "@modules/shared/components/user-menu";
 import { Clickable, Text } from "@mono/ui";
-import { Link } from "@tanstack/react-router";
-import { ArrowLeftIcon, NotebookTextIcon, Users2 } from "lucide-react";
+import { Link, useSearch } from "@tanstack/react-router";
+import {
+  ArrowLeftIcon,
+  Building2Icon,
+  NotebookTextIcon,
+  Users2,
+} from "lucide-react";
 
-interface SettingsNavigationProps {
-  organization: {
-    name: string;
-    slug: string;
-    id: string;
-  };
+interface AccountNavigationProps {
   user: (typeof authClient.$Infer.Session)["user"];
 }
 
-export const SettingsNavigation: React.FC<SettingsNavigationProps> = ({
-  organization,
+export const AccountNavigation: React.FC<AccountNavigationProps> = ({
   user,
 }) => {
+  const { organization } = useSearch({ from: "/_authorized/account" });
+
   return (
     <Sidebar.Root className="hidden w-64 bg-neutral-50 sm:flex">
       <Sidebar.Header>
@@ -27,7 +28,7 @@ export const SettingsNavigation: React.FC<SettingsNavigationProps> = ({
           variant="tertiary"
         >
           <Link
-            params={{ organizationSlug: organization.slug }}
+            params={{ organizationSlug: organization ?? "" }}
             to="/$organizationSlug"
           >
             <Clickable.Icon>
@@ -43,20 +44,26 @@ export const SettingsNavigation: React.FC<SettingsNavigationProps> = ({
         <Sidebar.Group>
           <Sidebar.NavLink
             icon={NotebookTextIcon}
-            label="Details"
-            params={{ organizationSlug: organization.slug }}
-            to="/$organizationSlug/settings/details"
+            label="Profile"
+            search={{ organization }}
+            to="/account/profile"
           />
           <Sidebar.NavLink
             icon={Users2}
-            label="Members"
-            params={{ organizationSlug: organization.slug }}
-            to="/$organizationSlug/settings/members"
+            label="Sessions"
+            search={{ organization }}
+            to="/account/sessions"
+          />
+          <Sidebar.NavLink
+            icon={Building2Icon}
+            label="Organizations"
+            search={{ organization }}
+            to="/account/organizations"
           />
         </Sidebar.Group>
       </Sidebar.ScrollArea>
       <Sidebar.Footer>
-        <UserMenu currentOrganizationSlug={organization.slug} user={user} />
+        <UserMenu currentOrganizationSlug={organization} user={user} />
       </Sidebar.Footer>
     </Sidebar.Root>
   );

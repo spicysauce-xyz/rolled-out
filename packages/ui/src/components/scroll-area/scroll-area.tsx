@@ -14,7 +14,7 @@ const ScrollAreaRoot = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof RadixScrollAreaRoot>
 >(({ className, children, ...props }, ref) => (
   <RadixScrollAreaRoot
-    className={cn("relative flex-1 overflow-hidden", className)}
+    className={cn("relative flex flex-1 overflow-hidden", className)}
     ref={ref}
     {...props}
   >
@@ -28,7 +28,7 @@ const ScrollAreaViewport = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
   <RadixScrollAreaViewport
     className={cn(
-      "[&>div]:!flex h-full w-full flex-1 rounded-[inherit] outline-0 [&>div]:min-h-full [&>div]:min-w-full [&>div]:flex-col",
+      "[&>div]:!flex w-full rounded-[inherit] outline-0 [&>div]:min-h-full [&>div]:min-w-full [&>div]:flex-col",
       className
     )}
     ref={ref}

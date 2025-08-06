@@ -93,7 +93,7 @@ const DropdownMenuSubContent = React.forwardRef<
       )}
       hideWhenDetached
       ref={ref}
-      sideOffset={16}
+      sideOffset={4}
       {...props}
     >
       <ScrollArea.Root>
@@ -135,7 +135,7 @@ const DropdownMenuContent = React.forwardRef<
       collisionPadding={8}
       hideWhenDetached
       ref={ref}
-      sideOffset={8}
+      sideOffset={4}
       {...props}
     >
       <ScrollArea.Root>

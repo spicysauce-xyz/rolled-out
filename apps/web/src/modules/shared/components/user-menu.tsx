@@ -1,5 +1,6 @@
 import { Confirmer } from "@components/confirmer";
 import type { authClient } from "@lib/auth";
+import { config } from "@lib/config";
 import { useLogoutMutation } from "@modules/auth/hooks/use-logout-mutation";
 import { Avatar, Clickable, DropdownMenu, Text } from "@mono/ui";
 import { Link } from "@tanstack/react-router";
@@ -11,13 +12,13 @@ import {
 } from "lucide-react";
 
 interface UserMenuProps {
-  organizationSlug: string;
   user: (typeof authClient.$Infer.Session)["user"];
+  currentOrganizationSlug?: string;
 }
 
 export const UserMenu: React.FC<UserMenuProps> = ({
-  organizationSlug,
   user,
+  currentOrganizationSlug,
 }) => {
   const logoutMutation = useLogoutMutation();
 
@@ -43,7 +44,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
         <Clickable.Root
-          className="flex h-9 w-full items-center px-2 hover:bg-neutral-100"
+          className="flex h-9 w-full items-center px-2 hover:bg-neutral-100 focus-visible:bg-neutral-100"
           variant="tertiary"
         >
           <div className="flex items-center gap-2">
@@ -57,7 +58,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({
           </Clickable.Icon>
         </Clickable.Root>
       </DropdownMenu.Trigger>
-      <DropdownMenu.Content align="end" side="right">
+      <DropdownMenu.Content align="start" side="top">
         <div className="flex items-center gap-2 px-4 py-2">
           <Avatar.Root>
             <Avatar.Image src={user.image || ""} />
@@ -82,8 +83,8 @@ export const UserMenu: React.FC<UserMenuProps> = ({
         <DropdownMenu.Separator />
         <DropdownMenu.Item asChild>
           <Link
-            params={{ organizationSlug }}
-            to="/$organizationSlug/settings/profile"
+            search={{ organization: currentOrganizationSlug }}
+            to="/account/profile"
           >
             <DropdownMenu.ItemIcon>
               <SettingsIcon />
@@ -97,6 +98,17 @@ export const UserMenu: React.FC<UserMenuProps> = ({
           </DropdownMenu.ItemIcon>
           Logout
         </DropdownMenu.Item>
+        <DropdownMenu.Separator />
+        <Text.Root asChild className="px-4 py-1" color="muted" size="xs">
+          <a
+            className="hover:underline"
+            href={`https://github.com/spicysauce-xyz/rolled-out/releases/tag/${config.version}`}
+            rel="noreferrer"
+            target="_blank"
+          >
+            Version: {config.version}
+          </a>
+        </Text.Root>
       </DropdownMenu.Content>
     </DropdownMenu.Root>
   );

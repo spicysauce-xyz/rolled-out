@@ -2,7 +2,6 @@ import useAppForm from "@lib/form";
 import { useCreateOrganizationMutation } from "@modules/dashboard/hooks/use-create-organization-mutation";
 import { useCheckSlugMutation } from "@modules/settings/pages/details/hooks/use-check-slug-mutation";
 import { Button, Dialog, Input, Label } from "@mono/ui";
-import { useNavigate } from "@tanstack/react-router";
 import { Loader2Icon } from "lucide-react";
 import { useEffect } from "react";
 import { z } from "zod";
@@ -16,8 +15,6 @@ export const NewOrganizationDialog: React.FC<NewOrganizationDialogProps> = ({
   isOpen,
   onOpenChange,
 }) => {
-  const navigate = useNavigate();
-
   const createOrganizationMutation = useCreateOrganizationMutation();
 
   const checkSlugMutation = useCheckSlugMutation();
@@ -41,14 +38,6 @@ export const NewOrganizationDialog: React.FC<NewOrganizationDialogProps> = ({
         },
         {
           onSuccess: () => {
-            navigate({
-              to: ".",
-              replace: true,
-              params: {
-                organizationSlug: value.slug,
-              },
-            });
-
             formApi.reset();
 
             onOpenChange(false);

@@ -148,16 +148,20 @@ const SidebarButton = React.forwardRef<
 });
 
 type SidebarLinkProps = React.HTMLAttributes<HTMLAnchorElement> &
-  LinkComponentProps & { icon?: LucideIcon; label: string };
+  LinkComponentProps & {
+    icon?: LucideIcon;
+    label: string;
+    hideLinkIcon?: boolean;
+  };
 
 const SidebarLink = React.forwardRef<HTMLAnchorElement, SidebarLinkProps>(
-  ({ children, className, icon, label, ...props }, ref) => {
+  ({ children, className, icon, label, hideLinkIcon, ...props }, ref) => {
     const Icon = icon ?? CircleIcon;
 
     return (
       <Clickable.Root
         asChild
-        className="flex h-9 items-center border-0 px-2"
+        className="flex h-9 items-center border-0 px-2 not-aria-disabled:hover:bg-neutral-100 focus-visible:bg-neutral-100"
         variant="tertiary"
       >
         <a ref={ref} {...props}>
@@ -172,9 +176,11 @@ const SidebarLink = React.forwardRef<HTMLAnchorElement, SidebarLinkProps>(
             {label}
           </Text.Root>
           {children}
-          <Clickable.Icon className="ml-auto">
-            <ExternalLinkIcon />
-          </Clickable.Icon>
+          {!hideLinkIcon && (
+            <Clickable.Icon className="ml-auto">
+              <ExternalLinkIcon />
+            </Clickable.Icon>
+          )}
         </a>
       </Clickable.Root>
     );
@@ -188,7 +194,7 @@ const SidebarHeader = React.forwardRef<
   return (
     <div
       className={cn(
-        "flex items-center justify-between gap-2 border-neutral-100 border-b p-4",
+        "flex items-center justify-between gap-2 border-neutral-100 border-b p-2",
         className
       )}
       ref={ref}
@@ -240,7 +246,7 @@ const SidebarFooter = React.forwardRef<
 >(({ children, className, ...props }, ref) => {
   return (
     <div
-      className={cn("border-neutral-100 border-t p-4", className)}
+      className={cn("border-neutral-100 border-t p-2", className)}
       ref={ref}
       {...props}
     >

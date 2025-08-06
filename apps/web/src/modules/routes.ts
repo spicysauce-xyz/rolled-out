@@ -1,3 +1,4 @@
+import account from "@modules/account/router";
 import auth from "@modules/auth/router";
 import dashboard from "@modules/dashboard/router";
 import onboarding from "@modules/onboarding";
@@ -8,6 +9,7 @@ export const routes = rootRoute("root.tsx", [
   layout("auth/guards/guest-only.tsx", auth),
   layout("auth/guards/authorized.tsx", [
     route("/onboarding", onboarding),
+    route("/account", "account/layout.tsx", account),
     layout("dashboard/guards/has-organization.tsx", [
       index("dashboard/pages/index/page.tsx"),
       route(

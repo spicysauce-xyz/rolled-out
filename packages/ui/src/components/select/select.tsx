@@ -71,7 +71,7 @@ const SelectContent = React.forwardRef<
       )}
       position="popper"
       ref={ref}
-      sideOffset={8}
+      sideOffset={4}
       {...props}
     >
       <ScrollArea.Root type="scroll">

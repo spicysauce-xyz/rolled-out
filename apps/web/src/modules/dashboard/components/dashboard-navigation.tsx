@@ -2,7 +2,9 @@ import { Sidebar } from "@components/sidebar";
 import type { authClient } from "@lib/auth";
 import { getPublicUrl } from "@modules/dashboard/utils";
 import { NotificationsList } from "@modules/shared/components/notifications-list";
+import { OrganizationSwitch } from "@modules/shared/components/organization-switch";
 import { UserMenu } from "@modules/shared/components/user-menu";
+import { Clickable } from "@mono/ui";
 import {
   BellIcon,
   ExternalLinkIcon,
@@ -17,6 +19,9 @@ import {
 interface DashboardNavigationProps {
   user: (typeof authClient.$Infer.Session)["user"];
   organization: {
+    id: string;
+    name: string;
+    logo: string | null;
     slug: string;
   };
 }
@@ -27,47 +32,59 @@ export const DashboardNavigation: React.FC<DashboardNavigationProps> = ({
 }) => {
   return (
     <Sidebar.Root className="hidden w-64 bg-neutral-50 sm:flex">
-      <Sidebar.Header>
-        <Sidebar.Logo />
-        <Sidebar.Version />
-      </Sidebar.Header>
-      <Sidebar.ScrollArea>
-        <Sidebar.Group>
-          <Sidebar.NavLink
-            activeOptions={{ exact: true }}
-            icon={BellIcon}
-            label="Updates"
-            params={{ organizationSlug: organization.slug }}
-            to="/$organizationSlug"
-          />
-          <Sidebar.NavLink
-            icon={MailIcon}
-            isDisabled
-            label="Subscribers"
-            params={{ organizationSlug: organization.slug }}
-            to="/$organizationSlug/contacts"
-          />
-          <Sidebar.NavLink
-            icon={LineChartIcon}
-            isDisabled
-            label="Analytics"
-            params={{ organizationSlug: organization.slug }}
-            to="/$organizationSlug/analytics"
-          />
-          <Sidebar.NavLink
-            icon={SettingsIcon}
-            label="Settings"
-            params={{ organizationSlug: organization.slug }}
-            to="/$organizationSlug/settings/details"
-          />
-          <Sidebar.Link
+      <Sidebar.Header className="flex gap-1">
+        <OrganizationSwitch organization={organization} />
+        <Clickable.Root
+          asChild
+          className="flex size-9 shrink-0 items-center justify-center hover:bg-neutral-100 focus-visible:bg-neutral-100"
+          color="neutral"
+          variant="tertiary"
+        >
+          <a
             href={getPublicUrl(organization.slug)}
-            icon={ExternalLinkIcon}
-            label="Preview"
             rel="noopener noreferrer"
             target="_blank"
-          />
-        </Sidebar.Group>
+          >
+            <Clickable.Icon>
+              <ExternalLinkIcon />
+            </Clickable.Icon>
+          </a>
+        </Clickable.Root>
+      </Sidebar.Header>
+      <Sidebar.ScrollArea>
+        <div className="flex flex-col gap-4">
+          <Sidebar.Group>
+            <Sidebar.NavLink
+              activeOptions={{ exact: true }}
+              icon={BellIcon}
+              label="Updates"
+              params={{ organizationSlug: organization.slug }}
+              to="/$organizationSlug"
+            />
+            <Sidebar.NavLink
+              icon={MailIcon}
+              isDisabled
+              label="Subscribers"
+              params={{ organizationSlug: organization.slug }}
+              to="/$organizationSlug/contacts"
+            />
+            <Sidebar.NavLink
+              icon={LineChartIcon}
+              isDisabled
+              label="Analytics"
+              params={{ organizationSlug: organization.slug }}
+              to="/$organizationSlug/analytics"
+            />
+          </Sidebar.Group>
+          <Sidebar.Group label="Workspace">
+            <Sidebar.NavLink
+              icon={SettingsIcon}
+              label="Settings"
+              params={{ organizationSlug: organization.slug }}
+              to="/$organizationSlug/settings/details"
+            />
+          </Sidebar.Group>
+        </div>
         {/* <Sidebar.Group label="Boards">
             <NewBoardDialog
               isOpen={newBoardDialog.isOpen}
@@ -149,8 +166,8 @@ export const DashboardNavigation: React.FC<DashboardNavigationProps> = ({
           <Sidebar.Link href="#" icon={HelpCircleIcon} label="Support" />
         </Sidebar.Group>
       </Sidebar.ScrollArea>
-      <Sidebar.Footer className="flex gap-1 p-2">
-        <UserMenu organizationSlug={organization.slug} user={user} />
+      <Sidebar.Footer className="flex gap-1">
+        <UserMenu currentOrganizationSlug={organization.slug} user={user} />
         <NotificationsList />
       </Sidebar.Footer>
     </Sidebar.Root>

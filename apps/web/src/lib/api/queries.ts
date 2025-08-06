@@ -1,5 +1,5 @@
 import { authClient } from "@lib/auth";
-import { queryOptions } from "@tanstack/react-query";
+import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
 import { api } from ".";
 
 export const sessionQuery = () =>
@@ -226,5 +226,49 @@ export const boardPostsQuery = (organizationId: string, boardId: string) =>
       }
 
       return json.data;
+    },
+  });
+
+export const notificationsStatusQuery = () =>
+  queryOptions({
+    queryKey: ["notifications-status"],
+    queryFn: async () => {
+      const response = await api.notifications.status.$get();
+
+      const json = await response.json();
+
+      if (!json.success) {
+        throw json.error;
+      }
+
+      return json.data;
+    },
+  });
+
+export const notificationsQuery = (limit: number) =>
+  infiniteQueryOptions({
+    queryKey: ["notifications"],
+    queryFn: async ({ pageParam = 0 }) => {
+      const response = await api.notifications.$get({
+        query: {
+          limit: limit.toString(),
+          offset: pageParam.toString(),
+        },
+      });
+
+      const json = await response.json();
+
+      if (!json.success) {
+        throw json.error;
+      }
+
+      return json.data;
+    },
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, pages) => {
+      const itemsLength = pages.flat().length;
+      const lastPageItemsLength = lastPage.length;
+
+      return lastPageItemsLength === limit ? itemsLength : undefined;
     },
   });
