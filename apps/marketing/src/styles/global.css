@@ -8,6 +8,7 @@
 
 @source "../pages";
 @source "../components";
+@source "../modules";
 @source "../../../../packages/ui/**/*.{ts,tsx}";
 
 html {

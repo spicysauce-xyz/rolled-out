@@ -59,7 +59,9 @@ export const buttonGroupVariants = tv({
     },
     active: {
       true: {
-        item: ["bg-neutral-50 text-neutral-900"],
+        item: [
+          "bg-neutral-50 text-neutral-900 hover:text-neutral-900 focus-visible:text-neutral-900",
+        ],
         icon: [
           // base
           "text-neutral-900",
