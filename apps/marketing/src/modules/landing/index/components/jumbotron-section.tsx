@@ -1,6 +1,6 @@
 import { LandingSection } from "@components/section";
 import { useGSAP } from "@gsap/react";
-import { Button } from "@mono/ui";
+import { Button, Text } from "@mono/ui";
 import { gsap } from "gsap";
 import { ArrowRightIcon } from "lucide-react";
 import { useRef } from "react";
@@ -102,6 +102,108 @@ export const JumbotronSection = () => {
                   "url(https://cdn.dribbble.com/userupload/8490108/file/original-d8b02f177cb6bc660f1bf5a4456a92de.png?resize=2048x1536&vertical=center)",
               }}
             />
+          </div>
+        </div>
+        <div className="flex w-full flex-col gap-6">
+          <Text.Root
+            className="text-balance"
+            size="xs"
+            variant="display"
+            weight="medium"
+          >
+            Trusted by 100+ companies
+          </Text.Root>
+          <div className="grid grid-cols-10 gap-4">
+            <div className="flex aspect-square w-full items-center justify-center rounded-md bg-neutral-50 p-4">
+              <div
+                className="h-full w-full bg-center bg-contain"
+                style={{
+                  backgroundImage:
+                    "url(https://registry.npmmirror.com/@lobehub/icons-static-png/latest/files/light/openai.png)",
+                }}
+              />
+            </div>
+            <div className="flex aspect-square w-full items-center justify-center rounded-md bg-neutral-50 p-4">
+              <div
+                className="h-full w-full bg-center bg-contain"
+                style={{
+                  backgroundImage:
+                    "url(https://registry.npmmirror.com/@lobehub/icons-static-png/latest/files/light/openai.png)",
+                }}
+              />
+            </div>
+            <div className="flex aspect-square w-full items-center justify-center rounded-md bg-neutral-50 p-4">
+              <div
+                className="h-full w-full bg-center bg-contain"
+                style={{
+                  backgroundImage:
+                    "url(https://registry.npmmirror.com/@lobehub/icons-static-png/latest/files/light/openai.png)",
+                }}
+              />
+            </div>
+            <div className="flex aspect-square w-full items-center justify-center rounded-md bg-neutral-50 p-4">
+              <div
+                className="h-full w-full bg-center bg-contain"
+                style={{
+                  backgroundImage:
+                    "url(https://registry.npmmirror.com/@lobehub/icons-static-png/latest/files/light/openai.png)",
+                }}
+              />
+            </div>
+            <div className="flex aspect-square w-full items-center justify-center rounded-md bg-neutral-50 p-4">
+              <div
+                className="h-full w-full bg-center bg-contain"
+                style={{
+                  backgroundImage:
+                    "url(https://registry.npmmirror.com/@lobehub/icons-static-png/latest/files/light/openai.png)",
+                }}
+              />
+            </div>
+            <div className="flex aspect-square w-full items-center justify-center rounded-md bg-neutral-50 p-4">
+              <div
+                className="h-full w-full bg-center bg-contain"
+                style={{
+                  backgroundImage:
+                    "url(https://registry.npmmirror.com/@lobehub/icons-static-png/latest/files/light/openai.png)",
+                }}
+              />
+            </div>
+            <div className="flex aspect-square w-full items-center justify-center rounded-md bg-neutral-50 p-4">
+              <div
+                className="h-full w-full bg-center bg-contain"
+                style={{
+                  backgroundImage:
+                    "url(https://registry.npmmirror.com/@lobehub/icons-static-png/latest/files/light/openai.png)",
+                }}
+              />
+            </div>
+            <div className="flex aspect-square w-full items-center justify-center rounded-md bg-neutral-50 p-4">
+              <div
+                className="h-full w-full bg-center bg-contain"
+                style={{
+                  backgroundImage:
+                    "url(https://registry.npmmirror.com/@lobehub/icons-static-png/latest/files/light/openai.png)",
+                }}
+              />
+            </div>
+            <div className="flex aspect-square w-full items-center justify-center rounded-md bg-neutral-50 p-4">
+              <div
+                className="h-full w-full bg-center bg-contain"
+                style={{
+                  backgroundImage:
+                    "url(https://registry.npmmirror.com/@lobehub/icons-static-png/latest/files/light/openai.png)",
+                }}
+              />
+            </div>
+            <div className="flex aspect-square w-full items-center justify-center rounded-md bg-neutral-50 p-4">
+              <div
+                className="h-full w-full bg-center bg-contain"
+                style={{
+                  backgroundImage:
+                    "url(https://registry.npmmirror.com/@lobehub/icons-static-png/latest/files/light/openai.png)",
+                }}
+              />
+            </div>
           </div>
         </div>
       </LandingSection.Content>
