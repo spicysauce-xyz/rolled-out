@@ -4,7 +4,7 @@ import _ from "lodash";
 import { SendIcon } from "lucide-react";
 import { useEffect } from "react";
 import { z } from "zod";
-import { useInviteMemberMutation } from "../hooks/use-invite-member-mutation";
+import { useInviteMemberMutation } from "../../settings/pages/members/hooks/use-invite-member-mutation";
 
 interface InviteMemberDialogProps {
   isOpen: boolean;

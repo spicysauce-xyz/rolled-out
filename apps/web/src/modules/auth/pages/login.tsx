@@ -40,7 +40,7 @@ function Login() {
 
   return (
     <div className="flex min-h-dvh flex-1 flex-col items-center justify-center bg-neutral-50">
-      <div className="flex w-full flex-col items-center gap-6 rounded-2xl p-6 sm:max-w-96">
+      <div className="flex w-full flex-col items-center gap-6 rounded-2xl border border-neutral-100 bg-white p-6 sm:max-w-96">
         <div className="flex w-full flex-col items-center gap-2">
           <Text.Root size="lg" weight="medium">
             Sign in to your account
@@ -97,14 +97,14 @@ function Login() {
                 size="lg"
                 type="submit"
               >
-                Send Magic Link
+                <span className="w-full text-center">Send Magic Link</span>
               </Button.Root>
             )}
           </form.Subscribe>
         </form>
         <div className="relative h-px w-full bg-neutral-100">
           <Text.Root
-            className="-translate-x-1/2 -translate-y-1/2 absolute top-1/2 left-1/2 bg-neutral-50 px-2"
+            className="-translate-x-1/2 -translate-y-1/2 absolute top-1/2 left-1/2 bg-white px-2"
             color="muted"
           >
             or
@@ -114,7 +114,7 @@ function Login() {
           <Button.Root
             className="w-full"
             color="neutral"
-            isDisabled={socialLoginMutation.isPending}
+            isDisabled
             isLoading={
               socialLoginMutation.isPending &&
               socialLoginMutation.variables.provider === "google"
@@ -123,12 +123,12 @@ function Login() {
             size="lg"
             variant="secondary"
           >
-            Continue with Google
+            <span className="w-full text-center">Continue with Google</span>
           </Button.Root>
           <Button.Root
             className="w-full"
             color="neutral"
-            isDisabled={socialLoginMutation.isPending}
+            isDisabled
             isLoading={
               socialLoginMutation.isPending &&
               socialLoginMutation.variables.provider === "github"
@@ -137,7 +137,7 @@ function Login() {
             size="lg"
             variant="secondary"
           >
-            Continue with GitHub
+            <span className="w-full text-center">Continue with GitHub</span>
           </Button.Root>
         </div>
       </div>

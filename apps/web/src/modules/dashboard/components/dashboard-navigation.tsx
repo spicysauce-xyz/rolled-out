@@ -1,9 +1,11 @@
 import { Sidebar } from "@components/sidebar";
 import { Transition } from "@components/transition";
 import type { authClient } from "@lib/auth";
-import { NotificationsList } from "@modules/shared/components/notifications-list";
-import { OrganizationSwitch } from "@modules/shared/components/organization-switch";
+import { NotificationsList } from "@modules/dashboard/components/notifications-list";
+import { OrganizationSwitch } from "@modules/dashboard/components/organization-switch";
+import { InviteMemberDialog } from "@modules/shared/components/invite-member-dialog";
 import { UserMenu } from "@modules/shared/components/user-menu";
+import { useDisclosure } from "@mono/ui/hooks";
 import { Link } from "@tanstack/react-router";
 import {
   BellIcon,
@@ -33,96 +35,103 @@ export const DashboardNavigation: React.FC<DashboardNavigationProps> = ({
   user,
   organization,
 }) => {
+  const inviteMemberDialog = useDisclosure();
+
   return (
-    <Sidebar.Root className="hidden w-64 bg-neutral-50 sm:flex">
-      <Sidebar.Header className="flex">
-        <OrganizationSwitch organization={organization} />
-      </Sidebar.Header>
-      <Sidebar.ScrollArea>
-        <div className="flex flex-col gap-4">
-          <Sidebar.Group>
-            <Sidebar.Button
-              icon={FileTextIcon}
-              label="Updates"
-              render={
-                <Link
-                  activeOptions={{ exact: true }}
-                  className="data-[status=active]:border data-[status=active]:border-neutral-100 data-[status=active]:bg-white data-[status=active]:[&>svg]:stroke-neutral-900"
-                  params={{ organizationSlug: organization.slug }}
-                  to="/$organizationSlug"
-                />
-              }
-            />
-            <Sidebar.Button
-              disabled
-              icon={MailIcon}
-              label="Subscribers"
-              render={
-                <Link
-                  activeOptions={{ exact: true }}
-                  className="data-[status=active]:text-accent-500 data-[status=active]:[&>svg]:stroke-accent-500"
-                  params={{ organizationSlug: organization.slug }}
-                  to="/$organizationSlug/contacts"
-                />
-              }
-            />
-            <Sidebar.Button
-              disabled
-              icon={LineChartIcon}
-              label="Analytics"
-              render={
-                <Link
-                  activeOptions={{ exact: true }}
-                  params={{ organizationSlug: organization.slug }}
-                  to="/$organizationSlug/analytics"
-                />
-              }
-            />
-          </Sidebar.Group>
-          <Sidebar.Group label="Workspace">
-            <NotificationsList
-              organizationId={organization.id}
-              render={(_, { unreadNotificationsCount }) => (
-                <Sidebar.Button icon={BellIcon} label="Notifications">
-                  <Transition.Root>
-                    {unreadNotificationsCount > 0 && (
-                      <Transition.Item
-                        className="ml-auto flex size-4 items-center justify-center rounded-xs bg-accent-500 text-white text-xs"
-                        key="unread-notifications-count"
-                      >
-                        {unreadNotificationsCount}
-                      </Transition.Item>
-                    )}
-                  </Transition.Root>
-                </Sidebar.Button>
-              )}
-            />
-            <Sidebar.Button icon={UserPlus2Icon} label="Invite Member" />
-            <Sidebar.Button
-              icon={ExternalLinkIcon}
-              label="My Board"
-              render={
-                <a
-                  href={getPublicUrl(organization.slug)}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                />
-              }
-            />
-            <Sidebar.Button
-              icon={SettingsIcon}
-              label="Settings"
-              render={
-                <Link
-                  activeOptions={{ exact: true }}
-                  params={{ organizationSlug: organization.slug }}
-                  to="/$organizationSlug/settings/details"
-                />
-              }
-            />
-          </Sidebar.Group>
-        </div>
-        {/* <Sidebar.Group label="Boards">
+    <>
+      <Sidebar.Root className="hidden w-64 bg-neutral-50 sm:flex">
+        <Sidebar.Header className="flex">
+          <OrganizationSwitch organization={organization} />
+        </Sidebar.Header>
+        <Sidebar.ScrollArea>
+          <div className="flex flex-col gap-4">
+            <Sidebar.Group>
+              <Sidebar.Button
+                icon={FileTextIcon}
+                label="Updates"
+                render={
+                  <Link
+                    activeOptions={{ exact: true }}
+                    className="data-[status=active]:border data-[status=active]:border-neutral-100 data-[status=active]:bg-white data-[status=active]:[&>svg]:stroke-neutral-900"
+                    params={{ organizationSlug: organization.slug }}
+                    to="/$organizationSlug"
+                  />
+                }
+              />
+              <Sidebar.Button
+                disabled
+                icon={MailIcon}
+                label="Subscribers"
+                render={
+                  <Link
+                    activeOptions={{ exact: true }}
+                    className="data-[status=active]:text-accent-500 data-[status=active]:[&>svg]:stroke-accent-500"
+                    params={{ organizationSlug: organization.slug }}
+                    to="/$organizationSlug/contacts"
+                  />
+                }
+              />
+              <Sidebar.Button
+                disabled
+                icon={LineChartIcon}
+                label="Analytics"
+                render={
+                  <Link
+                    activeOptions={{ exact: true }}
+                    params={{ organizationSlug: organization.slug }}
+                    to="/$organizationSlug/analytics"
+                  />
+                }
+              />
+            </Sidebar.Group>
+            <Sidebar.Group label="Workspace">
+              <NotificationsList
+                organizationId={organization.id}
+                render={(_, { unreadNotificationsCount }) => (
+                  <Sidebar.Button icon={BellIcon} label="Notifications">
+                    <Transition.Root>
+                      {unreadNotificationsCount > 0 && (
+                        <Transition.Item
+                          className="ml-auto flex size-4 items-center justify-center rounded-xs bg-accent-500 text-white text-xs"
+                          key="unread-notifications-count"
+                        >
+                          {unreadNotificationsCount}
+                        </Transition.Item>
+                      )}
+                    </Transition.Root>
+                  </Sidebar.Button>
+                )}
+              />
+              <Sidebar.Button
+                icon={UserPlus2Icon}
+                label="Invite Member"
+                onClick={inviteMemberDialog.toggle}
+              />
+              <Sidebar.Button
+                icon={ExternalLinkIcon}
+                label="My Board"
+                render={
+                  <a
+                    href={getPublicUrl(organization.slug)}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  />
+                }
+              />
+              <Sidebar.Button
+                icon={SettingsIcon}
+                label="Settings"
+                render={
+                  <Link
+                    activeOptions={{ exact: true }}
+                    params={{ organizationSlug: organization.slug }}
+                    to="/$organizationSlug/settings/details"
+                  />
+                }
+              />
+            </Sidebar.Group>
+          </div>
+          {/* <Sidebar.Group label="Boards">
             <NewBoardDialog
               isOpen={newBoardDialog.isOpen}
               onOpenChange={newBoardDialog.setOpen}
@@ -196,34 +205,40 @@ export const DashboardNavigation: React.FC<DashboardNavigationProps> = ({
                 ))}
             </Transition.Root>
           </Sidebar.Group> */}
-        <Sidebar.Fill />
-        <Sidebar.Group>
-          <Sidebar.Button
-            icon={MessageCircleIcon}
-            label="Feedback"
-            render={<a href="/" />}
-          >
-            <ExternalLinkIcon className="ml-auto" />
-          </Sidebar.Button>
-          <Sidebar.Button
-            icon={ListIcon}
-            label="Changelog"
-            render={<a href="/" />}
-          >
-            <ExternalLinkIcon className="ml-auto" />
-          </Sidebar.Button>
-          <Sidebar.Button
-            icon={HelpCircleIcon}
-            label="Support"
-            render={<a href="/" />}
-          >
-            <ExternalLinkIcon className="ml-auto" />
-          </Sidebar.Button>
-        </Sidebar.Group>
-      </Sidebar.ScrollArea>
-      <Sidebar.Footer className="flex gap-1">
-        <UserMenu currentOrganizationSlug={organization.slug} user={user} />
-      </Sidebar.Footer>
-    </Sidebar.Root>
+          <Sidebar.Fill />
+          <Sidebar.Group>
+            <Sidebar.Button
+              icon={MessageCircleIcon}
+              label="Feedback"
+              render={<a href="/" />}
+            >
+              <ExternalLinkIcon className="ml-auto" />
+            </Sidebar.Button>
+            <Sidebar.Button
+              icon={ListIcon}
+              label="Changelog"
+              render={<a href="/" />}
+            >
+              <ExternalLinkIcon className="ml-auto" />
+            </Sidebar.Button>
+            <Sidebar.Button
+              icon={HelpCircleIcon}
+              label="Support"
+              render={<a href="/" />}
+            >
+              <ExternalLinkIcon className="ml-auto" />
+            </Sidebar.Button>
+          </Sidebar.Group>
+        </Sidebar.ScrollArea>
+        <Sidebar.Footer className="flex gap-1">
+          <UserMenu currentOrganizationSlug={organization.slug} user={user} />
+        </Sidebar.Footer>
+      </Sidebar.Root>
+      <InviteMemberDialog
+        isOpen={inviteMemberDialog.isOpen}
+        onOpenChange={inviteMemberDialog.setOpen}
+        organizationId={organization.id}
+      />
+    </>
   );
 };

@@ -8,7 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { UserPlus2Icon } from "lucide-react";
 import { match } from "ts-pattern";
-import { InviteMemberDialog } from "./components/invite-member-dialog";
+import { InviteMemberDialog } from "../../../shared/components/invite-member-dialog";
 import { MembersList } from "./components/members-list";
 import { filterExpiredInvitations } from "./utils";
 
