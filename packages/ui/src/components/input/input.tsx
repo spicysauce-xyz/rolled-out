@@ -1,3 +1,4 @@
+import { AlertCircle } from "lucide-react";
 import React, { createContext, forwardRef } from "react";
 import type { VariantProps } from "tailwind-variants";
 import { tv } from "../../utils";
@@ -7,7 +8,7 @@ const inputVariants = tv({
   slots: {
     root: [
       // base
-      "group/input-root flex rounded-md border border-neutral-200 bg-white tracking-tight shadow-xs",
+      "group/input-root flex rounded-md border border-neutral-200 bg-white shadow-xs",
       // transition
       "transition-all",
       // hover
@@ -17,27 +18,22 @@ const inputVariants = tv({
     ],
     wrapper: [
       // base
-      "group/input-wrapper flex h-full flex-1 cursor-text items-center",
+      "group/input-wrapper flex h-full w-full flex-1 cursor-text items-center",
       // transition
       "transition-all",
     ],
     field: [
       // base
-      "h-full flex-1 outline-none",
+      "h-full flex-1 pb-px text-md outline-none",
       // transition
       "transition-all",
       // placeholder transition
       "placeholder:transition-all",
       // hover
-      "placeholder:text-neutral-400",
+      "placeholder:text-neutral-500",
     ],
-    text: [
-      //base
-      "shrink-0 select-none text-neutral-500",
-    ],
-    icon: [
-      "flex size-4 shrink-0 select-none items-center justify-center text-neutral-500",
-    ],
+    text: "shrink-0 select-none text-neutral-400 transition-colors",
+    icon: "flex size-4 shrink-0 select-none items-center justify-center text-neutral-400 transition-colors",
     divider: [
       // base
       "h-full w-[1px] shrink-0 bg-neutral-200",
@@ -52,28 +48,31 @@ const inputVariants = tv({
   variants: {
     size: {
       sm: {
-        root: ["h-9"],
-        wrapper: ["gap-2 px-2.5"],
-        field: ["text-sm"],
-        icon: "first:mr-0.5 last:ml-0.5",
-        text: "text-sm first:mr-0.5 last:ml-0.5",
+        root: ["h-8"],
+        wrapper: ["gap-2 px-2"],
       },
       md: {
-        root: ["h-10"],
-        wrapper: ["gap-2 px-3"],
-        field: ["text-sm"],
-        icon: "first:mr-1 last:ml-1",
-        text: "text-sm first:mr-1 last:ml-1",
+        root: ["h-9"],
+        wrapper: ["gap-2.5 px-2.5"],
       },
       lg: {
-        root: ["h-11"],
-        wrapper: ["gap-2 px-3.5"],
-        icon: "first:mr-1.5 last:ml-1.5",
-        text: "first:mr-1.5 last:ml-1.5",
+        root: ["h-10"],
+        wrapper: ["gap-3 px-3"],
       },
     },
     invalid: {
-      true: {
+      true: {},
+    },
+    disabled: {
+      true: {},
+    },
+  },
+  compoundVariants: [
+    {
+      invalid: true,
+      disabled: false,
+      class: {
+        field: "pr-6.5",
         root: [
           // base
           "border-danger-200",
@@ -84,9 +83,6 @@ const inputVariants = tv({
           // select
           "selection:bg-danger-200",
         ],
-        field: ["placeholder:text-danger-400"],
-        text: ["text-danger-500"],
-        icon: ["text-danger-500"],
         divider: [
           "bg-danger-200",
           // hover
@@ -96,19 +92,19 @@ const inputVariants = tv({
         ],
       },
     },
-    disabled: {
-      true: {
-        root: [
-          "select-none bg-neutral-50 shadow-none hover:border-neutral-200",
-        ],
-        wrapper: ["cursor-not-allowed"],
-        field: ["cursor-not-allowed text-neutral-400"],
-        text: ["text-neutral-400"],
-        icon: ["text-neutral-400"],
-        divider: ["group-hover/input-root:bg-neutral-200"],
+    {
+      disabled: true,
+      class: {
+        root: "select-none border-neutral-100 bg-neutral-100 shadow-none hover:border-neutral-100",
+        wrapper: "cursor-not-allowed",
+        field:
+          "cursor-not-allowed text-neutral-400 placeholder:text-neutral-400",
+        text: "text-neutral-400",
+        icon: "text-neutral-400",
+        divider: "bg-neutral-100 group-hover/input-root:bg-neutral-100",
       },
     },
-  },
+  ],
   defaultVariants: {
     size: "md",
   },
@@ -119,43 +115,50 @@ type InputSharedProps = VariantProps<typeof inputVariants>;
 const InputContext = createContext<InputSharedProps>({});
 const useInputContext = () => React.useContext(InputContext);
 
-type InputRootProps = React.HTMLAttributes<HTMLDivElement> &
+type InputRootProps = React.ComponentPropsWithRef<"div"> &
   Omit<InputSharedProps, "invalid" | "disabled"> & {
     isInvalid?: boolean;
     isDisabled?: boolean;
   };
 
-const InputRoot = forwardRef<HTMLInputElement, InputRootProps>(
-  ({ className, size, isInvalid, isDisabled, ...props }, ref) => {
-    const { root } = inputVariants({
-      size,
-      invalid: isInvalid,
-      disabled: isDisabled,
-    });
+const InputRoot: React.FC<InputRootProps> = ({
+  className,
+  size,
+  isInvalid,
+  isDisabled,
+  ref,
+  ...props
+}) => {
+  const { root } = inputVariants({
+    size,
+    invalid: isInvalid,
+    disabled: isDisabled,
+  });
 
-    const sharedProps = { size, invalid: isInvalid, disabled: isDisabled };
+  const sharedProps = { size, invalid: isInvalid, disabled: isDisabled };
 
-    return (
-      <InputContext.Provider value={sharedProps}>
-        <div ref={ref} {...props} className={root({ className })} />
-      </InputContext.Provider>
-    );
-  }
-);
+  return (
+    <InputContext.Provider value={sharedProps}>
+      <div ref={ref} {...props} className={root({ className })} />
+    </InputContext.Provider>
+  );
+};
 
-type InputWrapperProps = React.HTMLAttributes<HTMLLabelElement>;
+type InputWrapperProps = React.ComponentPropsWithRef<"label">;
 
-const InputWrapper = forwardRef<HTMLLabelElement, InputWrapperProps>(
-  ({ className, ...props }, ref) => {
-    const { size, invalid, disabled } = useInputContext();
-    const { wrapper } = inputVariants({ size, invalid, disabled });
+const InputWrapper: React.FC<InputWrapperProps> = ({
+  className,
+  ref,
+  ...props
+}) => {
+  const { size, invalid, disabled } = useInputContext();
+  const { wrapper } = inputVariants({ size, invalid, disabled });
 
-    return (
-      // biome-ignore lint/a11y/noLabelWithoutControl: input is wrapped in a label when used
-      <label ref={ref} {...props} className={wrapper({ className })} />
-    );
-  }
-);
+  return (
+    // biome-ignore lint/a11y/noLabelWithoutControl: input is wrapped in a label when used
+    <label ref={ref} {...props} className={wrapper({ className })} />
+  );
+};
 
 type InputFieldProps = React.InputHTMLAttributes<HTMLInputElement>;
 
@@ -165,48 +168,51 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
     const { field } = inputVariants({ size, invalid, disabled });
 
     return (
-      <input
-        ref={ref}
-        {...props}
-        className={field({ className })}
-        disabled={disabled}
-      />
+      <div className="relative flex flex-1 items-center overflow-hidden">
+        <input
+          ref={ref}
+          {...props}
+          className={field({ className })}
+          disabled={disabled}
+        />
+        {invalid && !disabled && (
+          <AlertCircle className="absolute right-0 size-4 text-danger-500" />
+        )}
+      </div>
     );
   }
 );
 
-type InputTextProps = Omit<React.HTMLAttributes<HTMLParagraphElement>, "color">;
+type InputTextProps = React.ComponentPropsWithRef<typeof Text.Root>;
 
-const InputText = forwardRef<HTMLParagraphElement, InputTextProps>(
-  ({ className, ...props }, ref) => {
-    const { size, invalid, disabled } = useInputContext();
-    const { text } = inputVariants({ size, invalid, disabled });
+const InputText: React.FC<InputTextProps> = ({ className, ref, ...props }) => {
+  const { size, invalid, disabled } = useInputContext();
+  const { text } = inputVariants({ size, invalid, disabled });
 
-    return <Text.Root ref={ref} {...props} className={text({ className })} />;
-  }
-);
+  return <Text.Root className={text({ className })} ref={ref} {...props} />;
+};
 
-type InputIconProps = React.HTMLAttributes<HTMLDivElement>;
+type InputIconProps = React.ComponentPropsWithRef<"div">;
 
-const InputIcon = forwardRef<HTMLDivElement, InputIconProps>(
-  ({ className, ...props }, ref) => {
-    const { size, invalid, disabled } = useInputContext();
-    const { icon } = inputVariants({ size, invalid, disabled });
+const InputIcon: React.FC<InputIconProps> = ({ className, ref, ...props }) => {
+  const { size, invalid, disabled } = useInputContext();
+  const { icon } = inputVariants({ size, invalid, disabled });
 
-    return <div ref={ref} {...props} className={icon({ className })} />;
-  }
-);
+  return <div ref={ref} {...props} className={icon({ className })} />;
+};
 
-type InputDividerProps = React.HTMLAttributes<HTMLDivElement>;
+type InputDividerProps = React.ComponentPropsWithRef<"div">;
 
-const InputDivider = forwardRef<HTMLDivElement, InputDividerProps>(
-  ({ className, ...props }, ref) => {
-    const { size, invalid, disabled } = useInputContext();
-    const { divider } = inputVariants({ size, invalid, disabled });
+const InputDivider: React.FC<InputDividerProps> = ({
+  className,
+  ref,
+  ...props
+}) => {
+  const { size, invalid, disabled } = useInputContext();
+  const { divider } = inputVariants({ size, invalid, disabled });
 
-    return <div ref={ref} {...props} className={divider({ className })} />;
-  }
-);
+  return <div ref={ref} {...props} className={divider({ className })} />;
+};
 
 export {
   InputRoot as Root,

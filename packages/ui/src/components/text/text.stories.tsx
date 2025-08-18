@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Text } from "./";
 
-const meta = {
+const meta: Meta = {
   title: "Components/Text",
   component: Text.Root,
   parameters: {
@@ -11,11 +11,6 @@ const meta = {
     children: "The quick brown fox jumps over the lazy dog",
   },
   argTypes: {
-    asChild: {
-      table: {
-        disable: true,
-      },
-    },
     variant: {
       control: "select",
       options: ["text", "display"],
@@ -33,7 +28,7 @@ const meta = {
       options: ["neutral", "accent", "danger", "warning", "success"],
     },
   },
-} satisfies Meta<typeof Text.Root>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;

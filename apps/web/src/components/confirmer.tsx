@@ -1,9 +1,7 @@
-import { AlertDialog, Button, Drawer, Input, Text } from "@mono/ui";
-import { useScreenBreakpoint } from "@mono/ui/hooks";
-import { cn } from "@mono/ui/utils";
+import { AlertDialog, Button, Input, Text } from "@mono/ui";
 import { produce } from "immer";
 import type { LucideIcon } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { create } from "zustand";
 
 interface Confirm {
@@ -59,13 +57,13 @@ const ConfirmAlert: React.FC<Confirm> = ({
   resolve,
   action,
 }: Confirm) => {
-  const isMobileScreen = useScreenBreakpoint({
-    breakpoint: "sm",
-    type: "max",
-  });
-
   const resolvedRef = useRef(false);
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    setOpen(true);
+  }, []);
+
   const [phraseConfirm, setPhraseConfirm] = useState("");
 
   const handleOpenChange = (value: boolean) => {
@@ -88,71 +86,6 @@ const ConfirmAlert: React.FC<Confirm> = ({
     }
   };
 
-  if (isMobileScreen) {
-    return (
-      <Drawer.Root onOpenChange={handleOpenChange} open={open}>
-        <Drawer.Body className="top-auto">
-          <Drawer.Header className={cn(!phrase && "border-b-0")}>
-            <Drawer.Title>{title}</Drawer.Title>
-            <Drawer.Description>{description}</Drawer.Description>
-            <Drawer.CloseX />
-          </Drawer.Header>
-          <form className="flex flex-col" onSubmit={(e) => e.preventDefault()}>
-            {!!phrase && (
-              <Drawer.Content>
-                <div className="flex flex-col gap-2">
-                  <Text.Root color="muted" size="sm">
-                    Type{" "}
-                    <Text.Root asChild size="sm" weight="medium">
-                      <span>{phrase}</span>
-                    </Text.Root>{" "}
-                    to confirm
-                  </Text.Root>
-                  <Input.Root className="w-full" size="sm">
-                    <Input.Wrapper>
-                      <Input.Field
-                        autoFocus
-                        onChange={(e) => setPhraseConfirm(e.target.value)}
-                        placeholder={phrase}
-                        type="text"
-                      />
-                    </Input.Wrapper>
-                  </Input.Root>
-                </div>
-              </Drawer.Content>
-            )}
-            <Drawer.Footer>
-              <Drawer.Close asChild>
-                <Button.Root size="sm" variant="secondary">
-                  Cancel
-                </Button.Root>
-              </Drawer.Close>
-              <Drawer.Close asChild>
-                <Button.Root
-                  autoFocus
-                  color={action?.color}
-                  isDisabled={!!phrase && phraseConfirm !== phrase}
-                  onClick={() => {
-                    resolvedRef.current = true;
-                    resolve(true);
-                  }}
-                  type="submit"
-                >
-                  {action?.icon && (
-                    <Button.Icon>
-                      <action.icon />
-                    </Button.Icon>
-                  )}
-                  {action?.label || "Confirm"}
-                </Button.Root>
-              </Drawer.Close>
-            </Drawer.Footer>
-          </form>
-        </Drawer.Body>
-      </Drawer.Root>
-    );
-  }
-
   return (
     <AlertDialog.Root onOpenChange={handleOpenChange} open={open}>
       <AlertDialog.Content>
@@ -161,19 +94,19 @@ const ConfirmAlert: React.FC<Confirm> = ({
           <AlertDialog.Description>{description}</AlertDialog.Description>
         </AlertDialog.Header>
         <form
-          className="flex flex-col sm:gap-4"
+          className="flex flex-col gap-6"
           onSubmit={(e) => e.preventDefault()}
         >
           {!!phrase && (
-            <div className="flex flex-col gap-2 border-neutral-100 border-y py-4">
-              <Text.Root color="muted" size="sm">
+            <div className="-mx-6 flex flex-col gap-2 border-neutral-100 border-y bg-neutral-50 px-6 py-4">
+              <Text.Root>
                 Type{" "}
-                <Text.Root asChild size="sm" weight="medium">
-                  <span>{phrase}</span>
+                <Text.Root color="accent" render={<span />} weight="medium">
+                  {phrase}
                 </Text.Root>{" "}
                 to confirm
               </Text.Root>
-              <Input.Root className="w-full" size="sm">
+              <Input.Root className="w-full">
                 <Input.Wrapper>
                   <Input.Field
                     autoFocus
@@ -197,11 +130,7 @@ const ConfirmAlert: React.FC<Confirm> = ({
               }}
               type="submit"
             >
-              {action?.icon && (
-                <Button.Icon>
-                  <action.icon />
-                </Button.Icon>
-              )}
+              {action?.icon && <Button.Icon render={<action.icon />} />}
               {action?.label || "Confirm"}
             </AlertDialog.Action>
           </AlertDialog.Footer>

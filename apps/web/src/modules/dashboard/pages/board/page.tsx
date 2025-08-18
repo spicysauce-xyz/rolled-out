@@ -50,7 +50,7 @@ function RouteComponent() {
   return (
     <Page.Wrapper>
       <Page.Header className="justify-between">
-        <Breadcrumbs organization={organization} page={board.name} />
+        <Breadcrumbs page={board.name} />
         <LinkButton.Root onClick={editBoardDialog.open}>
           <LinkButton.Icon>
             <SettingsIcon />
@@ -100,7 +100,6 @@ function RouteComponent() {
                       <Text.Root
                         className="max-w-96 text-balance text-center"
                         color="muted"
-                        size="sm"
                       >
                         No updates here yet. Only published updates with one of
                         the following tags will appear on this board:
@@ -117,7 +116,7 @@ function RouteComponent() {
                       ))}
                     </div>
                     <div className="flex items-center gap-2">
-                      <Button.Root size="sm" variant="secondary">
+                      <Button.Root variant="secondary">
                         <Button.Icon>
                           <BookOpenIcon />
                         </Button.Icon>
@@ -125,7 +124,6 @@ function RouteComponent() {
                       </Button.Root>
                       <Button.Root
                         onClick={editBoardDialog.open}
-                        size="sm"
                         variant="secondary"
                       >
                         <Button.Icon>

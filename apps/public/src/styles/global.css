@@ -1,7 +1,6 @@
 @layer theme, base, components, utilities;
 
 @import "@mono/ui/theme" layer(theme);
-@import "@mono/ui/plugins";
 @plugin "@tailwindcss/typography";
 
 @import "tailwindcss/preflight" layer(base) source(none);

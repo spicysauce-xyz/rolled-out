@@ -1,6 +1,6 @@
 import { Confirmer } from "@components/confirmer";
 import { useHasPermission } from "@modules/shared/hooks/use-has-permission";
-import { Button, DropdownMenu, Text } from "@mono/ui";
+import { DropdownMenu, IconButton, Text } from "@mono/ui";
 import _ from "lodash";
 import { EllipsisVerticalIcon, Trash2Icon, UserCog2Icon } from "lucide-react";
 import { useCallback } from "react";
@@ -85,20 +85,20 @@ export const MemberMenu = ({ member, organizationId }: MemberMenuProps) => {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
-        <Button.Root variant="tertiary">
-          <Button.Icon>
+        <IconButton.Root variant="tertiary">
+          <IconButton.Icon>
             <EllipsisVerticalIcon />
-          </Button.Icon>
-        </Button.Root>
+          </IconButton.Icon>
+        </IconButton.Root>
       </DropdownMenu.Trigger>
       <DropdownMenu.Content align="end">
         {updateMemberPermission.hasPermission && (
           <DropdownMenu.Sub>
             <DropdownMenu.SubTrigger>
-              <DropdownMenu.ItemIcon>
+              <DropdownMenu.Item.Icon>
                 <UserCog2Icon />
-              </DropdownMenu.ItemIcon>
-              <Text.Root asChild color="muted" size="sm" weight="medium">
+              </DropdownMenu.Item.Icon>
+              <Text.Root asChild color="muted" weight="medium">
                 <span>Role:</span>
               </Text.Root>{" "}
               {_.capitalize(member.role)}
@@ -111,21 +111,25 @@ export const MemberMenu = ({ member, organizationId }: MemberMenuProps) => {
                 value={member.role}
               >
                 {["owner", "admin", "member"].map((role) => (
-                  <DropdownMenu.RadioItem key={role} value={role}>
-                    {_.capitalize(role)}
-                  </DropdownMenu.RadioItem>
+                  <DropdownMenu.RadioItem.Root key={role} value={role}>
+                    <DropdownMenu.RadioItem.Content>
+                      {_.capitalize(role)}
+                    </DropdownMenu.RadioItem.Content>
+                  </DropdownMenu.RadioItem.Root>
                 ))}
               </DropdownMenu.RadioGroup>
             </DropdownMenu.SubContent>
           </DropdownMenu.Sub>
         )}
         {deleteMemberPermission.hasPermission && (
-          <DropdownMenu.Item onClick={handleRemoveMember}>
-            <DropdownMenu.ItemIcon>
-              <Trash2Icon />
-            </DropdownMenu.ItemIcon>
-            Remove Member
-          </DropdownMenu.Item>
+          <DropdownMenu.Item.Root onClick={handleRemoveMember}>
+            <DropdownMenu.Item.Content>
+              <DropdownMenu.Item.Icon>
+                <Trash2Icon />
+              </DropdownMenu.Item.Icon>
+              Remove Member
+            </DropdownMenu.Item.Content>
+          </DropdownMenu.Item.Root>
         )}
       </DropdownMenu.Content>
     </DropdownMenu.Root>

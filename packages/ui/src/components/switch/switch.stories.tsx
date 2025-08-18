@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Switch } from "./";
 
-const meta = {
+const meta: Meta = {
   title: "Components/Switch",
   component: Switch.Root,
   parameters: {
     layout: "centered",
   },
-} satisfies Meta<typeof Switch.Root>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;

@@ -1,295 +1,68 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Mail } from "lucide-react";
-import { Avatar } from "../avatar";
+import { MailIcon } from "lucide-react";
 import { Button } from "../button";
-import { Text } from "../text";
 import { Select } from "./";
 
-const meta = {
+const meta: Meta = {
   title: "Components/Select",
   component: Select.Root,
   parameters: {
     layout: "centered",
   },
-} satisfies Meta<typeof Select.Root>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+const values = [
+  {
+    label: "Option 0",
+    value: null,
+  },
+  {
+    label: "Option 1",
+    value: "1",
+  },
+  {
+    label: "Option 2",
+    value: "2",
+  },
+  {
+    label: "Option 3",
+    value: "3",
+  },
+  {
+    label: "Option 4",
+    value: "4",
+  },
+  {
+    label: "Option 5",
+    value: "5",
+  },
+  {
+    label: "Option 6",
+    value: "6",
+  },
+];
+
 export const Default: Story = {
   render: () => (
-    <Select.Root>
-      <Select.Trigger asChild>
-        <Button.Root variant="secondary">
-          <Select.Value placeholder="Select an option" />
-          <Button.Icon>
-            <Select.Icon />
-          </Button.Icon>
-        </Button.Root>
-      </Select.Trigger>
+    <Select.Root items={values}>
+      <Select.Trigger
+        render={
+          <Button.Root variant="secondary">
+            <Select.Value />
+            <Button.Icon render={<Select.Icon />} />
+          </Button.Root>
+        }
+      />
       <Select.Content>
-        <Select.Item value="1">
-          <Select.ItemText>
-            <Text.Root size="sm" weight="medium">
-              Option 1
-            </Text.Root>
-          </Select.ItemText>
-        </Select.Item>
-        <Select.Item value="2">
-          <Select.ItemText>
-            <Text.Root size="sm" weight="medium">
-              Option 2
-            </Text.Root>
-          </Select.ItemText>
-        </Select.Item>
-        <Select.Item value="3">
-          <Select.ItemText>
-            <Text.Root size="sm" weight="medium">
-              Option 3
-            </Text.Root>
-          </Select.ItemText>
-        </Select.Item>
-        <Select.Item value="4">
-          <Select.ItemText>
-            <Text.Root size="sm" weight="medium">
-              Option 4
-            </Text.Root>
-          </Select.ItemText>
-        </Select.Item>
-        <Select.Item value="5">
-          <Select.ItemText>
-            <Text.Root size="sm" weight="medium">
-              Option 5
-            </Text.Root>
-          </Select.ItemText>
-        </Select.Item>
-        <Select.Item value="6">
-          <Select.ItemText>
-            <Text.Root size="sm" weight="medium">
-              Option 6
-            </Text.Root>
-          </Select.ItemText>
-        </Select.Item>
-        <Select.Item value="7">
-          <Select.ItemText>
-            <Text.Root size="sm" weight="medium">
-              Option 7
-            </Text.Root>
-          </Select.ItemText>
-        </Select.Item>
-        <Select.Item value="8">
-          <Select.ItemText>
-            <Text.Root size="sm" weight="medium">
-              Option 8
-            </Text.Root>
-          </Select.ItemText>
-        </Select.Item>
-        <Select.Item value="9">
-          <Select.ItemText>
-            <Text.Root size="sm" weight="medium">
-              Option 9
-            </Text.Root>
-          </Select.ItemText>
-        </Select.Item>
-        <Select.Item value="10">
-          <Select.ItemText>
-            <Text.Root size="sm" weight="medium">
-              Option 10
-            </Text.Root>
-          </Select.ItemText>
-        </Select.Item>
-        <Select.Item value="11">
-          <Select.ItemText>
-            <Text.Root size="sm" weight="medium">
-              Option 11
-            </Text.Root>
-          </Select.ItemText>
-        </Select.Item>
-        <Select.Item value="12">
-          <Select.ItemText>
-            <Text.Root size="sm" weight="medium">
-              Option 12
-            </Text.Root>
-          </Select.ItemText>
-        </Select.Item>
-        <Select.Item value="13">
-          <Select.ItemText>
-            <Text.Root size="sm" weight="medium">
-              Option 13
-            </Text.Root>
-          </Select.ItemText>
-        </Select.Item>
-      </Select.Content>
-    </Select.Root>
-  ),
-};
-
-export const WithIcons: Story = {
-  render: () => (
-    <Select.Root>
-      <Select.Trigger asChild>
-        <Button.Root variant="secondary">
-          <Select.Value placeholder="Select an option" />
-          <Button.Icon>
-            <Select.Icon />
-          </Button.Icon>
-        </Button.Root>
-      </Select.Trigger>
-      <Select.Content>
-        <Select.Item value="1">
-          <Select.ItemIcon>
-            <Mail />
-          </Select.ItemIcon>
-          <Select.ItemText>
-            <Text.Root size="sm" weight="medium">
-              Option 1
-            </Text.Root>
-          </Select.ItemText>
-        </Select.Item>
-        <Select.Item value="2">
-          <Select.ItemIcon>
-            <Mail />
-          </Select.ItemIcon>
-          <Select.ItemText>
-            <Text.Root size="sm" weight="medium">
-              Option 2
-            </Text.Root>
-          </Select.ItemText>
-        </Select.Item>
-        <Select.Item value="3">
-          <Select.ItemIcon>
-            <Mail />
-          </Select.ItemIcon>
-          <Select.ItemText>
-            <Text.Root size="sm" weight="medium">
-              Option 3
-            </Text.Root>
-          </Select.ItemText>
-        </Select.Item>
-      </Select.Content>
-    </Select.Root>
-  ),
-};
-
-export const WithIconsInPreview: Story = {
-  render: () => (
-    <Select.Root>
-      <Select.Trigger asChild>
-        <Button.Root variant="secondary">
-          <Select.Value placeholder="Select an option" />
-          <Button.Icon>
-            <Select.Icon />
-          </Button.Icon>
-        </Button.Root>
-      </Select.Trigger>
-      <Select.Content>
-        <Select.Item value="1">
-          <Select.ItemText>
-            <div className="flex items-center gap-2">
-              <Select.ItemIcon>
-                <Mail />
-              </Select.ItemIcon>
-              <Text.Root size="sm" weight="medium">
-                Option 1
-              </Text.Root>
-            </div>
-          </Select.ItemText>
-        </Select.Item>
-        <Select.Item value="2">
-          <Select.ItemText>
-            <div className="flex items-center gap-2">
-              <Select.ItemIcon>
-                <Mail />
-              </Select.ItemIcon>
-              <Text.Root size="sm" weight="medium">
-                Option 2
-              </Text.Root>
-            </div>
-          </Select.ItemText>
-        </Select.Item>
-        <Select.Item value="3">
-          <Select.ItemText>
-            <div className="flex items-center gap-2">
-              <Select.ItemIcon>
-                <Mail />
-              </Select.ItemIcon>
-              <Text.Root size="sm" weight="medium">
-                Option 3
-              </Text.Root>
-            </div>
-          </Select.ItemText>
-        </Select.Item>
-      </Select.Content>
-    </Select.Root>
-  ),
-};
-
-export const WithAvatars: Story = {
-  render: () => (
-    <Select.Root>
-      <Select.Trigger asChild>
-        <Button.Root variant="secondary">
-          <Select.Value placeholder="Select an option" />
-          <Button.Icon>
-            <Select.Icon />
-          </Button.Icon>
-        </Button.Root>
-      </Select.Trigger>
-      <Select.Content>
-        <Select.Item value="1">
-          <Select.ItemText>
-            <div className="flex items-center gap-2">
-              <Avatar.Root className="size-6 rounded-full">
-                <Avatar.Image src="https://github.com/shadcn.png" />
-                <Avatar.Fallback>SH</Avatar.Fallback>
-              </Avatar.Root>
-              <div className="flex items-baseline gap-1">
-                <Text.Root size="sm" weight="medium">
-                  Shadcn
-                </Text.Root>
-                <Text.Root color="muted" size="xs">
-                  @shadcn
-                </Text.Root>
-              </div>
-            </div>
-          </Select.ItemText>
-        </Select.Item>
-        <Select.Item value="2">
-          <Select.ItemText>
-            <div className="flex items-center gap-2">
-              <Avatar.Root className="size-6 rounded-full">
-                <Avatar.Image src="https://github.com/johndoe.png" />
-                <Avatar.Fallback>JD</Avatar.Fallback>
-              </Avatar.Root>
-              <div className="flex items-baseline gap-1">
-                <Text.Root size="sm" weight="medium">
-                  John Doe
-                </Text.Root>
-                <Text.Root color="muted" size="xs">
-                  @johndoe
-                </Text.Root>
-              </div>
-            </div>
-          </Select.ItemText>
-        </Select.Item>
-        <Select.Item value="3">
-          <Select.ItemText>
-            <div className="flex items-center gap-2">
-              <Avatar.Root className="size-6 rounded-full">
-                <Avatar.Image src="https://github.com/janedoe.png" />
-                <Avatar.Fallback>JD</Avatar.Fallback>
-              </Avatar.Root>
-              <div className="flex items-baseline gap-1">
-                <Text.Root size="sm" weight="medium">
-                  Jane Doe
-                </Text.Root>
-                <Text.Root color="muted" size="xs">
-                  @janedoe
-                </Text.Root>
-              </div>
-            </div>
-          </Select.ItemText>
-        </Select.Item>
+        {values.map((value) => (
+          <Select.Item key={value.value} value={value.value}>
+            <Select.ItemIcon render={<MailIcon />} />
+            <Select.ItemText>{value.label}</Select.ItemText>
+          </Select.Item>
+        ))}
       </Select.Content>
     </Select.Root>
   ),

@@ -38,7 +38,6 @@ export const app = new Hono()
   .route("/auth", AuthHandler)
   .route("/assets", AssetsHandler)
   .route("/invitations", InvitationHandler)
-  .route("/notifications", NotificationHandler)
   .route(
     "/organizations",
     OrganizationHandler.route(
@@ -48,6 +47,7 @@ export const app = new Hono()
         .route("/posts", PostHandler)
         .route("/tags", TagHandler)
         .route("/boards", BoardHandler)
+        .route("/notifications", NotificationHandler)
     )
   );
 

@@ -1,33 +1,43 @@
-import { Slot } from "@radix-ui/react-slot";
+import { mergeProps } from "@base-ui-components/react/merge-props";
+import { useRender } from "@base-ui-components/react/use-render";
 import { Loader2 } from "lucide-react";
 import React from "react";
 import type { VariantProps } from "tailwind-variants";
-import type { AsChildProp } from "../../types";
 import { tv } from "../../utils";
+import { Transition } from "../transition/transition";
 
 export const buttonVariants = tv({
   slots: {
     root: [
       // base
-      "group/button-root relative inline-flex select-none overflow-hidden",
-      // hover
-      "transition-[background-color,border-color]",
+      "group/button-root relative flex select-none overflow-hidden rounded-md",
+      // transition
+      "transition-[background-color,border-color,color]",
       // focus
       "ring-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2",
       // active
       "active:inset-shadow-transparent active:shadow-none",
+      // icons
+      "[&_svg]:size-4 [&_svg]:shrink-0 [&_svg]:transition-colors",
     ],
-    content: [
-      "flex flex-1 items-center justify-center gap-2 whitespace-nowrap",
-    ],
-    icon: [
-      // base
-      "flex shrink-0 items-center justify-center [&>svg]:h-full [&>svg]:w-full",
-      // hover
-      "transition-colors",
-    ],
+    content:
+      "flex flex-1 items-center gap-2 whitespace-nowrap font-[450] text-md transition-opacity",
+    icon: "",
   },
   variants: {
+    variant: {
+      filled: {
+        root: "inset-shadow-default border text-white shadow-xs",
+      },
+      secondary: {
+        root: "inset-shadow-default border border-neutral-200 bg-white text-neutral-900 shadow-xs",
+        icon: "stroke-neutral-600",
+      },
+      tertiary: {
+        root: "border border-transparent text-neutral-900",
+        icon: "stroke-neutral-600",
+      },
+    },
     color: {
       neutral: {},
       accent: {},
@@ -35,43 +45,26 @@ export const buttonVariants = tv({
       warning: {},
       success: {},
     },
-    variant: {
-      filled: {
-        root: ["inset-shadow-default border shadow-xs"],
-      },
-      secondary: {
-        root: ["inset-shadow-default border bg-white shadow-xs"],
-      },
-      tertiary: {
-        root: ["border border-transparent"],
-      },
-    },
     size: {
       sm: {
-        root: ["h-9 rounded-md px-2.5"],
-        content: ["font-weight-500 text-sm"],
-        icon: ["size-4"],
+        root: ["h-8 rounded-md px-2"],
       },
       md: {
-        root: ["h-10 rounded-md px-3"],
-        content: ["font-weight-500 text-sm"],
-        icon: ["size-4"],
+        root: ["h-9 rounded-md px-2.5"],
       },
       lg: {
-        root: ["h-11 rounded-md px-3.5"],
-        content: ["font-weight-500 text-md"],
-        icon: ["size-4"],
-      },
-    },
-    loading: {
-      true: {
-        root: ["pointer-events-none"],
-        content: ["opacity-0"],
+        root: ["h-10 rounded-md px-3"],
       },
     },
     disabled: {
       true: {
-        root: ["cursor-not-allowed"],
+        root: "cursor-not-allowed",
+      },
+    },
+    loading: {
+      true: {
+        root: "pointer-events-none",
+        content: "opacity-0",
       },
     },
   },
@@ -81,18 +74,14 @@ export const buttonVariants = tv({
       variant: "filled",
       class: {
         root: [
-          "border-neutral-900 bg-neutral-900 text-white",
+          "border-neutral-900 bg-neutral-900",
           // hover
           "hover:border-neutral-950 hover:bg-neutral-950",
-          // focus
-          "focus-visible:border-neutral-950 focus-visible:bg-neutral-950",
         ],
         icon: [
-          "text-neutral-200",
+          "stroke-neutral-200",
           // hover
-          "group-hover/button-root:text-neutral-100",
-          // focus
-          "group-focus-visible/button-root:text-neutral-100",
+          "group-hover/button-root:stroke-neutral-100",
         ],
       },
     },
@@ -101,18 +90,14 @@ export const buttonVariants = tv({
       variant: "filled",
       class: {
         root: [
-          "border-accent-500 bg-accent-500 text-white",
+          "border-accent-500 bg-accent-500",
           // hover
           "hover:border-accent-600 hover:bg-accent-600",
-          // focus
-          "focus-visible:border-accent-600 focus-visible:bg-accent-600",
         ],
         icon: [
-          "text-accent-200",
+          "stroke-accent-200",
           // hover
-          "group-hover/button-root:text-accent-100",
-          // focus
-          "group-focus-visible/button-root:text-accent-100",
+          "group-hover/button-root:stroke-accent-100",
         ],
       },
     },
@@ -121,18 +106,14 @@ export const buttonVariants = tv({
       variant: "filled",
       class: {
         root: [
-          "border-danger-500 bg-danger-500 text-white",
+          "border-danger-500 bg-danger-500",
           // hover
           "hover:border-danger-600 hover:bg-danger-600",
-          // focus
-          "focus-visible:border-danger-600 focus-visible:bg-danger-600",
         ],
         icon: [
-          "text-danger-200",
+          "stroke-danger-200",
           // hover
-          "group-hover/button-root:text-danger-100",
-          // focus
-          "group-focus-visible/button-root:text-danger-100",
+          "group-hover/button-root:stroke-danger-100",
         ],
       },
     },
@@ -141,18 +122,14 @@ export const buttonVariants = tv({
       variant: "filled",
       class: {
         root: [
-          "border-warning-500 bg-warning-500 text-white",
+          "border-warning-500 bg-warning-500",
           // hover
           "hover:border-warning-600 hover:bg-warning-600",
-          // focus
-          "focus-visible:border-warning-600 focus-visible:bg-warning-600",
         ],
         icon: [
-          "text-warning-200",
+          "stroke-warning-200",
           // hover
-          "group-hover/button-root:text-warning-100",
-          // focus
-          "group-focus-visible/button-root:text-warning-100",
+          "group-hover/button-root:stroke-warning-100",
         ],
       },
     },
@@ -161,18 +138,14 @@ export const buttonVariants = tv({
       variant: "filled",
       class: {
         root: [
-          "border-success-500 bg-success-500 text-white",
+          "border-success-500 bg-success-500",
           // hover
           "hover:border-success-600 hover:bg-success-600",
-          // focus
-          "focus-visible:border-success-600 focus-visible:bg-success-600",
         ],
         icon: [
-          "text-success-200",
+          "stroke-success-200",
           // hover
-          "group-hover/button-root:text-success-100",
-          // focus
-          "group-focus-visible/button-root:text-success-100",
+          "group-hover/button-root:stroke-success-100",
         ],
       },
     },
@@ -181,18 +154,12 @@ export const buttonVariants = tv({
       variant: "secondary",
       class: {
         root: [
-          "border-neutral-200 bg-white text-neutral-500",
           // hover
-          "hover:border-neutral-300 hover:bg-neutral-50 hover:text-neutral-600",
-          // focus
-          "focus-visible:border-neutral-200 focus-visible:bg-neutral-50 focus-visible:text-neutral-600",
+          "hover:border-neutral-300 hover:bg-neutral-100",
         ],
         icon: [
-          "text-neutral-400",
           // hover
-          "group-hover/button-root:text-neutral-500",
-          // focus
-          "group-focus-visible/button-root:text-neutral-500",
+          "group-hover/button-root:stroke-neutral-900",
         ],
       },
     },
@@ -200,100 +167,41 @@ export const buttonVariants = tv({
       color: "accent",
       variant: "secondary",
       class: {
-        root: [
-          "border-accent-200 bg-white text-accent-500",
-          // hover
-          "hover:border-accent-300 hover:bg-accent-50 hover:text-accent-600",
-          // focus
-          "focus-visible:border-accent-300 focus-visible:bg-accent-50 focus-visible:text-accent-600",
-        ],
-        icon: [
-          "text-accent-400",
-          // hover
-          "group-hover/button-root:text-accent-500",
-          // focus
-          "group-focus-visible/button-root:text-accent-500",
-        ],
+        root: "hidden",
       },
     },
     {
       color: "danger",
       variant: "secondary",
       class: {
-        root: [
-          "border-danger-200 bg-white text-danger-500",
-          // hover
-          "hover:border-danger-300 hover:bg-danger-50 hover:text-danger-600",
-          // focus
-          "focus-visible:border-danger-300 focus-visible:bg-danger-50 focus-visible:text-danger-600",
-        ],
-        icon: [
-          "text-danger-400",
-          // hover
-          "group-hover/button-root:text-danger-500",
-          // focus
-          "group-focus-visible/button-root:text-danger-500",
-        ],
+        root: "hidden",
       },
     },
     {
       color: "warning",
       variant: "secondary",
       class: {
-        root: [
-          "border-warning-200 bg-white text-warning-500",
-          // hover
-          "hover:border-warning-300 hover:bg-warning-50 hover:text-warning-600",
-          // focus
-          "focus-visible:border-warning-300 focus-visible:bg-warning-50 focus-visible:text-warning-600",
-        ],
-        icon: [
-          "text-warning-400",
-          // hover
-          "group-hover/button-root:text-warning-500",
-          // focus
-          "group-focus-visible/button-root:text-warning-500",
-        ],
+        root: "hidden",
       },
     },
     {
       color: "success",
       variant: "secondary",
       class: {
-        root: [
-          "border-success-200 bg-white text-success-500",
-          // hover
-          "hover:border-success-300 hover:bg-success-50 hover:text-success-600",
-          // focus
-          "focus-visible:border-success-300 focus-visible:bg-success-50 focus-visible:text-success-600",
-        ],
-        icon: [
-          "text-success-400",
-          // hover
-          "group-hover/button-root:text-success-500",
-          // focus
-          "group-focus-visible/button-root:text-success-500",
-        ],
+        root: "hidden",
       },
     },
-
     {
       color: "neutral",
       variant: "tertiary",
       class: {
         root: [
-          "text-neutral-500",
           // hover
-          "hover:border-neutral-50 hover:bg-neutral-50 hover:text-neutral-600",
-          // focus
-          "focus-visible:border-neutral-50 focus-visible:bg-neutral-50 focus-visible:text-neutral-600",
+          "hover:border-neutral-100 hover:bg-neutral-100",
         ],
         icon: [
-          "text-neutral-400",
           // hover
-          "group-hover/button-root:text-neutral-500",
-          // focus
-          "group-focus-visible/button-root:text-neutral-500",
+          "group-hover/button-root:stroke-neutral-900",
         ],
       },
     },
@@ -301,80 +209,36 @@ export const buttonVariants = tv({
       color: "accent",
       variant: "tertiary",
       class: {
-        root: [
-          "text-accent-500",
-          // hover
-          "hover:border-accent-50 hover:bg-accent-50 hover:text-accent-600",
-          // focus
-          "focus-visible:border-accent-50 focus-visible:bg-accent-50 focus-visible:text-accent-600",
-        ],
-        icon: [
-          "text-accent-400",
-          // hover
-          "group-hover/button-root:text-accent-500",
-          // focus
-          "group-focus-visible/button-root:text-accent-500",
-        ],
+        root: "hidden",
       },
     },
     {
       color: "danger",
       variant: "tertiary",
       class: {
-        root: [
-          "text-danger-500",
-          // hover
-          "hover:border-danger-50 hover:bg-danger-50 hover:text-danger-600",
-          // focus
-          "focus-visible:border-danger-50 focus-visible:bg-danger-50 focus-visible:text-danger-600",
-        ],
-        icon: [
-          "text-danger-400",
-          // hover
-          "group-hover/button-root:text-danger-500",
-          // focus
-          "group-focus-visible/button-root:text-danger-500",
-        ],
+        root: "hidden",
       },
     },
     {
       color: "warning",
       variant: "tertiary",
       class: {
-        root: [
-          "text-warning-500",
-          // hover
-          "hover:border-warning-50 hover:bg-warning-50 hover:text-warning-600",
-          // focus
-          "focus-visible:border-warning-50 focus-visible:bg-warning-50 focus-visible:text-warning-600",
-        ],
-        icon: [
-          "text-warning-400",
-          // hover
-          "group-hover/button-root:text-warning-500",
-          // focus
-          "group-focus-visible/button-root:text-warning-500",
-        ],
+        root: "hidden",
       },
     },
     {
       color: "success",
       variant: "tertiary",
       class: {
-        root: [
-          "text-success-500",
-          // hover
-          "hover:border-success-50 hover:bg-success-50 hover:text-success-600",
-          // focus
-          "focus-visible:border-success-50 focus-visible:bg-success-50 focus-visible:text-success-600",
-        ],
-        icon: [
-          "text-success-400",
-          // hover
-          "group-hover/button-root:text-success-500",
-          // focus
-          "group-focus-visible/button-root:text-success-500",
-        ],
+        root: "hidden",
+      },
+    },
+    {
+      disabled: true,
+      loading: false,
+      class: {
+        content: ["text-neutral-400 group-hover/button-root:text-neutral-400"],
+        icon: ["stroke-neutral-400 group-hover/button-root:stroke-neutral-400"],
       },
     },
     {
@@ -383,18 +247,9 @@ export const buttonVariants = tv({
       variant: "filled",
       class: {
         root: [
-          "inset-shadow-transparent border-neutral-200 bg-neutral-50 text-neutral-400 shadow-none",
+          "inset-shadow-transparent border-neutral-100 bg-neutral-100 shadow-none",
           // hover
-          "hover:border-neutral-200 hover:bg-neutral-50 hover:text-neutral-400",
-          // focus
-          "focus-visible:border-neutral-200 focus-visible:bg-neutral-50 focus-visible:text-neutral-400",
-        ],
-        icon: [
-          "text-neutral-400",
-          // hover
-          "group-hover/button-root:text-neutral-400",
-          // focus
-          "group-focus-visible/button-root:text-neutral-400",
+          "hover:border-neutral-100 hover:bg-neutral-100",
         ],
       },
     },
@@ -404,18 +259,9 @@ export const buttonVariants = tv({
       variant: "secondary",
       class: {
         root: [
-          "inset-shadow-transparent border-neutral-50 bg-neutral-50 text-neutral-400 shadow-none",
+          "inset-shadow-transparent border-neutral-100 bg-white shadow-none",
           // hover
-          "hover:border-neutral-50 hover:bg-neutral-50 hover:text-neutral-400",
-          // focus
-          "focus-visible:border-neutral-50 focus-visible:bg-neutral-50 focus-visible:text-neutral-400",
-        ],
-        icon: [
-          "text-neutral-400",
-          // hover
-          "group-hover/button-root:text-neutral-400",
-          // focus
-          "group-focus-visible/button-root:text-neutral-400",
+          "hover:border-neutral-100 hover:bg-white",
         ],
       },
     },
@@ -425,25 +271,16 @@ export const buttonVariants = tv({
       variant: "tertiary",
       class: {
         root: [
-          "inset-shadow-transparent text-neutral-400 shadow-none",
+          "inset-shadow-transparent shadow-none",
           // hover
-          "hover:border-transparent hover:bg-transparent hover:text-neutral-400",
-          // focus
-          "focus-visible:border-transparent focus-visible:bg-transparent focus-visible:text-neutral-400",
-        ],
-        icon: [
-          "text-neutral-400",
-          // hover
-          "group-hover/button-root:text-neutral-400",
-          // focus
-          "group-focus-visible/button-root:text-neutral-400",
+          "hover:border-transparent hover:bg-transparent",
         ],
       },
     },
   ],
   defaultVariants: {
-    color: "neutral",
     variant: "filled",
+    color: "neutral",
     size: "md",
   },
 });
@@ -453,97 +290,105 @@ type ButtonSharedProps = VariantProps<typeof buttonVariants>;
 const ButtonContext = React.createContext<ButtonSharedProps>({});
 const useButtonContext = () => React.useContext(ButtonContext);
 
-export type ButtonRootProps = Omit<ButtonSharedProps, "loading" | "disabled"> &
-  Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "disabled"> &
-  AsChildProp & {
-    isLoading?: boolean;
+export type ButtonRootProps = Omit<
+  useRender.ComponentProps<"button">,
+  "disabled"
+> &
+  Omit<ButtonSharedProps, "disabled" | "loading"> & {
     isDisabled?: boolean;
+    isLoading?: boolean;
   };
 
-const ButtonRoot = React.forwardRef<HTMLButtonElement, ButtonRootProps>(
-  (
-    {
-      children,
-      color,
-      variant,
-      size,
-      asChild,
-      className,
-      isLoading,
-      isDisabled,
-      ...rest
+const ButtonRoot = ({
+  // biome-ignore lint/a11y/useButtonType: not needed
+  render = <button />,
+  color,
+  variant,
+  className,
+  isDisabled,
+  isLoading,
+  size,
+  onClick,
+  children,
+  ...props
+}: ButtonRootProps) => {
+  const { root, content } = buttonVariants({
+    color,
+    variant,
+    disabled: isDisabled,
+    loading: isLoading,
+    size,
+  });
+
+  const defaultProps: useRender.ElementProps<"button"> = {
+    children: (
+      <Transition.Root>
+        {isLoading && (
+          <Transition.Item
+            className="absolute inset-0 flex items-center justify-center"
+            key="loader"
+          >
+            <Loader2 className="animate-spin text-inherit" />
+          </Transition.Item>
+        )}
+        <div className={content()}>{children}</div>
+      </Transition.Root>
+    ),
+    disabled: isDisabled || isLoading,
+    className: root({ class: className }),
+    onClick: (...args) => {
+      if (isDisabled || isLoading) {
+        return;
+      }
+
+      onClick?.(...args);
     },
-    forwardedRef
-  ) => {
-    const Component = asChild ? Slot : "button";
-    const { root, content } = buttonVariants({
-      color,
-      variant,
-      size,
-      loading: isLoading,
-      disabled: isDisabled,
-    });
+  };
 
-    return (
-      <ButtonContext.Provider
-        value={{
-          color,
-          variant,
-          size,
-          loading: isLoading,
-          disabled: isDisabled,
-        }}
-      >
-        <Component
-          ref={forwardedRef}
-          {...rest}
-          className={root({ class: className })}
-          disabled={isDisabled || isLoading}
-          onClick={(...args) => {
-            if (isDisabled || isLoading) {
-              return;
-            }
-            rest.onClick?.(...args);
-          }}
-        >
-          {isLoading && (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <ButtonIcon className="animate-spin">
-                <Loader2 />
-              </ButtonIcon>
-            </div>
-          )}
-          <div className={content()}>{children}</div>
-        </Component>
-      </ButtonContext.Provider>
-    );
-  }
-);
+  const element = useRender({
+    render,
+    props: mergeProps<"button">(defaultProps, props),
+  });
 
-type ButtonIconProps = React.HTMLAttributes<HTMLDivElement> & AsChildProp;
+  return (
+    <ButtonContext.Provider
+      value={{
+        color,
+        variant,
+        disabled: isDisabled,
+        loading: isLoading,
+      }}
+    >
+      {element}
+    </ButtonContext.Provider>
+  );
+};
 
-const ButtonIcon = React.forwardRef<HTMLDivElement, ButtonIconProps>(
-  ({ children, className, asChild, ...rest }, forwardedRef) => {
-    const Component = asChild ? Slot : "div";
-    const { color, variant, size, loading, disabled } = useButtonContext();
-    const { icon } = buttonVariants({
-      color,
-      variant,
-      size,
-      loading,
-      disabled,
-    });
+export type ButtonIconProps = useRender.ComponentProps<"svg">;
 
-    return (
-      <Component
-        ref={forwardedRef}
-        {...rest}
-        className={icon({ class: className })}
-      >
-        {children}
-      </Component>
-    );
-  }
-);
+const ButtonIcon: React.FC<ButtonIconProps> = ({
+  className,
+  render = <svg />,
+  ...props
+}) => {
+  const { color, variant, disabled, loading } = useButtonContext();
+  const { icon } = buttonVariants({
+    color,
+    variant,
+    disabled,
+    loading,
+  });
+
+  const defaultProps: useRender.ElementProps<"svg"> = {
+    className: icon({ class: className }),
+  };
+
+  const element = useRender({
+    render,
+    props: mergeProps<"svg">(defaultProps, props),
+  });
+
+  return element;
+};
 
 export { ButtonRoot as Root, ButtonIcon as Icon };

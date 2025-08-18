@@ -45,7 +45,7 @@ function Login() {
           <Text.Root size="lg" weight="medium">
             Sign in to your account
           </Text.Root>
-          <Text.Root className="px-6 text-center" color="muted" size="sm">
+          <Text.Root className="px-6 text-center" color="muted">
             If you don't have an account, we will create one for you.
           </Text.Root>
         </div>
@@ -60,7 +60,10 @@ function Login() {
           <form.Field name="email">
             {(field) => (
               <form.FieldContainer errors={field.state.meta.errors}>
-                <Input.Root isInvalid={field.state.meta.errors.length > 0}>
+                <Input.Root
+                  isInvalid={field.state.meta.errors.length > 0}
+                  size="lg"
+                >
                   <Input.Wrapper>
                     <Input.Icon>
                       <MailIcon />
@@ -91,6 +94,7 @@ function Login() {
                 color="accent"
                 isDisabled={!isFieldsValid}
                 isLoading={isSubmitting}
+                size="lg"
                 type="submit"
               >
                 Send Magic Link
@@ -102,7 +106,6 @@ function Login() {
           <Text.Root
             className="-translate-x-1/2 -translate-y-1/2 absolute top-1/2 left-1/2 bg-neutral-50 px-2"
             color="muted"
-            size="sm"
           >
             or
           </Text.Root>
@@ -117,6 +120,7 @@ function Login() {
               socialLoginMutation.variables.provider === "google"
             }
             onClick={() => handleSocialLogin("google")}
+            size="lg"
             variant="secondary"
           >
             Continue with Google
@@ -130,6 +134,7 @@ function Login() {
               socialLoginMutation.variables.provider === "github"
             }
             onClick={() => handleSocialLogin("github")}
+            size="lg"
             variant="secondary"
           >
             Continue with GitHub

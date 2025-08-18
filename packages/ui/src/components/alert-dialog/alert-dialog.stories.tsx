@@ -3,13 +3,13 @@ import { Trash2Icon } from "lucide-react";
 import { Button } from "../button";
 import { AlertDialog } from "./";
 
-const meta = {
+const meta: Meta = {
   title: "Components/AlertDialog",
   component: AlertDialog.Root,
   parameters: {
     layout: "centered",
   },
-} satisfies Meta<typeof AlertDialog.Root>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -17,13 +17,9 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: () => (
     <AlertDialog.Root defaultOpen>
-      <AlertDialog.Trigger asChild>
-        <Button.Root color="danger">
-          <Button.Icon>
-            <Trash2Icon />
-          </Button.Icon>
-          Delete Account
-        </Button.Root>
+      <AlertDialog.Trigger render={<Button.Root color="danger" />}>
+        <Button.Icon render={<Trash2Icon />} />
+        Delete Account
       </AlertDialog.Trigger>
       <AlertDialog.Content>
         <AlertDialog.Header>
@@ -34,12 +30,10 @@ export const Default: Story = {
           </AlertDialog.Description>
         </AlertDialog.Header>
         <AlertDialog.Footer>
-          <AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
+          <AlertDialog.Cancel>No</AlertDialog.Cancel>
           <AlertDialog.Action color="danger">
-            <Button.Icon>
-              <Trash2Icon />
-            </Button.Icon>
-            Delete Account
+            <Button.Icon render={<Trash2Icon />} />
+            Yes, delete my account
           </AlertDialog.Action>
         </AlertDialog.Footer>
       </AlertDialog.Content>

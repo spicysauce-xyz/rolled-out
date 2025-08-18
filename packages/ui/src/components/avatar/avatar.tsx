@@ -1,9 +1,5 @@
-import {
-  Fallback as RadixAvatarFallback,
-  Image as RadixAvatarImage,
-  Root as RadixAvatarRoot,
-} from "@radix-ui/react-avatar";
-import React from "react";
+import { Avatar } from "@base-ui-components/react/avatar";
+import type React from "react";
 import type { VariantProps } from "tailwind-variants";
 import { cn, tv } from "../../utils";
 import { Text } from "../text";
@@ -15,13 +11,13 @@ const avatarVariants = tv({
   variants: {
     size: {
       sm: {
-        root: "size-9",
+        root: "size-8",
       },
       md: {
-        root: "size-10",
+        root: "size-9",
       },
       lg: {
-        root: "size-11",
+        root: "size-10",
       },
     },
   },
@@ -32,48 +28,48 @@ const avatarVariants = tv({
 
 type AvatarSharedProps = VariantProps<typeof avatarVariants>;
 
-type AvatarProps = React.ComponentPropsWithoutRef<typeof RadixAvatarRoot> &
+type AvatarProps = React.ComponentPropsWithRef<typeof Avatar.Root> &
   AvatarSharedProps;
 
-const AvatarRoot = React.forwardRef<
-  React.ElementRef<typeof RadixAvatarRoot>,
-  AvatarProps
->(({ className, size, ...props }, ref) => {
+const AvatarRoot: React.FC<AvatarProps> = ({ className, size, ...props }) => {
   const { root } = avatarVariants({ size });
 
   return (
-    <RadixAvatarRoot ref={ref} {...props} className={root({ className })} />
+    <Avatar.Root
+      {...props}
+      className={(state) =>
+        root({
+          className:
+            typeof className === "function" ? className(state) : className,
+        })
+      }
+    />
   );
-});
+};
 
-const AvatarImage = React.forwardRef<
-  React.ElementRef<typeof RadixAvatarImage>,
-  React.ComponentPropsWithoutRef<typeof RadixAvatarImage>
->(({ className, ...props }, ref) => (
-  <RadixAvatarImage
+const AvatarImage: React.FC<
+  React.ComponentPropsWithRef<typeof Avatar.Image>
+> = ({ className, ...props }) => (
+  <Avatar.Image
     className={cn(
-      "fade-in-0 aspect-square h-full w-full animate-in rounded-[inherit] object-cover object-center transition-opacity",
+      "aspect-square h-full w-full rounded-[inherit] object-cover object-center transition-opacity",
       className
     )}
-    ref={ref}
     {...props}
   />
-));
+);
 
-const AvatarFallback = React.forwardRef<
-  React.ElementRef<typeof RadixAvatarFallback>,
-  React.ComponentPropsWithoutRef<typeof RadixAvatarFallback>
->(({ className, ...props }, ref) => (
-  <Text.Root asChild size="sm" weight="medium">
-    <RadixAvatarFallback
-      className={cn(
-        "flex h-full w-full items-center justify-center rounded-[inherit] border border-neutral-100 bg-neutral-50 uppercase",
-        className
-      )}
-      ref={ref}
-      {...props}
-    />
-  </Text.Root>
-));
+const AvatarFallback: React.FC<
+  React.ComponentPropsWithRef<typeof Avatar.Fallback>
+> = ({ className, ...props }) => (
+  <Avatar.Fallback
+    className={cn(
+      "flex h-full w-full items-center justify-center rounded-[inherit] border border-neutral-200 bg-neutral-100 text-neutral-900 text-sm uppercase transition-colors",
+      className
+    )}
+    render={<Text.Root className="text-white" />}
+    {...props}
+  />
+);
 
 export { AvatarRoot as Root, AvatarImage as Image, AvatarFallback as Fallback };

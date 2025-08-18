@@ -1,12 +1,5 @@
 import type { HocuspocusProvider } from "@hocuspocus/provider";
-import {
-  Button,
-  Clickable,
-  Dialog,
-  Tag as TagComponent,
-  Text,
-  Tooltip,
-} from "@mono/ui";
+import { Button, Dialog, Tag as TagComponent, Tooltip } from "@mono/ui";
 import { useDisclosure } from "@mono/ui/hooks";
 import { TagsIcon } from "lucide-react";
 import { useDocumentTagManager } from "../hooks/use-document-tag-manager";
@@ -47,21 +40,7 @@ const TagsDialog: React.FC<TagsDialogProps> = ({
 
                 return (
                   <Tooltip.Root key={tag}>
-                    <Tooltip.Trigger asChild>
-                      <Clickable.Root
-                        className={tagClassName.root({ className: "border-0" })}
-                        onClick={() => tagManager.remove(tag)}
-                        variant="tertiary"
-                      >
-                        <Text.Root
-                          className={tagClassName.text()}
-                          size="sm"
-                          weight="medium"
-                        >
-                          {value}
-                        </Text.Root>
-                      </Clickable.Root>
-                    </Tooltip.Trigger>
+                    <Tooltip.Trigger>{value}</Tooltip.Trigger>
                     <Tooltip.Content>
                       <Tooltip.Title>Click to remove</Tooltip.Title>
                     </Tooltip.Content>
@@ -72,9 +51,7 @@ const TagsDialog: React.FC<TagsDialogProps> = ({
           </Tooltip.Provider>
         )}
         <Dialog.Footer>
-          <Dialog.Close asChild>
-            <Button.Root variant="secondary">Cancel</Button.Root>
-          </Dialog.Close>
+          <Dialog.Cancel>Cancel</Dialog.Cancel>
         </Dialog.Footer>
       </Dialog.Content>
     </Dialog.Root>
@@ -96,15 +73,13 @@ export const EditorTags: React.FC<EditorTags> = ({ provider }) => {
           {value}
         </TagComponent.Root>
       ))}
-      <Clickable.Root
+      <Button.Root
         className="flex size-5 items-center justify-center gap-1 rounded-sm bg-neutral-50 px-1"
         onClick={tagsDialog.open}
         variant="tertiary"
       >
-        <Clickable.Icon>
-          <TagsIcon />
-        </Clickable.Icon>
-      </Clickable.Root>
+        <Button.Icon render={<TagsIcon />} />
+      </Button.Root>
       <TagsDialog
         onOpenChange={tagsDialog.setOpen}
         open={tagsDialog.isOpen}

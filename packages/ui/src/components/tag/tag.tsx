@@ -92,7 +92,7 @@ const TagRoot = forwardRef<
 
   return (
     <div className={cn(root({ className }))} ref={ref} {...props}>
-      <Text.Root className={text()} size="sm" weight="medium">
+      <Text.Root className={text()} weight="medium">
         {children}
       </Text.Root>
     </div>

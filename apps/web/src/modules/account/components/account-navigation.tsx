@@ -1,7 +1,7 @@
 import { Sidebar } from "@components/sidebar";
 import type { authClient } from "@lib/auth";
 import { UserMenu } from "@modules/shared/components/user-menu";
-import { Clickable, Text } from "@mono/ui";
+import { Button } from "@mono/ui";
 import { Link, useSearch } from "@tanstack/react-router";
 import {
   ArrowLeftIcon,
@@ -22,43 +22,54 @@ export const AccountNavigation: React.FC<AccountNavigationProps> = ({
   return (
     <Sidebar.Root className="hidden w-64 bg-neutral-50 sm:flex">
       <Sidebar.Header>
-        <Clickable.Root
-          asChild
-          className="w-full items-center gap-2 border-0 p-2 hover:bg-neutral-100 focus-visible:bg-neutral-100"
+        <Button.Root
+          className="w-full justify-start px-2"
+          render={
+            <Link
+              params={{ organizationSlug: organization ?? "" }}
+              to="/$organizationSlug"
+            />
+          }
           variant="tertiary"
         >
-          <Link
-            params={{ organizationSlug: organization ?? "" }}
-            to="/$organizationSlug"
-          >
-            <Clickable.Icon>
-              <ArrowLeftIcon />
-            </Clickable.Icon>
-            <Text.Root size="sm" weight="medium">
-              Back
-            </Text.Root>
-          </Link>
-        </Clickable.Root>
+          <Button.Icon render={<ArrowLeftIcon />} />
+          Back
+        </Button.Root>
       </Sidebar.Header>
       <Sidebar.ScrollArea>
         <Sidebar.Group>
-          <Sidebar.NavLink
+          <Sidebar.Button
             icon={NotebookTextIcon}
             label="Profile"
-            search={{ organization }}
-            to="/account/profile"
+            render={
+              <Link
+                className="data-[status=active]:border data-[status=active]:border-neutral-100 data-[status=active]:bg-white data-[status=active]:[&>svg]:stroke-neutral-900"
+                search={{ organization }}
+                to="/account/profile"
+              />
+            }
           />
-          <Sidebar.NavLink
+          <Sidebar.Button
             icon={Users2}
             label="Sessions"
-            search={{ organization }}
-            to="/account/sessions"
+            render={
+              <Link
+                className="data-[status=active]:border data-[status=active]:border-neutral-100 data-[status=active]:bg-white data-[status=active]:[&>svg]:stroke-neutral-900"
+                search={{ organization }}
+                to="/account/sessions"
+              />
+            }
           />
-          <Sidebar.NavLink
+          <Sidebar.Button
             icon={Building2Icon}
             label="Organizations"
-            search={{ organization }}
-            to="/account/organizations"
+            render={
+              <Link
+                className="data-[status=active]:border data-[status=active]:border-neutral-100 data-[status=active]:bg-white data-[status=active]:[&>svg]:stroke-neutral-900"
+                search={{ organization }}
+                to="/account/organizations"
+              />
+            }
           />
         </Sidebar.Group>
       </Sidebar.ScrollArea>

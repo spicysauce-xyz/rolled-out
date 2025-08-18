@@ -1,7 +1,7 @@
 import { relations } from "drizzle-orm";
 import { pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
+import { member } from "./member.model";
 import { organization } from "./organization.model";
-import { user } from "./user.model";
 
 export const notification = pgTable("notification", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -9,11 +9,11 @@ export const notification = pgTable("notification", {
     .notNull()
     .references(() => organization.id, { onDelete: "cascade" }),
 
-  recipientId: uuid("recipient_id")
+  recipientId: uuid("recipient_member_id")
     .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
+    .references(() => member.id, { onDelete: "cascade" }),
 
-  senderId: uuid("sender_id").references(() => user.id, {
+  senderId: uuid("sender_member_id").references(() => member.id, {
     onDelete: "cascade",
   }),
 

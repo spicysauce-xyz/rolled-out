@@ -113,13 +113,7 @@ const MemberEntryHeading = forwardRef<
   React.ComponentPropsWithoutRef<typeof Text.Root>
 >(({ children, className, ...props }, ref) => {
   return (
-    <Text.Root
-      className={className}
-      ref={ref}
-      size="sm"
-      weight="medium"
-      {...props}
-    >
+    <Text.Root className={className} ref={ref} weight="medium" {...props}>
       {children}
     </Text.Root>
   );
@@ -134,7 +128,7 @@ const MemberEntrySubheading = forwardRef<
       className={className}
       color="muted"
       ref={ref}
-      size="xs"
+      size="sm"
       {...props}
     >
       {children}

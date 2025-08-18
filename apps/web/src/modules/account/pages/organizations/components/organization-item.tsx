@@ -48,9 +48,7 @@ export const OrganizationItem: React.FC<OrganizationItemProps> = ({
         <div className="relative">
           <Avatar.Root className="size-10 rounded-md">
             <Avatar.Image src={data?.logo || ""} />
-            <Avatar.Fallback className="text-xs">
-              {data?.name[0]}
-            </Avatar.Fallback>
+            <Avatar.Fallback>{data?.name[0]}</Avatar.Fallback>
           </Avatar.Root>
           {isActive && (
             <div className="-right-1.5 -top-1.5 absolute flex items-center justify-center rounded-full bg-accent-500 px-0.75 text-[8px] text-white">
@@ -59,10 +57,8 @@ export const OrganizationItem: React.FC<OrganizationItemProps> = ({
           )}
         </div>
         <div className="flex flex-col gap-0.5">
-          <Text.Root size="sm" weight="medium">
-            {data?.name}
-          </Text.Root>
-          <Text.Root className="capitalize" color="muted" size="xs">
+          <Text.Root weight="medium">{data?.name}</Text.Root>
+          <Text.Root className="capitalize" color="muted" size="sm">
             {data.role}
           </Text.Root>
         </div>
@@ -72,9 +68,7 @@ export const OrganizationItem: React.FC<OrganizationItemProps> = ({
         onClick={handleLeave}
         variant="tertiary"
       >
-        <Button.Icon>
-          <DoorClosedIcon />
-        </Button.Icon>
+        <Button.Icon render={<DoorClosedIcon />} />
         Leave
       </Button.Root>
     </div>

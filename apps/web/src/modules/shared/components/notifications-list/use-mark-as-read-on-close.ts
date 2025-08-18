@@ -4,47 +4,55 @@ import type { useDisclosure } from "@mono/ui/hooks";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface Args {
+  organizationId: string;
   disclosure: ReturnType<typeof useDisclosure>;
 }
 
 export const useMarkAsReadOnClose = (args: Args) => {
-  const { disclosure } = args;
+  const { disclosure, organizationId } = args;
   const queryClient = useQueryClient();
 
   const markNotificationsAsRead = useMutation({
     mutationFn: async () => {
-      const response = await api.notifications.status.$put();
+      const response = await api.organizations[
+        ":organizationId"
+      ].notifications.status.$put({
+        param: {
+          organizationId,
+        },
+      });
 
       const json = await response.json();
 
       if (!json.success) {
         throw json.error;
       }
-
-      return json.data;
     },
     onMutate: () => {
       const previousNotificationsStatus = queryClient.getQueryData(
-        notificationsStatusQuery().queryKey
+        notificationsStatusQuery(organizationId).queryKey
       );
 
-      queryClient.setQueryData(notificationsStatusQuery().queryKey, (old) => ({
-        unreadCount: 0,
-        count: old?.count ?? 0,
-        lastReadAt: new Date().toISOString(),
-      }));
+      queryClient.setQueryData(
+        notificationsStatusQuery(organizationId).queryKey,
+        (old) => ({
+          unreadCount: 0,
+          count: old?.count ?? 0,
+          lastReadAt: new Date().toISOString(),
+        })
+      );
 
       return { previousNotificationsStatus };
     },
     onError: (_, __, context) => {
       queryClient.setQueryData(
-        notificationsStatusQuery().queryKey,
+        notificationsStatusQuery(organizationId).queryKey,
         context?.previousNotificationsStatus
       );
     },
     onSettled: async () => {
       await queryClient.invalidateQueries({
-        queryKey: notificationsStatusQuery().queryKey,
+        queryKey: notificationsStatusQuery(organizationId).queryKey,
       });
     },
   });

@@ -19,7 +19,7 @@ const TransitionItem = forwardRef<
       exit={{ opacity: 0 }}
       initial={{ opacity: 0 }}
       ref={ref}
-      transition={{ duration: 0.15 }}
+      transition={{ duration: 0.075 }}
       {...props}
     />
   );

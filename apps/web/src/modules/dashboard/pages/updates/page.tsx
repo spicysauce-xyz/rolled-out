@@ -6,7 +6,7 @@ import { useCreateUpdateMutation } from "@modules/dashboard/hooks/use-create-upd
 import { Button, Text } from "@mono/ui";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { PlusIcon } from "lucide-react";
+import { ListFilterIcon } from "lucide-react";
 import { match, P } from "ts-pattern";
 import { Empty } from "./empty";
 import { List } from "./list";
@@ -42,19 +42,22 @@ function RouteComponent() {
     <Page.Wrapper>
       <Page.Header className="justify-between py-2">
         <Breadcrumbs page="Updates" />
-        <Button.Root
-          isLoading={createPostMutation.isPending}
-          onClick={handleCreatePost}
-          size="sm"
-          variant="tertiary"
-        >
-          <Button.Icon>
-            <PlusIcon />
-          </Button.Icon>
-          <Text.Root size="sm" weight="medium">
-            New Update
-          </Text.Root>
-        </Button.Root>
+        <div className="flex items-center gap-2">
+          <Button.Root
+            isLoading={createPostMutation.isPending}
+            onClick={handleCreatePost}
+            variant="secondary"
+          >
+            <Button.Icon render={<ListFilterIcon />} />
+            Filters
+          </Button.Root>
+          <Button.Root
+            isLoading={createPostMutation.isPending}
+            onClick={handleCreatePost}
+          >
+            New Draft
+          </Button.Root>
+        </div>
       </Page.Header>
       <Page.Content className="flex-1 gap-0 p-0">
         <Transition.Root>
@@ -66,7 +69,7 @@ function RouteComponent() {
             ))
             .with({ isError: true }, ({ error }) => (
               <Transition.Item key="error">
-                <Text.Root size="sm" weight="medium">
+                <Text.Root weight="medium">
                   Failed to load updates: {error.message}
                 </Text.Root>
               </Transition.Item>

@@ -84,19 +84,15 @@ export const InvitationItem: React.FC<InvitationItemProps> = ({ data }) => {
         <div className="relative">
           <Avatar.Root className="size-10 rounded-md">
             <Avatar.Image src={data?.organization?.logo || ""} />
-            <Avatar.Fallback className="text-xs">
-              {data?.organization?.name[0]}
-            </Avatar.Fallback>
+            <Avatar.Fallback>{data?.organization?.name[0]}</Avatar.Fallback>
           </Avatar.Root>
           <div className="-right-1.5 -top-1.5 absolute flex size-3 items-center justify-center rounded-full bg-white p-0.75">
             <div className="h-full w-full animate-pulse rounded-full bg-warning-500" />
           </div>
         </div>
         <div className="flex flex-col gap-0.5">
-          <Text.Root size="sm" weight="medium">
-            {data?.organization?.name}
-          </Text.Root>
-          <Text.Root color="muted" size="xs">
+          <Text.Root weight="medium">{data?.organization?.name}</Text.Root>
+          <Text.Root color="muted">
             {data.inviter.name} invited you to join {data.organization.name},
             expires{" "}
             {formatDistance(data.expiresAt, new Date(), {
@@ -111,18 +107,14 @@ export const InvitationItem: React.FC<InvitationItemProps> = ({ data }) => {
           onClick={handleAcceptInvitation}
           variant="tertiary"
         >
-          <IconButton.Icon>
-            <CheckIcon />
-          </IconButton.Icon>
+          <IconButton.Icon render={<CheckIcon />} />
         </IconButton.Root>
         <IconButton.Root
           color="danger"
           onClick={handleRejectInvitation}
           variant="tertiary"
         >
-          <IconButton.Icon>
-            <XIcon />
-          </IconButton.Icon>
+          <IconButton.Icon render={<XIcon />} />
         </IconButton.Root>
       </div>
     </div>

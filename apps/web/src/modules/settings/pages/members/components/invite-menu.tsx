@@ -52,19 +52,13 @@ export const InvitationMenu = ({
 
   return (
     <DropdownMenu.Root>
-      <DropdownMenu.Trigger asChild>
-        <Button.Root variant="tertiary">
-          <Button.Icon>
-            <EllipsisVerticalIcon />
-          </Button.Icon>
-        </Button.Root>
+      <DropdownMenu.Trigger render={<Button.Root variant="tertiary" />}>
+        <Button.Icon render={<EllipsisVerticalIcon />} />
       </DropdownMenu.Trigger>
-      <DropdownMenu.Content align="end">
+      <DropdownMenu.Content>
         {cancelInvitationPermission.hasPermission && (
           <DropdownMenu.Item onClick={handleCancelInvitation}>
-            <DropdownMenu.ItemIcon>
-              <Trash2Icon />
-            </DropdownMenu.ItemIcon>
+            <DropdownMenu.ItemIcon render={<Trash2Icon />} />
             Cancel Invitation
           </DropdownMenu.Item>
         )}

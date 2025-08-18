@@ -21,7 +21,7 @@ const FieldContainer = forwardRef<HTMLDivElement, FieldContainerProps>(
       >
         {children}
         {errors?.length ? (
-          <Text.Root className="text-danger-500" size="sm">
+          <Text.Root className="text-danger-500">
             {errors[0]?.message}
           </Text.Root>
         ) : null}

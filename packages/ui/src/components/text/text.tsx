@@ -1,12 +1,11 @@
-import { Slot } from "@radix-ui/react-slot";
-import React from "react";
+import { mergeProps } from "@base-ui-components/react/merge-props";
+import { useRender } from "@base-ui-components/react/use-render";
 import type { VariantProps } from "tailwind-variants";
-import type { AsChildProp } from "../../types";
 import { tv } from "../../utils";
 
 export const textVariants = tv({
   slots: {
-    root: ["tracking-tight"],
+    root: "",
   },
   variants: {
     variant: {
@@ -85,24 +84,25 @@ export const textVariants = tv({
 
 type TextSharedProps = VariantProps<typeof textVariants>;
 
-type TextProps = React.HTMLAttributes<HTMLParagraphElement> &
-  TextSharedProps &
-  AsChildProp;
+type TextProps = useRender.ComponentProps<"p"> & TextSharedProps;
 
-const TextRoot = React.forwardRef<HTMLParagraphElement, TextProps>(
-  (
-    { children, className, asChild, size, weight, variant, color, ...props },
-    ref
-  ) => {
-    const Comp = asChild ? Slot : "p";
-    const { root } = textVariants({ size, weight, variant, color });
+const TextRoot = ({
+  className,
+  size,
+  weight,
+  variant,
+  color,
+  render = <p />,
+  ...props
+}: TextProps) => {
+  const { root } = textVariants({ size, weight, variant, color });
 
-    return (
-      <Comp ref={ref} {...props} className={root({ className })}>
-        {children}
-      </Comp>
-    );
-  }
-);
+  const element = useRender({
+    render,
+    props: mergeProps<"p">({ className: root({ className }) }, props),
+  });
+
+  return element;
+};
 
 export { TextRoot as Root };

@@ -1,7 +1,7 @@
 import type { HocuspocusProvider } from "@hocuspocus/provider";
 import { organizationTagsQuery } from "@lib/api/queries";
 import useAppForm from "@lib/form";
-import { Clickable, Input, Tag as TagComponent, Text } from "@mono/ui";
+import { Button, Input, Tag as TagComponent, Text } from "@mono/ui";
 import { cn } from "@mono/ui/utils";
 import { useStore } from "@tanstack/react-form";
 import { useQuery } from "@tanstack/react-query";
@@ -149,7 +149,7 @@ export const TagInput: React.FC<TagInputProps> = ({ provider }) => {
                           });
 
                           return (
-                            <Clickable.Root
+                            <Button.Root
                               className={tagClassName.root({
                                 className:
                                   "h-9 w-full justify-start border-0 bg-white",
@@ -161,12 +161,11 @@ export const TagInput: React.FC<TagInputProps> = ({ provider }) => {
                             >
                               <Text.Root
                                 className={tagClassName.text()}
-                                size="sm"
                                 weight="medium"
                               >
                                 {tag.label}
                               </Text.Root>
-                            </Clickable.Root>
+                            </Button.Root>
                           );
                         })
                     )
@@ -180,7 +179,7 @@ export const TagInput: React.FC<TagInputProps> = ({ provider }) => {
                         <Text.Root
                           className="text-balance text-center"
                           color="muted"
-                          size="xs"
+                          size="sm"
                         >
                           No tags found. Press Enter to create{" "}
                           <span

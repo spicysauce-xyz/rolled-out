@@ -51,6 +51,14 @@ function RouteComponent() {
             Manage organizations you are a member of
           </Card.HeaderDescription>
         </Card.HeaderCopy>
+        <Button.Root
+          onClick={newOrganizationModal.open}
+          size="sm"
+          variant="secondary"
+        >
+          <Button.Icon render={<PlusIcon />} />
+          Create
+        </Button.Root>
       </Card.Header>
       <Card.Content>
         <Transition.Root>
@@ -100,14 +108,6 @@ function RouteComponent() {
             ))}
         </Transition.Root>
       </Card.Content>
-      <Card.Footer>
-        <Button.Root onClick={newOrganizationModal.open} variant="secondary">
-          <Button.Icon>
-            <PlusIcon />
-          </Button.Icon>
-          New Organization
-        </Button.Root>
-      </Card.Footer>
       <NewOrganizationDialog
         isOpen={newOrganizationModal.isOpen}
         onOpenChange={newOrganizationModal.setOpen}

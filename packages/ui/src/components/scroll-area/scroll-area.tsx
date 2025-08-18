@@ -1,46 +1,31 @@
-import {
-  Corner as RadixScrollAreaCorner,
-  Root as RadixScrollAreaRoot,
-  Scrollbar as RadixScrollAreaScrollbar,
-  Thumb as RadixScrollAreaThumb,
-  Viewport as RadixScrollAreaViewport,
-} from "@radix-ui/react-scroll-area";
-import React from "react";
+import { ScrollArea } from "@base-ui-components/react/scroll-area";
+import type React from "react";
 import type { VariantProps } from "tailwind-variants";
 import { cn, tv } from "../../utils";
 
-const ScrollAreaRoot = React.forwardRef<
-  React.ComponentRef<typeof RadixScrollAreaRoot>,
-  React.ComponentPropsWithoutRef<typeof RadixScrollAreaRoot>
->(({ className, children, ...props }, ref) => (
-  <RadixScrollAreaRoot
-    className={cn("relative flex flex-1 overflow-hidden", className)}
-    ref={ref}
+const ScrollAreaRoot = ({
+  className,
+  ...props
+}: React.ComponentPropsWithRef<typeof ScrollArea.Root>) => (
+  <ScrollArea.Root
+    className={cn("relative flex flex-1", className)}
     {...props}
-  >
-    {children}
-  </RadixScrollAreaRoot>
-));
+  />
+);
 
-const ScrollAreaViewport = React.forwardRef<
-  React.ComponentRef<typeof RadixScrollAreaViewport>,
-  React.ComponentPropsWithoutRef<typeof RadixScrollAreaViewport>
->(({ className, children, ...props }, ref) => (
-  <RadixScrollAreaViewport
-    className={cn(
-      "[&>div]:!flex w-full rounded-[inherit] outline-0 [&>div]:min-h-full [&>div]:min-w-full [&>div]:flex-col",
-      className
-    )}
-    ref={ref}
+const ScrollAreaViewport = ({
+  className,
+  ...props
+}: React.ComponentPropsWithRef<typeof ScrollArea.Viewport>) => (
+  <ScrollArea.Viewport
+    className={cn("rounded-[inherit] outline-0", className)}
     {...props}
-  >
-    {children}
-  </RadixScrollAreaViewport>
-));
+  />
+);
 
 const scrollBarVariants = tv({
   slots: {
-    root: "group/scrollbar flex touch-none select-none transition-colors",
+    root: "group/scrollbar flex touch-none select-none opacity-0 transition-opacity data-[scrolling]:opacity-100",
   },
   variants: {
     size: {
@@ -80,28 +65,34 @@ const scrollBarVariants = tv({
   },
 });
 
-const ScrollAreaScrollbar = React.forwardRef<
-  React.ComponentRef<typeof RadixScrollAreaScrollbar>,
-  React.ComponentPropsWithoutRef<typeof RadixScrollAreaScrollbar> &
-    VariantProps<typeof scrollBarVariants>
->(({ className, orientation = "vertical", size, ...props }, ref) => {
+const ScrollAreaScrollbar = ({
+  className,
+  orientation = "vertical",
+  size,
+  ...props
+}: React.ComponentPropsWithRef<typeof ScrollArea.Scrollbar> &
+  VariantProps<typeof scrollBarVariants>) => {
   const { root } = scrollBarVariants({ size, orientation });
 
   return (
-    <RadixScrollAreaScrollbar
-      className={root({ className })}
+    <ScrollArea.Scrollbar
+      className={(state) =>
+        root({
+          className:
+            typeof className === "function" ? className(state) : className,
+        })
+      }
       orientation={orientation}
-      ref={ref}
       {...props}
     />
   );
-});
+};
 
-const ScrollAreaThumb = React.forwardRef<
-  React.ComponentRef<typeof RadixScrollAreaThumb>,
-  React.ComponentPropsWithoutRef<typeof RadixScrollAreaThumb>
->(({ className, ...props }, ref) => (
-  <RadixScrollAreaThumb
+const ScrollAreaThumb = ({
+  className,
+  ...props
+}: React.ComponentPropsWithRef<typeof ScrollArea.Thumb>) => (
+  <ScrollArea.Thumb
     className={cn(
       "rounded-full bg-neutral-200",
       // vertical
@@ -110,12 +101,11 @@ const ScrollAreaThumb = React.forwardRef<
       "group-data-[orientation=horizontal]/scrollbar:!h-full",
       className
     )}
-    ref={ref}
     {...props}
   />
-));
+);
 
-const ScrollAreaCorner = RadixScrollAreaCorner;
+const ScrollAreaCorner = ScrollArea.Corner;
 
 export {
   ScrollAreaRoot as Root,

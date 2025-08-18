@@ -90,7 +90,7 @@ export const PublishedUpdate: React.FC<PublishedUpdateProps> = ({
           <UpdateEntry.Date date={publishedAt} label="Published on" />
         )}
       </UpdateEntry.Meta>
-      <IconButton.Root className="-my-2" size="sm" variant="tertiary">
+      <IconButton.Root className="-my-2" variant="tertiary">
         <IconButton.Icon>
           <EllipsisVerticalIcon />
         </IconButton.Icon>

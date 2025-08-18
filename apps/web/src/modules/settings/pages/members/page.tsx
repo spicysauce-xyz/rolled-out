@@ -75,9 +75,7 @@ function RouteComponent() {
             onClick={inviteMemberDialog.open}
             variant="secondary"
           >
-            <Button.Icon>
-              <UserPlus2Icon />
-            </Button.Icon>
+            <Button.Icon render={<UserPlus2Icon />} />
             Invite Member
           </Button.Root>
           <InviteMemberDialog

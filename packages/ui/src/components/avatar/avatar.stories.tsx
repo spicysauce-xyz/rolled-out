@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Avatar } from "./";
 
-const meta = {
+const meta: Meta = {
   title: "Components/Avatar",
   component: Avatar.Root,
   parameters: {
@@ -13,7 +13,7 @@ const meta = {
       control: { type: "select" },
     },
   },
-} satisfies Meta<typeof Avatar.Root>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;

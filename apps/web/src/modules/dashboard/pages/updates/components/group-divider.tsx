@@ -39,9 +39,7 @@ export const GroupDivider: React.FC<{
   return (
     <div className="flex items-center gap-2 p-6">
       {variant.icon}
-      <Text.Root size="sm" weight="medium">
-        {variant.label}
-      </Text.Root>
+      <Text.Root weight="medium">{variant.label}</Text.Root>
     </div>
   );
 };

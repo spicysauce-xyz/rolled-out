@@ -6,6 +6,9 @@
   },
   "linter": {
     "rules": {
+      "a11y": {
+        "useAnchorContent": "off"
+      },
       "style": {
         "noParameterProperties": "off"
       },

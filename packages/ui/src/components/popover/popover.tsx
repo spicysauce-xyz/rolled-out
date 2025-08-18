@@ -1,70 +1,46 @@
-import {
-  Anchor as RadixPopoverAnchor,
-  Content as RadixPopoverContent,
-  Portal as RadixPopoverPortal,
-  Root as RadixPopoverRoot,
-  Trigger as RadixPopoverTrigger,
-} from "@radix-ui/react-popover";
+import { Popover } from "@base-ui-components/react/popover";
 import type React from "react";
 import { cn } from "../../utils";
 
-function PopoverRoot({
-  ...props
-}: React.ComponentProps<typeof RadixPopoverRoot>) {
-  return <RadixPopoverRoot {...props} />;
-}
+const PopoverRoot = Popover.Root;
 
-function PopoverTrigger({
-  ...props
-}: React.ComponentProps<typeof RadixPopoverTrigger>) {
-  return <RadixPopoverTrigger {...props} />;
-}
+const PopoverTrigger = Popover.Trigger;
 
 function PopoverContent({
   className,
-  align = "center",
-  sideOffset = 4,
+  side,
   ...props
-}: React.ComponentProps<typeof RadixPopoverContent>) {
+}: React.ComponentProps<typeof Popover.Popup> &
+  Pick<React.ComponentPropsWithoutRef<typeof Popover.Positioner>, "side">) {
   return (
-    <RadixPopoverPortal>
-      <RadixPopoverContent
-        align={align}
-        arrowPadding={12}
-        className={cn(
-          "z-50 max-h-[var(--radix-popover-content-available-height)] rounded-xl border border-neutral-100 bg-white p-2 shadow-lg",
-          // transition
-          "transition-all",
-          // animation
-          "fade-in data-[state=closed]:fade-out animate-in data-[state=closed]:animate-out",
-          // animation left
-          "data-[side=left]:slide-in-from-right-1 data-[side=left]:data-[state=closed]:slide-out-to-right-1",
-          // animation top
-          "data-[side=top]:slide-in-from-bottom-1 data-[side=top]:data-[state=closed]:slide-out-to-bottom-1",
-          // animation right
-          "data-[side=right]:slide-in-from-left-1 data-[side=right]:data-[state=closed]:slide-out-to-left-1",
-          // animation bottom
-          "data-[side=bottom]:slide-in-from-top-1 data-[side=bottom]:data-[state=closed]:slide-out-to-top-1",
-          className
-        )}
-        collisionPadding={8}
-        hideWhenDetached
-        sideOffset={4}
-        {...props}
-      />
-    </RadixPopoverPortal>
+    <Popover.Portal>
+      <Popover.Positioner collisionPadding={8} side={side} sideOffset={4}>
+        <Popover.Popup
+          className={cn(
+            "z-50 rounded-xl border border-neutral-100 bg-white p-2 shadow-lg",
+            // transition
+            "transition-all",
+            // animation
+            "data-[ending-style]:opacity-0 data-[starting-style]:opacity-0 data-[instant]:duration-0",
+            // // animation left
+            "data-[side=left]:data-[ending-style]:-translate-x-1 data-[side=left]:data-[starting-style]:-translate-x-1",
+            // // animation top
+            "data-[side=top]:data-[ending-style]:-translate-y-1 data-[side=top]:data-[starting-style]:-translate-y-1",
+            // // animation right
+            "data-[side=right]:data-[ending-style]:translate-x-1 data-[side=right]:data-[starting-style]:translate-x-1",
+            // // animation bottom
+            "data-[side=bottom]:data-[ending-style]:translate-y-1 data-[side=bottom]:data-[starting-style]:translate-y-1",
+            className
+          )}
+          {...props}
+        />
+      </Popover.Positioner>
+    </Popover.Portal>
   );
-}
-
-function PopoverAnchor({
-  ...props
-}: React.ComponentProps<typeof RadixPopoverAnchor>) {
-  return <RadixPopoverAnchor data-slot="popover-anchor" {...props} />;
 }
 
 export {
   PopoverRoot as Root,
   PopoverTrigger as Trigger,
   PopoverContent as Content,
-  PopoverAnchor as Anchor,
 };

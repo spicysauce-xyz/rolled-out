@@ -70,8 +70,8 @@ const Invitation: React.FC<InvitationProps> = ({ data, organizationId }) => {
         <MemberEntry.Content>
           <MemberEntry.Heading>{data.email}</MemberEntry.Heading>
           <MemberEntry.Subheading>
-            <Text.Root asChild color={statusColor} size="xs">
-              <span>{_.capitalize(data.status)} Invitation</span>
+            <Text.Root color={statusColor} render={<span />} size="sm">
+              {_.capitalize(data.status)} Invitation
             </Text.Root>{" "}
             · Expires in {formatDistance(data.expiresAt, new Date())}
           </MemberEntry.Subheading>

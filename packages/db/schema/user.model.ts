@@ -9,11 +9,6 @@ export const user = pgTable("user", {
   image: text("image"),
 
   onboarded: boolean("onboarded").notNull().default(false),
-  notificationsReadAt: timestamp("notifications_read_at", {
-    withTimezone: true,
-  })
-    .defaultNow()
-    .notNull(),
 
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),

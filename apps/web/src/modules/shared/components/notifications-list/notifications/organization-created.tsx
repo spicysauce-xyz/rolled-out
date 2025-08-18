@@ -21,15 +21,15 @@ export const OrganizationCreatedNotification: React.FC<
       </div>
       <div className="flex flex-1 flex-col gap-0.5 overflow-hidden">
         <div className="flex items-center gap-4 overflow-hidden">
-          <Text.Root className="flex-1 truncate" color="muted" size="sm">
-            <Text.Root asChild size="sm">
-              <span className="font-weight-500">{organization.name}</span>
+          <Text.Root className="flex-1 truncate" color="muted">
+            <Text.Root render={<span />} weight="medium">
+              {organization.name}
             </Text.Root>{" "}
             has been successfully created.
           </Text.Root>
           {isUnread && <div className="size-2 rounded-full bg-accent-500" />}
         </div>
-        <Text.Root color="muted" size="xs">
+        <Text.Root color="muted" size="sm">
           {organization.name} ·{" "}
           {formatDistanceToNow(new Date(createdAt), { addSuffix: true })}
         </Text.Root>

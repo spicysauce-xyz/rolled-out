@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Textarea } from "./";
 
-const meta = {
+const meta: Meta = {
   title: "Components/Textarea",
   component: Textarea.Root,
   parameters: {
@@ -13,7 +13,7 @@ const meta = {
       control: { type: "select" },
     },
   },
-} satisfies Meta<typeof Textarea.Root>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;
