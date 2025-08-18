@@ -1,4 +1,4 @@
-import { Clickable, Text } from "@mono/ui";
+import { Button, Text } from "@mono/ui";
 import { cn } from "@mono/ui/utils";
 import type { Editor, Range } from "@tiptap/react";
 import type { LucideIcon } from "lucide-react";
@@ -49,7 +49,7 @@ export const SlashCommandMenu = forwardRef<
   return (
     <div className="flex-col gap-px rounded-xl border border-neutral-100 bg-white p-2 shadow-xl">
       {items.map((item, index) => (
-        <Clickable.Root
+        <Button.Root
           className={cn(
             "w-full items-center gap-2 p-2",
             selectedIndex === index && "bg-neutral-50 text-neutral-600"
@@ -58,18 +58,11 @@ export const SlashCommandMenu = forwardRef<
           onMouseEnter={() => setSelectedIndex(index)}
           variant="tertiary"
         >
-          <Clickable.Icon
-            className={cn(
-              "size-5",
-              selectedIndex === index && "text-neutral-500"
-            )}
-          >
-            <item.icon />
-          </Clickable.Icon>
+          <Button.Icon render={<item.icon />} />
           <Text.Root className="text-inherit" size="sm" weight="medium">
             {item.title}
           </Text.Root>
-        </Clickable.Root>
+        </Button.Root>
       ))}
     </div>
   );

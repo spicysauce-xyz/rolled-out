@@ -4,11 +4,11 @@ import { ResultAsync } from "neverthrow";
 import { NotificationRepository } from "./notification.repository";
 
 export const NotificationService = {
-  getNotificationsForUser: (
-    user: { id: string },
+  getNotificationsForMember: (
+    member: { id: string },
     { limit, offset }: { limit: number; offset: number }
   ) => {
-    return NotificationRepository.getNotificationsForUser(user, {
+    return NotificationRepository.getNotificationsForMember(member, {
       limit,
       offset,
     });
@@ -20,34 +20,18 @@ export const NotificationService = {
         where: eq(schema.member.organizationId, organizationId),
         columns: {
           id: true,
-          userId: true,
         },
       }),
       () => new Error("Failed to get all organization members")
     );
   },
-  createOrganizationCreatedNotification: (organizationId: string) => {
-    return NotificationService.getAllOrganizationMembers(
-      organizationId
-    ).andThen((members) => {
-      return ResultAsync.combine(
-        members.map((member) => {
-          return NotificationRepository.create({
-            type: "organization_created",
-            organizationId,
-            recipientId: member.userId,
-          });
-        })
-      );
-    });
-  },
-  getNotificationsStatusForUser: (user: { id: string }) => {
-    return NotificationRepository.getLastReadAtForUser(user)
+  getNotificationsStatusForMember: (member: { id: string }) => {
+    return NotificationRepository.getLastReadAtForMember(member)
       .andThen((lastReadAt) => {
         return ResultAsync.combine([
-          NotificationRepository.countNotificationsForUser(user),
-          NotificationRepository.countUnreadNotificationsForUser(
-            user,
+          NotificationRepository.countNotificationsForMember(member),
+          NotificationRepository.countUnreadNotificationsForMember(
+            member,
             lastReadAt
           ),
         ]);
@@ -58,7 +42,7 @@ export const NotificationService = {
         lastReadAt: unreadCount.lastReadAt,
       }));
   },
-  markNotificationsAsReadForUser: (user: { id: string }) => {
-    return NotificationRepository.markNotificationsAsReadForUser(user);
+  markNotificationsAsReadForMember: (member: { id: string }) => {
+    return NotificationRepository.markNotificationsAsReadForMember(member);
   },
 };

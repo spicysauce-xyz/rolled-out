@@ -1,6 +1,6 @@
 import { SymbolPicker } from "@components/symbol-picker";
 import useAppForm from "@lib/form";
-import { Button, Clickable, Dialog, Input, Label } from "@mono/ui";
+import { Button, Dialog, Input, Label } from "@mono/ui";
 import { useDisclosure } from "@mono/ui/hooks";
 import {
   DynamicIcon,
@@ -93,7 +93,7 @@ export const NewBoardDialog: React.FC<NewBoardDialogProps> = ({
                     <Label.Asterisk />
                   </Label.Root>
                   <div className="flex items-start">
-                    <Clickable.Root
+                    <Button.Root
                       className="flex size-10 items-center justify-center"
                       onClick={symbolPicker.toggle}
                       type="button"
@@ -103,9 +103,8 @@ export const NewBoardDialog: React.FC<NewBoardDialogProps> = ({
                         className="size-4 stroke-neutral-900"
                         name={field.state.value}
                       />
-                    </Clickable.Root>
+                    </Button.Root>
                     <SymbolPicker
-                      align="start"
                       isOpen={symbolPicker.isOpen}
                       onChange={field.handleChange}
                       onOpenChange={symbolPicker.setOpen}
@@ -203,9 +202,9 @@ export const NewBoardDialog: React.FC<NewBoardDialogProps> = ({
             </form.Field>
           </div>
           <Dialog.Footer className="justify-end">
-            <Dialog.Close asChild>
-              <Button.Root variant="secondary">Cancel</Button.Root>
-            </Dialog.Close>
+            <Dialog.Cancel render={<Button.Root variant="secondary" />}>
+              Cancel
+            </Dialog.Cancel>
             <form.Subscribe
               selector={({ isDirty, canSubmit }) => ({
                 isDirty,

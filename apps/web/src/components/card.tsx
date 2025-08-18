@@ -55,15 +55,7 @@ const CardHeaderDescription = React.forwardRef<
   React.ComponentRef<typeof Text.Root>,
   React.ComponentProps<typeof Text.Root>
 >(({ className, ...props }, ref) => {
-  return (
-    <Text.Root
-      className={className}
-      color="muted"
-      ref={ref}
-      size="sm"
-      {...props}
-    />
-  );
+  return <Text.Root className={className} color="muted" ref={ref} {...props} />;
 });
 
 type CardContentProps = React.HTMLAttributes<HTMLDivElement>;

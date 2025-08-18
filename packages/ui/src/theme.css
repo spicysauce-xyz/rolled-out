@@ -158,14 +158,14 @@
   --breakpoint-xl: 80rem;
   --breakpoint-2xl: 96rem;
 
-  --text-xs: 0.75rem;
-  --text-xs--line-height: calc(18 / 12);
-  --text-sm: 0.875rem;
-  --text-sm--line-height: calc(20 / 14);
-  --text-md: 1rem;
-  --text-md--line-height: calc(24 / 16);
-  --text-lg: 1.125rem;
-  --text-lg--line-height: calc(28 / 18);
+  --text-xs: 0.5rem;
+  --text-xs--line-height: calc(14 / 8);
+  --text-sm: 0.75rem;
+  --text-sm--line-height: calc(18 / 12);
+  --text-md: 0.875rem;
+  --text-md--line-height: calc(20 / 14);
+  --text-lg: 1rem;
+  --text-lg--line-height: calc(24 / 16);
 
   --text-display-xs: 1.5rem;
   --text-display-xs--line-height: calc(32 / 24);
@@ -265,6 +265,6 @@
     }
   }
 
-  --default-transition-duration: 150ms;
+  --default-transition-duration: 75ms;
   --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }

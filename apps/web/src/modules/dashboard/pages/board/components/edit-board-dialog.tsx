@@ -2,7 +2,7 @@ import { SymbolPicker } from "@components/symbol-picker";
 import type { api, SuccessResponse } from "@lib/api";
 import { boardQuery } from "@lib/api/queries";
 import useAppForm from "@lib/form";
-import { Button, Clickable, Dialog, Input, Label } from "@mono/ui";
+import { Button, Dialog, Input, Label } from "@mono/ui";
 import { useDisclosure } from "@mono/ui/hooks";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
@@ -86,7 +86,7 @@ const Content: React.FC<
                   <Label.Asterisk />
                 </Label.Root>
                 <div className="flex items-start">
-                  <Clickable.Root
+                  <Button.Root
                     className="flex size-10 items-center justify-center"
                     onClick={symbolPicker.toggle}
                     type="button"
@@ -96,9 +96,8 @@ const Content: React.FC<
                       className="size-4 stroke-neutral-900"
                       name={field.state.value}
                     />
-                  </Clickable.Root>
+                  </Button.Root>
                   <SymbolPicker
-                    align="start"
                     isOpen={symbolPicker.isOpen}
                     onChange={field.handleChange}
                     onOpenChange={symbolPicker.setOpen}
@@ -178,9 +177,9 @@ const Content: React.FC<
           </form.Field>
         </div>
         <Dialog.Footer className="justify-end">
-          <Dialog.Close asChild>
-            <Button.Root variant="secondary">Cancel</Button.Root>
-          </Dialog.Close>
+          <Dialog.Cancel render={<Button.Root variant="secondary" />}>
+            Cancel
+          </Dialog.Cancel>
           <form.Subscribe
             selector={({ isDirty, canSubmit }) => ({
               isDirty,

@@ -29,11 +29,15 @@ export const useUpdateOrganizationMutation = () => {
       return response.data;
     },
     onSuccess: async (data) => {
-      await queryClient.refetchQueries(organizationQuery(data.id));
+      console.time("invalidating organization");
+      await queryClient.invalidateQueries(organizationQuery(data.id));
+      console.timeEnd("invalidating organization");
 
+      console.time("refetching organizations");
       await queryClient.refetchQueries(organizationsQuery());
+      console.timeEnd("refetching organizations");
 
-      Toaster.success("Organization updated successfully!");
+      Toaster.success("Organization updated.");
     },
     onError: (error, __, context) => {
       if (context) {

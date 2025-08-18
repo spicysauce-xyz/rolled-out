@@ -1,4 +1,4 @@
-import { Clickable, Input, Popover, ScrollArea, Text } from "@mono/ui";
+import { Button, Input, Popover, ScrollArea, Text } from "@mono/ui";
 import { cn } from "@mono/ui/utils";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import _ from "lodash";
@@ -39,7 +39,7 @@ const Content = ({ onIconClick }: ContentProps) => {
   return (
     <>
       <div className="border-neutral-100 border-b p-2">
-        <Input.Root size="sm">
+        <Input.Root>
           <Input.Wrapper>
             <Input.Field
               onChange={(e) => setSearch(e.target.value)}
@@ -54,16 +54,10 @@ const Content = ({ onIconClick }: ContentProps) => {
           <ScrollArea.Viewport className="p-2 pb-0" ref={viewportRef}>
             {chunks.length === 0 ? (
               <div className="flex flex-1 items-center justify-center">
-                <Text.Root
-                  className="text-balance text-center"
-                  color="muted"
-                  size="sm"
-                >
+                <Text.Root className="text-balance text-center" color="muted">
                   No results found for{" "}
-                  <Text.Root asChild size="sm">
-                    <span>"{search}"</span>
-                  </Text.Root>
-                  . Try a different search
+                  <Text.Root render={<span />}>"{search}"</Text.Root>. Try a
+                  different search
                 </Text.Root>
               </div>
             ) : (
@@ -85,19 +79,21 @@ const Content = ({ onIconClick }: ContentProps) => {
                     }}
                   >
                     {chunks[virtualItem.index].map((icon: IconName) => (
-                      <Clickable.Root
+                      <Button.Root
                         className="flex aspect-square h-full items-center justify-center"
                         key={icon}
                         onClick={() => onIconClick(icon)}
                         variant="tertiary"
                       >
-                        <Clickable.Icon>
-                          <DynamicIcon
-                            className="stroke-neutral-500"
-                            name={icon}
-                          />
-                        </Clickable.Icon>
-                      </Clickable.Root>
+                        <Button.Icon
+                          render={
+                            <DynamicIcon
+                              className="stroke-neutral-500"
+                              name={icon}
+                            />
+                          }
+                        />
+                      </Button.Root>
                     ))}
                   </div>
                 ))}
@@ -135,7 +131,6 @@ export const SymbolPicker: React.FC<SymbolPickerProps> = ({
 
   return (
     <Popover.Root onOpenChange={onOpenChange} open={isOpen}>
-      <Popover.Anchor />
       <Popover.Content
         {...contentProps}
         className={cn("w-64 p-0", contentProps.className)}

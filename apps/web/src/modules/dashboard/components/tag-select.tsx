@@ -1,12 +1,5 @@
 import { organizationTagsQuery } from "@lib/api/queries";
-import {
-  Clickable,
-  DropdownMenu,
-  IconButton,
-  Tag,
-  Text,
-  Tooltip,
-} from "@mono/ui";
+import { Button, DropdownMenu, IconButton, Tag, Text, Tooltip } from "@mono/ui";
 import { useQuery } from "@tanstack/react-query";
 import { PlusIcon } from "lucide-react";
 import { useMemo } from "react";
@@ -53,14 +46,14 @@ export const TagSelect: React.FC<TagSelectProps> = ({
   return (
     <div className="flex flex-wrap gap-2">
       <DropdownMenu.Root>
-        <DropdownMenu.Trigger asChild>
-          <IconButton.Root isLoading={isPending} variant="secondary">
-            <IconButton.Icon>
-              <PlusIcon />
-            </IconButton.Icon>
-          </IconButton.Root>
+        <DropdownMenu.Trigger
+          render={<IconButton.Root isLoading={isPending} variant="secondary" />}
+        >
+          <IconButton.Icon>
+            <PlusIcon />
+          </IconButton.Icon>
         </DropdownMenu.Trigger>
-        <DropdownMenu.Content align="start" asChild className="max-h-64 p-0">
+        <DropdownMenu.Content align="start" className="max-h-64 p-0">
           {tagsData?.map((tag) => (
             <DropdownMenu.CheckboxItem
               checked={selectedTagsMap.has(tag.id)}
@@ -71,9 +64,7 @@ export const TagSelect: React.FC<TagSelectProps> = ({
             >
               <div className="flex flex-1 items-center justify-between gap-4">
                 {tag.label}
-                <Text.Root color="muted" size="sm">
-                  {tag.postsCount || ""}
-                </Text.Root>
+                <Text.Root color="muted">{tag.postsCount || ""}</Text.Root>
               </div>
             </DropdownMenu.CheckboxItem>
           ))}
@@ -93,20 +84,18 @@ export const TagSelect: React.FC<TagSelectProps> = ({
 
           return (
             <Tooltip.Root key={tag.id}>
-              <Tooltip.Trigger asChild>
-                <Clickable.Root
-                  className={tagClassName.root({ className: "border-0" })}
-                  onClick={() => removeTag(tag.id)}
-                  variant="tertiary"
-                >
-                  <Text.Root
-                    className={tagClassName.text()}
-                    size="sm"
-                    weight="medium"
-                  >
-                    {tag.label}
-                  </Text.Root>
-                </Clickable.Root>
+              <Tooltip.Trigger
+                render={
+                  <Button.Root
+                    className={tagClassName.root({ className: "border-0" })}
+                    onClick={() => removeTag(tag.id)}
+                    variant="tertiary"
+                  />
+                }
+              >
+                <Text.Root className={tagClassName.text()} weight="medium">
+                  {tag.label}
+                </Text.Root>
               </Tooltip.Trigger>
               <Tooltip.Content>
                 <Tooltip.Title>Click to remove</Tooltip.Title>

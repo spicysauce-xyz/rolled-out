@@ -1,13 +1,5 @@
 import useAppForm from "@lib/form";
-import {
-  Button,
-  Clickable,
-  Dialog,
-  Input,
-  Label,
-  Select,
-  Text,
-} from "@mono/ui";
+import { Button, Dialog, Input, Label, Select, Text } from "@mono/ui";
 import _ from "lodash";
 import { SendIcon } from "lucide-react";
 import { useEffect } from "react";
@@ -105,27 +97,39 @@ export const InviteMemberDialog: React.FC<InviteMemberDialogProps> = ({
                     <Label.Asterisk />
                   </Label.Root>
                   <Select.Root
+                    items={[
+                      {
+                        label: "Member",
+                        value: "member",
+                      },
+                      {
+                        label: "Admin",
+                        value: "admin",
+                      },
+                      {
+                        label: "Owner",
+                        value: "owner",
+                      },
+                    ]}
                     onValueChange={(value) =>
                       field.handleChange(value as "member" | "admin" | "owner")
                     }
                     value={field.state.value}
                   >
-                    <Select.Trigger asChild>
-                      <Clickable.Root
-                        className="flex h-10 items-center justify-between px-3"
-                        variant="secondary"
-                      >
-                        <Select.Value placeholder="Role" />
-                        <Clickable.Icon>
-                          <Select.Icon />
-                        </Clickable.Icon>
-                      </Clickable.Root>
+                    <Select.Trigger
+                      render={<Button.Root type="button" variant="secondary" />}
+                    >
+                      <Select.Value />
+                      <Button.Icon
+                        className="ml-auto"
+                        render={<Select.Icon />}
+                      />
                     </Select.Trigger>
-                    <Select.Content align="end">
+                    <Select.Content>
                       {["member", "admin", "owner"].map((role) => (
                         <Select.Item key={role} value={role}>
                           <Select.ItemText>
-                            <Text.Root size="sm" weight="medium">
+                            <Text.Root weight="medium">
                               {_.capitalize(role)}
                             </Text.Root>
                           </Select.ItemText>
@@ -138,9 +142,9 @@ export const InviteMemberDialog: React.FC<InviteMemberDialogProps> = ({
             </form.Field>
           </div>
           <Dialog.Footer className="justify-end">
-            <Dialog.Close asChild>
-              <Button.Root variant="secondary">Cancel</Button.Root>
-            </Dialog.Close>
+            <Dialog.Cancel render={<Button.Root variant="secondary" />}>
+              Cancel
+            </Dialog.Cancel>
             <form.Subscribe
               selector={({ isSubmitting, isFieldsValid }) => ({
                 isSubmitting,
@@ -152,9 +156,7 @@ export const InviteMemberDialog: React.FC<InviteMemberDialogProps> = ({
                   isDisabled={!isFieldsValid || isSubmitting}
                   type="submit"
                 >
-                  <Button.Icon>
-                    <SendIcon />
-                  </Button.Icon>
+                  <Button.Icon render={<SendIcon />} />
                   Send Invite
                 </Button.Root>
               )}

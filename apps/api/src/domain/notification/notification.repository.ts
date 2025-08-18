@@ -9,13 +9,13 @@ export const NotificationRepository = {
       () => new Error("Failed to create notification")
     );
   },
-  getNotificationsForUser: (
-    user: { id: string },
+  getNotificationsForMember: (
+    member: { id: string },
     { limit, offset }: { limit: number; offset: number }
   ) => {
     return ResultAsync.fromPromise(
       Database.query.notification.findMany({
-        where: eq(schema.notification.recipientId, user.id),
+        where: eq(schema.notification.recipientId, member.id),
         columns: {
           id: true,
           type: true,
@@ -33,22 +33,19 @@ export const NotificationRepository = {
         limit,
         offset,
       }),
-      () => new Error("Failed to get notifications for user")
+      () => new Error("Failed to get notifications for member")
     );
   },
-  getLastReadAtForUser: (user: { id: string }) => {
+  getLastReadAtForMember: (member: { id: string }) => {
     return ResultAsync.fromPromise(
-      Database.select({ lastReadAt: schema.user.notificationsReadAt })
-        .from(schema.user)
-        .where(eq(schema.user.id, user.id)),
-      (error) => {
-        console.error(error);
-        return new Error("Failed to get user");
-      }
+      Database.select({ lastReadAt: schema.member.notificationsReadAt })
+        .from(schema.member)
+        .where(eq(schema.member.id, member.id)),
+      () => new Error("Failed to get last read at for member")
     ).map((result) => result?.[0]?.lastReadAt ?? null);
   },
-  countUnreadNotificationsForUser: (
-    user: { id: string },
+  countUnreadNotificationsForMember: (
+    member: { id: string },
     lastReadAt: Date | null
   ) => {
     return ResultAsync.fromPromise(
@@ -56,32 +53,32 @@ export const NotificationRepository = {
         .from(schema.notification)
         .where(
           and(
-            eq(schema.notification.recipientId, user.id),
+            eq(schema.notification.recipientId, member.id),
             lastReadAt
               ? gte(schema.notification.createdAt, lastReadAt)
               : undefined
           )
         ),
-      () => new Error("Failed to count unread notifications for user")
+      () => new Error("Failed to count unread notifications for member")
     ).map((result) => ({
       unreadCount: result?.[0]?.count ?? 0,
       lastReadAt,
     }));
   },
-  countNotificationsForUser: (user: { id: string }) => {
+  countNotificationsForMember: (member: { id: string }) => {
     return ResultAsync.fromPromise(
       Database.select({ count: count() })
         .from(schema.notification)
-        .where(and(eq(schema.notification.recipientId, user.id))),
-      () => new Error("Failed to count notifications for user")
+        .where(and(eq(schema.notification.recipientId, member.id))),
+      () => new Error("Failed to count notifications for member")
     ).map((result) => ({ count: result?.[0]?.count ?? 0 }));
   },
-  markNotificationsAsReadForUser: (user: { id: string }) => {
+  markNotificationsAsReadForMember: (member: { id: string }) => {
     return ResultAsync.fromPromise(
-      Database.update(schema.user)
+      Database.update(schema.member)
         .set({ notificationsReadAt: new Date() })
-        .where(eq(schema.user.id, user.id)),
-      () => new Error("Failed to mark notifications as read for user")
+        .where(eq(schema.member.id, member.id)),
+      () => new Error("Failed to mark notifications as read for member")
     );
   },
 };

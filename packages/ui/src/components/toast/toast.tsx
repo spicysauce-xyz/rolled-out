@@ -90,8 +90,8 @@ const ToasterRoot = ({ ...props }: ToasterProps) => {
           "rounded-xl flex w-full mx-auto flex-col gap-2 py-4 pl-11 pr-12.5 bg-neutral-900 shadow-xl ring-0",
         classNames: {
           closeButton: "absolute top-2 right-2 outline-none",
-          title: "text-sm font-weight-500 text-white",
-          description: "text-xs font-weight-400 text-neutral-200",
+          title: "font-weight-500 text-md text-white",
+          description: "text-sm font-weight-400 text-neutral-200",
           icon: "size-5 flex items-center ml-0 mr-0 absolute top-4 left-4",
           content: "flex flex-col gap-0.5",
         },

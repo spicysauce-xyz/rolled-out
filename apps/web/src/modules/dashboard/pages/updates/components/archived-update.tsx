@@ -1,7 +1,7 @@
 import { Confirmer } from "@components/confirmer";
 import { UpdateEntry } from "@modules/dashboard/components/update-list";
 import { useUnarchiveUpdateMutation } from "@modules/dashboard/hooks/use-unarchive-update-mutation";
-import { Clickable, DropdownMenu, IconButton, Text } from "@mono/ui";
+import { DropdownMenu, IconButton, Text } from "@mono/ui";
 import { Link } from "@tanstack/react-router";
 import { ArchiveIcon, EllipsisVerticalIcon } from "lucide-react";
 import type React from "react";
@@ -54,7 +54,7 @@ export const ArchivedUpdate: React.FC<ArchivedUpdateProps> = ({
   };
 
   return (
-    <UpdateEntry.Root asChild>
+    <UpdateEntry.Root>
       <Link
         params={{ organizationSlug, id }}
         to="/$organizationSlug/editor/$id"
@@ -73,12 +73,12 @@ export const ArchivedUpdate: React.FC<ArchivedUpdateProps> = ({
           <UpdateEntry.Date date={createdAt} label="Created on" />
         </UpdateEntry.Meta>
         <DropdownMenu.Root>
-          <DropdownMenu.Trigger asChild>
-            <IconButton.Root className="-my-2" size="sm" variant="tertiary">
-              <IconButton.Icon>
-                <EllipsisVerticalIcon />
-              </IconButton.Icon>
-            </IconButton.Root>
+          <DropdownMenu.Trigger
+            render={<IconButton.Root className="-my-2" variant="tertiary" />}
+          >
+            <IconButton.Icon>
+              <EllipsisVerticalIcon />
+            </IconButton.Icon>
           </DropdownMenu.Trigger>
           <DropdownMenu.Content
             align="end"
@@ -89,9 +89,7 @@ export const ArchivedUpdate: React.FC<ArchivedUpdateProps> = ({
             side="bottom"
           >
             <DropdownMenu.Item onClick={handleUnarchiveUpdate}>
-              <DropdownMenu.ItemIcon>
-                <ArchiveIcon />
-              </DropdownMenu.ItemIcon>
+              <DropdownMenu.ItemIcon render={<ArchiveIcon />} />
               Unarchive
             </DropdownMenu.Item>
           </DropdownMenu.Content>
@@ -113,22 +111,22 @@ export const ArchivedUpdatesButton: React.FC<ArchivedUpdatesButtonProps> = ({
   onClick,
 }) => {
   return (
-    <Clickable.Root
+    <button
       className="flex items-center justify-center gap-2 rounded-none px-6 py-4"
       onClick={onClick}
-      variant="tertiary"
+      type="button"
     >
       {isOpen ? (
-        <Text.Root className="text-center" color="muted" size="sm">
+        <Text.Root className="text-center" color="muted">
           Click here to hide archived updates
         </Text.Root>
       ) : (
-        <Text.Root className="text-center" color="muted" size="sm">
+        <Text.Root className="text-center" color="muted">
           You have {count} archived update{count === 1 ? "" : "s"}. Click here
           to view them
         </Text.Root>
       )}
-    </Clickable.Root>
+    </button>
   );
 };
 

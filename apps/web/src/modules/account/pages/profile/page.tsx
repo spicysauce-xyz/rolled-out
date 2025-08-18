@@ -2,10 +2,10 @@ import { Card } from "@components/card";
 import { sessionQuery } from "@lib/api/queries";
 import useAppForm from "@lib/form";
 import { FileUpload } from "@modules/shared/components/file-upload";
-import { Avatar, Button, Input, Label, Text } from "@mono/ui";
+import { Avatar, Button, Input, Label } from "@mono/ui";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { MailIcon, SaveIcon, UserIcon } from "lucide-react";
+import { ImageIcon, MailIcon, UserIcon } from "lucide-react";
 import { match } from "ts-pattern";
 import { z } from "zod";
 import { useUpdateUserMutation } from "./hooks/use-update-user-mutation";
@@ -48,14 +48,18 @@ function RouteComponent() {
         email: z.string().email(),
       }),
     },
-    onSubmit: async ({ value, formApi }) => {
-      await updateUserMutation.mutateAsync({
-        name: value.name.trim(),
-        image: value.image,
-      });
-
-      formApi.reset();
-    },
+    onSubmit: ({ value, formApi }) =>
+      updateUserMutation.mutateAsync(
+        {
+          name: value.name.trim(),
+          image: value.image,
+        },
+        {
+          onSuccess: () => {
+            formApi.reset();
+          },
+        }
+      ),
   });
 
   return (
@@ -88,7 +92,7 @@ function RouteComponent() {
                 >
                   {({ id }, state) => (
                     <label htmlFor={id}>
-                      <Avatar.Root className="group size-15">
+                      <Avatar.Root className="group size-10">
                         {match(state)
                           .with(
                             { state: "uploading" },
@@ -106,13 +110,7 @@ function RouteComponent() {
                             <>
                               <Avatar.Image src={field.state.value || ""} />
                               <div className="absolute inset-0 flex items-center justify-center bg-white/10 opacity-0 backdrop-blur-sm transition-all group-hover:opacity-100">
-                                <Text.Root
-                                  className="text-white"
-                                  size="xs"
-                                  weight="medium"
-                                >
-                                  Update
-                                </Text.Root>
+                                <ImageIcon className="size-4 text-white" />
                               </div>
                             </>
                           ))}
@@ -186,21 +184,17 @@ function RouteComponent() {
                   isLoading={isSubmitting}
                   type="submit"
                 >
-                  <Button.Icon>
-                    <SaveIcon />
-                  </Button.Icon>
                   Save
                 </Button.Root>
-                {isDirty && (
-                  <Button.Root
-                    isDisabled={isSubmitting}
-                    onClick={() => form.reset()}
-                    type="button"
-                    variant="tertiary"
-                  >
-                    Discard
-                  </Button.Root>
-                )}
+
+                <Button.Root
+                  isDisabled={isSubmitting || !isDirty}
+                  onClick={() => form.reset()}
+                  type="button"
+                  variant="secondary"
+                >
+                  Discard
+                </Button.Root>
               </div>
             )}
           </form.Subscribe>

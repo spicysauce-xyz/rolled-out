@@ -1,11 +1,11 @@
 import { Card } from "@components/card";
-import { organizationQuery } from "@lib/api/queries";
+import { organizationQuery, organizationsQuery } from "@lib/api/queries";
 import useAppForm from "@lib/form";
 import { FileUpload } from "@modules/shared/components/file-upload";
-import { Avatar, Button, Input, Label, Text } from "@mono/ui";
+import { Avatar, Button, Input, Label } from "@mono/ui";
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute, useRouter } from "@tanstack/react-router";
-import { Loader2Icon, SaveIcon } from "lucide-react";
+import { createFileRoute } from "@tanstack/react-router";
+import { ImageIcon, Loader2Icon, SaveIcon } from "lucide-react";
 import { match } from "ts-pattern";
 import { z } from "zod";
 import { useCheckSlugMutation } from "./hooks/use-check-slug-mutation";
@@ -19,8 +19,9 @@ export const Route = createFileRoute(
 
 function RouteComponent() {
   const navigate = Route.useNavigate();
-  const router = useRouter();
-  const { organization } = Route.useRouteContext();
+  const { organization, organizations } = Route.useRouteContext();
+
+  useQuery({ ...organizationsQuery(), initialData: organizations });
 
   const { data: organizationQueryData, isPending: isOrganizationQueryPending } =
     useQuery({
@@ -49,8 +50,8 @@ function RouteComponent() {
         logo: z.string().nullable(),
       }),
     },
-    onSubmit: async ({ value }) => {
-      await updateOrganizationMutation.mutateAsync(
+    onSubmit: async ({ value, formApi }) =>
+      updateOrganizationMutation.mutateAsync(
         {
           name: value.name,
           slug: value.slug,
@@ -58,7 +59,7 @@ function RouteComponent() {
           organizationId: organization.id,
         },
         {
-          onSuccess: async () => {
+          onSuccess: () => {
             if (value.slug !== organization.slug) {
               navigate({
                 to: ".",
@@ -67,13 +68,12 @@ function RouteComponent() {
                   organizationSlug: value.slug,
                 },
               });
-            } else {
-              await router.invalidate({ sync: true });
             }
+
+            formApi.reset();
           },
         }
-      );
-    },
+      ),
   });
 
   return (
@@ -106,7 +106,7 @@ function RouteComponent() {
                 >
                   {({ id }, state) => (
                     <label htmlFor={id}>
-                      <Avatar.Root className="group size-15">
+                      <Avatar.Root className="group size-10">
                         {match(state)
                           .with(
                             { state: "uploading" },
@@ -124,13 +124,7 @@ function RouteComponent() {
                             <>
                               <Avatar.Image src={field.state.value || ""} />
                               <div className="absolute inset-0 flex items-center justify-center bg-white/10 opacity-0 backdrop-blur-sm transition-all group-hover:opacity-100">
-                                <Text.Root
-                                  className="text-white"
-                                  size="xs"
-                                  weight="medium"
-                                >
-                                  Update
-                                </Text.Root>
+                                <ImageIcon className="size-4 text-white" />
                               </div>
                             </>
                           ))}
@@ -248,21 +242,17 @@ function RouteComponent() {
                   isLoading={isSubmitting}
                   type="submit"
                 >
-                  <Button.Icon>
-                    <SaveIcon />
-                  </Button.Icon>
+                  <Button.Icon render={<SaveIcon />} />
                   Save
                 </Button.Root>
-                {isDirty && (
-                  <Button.Root
-                    isDisabled={isSubmitting}
-                    onClick={() => form.reset()}
-                    type="button"
-                    variant="tertiary"
-                  >
-                    Discard
-                  </Button.Root>
-                )}
+                <Button.Root
+                  isDisabled={isSubmitting || !isDirty}
+                  onClick={() => form.reset()}
+                  type="button"
+                  variant="secondary"
+                >
+                  Discard
+                </Button.Root>
               </div>
             )}
           </form.Subscribe>

@@ -173,9 +173,9 @@ export const NewOrganizationDialog: React.FC<NewOrganizationDialogProps> = ({
             </form.Field>
           </div>
           <Dialog.Footer className="justify-end">
-            <Dialog.Close asChild>
-              <Button.Root variant="secondary">Cancel</Button.Root>
-            </Dialog.Close>
+            <Dialog.Cancel render={<Button.Root variant="secondary" />}>
+              Cancel
+            </Dialog.Cancel>
             <form.Subscribe
               selector={({ isSubmitting, isDirty, canSubmit }) => ({
                 isSubmitting,

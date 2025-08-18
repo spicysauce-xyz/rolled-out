@@ -1,17 +1,17 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import {
+  AppleIcon,
+  BananaIcon,
   BarChart2,
   LineChart,
   LogOut,
-  PenLine,
   RefreshCw,
-  Settings,
   Smartphone,
 } from "lucide-react";
 import { Button } from "../button";
 import { DropdownMenu } from "./";
 
-const meta = {
+const meta: Meta = {
   title: "Components/DropdownMenu",
   component: DropdownMenu.Content,
   parameters: {
@@ -23,7 +23,7 @@ const meta = {
       control: { type: "select" },
     },
   },
-} satisfies Meta<typeof DropdownMenu.Content>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -31,65 +31,63 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: ({ ...args }) => (
     <DropdownMenu.Root>
-      <DropdownMenu.Trigger asChild>
-        <Button.Root>Open Menu</Button.Root>
+      <DropdownMenu.Trigger render={<Button.Root />}>
+        Open Menu
       </DropdownMenu.Trigger>
       <DropdownMenu.Content {...args}>
         <DropdownMenu.Group>
           <DropdownMenu.Item>
-            <DropdownMenu.ItemIcon>
-              <PenLine />
-            </DropdownMenu.ItemIcon>
-            Profile
-            <DropdownMenu.Shortcut>⇧⌘P</DropdownMenu.Shortcut>
-          </DropdownMenu.Item>
-          <DropdownMenu.Item>
-            <DropdownMenu.ItemIcon>
-              <Settings />
-            </DropdownMenu.ItemIcon>
-            Settings
-            <DropdownMenu.Shortcut>⌘S</DropdownMenu.Shortcut>
-          </DropdownMenu.Item>
-        </DropdownMenu.Group>
-        <DropdownMenu.Separator />
-        <DropdownMenu.Group>
-          <DropdownMenu.Item>
-            <DropdownMenu.ItemIcon>
-              <RefreshCw />
-            </DropdownMenu.ItemIcon>
+            <DropdownMenu.ItemIcon render={<RefreshCw />} />
             Updates
           </DropdownMenu.Item>
           <DropdownMenu.Sub>
             <DropdownMenu.SubTrigger>
-              <DropdownMenu.ItemIcon>
-                <Smartphone />
-              </DropdownMenu.ItemIcon>
+              <DropdownMenu.ItemIcon render={<Smartphone />} />
               More Tools
             </DropdownMenu.SubTrigger>
-            <DropdownMenu.SubContent>
-              <DropdownMenu.Item>
-                <DropdownMenu.ItemIcon>
-                  <BarChart2 />
-                </DropdownMenu.ItemIcon>
-                Analytics
-              </DropdownMenu.Item>
-              <DropdownMenu.Item>
-                <DropdownMenu.ItemIcon>
-                  <LineChart />
-                </DropdownMenu.ItemIcon>
-                Reports
-              </DropdownMenu.Item>
-            </DropdownMenu.SubContent>
+            <DropdownMenu.Content alignOffset={-8} side="right" sideOffset={12}>
+              <DropdownMenu.Group>
+                <DropdownMenu.Item>
+                  <DropdownMenu.ItemIcon render={<BarChart2 />} />
+                  Analytics
+                </DropdownMenu.Item>
+                <DropdownMenu.Item>
+                  <DropdownMenu.ItemIcon render={<LineChart />} />
+                  Reports
+                </DropdownMenu.Item>
+              </DropdownMenu.Group>
+            </DropdownMenu.Content>
           </DropdownMenu.Sub>
         </DropdownMenu.Group>
         <DropdownMenu.Separator />
-        <DropdownMenu.Item>
-          <DropdownMenu.ItemIcon>
-            <LogOut />
-          </DropdownMenu.ItemIcon>
-          Log out
-          <DropdownMenu.Shortcut>⇧⌘Q</DropdownMenu.Shortcut>
-        </DropdownMenu.Item>
+        <DropdownMenu.RadioGroup>
+          <DropdownMenu.RadioItem value="apple">
+            <DropdownMenu.ItemIcon render={<AppleIcon />} />
+            Apple
+          </DropdownMenu.RadioItem>
+          <DropdownMenu.RadioItem value="banana">
+            <DropdownMenu.ItemIcon render={<BananaIcon />} />
+            Banana
+          </DropdownMenu.RadioItem>
+        </DropdownMenu.RadioGroup>
+        <DropdownMenu.Separator />
+        <DropdownMenu.Group>
+          <DropdownMenu.CheckboxItem>
+            <DropdownMenu.ItemIcon render={<AppleIcon />} />
+            Apple
+          </DropdownMenu.CheckboxItem>
+          <DropdownMenu.CheckboxItem>
+            <DropdownMenu.ItemIcon render={<BananaIcon />} />
+            Banana
+          </DropdownMenu.CheckboxItem>
+        </DropdownMenu.Group>
+        <DropdownMenu.Separator />
+        <DropdownMenu.Group>
+          <DropdownMenu.Item>
+            <DropdownMenu.ItemIcon render={<LogOut />} />
+            Log out
+          </DropdownMenu.Item>
+        </DropdownMenu.Group>
       </DropdownMenu.Content>
     </DropdownMenu.Root>
   ),

@@ -45,10 +45,8 @@ function RouteComponent() {
       description: (
         <>
           Are you sure you want to terminate{" "}
-          <Text.Root asChild size="sm" weight="medium">
-            <span>
-              {browser.name} on {os.name} ({os.version})
-            </span>
+          <Text.Root render={<span />} weight="medium">
+            {browser.name} on {os.name} ({os.version})
           </Text.Root>{" "}
           session?
         </>
@@ -175,10 +173,10 @@ function RouteComponent() {
                           )}
                         </div>
                         <div className="flex flex-col gap-0.5">
-                          <Text.Root size="sm" weight="medium">
+                          <Text.Root weight="medium">
                             {browser.name} on {os.name} ({os.version})
                           </Text.Root>
-                          <Text.Root color="muted" size="xs">
+                          <Text.Root color="muted" size="sm">
                             Logged in on {format(session.createdAt, "MMM d")}
                           </Text.Root>
                         </div>
@@ -189,9 +187,7 @@ function RouteComponent() {
                           onClick={handleLogout}
                           variant="tertiary"
                         >
-                          <Button.Icon>
-                            <LogOutIcon />
-                          </Button.Icon>
+                          <Button.Icon render={<LogOutIcon />} />
                           Logout
                         </Button.Root>
                       ) : (
@@ -200,9 +196,7 @@ function RouteComponent() {
                           onClick={() => handleTerminateSession(session)}
                           variant="tertiary"
                         >
-                          <Button.Icon>
-                            <BanIcon />
-                          </Button.Icon>
+                          <Button.Icon render={<BanIcon />} />
                           Terminate
                         </Button.Root>
                       )}
@@ -220,9 +214,7 @@ function RouteComponent() {
             onClick={handleTerminateOtherSessions}
             variant="secondary"
           >
-            <Button.Icon>
-              <BanIcon />
-            </Button.Icon>
+            <Button.Icon render={<BanIcon />} />
             Terminate Other Sessions
           </Button.Root>
         </Card.Footer>

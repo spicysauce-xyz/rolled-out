@@ -1,156 +1,91 @@
-import {
-  Action as RadixAlertDialogAction,
-  Cancel as RadixAlertDialogCancel,
-  Content as RadixAlertDialogContent,
-  Description as RadixAlertDialogDescription,
-  Overlay as RadixAlertDialogOverlay,
-  Portal as RadixAlertDialogPortal,
-  Root as RadixAlertDialogRoot,
-  Title as RadixAlertDialogTitle,
-  Trigger as RadixAlertDialogTrigger,
-} from "@radix-ui/react-alert-dialog";
-import { XIcon } from "lucide-react";
-import React from "react";
+import { AlertDialog } from "@base-ui-components/react/alert-dialog";
+import type React from "react";
 import { cn } from "../../utils";
 import { Button } from "../button";
-import { IconButton } from "../icon-button";
 import { Text } from "../text";
 
-const AlertDialogRoot = RadixAlertDialogRoot;
+const AlertDialogRoot = AlertDialog.Root;
 
-const AlertDialogTrigger = RadixAlertDialogTrigger;
+const AlertDialogTrigger = AlertDialog.Trigger;
 
-const AlertDialogPortal = RadixAlertDialogPortal;
-
-const AlertDialogOverlay = React.forwardRef<
-  React.ElementRef<typeof RadixAlertDialogOverlay>,
-  React.ComponentPropsWithoutRef<typeof RadixAlertDialogOverlay>
->(({ className, ...props }, ref) => (
-  <RadixAlertDialogOverlay
-    className={cn(
-      // base
-      "fixed inset-0 z-50 bg-neutral-900/25",
-      // transition
-      "transition-all",
-      // open
-      "data-[state=open]:fade-in-0 data-[state=open]:animate-in",
-      // closed
-      "data-[state=closed]:fade-out-0 data-[state=closed]:animate-out",
-      className
-    )}
-    {...props}
-    ref={ref}
-  />
-));
-
-const AlertDialogContent = React.forwardRef<
-  React.ElementRef<typeof RadixAlertDialogContent>,
-  React.ComponentPropsWithoutRef<typeof RadixAlertDialogContent>
->(({ className, children, ...props }, ref) => (
-  <AlertDialogPortal>
-    <AlertDialogOverlay />
-    <RadixAlertDialogContent
+const AlertDialogContent = ({
+  className,
+  children,
+  ...props
+}: React.ComponentPropsWithoutRef<typeof AlertDialog.Popup>) => (
+  <AlertDialog.Portal>
+    <AlertDialog.Backdrop
+      className={cn(
+        // base
+        "fixed inset-0 z-50 bg-neutral-900/25",
+        // transition
+        "transition-all",
+        // open
+        "data-[starting-style]:opacity-0",
+        // closed
+        "data-[ending-style]:opacity-0",
+        className
+      )}
+    />
+    <AlertDialog.Popup
       className={cn(
         // base
         "-translate-x-1/2 -translate-y-1/2 fixed top-1/2 left-1/2 z-50 flex w-full max-w-108 flex-col gap-6 rounded-xl bg-white p-6 shadow-xl outline-none",
         // transition
         "transition-all",
         // open
-        "fade-in-0 slide-in-from-top-4 animate-in",
+        "data-[starting-style]:-mt-4 data-[starting-style]:opacity-0",
         // closed
-        "data-[state=closed]:fade-out-0 data-[state=closed]:slide-out-to-top-4 data-[state=closed]:animate-out",
+        "data-[ending-style]:-mt-4 data-[ending-style]:opacity-0",
         className
       )}
-      ref={ref}
       {...props}
     >
       {children}
-      <RadixAlertDialogCancel asChild>
-        <IconButton.Root
-          className="absolute top-2.5 right-2.5"
-          size="sm"
-          variant="tertiary"
-        >
-          <IconButton.Icon>
-            <XIcon />
-          </IconButton.Icon>
-        </IconButton.Root>
-      </RadixAlertDialogCancel>
-    </RadixAlertDialogContent>
-  </AlertDialogPortal>
-));
+    </AlertDialog.Popup>
+  </AlertDialog.Portal>
+);
 
 const AlertDialogHeader = ({
   className,
   ...props
-}: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn("flex flex-col gap-1", className)} {...props} />
+}: React.ComponentPropsWithRef<"div">) => (
+  <div className={cn("flex flex-col gap-2", className)} {...props} />
 );
 
 const AlertDialogFooter = ({
   className,
   ...props
-}: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn("flex flex-row gap-2", className)} {...props} />
+}: React.ComponentPropsWithRef<"div">) => (
+  <div
+    className={cn("flex flex-row justify-end gap-2", className)}
+    {...props}
+  />
 );
 
-const AlertDialogTitle = React.forwardRef<
-  React.ElementRef<typeof Text.Root>,
-  React.ComponentPropsWithoutRef<typeof Text.Root>
->(({ className, ...props }, ref) => (
-  <RadixAlertDialogTitle asChild>
-    <Text.Root
-      className={className}
-      ref={ref}
-      size="lg"
-      weight="medium"
-      {...props}
-    />
-  </RadixAlertDialogTitle>
-));
+const AlertDialogTitle = (
+  props: React.ComponentPropsWithRef<typeof Text.Root>
+) => (
+  <AlertDialog.Title
+    render={<Text.Root size="lg" weight="medium" {...props} />}
+  />
+);
 
-const AlertDialogDescription = React.forwardRef<
-  React.ElementRef<typeof Text.Root>,
-  React.ComponentPropsWithoutRef<typeof Text.Root>
->(({ className, ...props }, ref) => (
-  <RadixAlertDialogDescription asChild>
-    <Text.Root
-      className={className}
-      color="muted"
-      ref={ref}
-      size="sm"
-      {...props}
-    />
-  </RadixAlertDialogDescription>
-));
+const AlertDialogDescription = (
+  props: React.ComponentPropsWithRef<typeof Text.Root>
+) => (
+  <AlertDialog.Description render={<Text.Root color="muted" {...props} />} />
+);
 
-const AlertDialogAction = React.forwardRef<
-  React.ElementRef<typeof RadixAlertDialogAction>,
-  React.ComponentPropsWithoutRef<typeof Button.Root>
->(({ className, variant = "filled", color = "neutral", ...props }, ref) => (
-  <RadixAlertDialogAction asChild ref={ref}>
-    <Button.Root
-      className={cn("flex-1", className)}
-      color={color}
-      variant={variant}
-      {...props}
-    />
-  </RadixAlertDialogAction>
-));
+const AlertDialogAction = (
+  props: React.ComponentPropsWithRef<typeof Button.Root>
+) => <AlertDialog.Close render={<Button.Root {...props} />} />;
 
-const AlertDialogCancel = React.forwardRef<
-  React.ElementRef<typeof RadixAlertDialogCancel>,
-  React.ComponentPropsWithoutRef<typeof Button.Root>
->(({ className, variant = "secondary", color = "neutral", ...props }, ref) => (
-  <RadixAlertDialogCancel asChild ref={ref}>
-    <Button.Root
-      className={cn("flex-1", className)}
-      color={color}
-      variant={variant}
-      {...props}
-    />
-  </RadixAlertDialogCancel>
-));
+const AlertDialogCancel = (
+  props: React.ComponentPropsWithRef<typeof Button.Root>
+) => (
+  <AlertDialog.Close render={<Button.Root variant="secondary" {...props} />} />
+);
 
 export {
   AlertDialogRoot as Root,

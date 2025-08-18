@@ -54,49 +54,54 @@ export const DraftUpdate: React.FC<DraftUpdateProps> = ({
   };
 
   return (
-    <UpdateEntry.Root asChild>
-      <Link
-        params={{ organizationSlug, id }}
-        to="/$organizationSlug/editor/$id"
-      >
-        <UpdateEntry.Group>
-          <UpdateEntry.Number number={order} />
-          <UpdateEntry.Title title={title} />
-        </UpdateEntry.Group>
-        <UpdateEntry.Tags
-          className="flex-1"
-          tags={tags.map(({ tag }) => tag.label)}
+    <UpdateEntry.Root
+      render={
+        <Link
+          className="flex w-full gap-6"
+          params={{ organizationSlug, id }}
+          to="/$organizationSlug/editor/$id"
         />
-        <UpdateEntry.Meta>
-          {editors.length > 0 && <UpdateEntry.Editors editors={editors} />}
-          <UpdateEntry.Date date={updatedAt} label="Last edited on" />
-          <UpdateEntry.Date date={createdAt} label="Created on" />
-        </UpdateEntry.Meta>
-        <DropdownMenu.Root>
-          <DropdownMenu.Trigger asChild>
-            <IconButton.Root className="-my-2" size="sm" variant="tertiary">
-              <IconButton.Icon>
-                <EllipsisVerticalIcon />
-              </IconButton.Icon>
-            </IconButton.Root>
-          </DropdownMenu.Trigger>
-          <DropdownMenu.Content
-            align="end"
-            onClick={(e: React.MouseEvent) => {
-              e.stopPropagation();
-              e.preventDefault();
-            }}
-            side="bottom"
-          >
-            <DropdownMenu.Item onClick={handleArchiveUpdate}>
-              <DropdownMenu.ItemIcon>
-                <ArchiveIcon />
-              </DropdownMenu.ItemIcon>
-              Archive
-            </DropdownMenu.Item>
-          </DropdownMenu.Content>
-        </DropdownMenu.Root>
-      </Link>
+      }
+    >
+      <UpdateEntry.Group>
+        <UpdateEntry.Number number={order} />
+        <UpdateEntry.Title title={title} />
+      </UpdateEntry.Group>
+      <UpdateEntry.Tags
+        className="flex-1"
+        tags={tags.map(({ tag }) => tag.label)}
+      />
+      <UpdateEntry.Meta>
+        {editors.length > 0 && <UpdateEntry.Editors editors={editors} />}
+        <UpdateEntry.Date date={updatedAt} label="Last edited on" />
+        <UpdateEntry.Date date={createdAt} label="Created on" />
+      </UpdateEntry.Meta>
+      <DropdownMenu.Root>
+        <DropdownMenu.Trigger
+          onClick={(e: React.MouseEvent) => {
+            e.stopPropagation();
+            e.preventDefault();
+          }}
+          render={<IconButton.Root className="-my-2" variant="tertiary" />}
+        >
+          <IconButton.Icon>
+            <EllipsisVerticalIcon />
+          </IconButton.Icon>
+        </DropdownMenu.Trigger>
+        <DropdownMenu.Content
+          align="end"
+          onClick={(e: React.MouseEvent) => {
+            e.stopPropagation();
+            e.preventDefault();
+          }}
+          side="bottom"
+        >
+          <DropdownMenu.Item onClick={handleArchiveUpdate}>
+            <DropdownMenu.ItemIcon render={<ArchiveIcon />} />
+            Archive
+          </DropdownMenu.Item>
+        </DropdownMenu.Content>
+      </DropdownMenu.Root>
     </UpdateEntry.Root>
   );
 };

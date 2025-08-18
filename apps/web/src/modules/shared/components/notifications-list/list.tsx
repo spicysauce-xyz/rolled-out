@@ -7,7 +7,9 @@ import { useEffect, useMemo, useRef } from "react";
 import { OrganizationCreatedNotification } from "./notifications/organization-created";
 
 type Notification = SuccessResponse<
-  InferResponseType<(typeof api.notifications)["$get"]>
+  InferResponseType<
+    (typeof api.organizations)[":organizationId"]["notifications"]["$get"]
+  >
 >[number];
 
 interface ListProps {
@@ -62,8 +64,8 @@ export const List = ({
   ]);
 
   return (
-    <ScrollArea.Root type="scroll">
-      <ScrollArea.Viewport className="max-h-130 p-2" ref={viewportRef}>
+    <ScrollArea.Root className="w-full">
+      <ScrollArea.Viewport className="max-h-130 w-full p-2" ref={viewportRef}>
         <div
           className="relative"
           style={{ height: `${rowVirtualizer.getTotalSize()}px` }}
@@ -109,7 +111,9 @@ export const List = ({
           })}
         </div>
       </ScrollArea.Viewport>
-      <ScrollArea.Scrollbar />
+      <ScrollArea.Scrollbar className="py-4" size="sm">
+        <ScrollArea.Thumb />
+      </ScrollArea.Scrollbar>
     </ScrollArea.Root>
   );
 };

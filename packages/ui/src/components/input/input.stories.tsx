@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { PhoneIcon } from "lucide-react";
 import { Input } from "./";
 
-const meta = {
+const meta: Meta = {
   title: "Components/Input",
   component: Input.Root,
   parameters: {
@@ -14,7 +14,7 @@ const meta = {
       control: { type: "select" },
     },
   },
-} satisfies Meta<typeof Input.Root>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -25,7 +25,7 @@ export const Simple: Story = {
     <div className="w-64">
       <Input.Root {...args}>
         <Input.Wrapper>
-          <Input.Field placeholder="Simple Input" type="tel" />
+          <Input.Field placeholder="Simple Input" />
         </Input.Wrapper>
       </Input.Root>
     </div>
@@ -41,7 +41,7 @@ export const WithIcon: Story = {
           <Input.Icon>
             <PhoneIcon />
           </Input.Icon>
-          <Input.Field placeholder="+1 (555) 123-4567" type="tel" />
+          <Input.Field placeholder="+1 (555) 123-4567" />
         </Input.Wrapper>
       </Input.Root>
     </div>
@@ -55,7 +55,11 @@ export const WithLabel: Story = {
       <Input.Root {...args}>
         <Input.Wrapper>
           <Input.Text>+1</Input.Text>
-          <Input.Field placeholder="(555) 123-4567" type="tel" />
+          <Input.Field placeholder="(555) 123-4567" />
+          <Input.Divider />
+          <Input.Icon>
+            <PhoneIcon />
+          </Input.Icon>
         </Input.Wrapper>
       </Input.Root>
     </div>

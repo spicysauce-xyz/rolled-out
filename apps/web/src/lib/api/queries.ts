@@ -229,11 +229,17 @@ export const boardPostsQuery = (organizationId: string, boardId: string) =>
     },
   });
 
-export const notificationsStatusQuery = () =>
+export const notificationsStatusQuery = (organizationId: string) =>
   queryOptions({
-    queryKey: ["notifications-status"],
-    queryFn: async () => {
-      const response = await api.notifications.status.$get();
+    queryKey: ["notifications-status", organizationId] as const,
+    queryFn: async ({ queryKey }) => {
+      const response = await api.organizations[
+        ":organizationId"
+      ].notifications.status.$get({
+        param: {
+          organizationId: queryKey[1],
+        },
+      });
 
       const json = await response.json();
 
@@ -245,11 +251,16 @@ export const notificationsStatusQuery = () =>
     },
   });
 
-export const notificationsQuery = (limit: number) =>
+export const notificationsQuery = (organizationId: string, limit: number) =>
   infiniteQueryOptions({
-    queryKey: ["notifications"],
-    queryFn: async ({ pageParam = 0 }) => {
-      const response = await api.notifications.$get({
+    queryKey: ["notifications", organizationId] as const,
+    queryFn: async ({ pageParam = 0, queryKey }) => {
+      const response = await api.organizations[
+        ":organizationId"
+      ].notifications.$get({
+        param: {
+          organizationId: queryKey[1],
+        },
         query: {
           limit: limit.toString(),
           offset: pageParam.toString(),

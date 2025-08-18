@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Label } from "./";
 
-const meta = {
+const meta: Meta = {
   title: "Components/Label",
   component: Label.Root,
   parameters: {
     layout: "centered",
   },
-} satisfies Meta<typeof Label.Root>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;

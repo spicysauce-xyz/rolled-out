@@ -1,24 +1,27 @@
-import { Clickable, Skeleton, Tag, Text, Tooltip } from "@mono/ui";
+import { mergeProps } from "@base-ui-components/react/merge-props";
+import { useRender } from "@base-ui-components/react/use-render";
+import { Skeleton, Tag, Text, Tooltip } from "@mono/ui";
 import { cn } from "@mono/ui/utils";
 import { format } from "date-fns";
 import React from "react";
 
-interface UpdateEntryProps
-  extends React.ComponentProps<typeof Clickable.Root> {}
+interface UpdateEntryProps extends useRender.ComponentProps<"button"> {}
 
 const UpdateEntryRoot: React.FC<UpdateEntryProps> = ({
-  children,
+  render = <button type="button" />,
   ...props
 }) => {
-  return (
-    <Clickable.Root
-      className="flex w-full items-start justify-between gap-6 rounded-none border-0 px-6 py-4"
-      variant="tertiary"
-      {...props}
-    >
-      {children}
-    </Clickable.Root>
-  );
+  const defaultProps: useRender.ElementProps<"button"> = {
+    className:
+      "flex w-full items-start justify-between gap-6 rounded-none border-0 px-6 py-4 hover:bg-neutral-50 focus-visible:bg-neutral-50 focus-within:bg-neutral-50 outline-none",
+  };
+
+  const element = useRender({
+    render,
+    props: mergeProps(defaultProps, props),
+  });
+
+  return element;
 };
 
 interface UpdateEntryGroupProps {
@@ -40,9 +43,7 @@ interface UpdateEntryNumberProps {
 const UpdateNumber: React.FC<UpdateEntryNumberProps> = ({ number }) => {
   return (
     <div className="flex items-center gap-2">
-      <Text.Root color="muted" size="sm">
-        #{number.toString().padStart(3, "0")}
-      </Text.Root>
+      <Text.Root color="muted">#{number.toString().padStart(3, "0")}</Text.Root>
     </div>
   );
 };
@@ -52,11 +53,7 @@ interface UpdateEntryTitleProps {
 }
 
 const UpdateEntryTitle: React.FC<UpdateEntryTitleProps> = ({ title }) => {
-  return (
-    <Text.Root size="sm" weight="medium">
-      {title}
-    </Text.Root>
-  );
+  return <Text.Root weight="medium">{title}</Text.Root>;
 };
 
 interface UpdateEntryTagsProps {
@@ -96,11 +93,7 @@ const UpdateEntryMeta: React.FC<
         {React.Children.toArray(children).map((item, index) => (
           // biome-ignore lint/suspicious/noArrayIndexKey: there is no other way to get the key. or maybe I'm wrong
           <React.Fragment key={index}>
-            {index > 0 && (
-              <Text.Root className="text-inherit" size="sm">
-                ·
-              </Text.Root>
-            )}
+            {index > 0 && <Text.Root className="text-inherit">·</Text.Root>}
             {item}
           </React.Fragment>
         ))}
@@ -120,22 +113,19 @@ const UpdateEntryEditors: React.FC<UpdateEntryEditorsProps> = ({ editors }) => {
   return (
     <Tooltip.Root>
       <div className="flex items-center gap-1">
-        <Text.Root size="sm" weight="medium">
-          {creator?.name}
-        </Text.Root>
-        <Tooltip.Trigger asChild>
-          {otherEditors.length > 0 && (
+        <Text.Root weight="medium">{creator?.name}</Text.Root>
+        {otherEditors.length > 0 && (
+          <Tooltip.Trigger>
             <Text.Root
               className="decoration-dashed underline-offset-2 hover:underline"
               color="muted"
-              size="sm"
             >
               {" "}
               and {otherEditors.length} other
               {otherEditors.length !== 1 ? "s" : ""}
             </Text.Root>
-          )}
-        </Tooltip.Trigger>
+          </Tooltip.Trigger>
+        )}
       </div>
       <Tooltip.Content>
         <Tooltip.Title>
@@ -158,7 +148,6 @@ const UpdateEntryDate: React.FC<UpdateEntryDateProps> = ({ date, label }) => {
         <Text.Root
           className="decoration-dashed underline-offset-2 hover:underline"
           color="muted"
-          size="sm"
         >
           {format(date, "MMM d")}
         </Text.Root>

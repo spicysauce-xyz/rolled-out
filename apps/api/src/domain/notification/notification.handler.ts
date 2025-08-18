@@ -1,12 +1,11 @@
-import { authMiddleware } from "@domain/auth";
+import { organizationFactory } from "@domain/organizaiton";
 import { validator } from "@lib/validator";
 import { notOk, ok } from "@utils/network";
-import { Hono } from "hono";
 import { z } from "zod";
 import { NotificationService } from "./notification.service";
 
-export const NotificationHandler = new Hono()
-  .use(authMiddleware({ required: true }))
+export const NotificationHandler = organizationFactory
+  .createApp()
   .get(
     "/",
     validator(
@@ -17,10 +16,10 @@ export const NotificationHandler = new Hono()
       })
     ),
     (c) => {
-      const user = c.get("user");
+      const member = c.get("member");
       const { limit, offset } = c.req.valid("query");
 
-      return NotificationService.getNotificationsForUser(user, {
+      return NotificationService.getNotificationsForMember(member, {
         limit,
         offset,
       }).match(
@@ -30,17 +29,17 @@ export const NotificationHandler = new Hono()
     }
   )
   .get("/status", (c) => {
-    const user = c.get("user");
+    const member = c.get("member");
 
-    return NotificationService.getNotificationsStatusForUser(user).match(
+    return NotificationService.getNotificationsStatusForMember(member).match(
       (status) => ok(c, status),
       (error) => notOk(c, { message: error.message }, 500)
     );
   })
   .put("/status", (c) => {
-    const user = c.get("user");
+    const member = c.get("member");
 
-    return NotificationService.markNotificationsAsReadForUser(user).match(
+    return NotificationService.markNotificationsAsReadForMember(member).match(
       () => ok(c, undefined),
       (error) => notOk(c, { message: error.message }, 500)
     );

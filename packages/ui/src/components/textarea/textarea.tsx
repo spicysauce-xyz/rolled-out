@@ -6,7 +6,7 @@ const textareaVariants = tv({
   slots: {
     root: [
       // base
-      "group/textarea-root flex rounded-md border border-neutral-200 tracking-tight shadow-xs",
+      "group/textarea-root flex rounded-md border border-neutral-200 shadow-xs",
       // transition
       "transition-all",
       // hover
@@ -35,11 +35,9 @@ const textareaVariants = tv({
     size: {
       sm: {
         wrapper: ["gap-2 px-2.5 py-1.5"],
-        field: ["text-sm"],
       },
       md: {
         wrapper: ["gap-2 px-3 py-2"],
-        field: ["text-sm"],
       },
       lg: {
         wrapper: ["gap-2 px-3.5 py-2.5"],

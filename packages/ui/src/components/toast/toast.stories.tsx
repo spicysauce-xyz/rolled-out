@@ -3,13 +3,13 @@ import { Button } from "../button";
 import { LinkButton } from "../link-button";
 import { Toaster } from "./";
 
-const meta = {
+const meta: Meta = {
   title: "Components/Toast",
   component: Toaster.Root,
   parameters: {
     layout: "centered",
   },
-} satisfies Meta<typeof Toaster.Root>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -46,11 +46,7 @@ export const Default: Story = {
           Toaster.error("Save failed", {
             description:
               "We encountered an error while trying to save your recent changes to the system. Please try saving again, and if you continue experiencing issues, reach out to our support team for assistance",
-            action: (
-              <LinkButton.Root color="danger" size="sm">
-                Try Again
-              </LinkButton.Root>
-            ),
+            action: <LinkButton.Root color="danger">Try Again</LinkButton.Root>,
           })
         }
       >

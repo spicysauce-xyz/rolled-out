@@ -3,13 +3,13 @@ import { EditorContent, useCurrentEditor } from "@tiptap/react";
 
 export const editorContentClassName = cn(
   // base
-  "prose min-w-full prose-headings:font-weight-500 [&>div]:outline-none",
+  "prose min-w-full prose-headings:font-weight-500 tracking-tight [&>div]:outline-none",
   // placeholder
   "[&>div>*]:before:pointer-events-none [&>div>*]:before:absolute [&>div>*]:before:text-neutral-500 [&>div>*]:before:content-[attr(data-placeholder)]",
   // paragraph
-  "prose-p:text-md prose-p:text-neutral-900 prose-p:tracking-tight",
+  "prose-p:text-md prose-p:text-neutral-900",
   // heading
-  "prose-headings:font-weight-500 prose-headings:text-neutral-900 prose-headings:tracking-tight",
+  "prose-headings:font-weight-500 prose-headings:text-neutral-900",
   // h1
   "prose-h1:text-display-sm",
   // h2

@@ -14,6 +14,12 @@ export const member = pgTable("member", {
 
   role: varchar("role", { enum: ["owner", "admin", "member"] }).notNull(),
 
+  notificationsReadAt: timestamp("notifications_read_at", {
+    withTimezone: true,
+  })
+    .defaultNow()
+    .notNull(),
+
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });

@@ -3,7 +3,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ButtonGroup } from "./";
 
 const meta = {
-  title: "Components/ButtonGroup",
+  title: "Components/Buttons/Group",
   component: ButtonGroup.Root,
   parameters: {
     layout: "centered",
@@ -22,8 +22,9 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: ({ ...args }) => (
     <ButtonGroup.Root {...args}>
-      <ButtonGroup.Item>Previous</ButtonGroup.Item>
-      <ButtonGroup.Item>Next</ButtonGroup.Item>
+      <ButtonGroup.Item isActive>Weekly</ButtonGroup.Item>
+      <ButtonGroup.Item>Monthly</ButtonGroup.Item>
+      <ButtonGroup.Item>Yearly</ButtonGroup.Item>
     </ButtonGroup.Root>
   ),
 };
@@ -31,17 +32,26 @@ export const Default: Story = {
 export const WithIcons: Story = {
   render: ({ ...args }) => (
     <ButtonGroup.Root {...args}>
-      <ButtonGroup.Item>
-        <ButtonGroup.Icon>
-          <ChevronLeft />
-        </ButtonGroup.Icon>
+      <ButtonGroup.Item isDisabled>
+        <ButtonGroup.Icon render={<ChevronLeft />} />
         Previous
+      </ButtonGroup.Item>
+      <ButtonGroup.Item className="min-w-10 justify-center" isActive>
+        1
+      </ButtonGroup.Item>
+      <ButtonGroup.Item className="min-w-10 justify-center">2</ButtonGroup.Item>
+      <ButtonGroup.Item className="min-w-10 justify-center">
+        ...
+      </ButtonGroup.Item>
+      <ButtonGroup.Item className="min-w-10 justify-center">
+        14
+      </ButtonGroup.Item>
+      <ButtonGroup.Item className="min-w-10 justify-center">
+        15
       </ButtonGroup.Item>
       <ButtonGroup.Item>
         Next
-        <ButtonGroup.Icon>
-          <ChevronRight />
-        </ButtonGroup.Icon>
+        <ButtonGroup.Icon render={<ChevronRight />} />
       </ButtonGroup.Item>
     </ButtonGroup.Root>
   ),
@@ -51,14 +61,10 @@ export const IconsOnly: Story = {
   render: ({ ...args }) => (
     <ButtonGroup.Root {...args}>
       <ButtonGroup.Item>
-        <ButtonGroup.Icon>
-          <ChevronLeft />
-        </ButtonGroup.Icon>
+        <ButtonGroup.Icon render={<ChevronLeft />} />
       </ButtonGroup.Item>
       <ButtonGroup.Item>
-        <ButtonGroup.Icon>
-          <ChevronRight />
-        </ButtonGroup.Icon>
+        <ButtonGroup.Icon render={<ChevronRight />} />
       </ButtonGroup.Item>
     </ButtonGroup.Root>
   ),

@@ -1,20 +1,23 @@
 import { Sidebar } from "@components/sidebar";
+import { Transition } from "@components/transition";
 import type { authClient } from "@lib/auth";
-import { getPublicUrl } from "@modules/dashboard/utils";
 import { NotificationsList } from "@modules/shared/components/notifications-list";
 import { OrganizationSwitch } from "@modules/shared/components/organization-switch";
 import { UserMenu } from "@modules/shared/components/user-menu";
-import { Clickable } from "@mono/ui";
+import { Link } from "@tanstack/react-router";
 import {
   BellIcon,
   ExternalLinkIcon,
+  FileTextIcon,
   HelpCircleIcon,
   LineChartIcon,
   ListIcon,
   MailIcon,
   MessageCircleIcon,
   SettingsIcon,
+  UserPlus2Icon,
 } from "lucide-react";
+import { getPublicUrl } from "../utils";
 
 interface DashboardNavigationProps {
   user: (typeof authClient.$Infer.Session)["user"];
@@ -32,56 +35,90 @@ export const DashboardNavigation: React.FC<DashboardNavigationProps> = ({
 }) => {
   return (
     <Sidebar.Root className="hidden w-64 bg-neutral-50 sm:flex">
-      <Sidebar.Header className="flex gap-1">
+      <Sidebar.Header className="flex">
         <OrganizationSwitch organization={organization} />
-        <Clickable.Root
-          asChild
-          className="flex size-9 shrink-0 items-center justify-center hover:bg-neutral-100 focus-visible:bg-neutral-100"
-          color="neutral"
-          variant="tertiary"
-        >
-          <a
-            href={getPublicUrl(organization.slug)}
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            <Clickable.Icon>
-              <ExternalLinkIcon />
-            </Clickable.Icon>
-          </a>
-        </Clickable.Root>
       </Sidebar.Header>
       <Sidebar.ScrollArea>
         <div className="flex flex-col gap-4">
           <Sidebar.Group>
-            <Sidebar.NavLink
-              activeOptions={{ exact: true }}
-              icon={BellIcon}
+            <Sidebar.Button
+              icon={FileTextIcon}
               label="Updates"
-              params={{ organizationSlug: organization.slug }}
-              to="/$organizationSlug"
+              render={
+                <Link
+                  activeOptions={{ exact: true }}
+                  className="data-[status=active]:border data-[status=active]:border-neutral-100 data-[status=active]:bg-white data-[status=active]:[&>svg]:stroke-neutral-900"
+                  params={{ organizationSlug: organization.slug }}
+                  to="/$organizationSlug"
+                />
+              }
             />
-            <Sidebar.NavLink
+            <Sidebar.Button
+              disabled
               icon={MailIcon}
-              isDisabled
               label="Subscribers"
-              params={{ organizationSlug: organization.slug }}
-              to="/$organizationSlug/contacts"
+              render={
+                <Link
+                  activeOptions={{ exact: true }}
+                  className="data-[status=active]:text-accent-500 data-[status=active]:[&>svg]:stroke-accent-500"
+                  params={{ organizationSlug: organization.slug }}
+                  to="/$organizationSlug/contacts"
+                />
+              }
             />
-            <Sidebar.NavLink
+            <Sidebar.Button
+              disabled
               icon={LineChartIcon}
-              isDisabled
               label="Analytics"
-              params={{ organizationSlug: organization.slug }}
-              to="/$organizationSlug/analytics"
+              render={
+                <Link
+                  activeOptions={{ exact: true }}
+                  params={{ organizationSlug: organization.slug }}
+                  to="/$organizationSlug/analytics"
+                />
+              }
             />
           </Sidebar.Group>
           <Sidebar.Group label="Workspace">
-            <Sidebar.NavLink
+            <NotificationsList
+              organizationId={organization.id}
+              render={(_, { unreadNotificationsCount }) => (
+                <Sidebar.Button icon={BellIcon} label="Notifications">
+                  <Transition.Root>
+                    {unreadNotificationsCount > 0 && (
+                      <Transition.Item
+                        className="ml-auto flex size-4 items-center justify-center rounded-xs bg-accent-500 text-white text-xs"
+                        key="unread-notifications-count"
+                      >
+                        {unreadNotificationsCount}
+                      </Transition.Item>
+                    )}
+                  </Transition.Root>
+                </Sidebar.Button>
+              )}
+            />
+            <Sidebar.Button icon={UserPlus2Icon} label="Invite Member" />
+            <Sidebar.Button
+              icon={ExternalLinkIcon}
+              label="My Board"
+              render={
+                <a
+                  href={getPublicUrl(organization.slug)}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                />
+              }
+            />
+            <Sidebar.Button
               icon={SettingsIcon}
               label="Settings"
-              params={{ organizationSlug: organization.slug }}
-              to="/$organizationSlug/settings/details"
+              render={
+                <Link
+                  activeOptions={{ exact: true }}
+                  params={{ organizationSlug: organization.slug }}
+                  to="/$organizationSlug/settings/details"
+                />
+              }
             />
           </Sidebar.Group>
         </div>
@@ -161,14 +198,31 @@ export const DashboardNavigation: React.FC<DashboardNavigationProps> = ({
           </Sidebar.Group> */}
         <Sidebar.Fill />
         <Sidebar.Group>
-          <Sidebar.Link href="#" icon={MessageCircleIcon} label="Feedback" />
-          <Sidebar.Link href="#" icon={ListIcon} label="Changelog" />
-          <Sidebar.Link href="#" icon={HelpCircleIcon} label="Support" />
+          <Sidebar.Button
+            icon={MessageCircleIcon}
+            label="Feedback"
+            render={<a href="/" />}
+          >
+            <ExternalLinkIcon className="ml-auto" />
+          </Sidebar.Button>
+          <Sidebar.Button
+            icon={ListIcon}
+            label="Changelog"
+            render={<a href="/" />}
+          >
+            <ExternalLinkIcon className="ml-auto" />
+          </Sidebar.Button>
+          <Sidebar.Button
+            icon={HelpCircleIcon}
+            label="Support"
+            render={<a href="/" />}
+          >
+            <ExternalLinkIcon className="ml-auto" />
+          </Sidebar.Button>
         </Sidebar.Group>
       </Sidebar.ScrollArea>
       <Sidebar.Footer className="flex gap-1">
         <UserMenu currentOrganizationSlug={organization.slug} user={user} />
-        <NotificationsList />
       </Sidebar.Footer>
     </Sidebar.Root>
   );

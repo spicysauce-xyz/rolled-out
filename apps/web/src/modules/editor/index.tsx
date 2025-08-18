@@ -6,7 +6,12 @@ import { useGoBack } from "@modules/dashboard/hooks/use-go-back";
 import { usePublishUpdateMutation } from "@modules/dashboard/hooks/use-publish-update-mutation";
 import { Editor } from "@mono/editor";
 import { Button, IconButton, Skeleton, Text } from "@mono/ui";
-import { createFileRoute, redirect, useParams } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Link,
+  redirect,
+  useParams,
+} from "@tanstack/react-router";
 import { tryCatch } from "@utils/promise";
 import { ArrowLeftIcon, ClockIcon, SendIcon } from "lucide-react";
 import { ConnectedPeers } from "./components/connected-peers";
@@ -76,12 +81,15 @@ function RouteComponent() {
   return (
     <Page.Root>
       <Page.Wrapper>
-        <Page.Header>
+        <Page.Header className="py-2">
           <div className="flex items-center gap-4">
-            <IconButton.Root onClick={handleGoBack} variant="secondary">
-              <IconButton.Icon>
-                <ArrowLeftIcon />
-              </IconButton.Icon>
+            <IconButton.Root
+              render={
+                <Link params={{ organizationSlug }} to="/$organizationSlug" />
+              }
+              variant="secondary"
+            >
+              <IconButton.Icon render={<ArrowLeftIcon />} />
             </IconButton.Root>
             <div className="flex flex-col gap-0.5">
               <Transition.Root>
@@ -90,7 +98,7 @@ function RouteComponent() {
                     className="flex items-center gap-4"
                     key="title"
                   >
-                    <Text.Root size="sm" weight="medium">
+                    <Text.Root weight="medium">
                       {hocuspocus.title || "Untitled Update"}
                     </Text.Root>
                     <EditorTags provider={hocuspocus.provider} />
@@ -104,14 +112,14 @@ function RouteComponent() {
               <Transition.Root>
                 {hocuspocus.isReady && hocuspocus.hasUnsyncedChanges && (
                   <Transition.Item key="sync-status">
-                    <Text.Root color="muted" size="xs">
+                    <Text.Root color="muted" size="sm">
                       Syncing...
                     </Text.Root>
                   </Transition.Item>
                 )}
                 {hocuspocus.isReady && !hocuspocus.hasUnsyncedChanges && (
                   <Transition.Item key="synced">
-                    <Text.Root color="muted" size="xs">
+                    <Text.Root color="muted" size="sm">
                       Synced
                     </Text.Root>
                   </Transition.Item>
@@ -134,9 +142,7 @@ function RouteComponent() {
             </Transition.Root>
             <div className="flex items-center gap-2">
               <Button.Root isDisabled={!hocuspocus.isReady} variant="secondary">
-                <Button.Icon>
-                  <ClockIcon />
-                </Button.Icon>
+                <Button.Icon render={<ClockIcon />} />
                 Schedule
               </Button.Root>
               <Button.Root
@@ -144,9 +150,7 @@ function RouteComponent() {
                 isLoading={publishPostMutation.isPending}
                 onClick={handlePublish}
               >
-                <Button.Icon>
-                  <SendIcon />
-                </Button.Icon>
+                <Button.Icon render={<SendIcon />} />
                 Publish
               </Button.Root>
             </div>

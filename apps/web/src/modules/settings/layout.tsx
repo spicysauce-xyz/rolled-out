@@ -17,7 +17,7 @@ function RouteComponent() {
       <SettingsNavigation organization={organization} user={user} />
       <Page.Wrapper>
         <Page.Header>
-          <Breadcrumbs organization={organization} page="Settings" />
+          <Breadcrumbs page="Settings" />
         </Page.Header>
         <Page.Content className="mx-auto w-full max-w-180">
           <Outlet />

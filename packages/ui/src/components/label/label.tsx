@@ -1,52 +1,41 @@
-import { Root as RadixLabelRoot } from "@radix-ui/react-label";
-import React from "react";
+import type React from "react";
 import { cn } from "../../utils";
 import { Text } from "../text";
 
-const LabelRoot = React.forwardRef<
-  React.ComponentRef<typeof RadixLabelRoot>,
-  React.ComponentPropsWithoutRef<typeof RadixLabelRoot> & {
-    disabled?: boolean;
-  }
->(({ className, disabled, ...rest }, ref) => {
+const LabelRoot = ({
+  className,
+  ...rest
+}: React.ComponentPropsWithRef<"label">) => {
   return (
-    <Text.Root asChild size="sm" weight="medium">
-      <RadixLabelRoot
-        aria-disabled={disabled}
-        className={cn(
-          "group cursor-pointer",
-          "flex items-center gap-px",
-          className
-        )}
-        ref={ref}
-        {...rest}
-      />
-    </Text.Root>
+    // biome-ignore lint/a11y/noLabelWithoutControl: <explanation>
+    <label
+      className={cn(
+        "group flex cursor-pointer items-center gap-px font-[450] text-md",
+        className
+      )}
+      {...rest}
+    />
   );
-});
+};
 
 function LabelAsterisk({
+  children = "*",
   className,
-  children,
   ...rest
-}: React.HTMLAttributes<HTMLSpanElement>) {
+}: React.ComponentPropsWithRef<typeof Text.Root>) {
   return (
-    <span className={cn("text-danger-500", className)} {...rest}>
-      {children || "*"}
-    </span>
+    <Text.Root
+      className={cn("text-danger-500", className)}
+      render={<span />}
+      {...rest}
+    >
+      {children}
+    </Text.Root>
   );
 }
 
-function LabelSub({
-  children,
-  className,
-  ...rest
-}: React.HTMLAttributes<HTMLSpanElement>) {
-  return (
-    <Text.Root asChild className={className} color="muted" size="sm">
-      <span {...rest}>{children}</span>
-    </Text.Root>
-  );
+function LabelSub(props: React.ComponentPropsWithRef<typeof Text.Root>) {
+  return <Text.Root color="muted" render={<span />} {...props} />;
 }
 
 export { LabelRoot as Root, LabelAsterisk as Asterisk, LabelSub as Sub };

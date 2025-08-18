@@ -1,4 +1,4 @@
-import { Clickable, Select } from "@mono/ui";
+import { Button, Select } from "@mono/ui";
 import {
   NodeViewContent,
   NodeViewWrapper,
@@ -18,18 +18,11 @@ export const CodeBlockView: React.FC<ReactNodeViewProps> = ({
       value={defaultLanguage}
     >
       <Select.Trigger
-        asChild
         className="absolute top-4 right-4 opacity-0 transition-opacity group-hover/code-block:opacity-100 data-[state=open]:opacity-100"
+        render={<Button.Root type="button" variant="tertiary" />}
       >
-        <Clickable.Root
-          className="flex h-6 items-center justify-between gap-2"
-          variant="tertiary"
-        >
-          <Select.Value placeholder="Role" />
-          <Clickable.Icon>
-            <Select.Icon />
-          </Clickable.Icon>
-        </Clickable.Root>
+        <Select.Value />
+        <Button.Icon render={<Select.Icon />} />
       </Select.Trigger>
       <Select.Content className="h-64">
         {extension.options.lowlight.listLanguages().map((lang: string) => (

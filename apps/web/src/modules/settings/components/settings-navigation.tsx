@@ -1,7 +1,7 @@
 import { Sidebar } from "@components/sidebar";
 import type { authClient } from "@lib/auth";
 import { UserMenu } from "@modules/shared/components/user-menu";
-import { Clickable, Text } from "@mono/ui";
+import { Button } from "@mono/ui";
 import { Link } from "@tanstack/react-router";
 import { ArrowLeftIcon, NotebookTextIcon, Users2 } from "lucide-react";
 
@@ -21,37 +21,43 @@ export const SettingsNavigation: React.FC<SettingsNavigationProps> = ({
   return (
     <Sidebar.Root className="hidden w-64 bg-neutral-50 sm:flex">
       <Sidebar.Header>
-        <Clickable.Root
-          asChild
-          className="w-full items-center gap-2 border-0 p-2 hover:bg-neutral-100 focus-visible:bg-neutral-100"
+        <Button.Root
+          className="w-full justify-start px-2"
+          render={
+            <Link
+              params={{ organizationSlug: organization.slug }}
+              to="/$organizationSlug"
+            />
+          }
           variant="tertiary"
         >
-          <Link
-            params={{ organizationSlug: organization.slug }}
-            to="/$organizationSlug"
-          >
-            <Clickable.Icon>
-              <ArrowLeftIcon />
-            </Clickable.Icon>
-            <Text.Root size="sm" weight="medium">
-              Back
-            </Text.Root>
-          </Link>
-        </Clickable.Root>
+          <Button.Icon render={<ArrowLeftIcon />} />
+          Back
+        </Button.Root>
       </Sidebar.Header>
       <Sidebar.ScrollArea>
         <Sidebar.Group>
-          <Sidebar.NavLink
+          <Sidebar.Button
             icon={NotebookTextIcon}
             label="Details"
-            params={{ organizationSlug: organization.slug }}
-            to="/$organizationSlug/settings/details"
+            render={
+              <Link
+                className="data-[status=active]:border data-[status=active]:border-neutral-100 data-[status=active]:bg-white data-[status=active]:[&>svg]:stroke-neutral-900"
+                params={{ organizationSlug: organization.slug }}
+                to="/$organizationSlug/settings/details"
+              />
+            }
           />
-          <Sidebar.NavLink
+          <Sidebar.Button
             icon={Users2}
             label="Members"
-            params={{ organizationSlug: organization.slug }}
-            to="/$organizationSlug/settings/members"
+            render={
+              <Link
+                className="data-[status=active]:border data-[status=active]:border-neutral-100 data-[status=active]:bg-white data-[status=active]:[&>svg]:stroke-neutral-900"
+                params={{ organizationSlug: organization.slug }}
+                to="/$organizationSlug/settings/members"
+              />
+            }
           />
         </Sidebar.Group>
       </Sidebar.ScrollArea>
