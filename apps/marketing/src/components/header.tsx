@@ -2,17 +2,13 @@ import { LandingSection } from "@components/section";
 import { Button, Text } from "@mono/ui";
 
 interface NavItemProps {
-  icon?: React.ReactNode;
   children: React.ReactNode;
 }
 
-const NavItem = ({ icon, children }: NavItemProps) => {
+const NavItem = ({ children }: NavItemProps) => {
   return (
     <Button.Root size="sm" variant="tertiary">
-      {icon && <Button.Icon>{icon}</Button.Icon>}
-      <span className="text-md transition-colors group-hover/button-root:text-neutral-950 group-focus-visible/button-root:text-neutral-950">
-        {children}
-      </span>
+      <span className="text-lg">{children}</span>
     </Button.Root>
   );
 };
@@ -23,7 +19,7 @@ export const MarketingHeader = () => {
       <LandingSection.Content className="flex-row py-4">
         <div className="flex w-full items-center justify-between gap-4">
           <div className="flex-1">
-            <Text.Root className="flex-1" weight="medium">
+            <Text.Root className="flex-1" size="lg" weight="medium">
               rolledout.xyz
             </Text.Root>
           </div>

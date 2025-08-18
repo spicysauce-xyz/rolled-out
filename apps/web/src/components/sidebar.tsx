@@ -68,19 +68,6 @@ type SidebarButtonProps = useRender.ComponentProps<"button"> & {
   isDisabled?: boolean;
 };
 
-const sidebarClass = [
-  // base
-  "group/sidebar-button border border-transparent flex items-center rounded-md px-2 h-9 w-full gap-2 font-[450] text-md text-neutral-900 transition-[background-color,border-color,color] [&>svg]:transition-colors [&>svg]:size-4 [&>svg]:stroke-neutral-600",
-  // hover
-  "hover:bg-neutral-100 hover:border-neutral-100 hover:text-neutral-900 hover:[&>svg]:stroke-neutral-900",
-  // focus
-  "ring-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2",
-  // disabled
-  "disabled:text-neutral-400 disabled:border-transparent disabled:cursor-not-allowed disabled:[&>svg]:stroke-neutral-400",
-  // aria-disabled
-  "aria-disabled:text-neutral-400 aria-disabled:border-transparent aria-disabled:cursor-not-allowed aria-disabled:[&>svg]:stroke-neutral-400 aria-disabled:bg-transparent",
-];
-
 const SidebarButton = ({
   render = <button type="button" />,
   icon,
@@ -112,7 +99,21 @@ const SidebarButton = ({
       </>
     ),
     disabled: isDisabled,
-    className: cn(sidebarClass, className),
+    className: cn(
+      [
+        // base
+        "group/sidebar-button flex h-9 w-full items-center gap-2 rounded-md border border-transparent px-2 font-[450] text-md text-neutral-900 transition-[background-color,border-color,color] [&>svg]:size-4 [&>svg]:stroke-neutral-600 [&>svg]:transition-colors",
+        // hover
+        "hover:border-neutral-100 hover:bg-neutral-100 hover:text-neutral-900 hover:[&>svg]:stroke-neutral-900",
+        // focus
+        "ring-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2",
+        // disabled
+        "disabled:cursor-not-allowed disabled:border-transparent disabled:text-neutral-400 disabled:[&>svg]:stroke-neutral-400",
+        // aria-disabled
+        "aria-disabled:cursor-not-allowed aria-disabled:border-transparent aria-disabled:bg-transparent aria-disabled:text-neutral-400 aria-disabled:[&>svg]:stroke-neutral-400",
+      ],
+      className
+    ),
     type: "button",
     onClick: (...args) => {
       if (isDisabled) {

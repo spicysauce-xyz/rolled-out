@@ -7,7 +7,7 @@ export const EditorSection = () => {
       <LandingSection.Content>
         <LandingSection.Header>
           <div className="flex flex-col gap-4">
-            <Text.Root className="text-accent-500" weight="medium">
+            <Text.Root className="text-accent-500" size="lg" weight="medium">
               Write
             </Text.Root>
             <LandingSection.Title>
@@ -22,7 +22,7 @@ export const EditorSection = () => {
         <div className="grid grid-cols-3 gap-4">
           <div className="col-span-2 flex flex-col gap-4 rounded-md border border-neutral-100 bg-white p-4">
             <div className="flex-1" />
-            <Text.Root className="text-balance" weight="medium">
+            <Text.Root className="text-balance" size="lg" weight="medium">
               Live multi-cursor editing.{" "}
               <span className="font-weight-400 text-neutral-500">
                 See teammates type in real time—no more v3_final.docx chaos.
@@ -31,7 +31,7 @@ export const EditorSection = () => {
           </div>
           <div className="flex flex-col gap-4 rounded-md border border-neutral-100 bg-white p-4">
             <div className="aspect-[16/9] w-full" />
-            <Text.Root className="text-balance" weight="medium">
+            <Text.Root className="text-balance" size="lg" weight="medium">
               Rich WYSIWYG + Markdown.{" "}
               <span className="font-weight-400 text-neutral-500">
                 Headings, code, images, embeds—all.
@@ -40,7 +40,7 @@ export const EditorSection = () => {
           </div>
           <div className="flex flex-col gap-4 rounded-md border border-neutral-100 bg-white p-4">
             <div className="aspect-[16/9] w-full" />
-            <Text.Root className="text-balance" weight="medium">
+            <Text.Root className="text-balance" size="lg" weight="medium">
               Drafts & Scheduling.{" "}
               <span className="font-weight-400 text-neutral-500">
                 Write now, queue for launch day with a single click.
@@ -49,7 +49,7 @@ export const EditorSection = () => {
           </div>
           <div className="col-span-2 flex flex-col gap-4 rounded-md border border-neutral-100 bg-white p-4">
             <div className="flex-1" />
-            <Text.Root className="text-balance" weight="medium">
+            <Text.Root className="text-balance" size="lg" weight="medium">
               AI outline from GitHub commits.{" "}
               <span className="font-weight-400 text-neutral-500">
                 Turn merged PRs into a ready-to-edit draft in seconds.

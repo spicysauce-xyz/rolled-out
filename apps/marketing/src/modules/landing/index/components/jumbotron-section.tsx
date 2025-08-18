@@ -75,13 +75,11 @@ export const JumbotronSection = () => {
           </div>
           <div className="flex gap-2 opacity-0" ref={buttons}>
             <Button.Root size="lg">
-              Get Started
-              <Button.Icon>
-                <ArrowRightIcon />
-              </Button.Icon>
+              <span className="text-lg">Get Started</span>
+              <Button.Icon render={<ArrowRightIcon />} />
             </Button.Root>
             <Button.Root size="lg" variant="tertiary">
-              Live Demo
+              <span className="text-lg">Live Demo</span>
             </Button.Root>
           </div>
         </LandingSection.Header>

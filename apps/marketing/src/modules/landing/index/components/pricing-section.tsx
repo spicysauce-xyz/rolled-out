@@ -21,14 +21,16 @@ export const PricingSection = () => {
           </div>
           <div className="relative flex gap-2">
             <ButtonGroup.Root size="lg">
-              <ButtonGroup.Item isActive>Monthly</ButtonGroup.Item>
-              <ButtonGroup.Item>Yearly</ButtonGroup.Item>
+              <ButtonGroup.Item isActive>
+                <span className="text-lg">Monthly</span>
+              </ButtonGroup.Item>
+              <ButtonGroup.Item>
+                <span className="text-lg">Yearly</span>
+              </ButtonGroup.Item>
             </ButtonGroup.Root>
             <div className="flex items-center gap-1">
               <ArrowLeftIcon className="size-3.5 stroke-neutral-500" />
-              <Text.Root color="muted" size="sm">
-                Save ~17% with yearly billing
-              </Text.Root>
+              <Text.Root color="muted">Save ~17% with yearly billing</Text.Root>
             </div>
           </div>
         </LandingSection.Header>
@@ -38,12 +40,12 @@ export const PricingSection = () => {
               <div className="flex size-8 items-center justify-center rounded-sm bg-accent-50">
                 <CircleIcon className="size-6 stroke-accent-500" />
               </div>
-              <Text.Root size="lg" weight="medium">
+              <Text.Root className="text-[1.25rem]" weight="medium">
                 Free
               </Text.Root>
               <Text.Root size="xs" variant="display" weight="medium">
                 $0{" "}
-                <span className="font-weight-400 text-neutral-500 text-sm">
+                <span className="font-weight-400 text-md text-neutral-500">
                   / month
                 </span>
               </Text.Root>
@@ -52,24 +54,34 @@ export const PricingSection = () => {
             <div className="flex flex-col gap-2 border-neutral-100 border-t p-4">
               <div className="flex items-center gap-2">
                 <CheckIcon className="size-4" />
-                <Text.Root weight="medium">Up to 3 boards</Text.Root>
+                <Text.Root size="lg" weight="medium">
+                  Up to 3 boards
+                </Text.Root>
               </div>
               <div className="flex items-center gap-2">
                 <CheckIcon className="size-4" />
-                <Text.Root weight="medium">Up to 3 boards</Text.Root>
+                <Text.Root size="lg" weight="medium">
+                  Up to 3 boards
+                </Text.Root>
               </div>
               <div className="flex items-center gap-2">
                 <CheckIcon className="size-4" />
-                <Text.Root weight="medium">Up to 3 boards</Text.Root>
+                <Text.Root size="lg" weight="medium">
+                  Up to 3 boards
+                </Text.Root>
               </div>
               <div className="flex items-center gap-2">
                 <CheckIcon className="size-4" />
-                <Text.Root weight="medium">Up to 3 boards</Text.Root>
+                <Text.Root size="lg" weight="medium">
+                  Up to 3 boards
+                </Text.Root>
               </div>
             </div>
             <div className="flex flex-col border-neutral-100 border-t p-4">
               <Button.Root size="lg" variant="tertiary">
-                Start with Free
+                <span className="w-full text-center text-lg">
+                  Start with Free
+                </span>
               </Button.Root>
             </div>
           </div>
@@ -79,40 +91,52 @@ export const PricingSection = () => {
               <div className="flex size-8 items-center justify-center rounded-sm bg-success-50">
                 <SquareIcon className="size-6 stroke-success-500" />
               </div>
-              <Text.Root size="lg" weight="medium">
+              <Text.Root className="text-[1.25rem]" weight="medium">
                 Starter
               </Text.Root>
               <Text.Root size="xs" variant="display" weight="medium">
                 $14{" "}
-                <span className="font-weight-400 text-neutral-500 text-sm">
+                <span className="font-weight-400 text-md text-neutral-500">
                   / month, billed monthly
                 </span>
               </Text.Root>
             </div>
 
             <div className="flex flex-col gap-2 border-neutral-100 border-t p-4">
-              <Text.Root className="leading-6" color="muted" size="sm">
+              <Text.Root className="leading-6" color="muted">
                 Everything from Free, plus:
               </Text.Root>
               <div className="flex items-center gap-2">
                 <CheckIcon className="size-4" />
-                <Text.Root weight="medium">Up to 3 boards</Text.Root>
+                <Text.Root size="lg" weight="medium">
+                  Up to 3 boards
+                </Text.Root>
               </div>
               <div className="flex items-center gap-2">
                 <CheckIcon className="size-4" />
-                <Text.Root weight="medium">Up to 3 boards</Text.Root>
+                <Text.Root size="lg" weight="medium">
+                  Up to 3 boards
+                </Text.Root>
               </div>
               <div className="flex items-center gap-2">
                 <CheckIcon className="size-4" />
-                <Text.Root weight="medium">Up to 3 boards</Text.Root>
+                <Text.Root size="lg" weight="medium">
+                  Up to 3 boards
+                </Text.Root>
               </div>
               <div className="flex items-center gap-2">
                 <CheckIcon className="size-4" />
-                <Text.Root weight="medium">Up to 3 boards</Text.Root>
+                <Text.Root size="lg" weight="medium">
+                  Up to 3 boards
+                </Text.Root>
               </div>
             </div>
             <div className="flex flex-col border-neutral-100 border-t p-4">
-              <Button.Root size="lg">Start with Starter</Button.Root>
+              <Button.Root size="lg">
+                <span className="w-full text-center text-lg">
+                  Start with Starter
+                </span>
+              </Button.Root>
             </div>
           </div>
 
@@ -121,41 +145,51 @@ export const PricingSection = () => {
               <div className="flex size-8 items-center justify-center rounded-sm bg-warning-50">
                 <DiamondIcon className="size-6 stroke-warning-500" />
               </div>
-              <Text.Root size="lg" weight="medium">
+              <Text.Root className="text-[1.25rem]" weight="medium">
                 Pro
               </Text.Root>
               <Text.Root size="xs" variant="display" weight="medium">
                 $29{" "}
-                <span className="font-weight-400 text-neutral-500 text-sm">
+                <span className="font-weight-400 text-md text-neutral-500">
                   / month, billed monthly
                 </span>
               </Text.Root>
             </div>
 
             <div className="flex flex-col gap-2 border-neutral-100 border-t p-4">
-              <Text.Root className="leading-6" color="muted" size="sm">
+              <Text.Root className="leading-6" color="muted">
                 Everything from Starter, plus:
               </Text.Root>
               <div className="flex items-center gap-2">
                 <CheckIcon className="size-4" />
-                <Text.Root weight="medium">Up to 3 boards</Text.Root>
+                <Text.Root size="lg" weight="medium">
+                  Up to 3 boards
+                </Text.Root>
               </div>
               <div className="flex items-center gap-2">
                 <CheckIcon className="size-4" />
-                <Text.Root weight="medium">Up to 3 boards</Text.Root>
+                <Text.Root size="lg" weight="medium">
+                  Up to 3 boards
+                </Text.Root>
               </div>
               <div className="flex items-center gap-2">
                 <CheckIcon className="size-4" />
-                <Text.Root weight="medium">Up to 3 boards</Text.Root>
+                <Text.Root size="lg" weight="medium">
+                  Up to 3 boards
+                </Text.Root>
               </div>
               <div className="flex items-center gap-2">
                 <CheckIcon className="size-4" />
-                <Text.Root weight="medium">Up to 3 boards</Text.Root>
+                <Text.Root size="lg" weight="medium">
+                  Up to 3 boards
+                </Text.Root>
               </div>
             </div>
             <div className="flex flex-col border-neutral-100 border-t p-4">
               <Button.Root size="lg" variant="tertiary">
-                Start with Pro
+                <span className="w-full text-center text-lg">
+                  Start with Pro
+                </span>
               </Button.Root>
             </div>
           </div>

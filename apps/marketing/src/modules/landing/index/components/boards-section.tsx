@@ -7,7 +7,7 @@ export const BoardsSection = () => {
       <LandingSection.Content>
         <LandingSection.Header>
           <div className="flex flex-col gap-4">
-            <Text.Root className="text-success-500" weight="medium">
+            <Text.Root className="text-success-500" size="lg" weight="medium">
               Organize
             </Text.Root>
             <LandingSection.Title>
@@ -22,7 +22,7 @@ export const BoardsSection = () => {
         <div className="grid grid-cols-3 gap-4">
           <div className="flex flex-col gap-4 rounded-md border border-neutral-100 bg-white p-4">
             <div className="aspect-[16/9] w-full" />
-            <Text.Root weight="medium">
+            <Text.Root size="lg" weight="medium">
               Rules, not rituals.{" "}
               <span className="font-weight-400 text-neutral-500">
                 Set keywords or labels once and new releases route themselves to
@@ -32,7 +32,7 @@ export const BoardsSection = () => {
           </div>
           <div className="flex flex-col gap-4 rounded-md border border-neutral-100 bg-white p-4">
             <div className="aspect-[16/9] w-full" />
-            <Text.Root weight="medium">
+            <Text.Root size="lg" weight="medium">
               Feels like home.{" "}
               <span className="font-weight-400 text-neutral-500">
                 Your colors, logo, and domain make the changelog look native,

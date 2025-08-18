@@ -40,7 +40,11 @@ const LandingSectionSubtitle: React.FC<
   React.ComponentPropsWithRef<typeof Text.Root>
 > = ({ className, ...props }) => {
   return (
-    <Text.Root className={cn("max-w-130 text-balance", className)} {...props} />
+    <Text.Root
+      className={cn("max-w-130 text-balance", className)}
+      size="lg"
+      {...props}
+    />
   );
 };
 
