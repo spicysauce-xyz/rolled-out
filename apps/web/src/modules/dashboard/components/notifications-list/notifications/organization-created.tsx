@@ -30,7 +30,6 @@ export const OrganizationCreatedNotification: React.FC<
           {isUnread && <div className="size-2 rounded-full bg-accent-500" />}
         </div>
         <Text.Root color="muted" size="sm">
-          {organization.name} ·{" "}
           {formatDistanceToNow(new Date(createdAt), { addSuffix: true })}
         </Text.Root>
       </div>

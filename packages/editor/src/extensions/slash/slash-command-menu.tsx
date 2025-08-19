@@ -46,23 +46,27 @@ export const SlashCommandMenu = forwardRef<
     },
   }));
 
+  const handleMouseClick = (index: number) => {
+    items[index].command({ editor, range });
+  };
+
   return (
     <div className="flex-col gap-px rounded-xl border border-neutral-100 bg-white p-2 shadow-xl">
       {items.map((item, index) => (
-        <Button.Root
+        <button
           className={cn(
-            "w-full items-center gap-2 p-2",
-            selectedIndex === index && "bg-neutral-50 text-neutral-600"
+            "flex h-9 w-full items-center gap-2 rounded-md border border-transparent px-2 font-[450] text-md transition-colors [&>svg]:size-4 [&>svg]:text-neutral-700",
+            selectedIndex === index &&
+              "border-neutral-100 bg-neutral-100 [&>svg]:text-neutral-900"
           )}
           key={item.title}
+          onClick={() => handleMouseClick(index)}
           onMouseEnter={() => setSelectedIndex(index)}
-          variant="tertiary"
+          type="button"
         >
-          <Button.Icon render={<item.icon />} />
-          <Text.Root className="text-inherit" size="sm" weight="medium">
-            {item.title}
-          </Text.Root>
-        </Button.Root>
+          <item.icon className="size-4 transition-colors" />
+          {item.title}
+        </button>
       ))}
     </div>
   );

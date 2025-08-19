@@ -4,7 +4,7 @@ import { UpdateEntry } from "@modules/dashboard/components/update-list";
 import { useArchiveUpdateMutation } from "@modules/dashboard/hooks/use-archive-update-mutation";
 import { DropdownMenu, IconButton } from "@mono/ui";
 import { Link } from "@tanstack/react-router";
-import { ArchiveIcon, EllipsisVerticalIcon } from "lucide-react";
+import { ArchiveIcon, EllipsisVerticalIcon, Trash2Icon } from "lucide-react";
 import type React from "react";
 
 interface DraftUpdateProps {
@@ -12,7 +12,6 @@ interface DraftUpdateProps {
   title: string;
   id: string;
   editors: Array<{ user: { id: string; name: string; image: string | null } }>;
-  tags: Array<{ tag: { label: string } }>;
   createdAt: string;
   updatedAt: string;
   organizationSlug: string;
@@ -24,7 +23,6 @@ export const DraftUpdate: React.FC<DraftUpdateProps> = ({
   title,
   id,
   editors,
-  tags,
   createdAt,
   updatedAt,
   organizationSlug,
@@ -66,10 +64,7 @@ export const DraftUpdate: React.FC<DraftUpdateProps> = ({
         <UpdateEntry.Number number={order} />
         <UpdateEntry.Title title={title} />
       </UpdateEntry.Group>
-      <UpdateEntry.Tags
-        className="flex-1"
-        tags={tags.map(({ tag }) => tag.label)}
-      />
+      <div className="flex-1" />
       <UpdateEntry.Meta>
         {editors.length > 0 && <UpdateEntry.Editors editors={editors} />}
         <UpdateEntry.Date date={updatedAt} label="Last edited on" />

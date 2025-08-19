@@ -136,7 +136,10 @@ function RouteComponent() {
       <Page.Content>
         <Transition.Root>
           {hocuspocus.isReady ? (
-            <Transition.Item className="mx-auto w-full max-w-180" key="editor">
+            <Transition.Item
+              className="mx-auto flex w-full max-w-180 flex-1 flex-col"
+              key="editor"
+            >
               <Editor.Root provider={hocuspocus.provider} user={{ ...user }}>
                 <Editor.Content />
                 <Editor.BubbleMenu />
