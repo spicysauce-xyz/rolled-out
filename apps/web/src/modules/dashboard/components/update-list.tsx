@@ -13,7 +13,7 @@ const UpdateEntryRoot: React.FC<UpdateEntryProps> = ({
 }) => {
   const defaultProps: useRender.ElementProps<"button"> = {
     className:
-      "flex w-full items-start justify-between gap-6 rounded-none border-0 px-6 py-4 hover:bg-neutral-50 focus-visible:bg-neutral-50 focus-within:bg-neutral-50 outline-none",
+      "flex w-full items-start justify-between gap-4 rounded-none border-0 px-6 py-4 hover:bg-neutral-50 focus-visible:bg-neutral-50 focus-within:bg-neutral-50 outline-none",
   };
 
   const element = useRender({

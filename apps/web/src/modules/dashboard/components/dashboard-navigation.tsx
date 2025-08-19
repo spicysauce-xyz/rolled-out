@@ -51,10 +51,9 @@ export const DashboardNavigation: React.FC<DashboardNavigationProps> = ({
                 label="Updates"
                 render={
                   <Link
-                    activeOptions={{ exact: true }}
                     className="data-[status=active]:border data-[status=active]:border-neutral-100 data-[status=active]:bg-white data-[status=active]:[&>svg]:stroke-neutral-900"
                     params={{ organizationSlug: organization.slug }}
-                    to="/$organizationSlug"
+                    to="/$organizationSlug/updates"
                   />
                 }
               />

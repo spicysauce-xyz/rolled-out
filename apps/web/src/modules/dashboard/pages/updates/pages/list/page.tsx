@@ -13,7 +13,7 @@ import { List } from "./list";
 import { Skeleton } from "./skeleton";
 
 export const Route = createFileRoute(
-  "/_authorized/_has-organization/$organizationSlug/_layout/"
+  "/_authorized/_has-organization/$organizationSlug/_layout/updates/"
 )({
   component: RouteComponent,
 });
@@ -31,7 +31,7 @@ function RouteComponent() {
     createPostMutation.mutate(organization.id, {
       onSuccess: (post) => {
         navigate({
-          to: "/$organizationSlug/editor/$id",
+          to: "/$organizationSlug/updates/$id",
           params: { id: post.id, organizationSlug },
         });
       },

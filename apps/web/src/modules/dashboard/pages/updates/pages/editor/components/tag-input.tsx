@@ -36,7 +36,7 @@ const useFilteredTags = (
 
 export const TagInput: React.FC<TagInputProps> = ({ provider }) => {
   const { organization } = useRouteContext({
-    from: "/_authorized/_has-organization/$organizationSlug/editor/$id",
+    from: "/_authorized/_has-organization/$organizationSlug/_layout/updates/$id",
   });
 
   const { data: organizationTags } = useQuery(
@@ -159,22 +159,12 @@ export const TagInput: React.FC<TagInputProps> = ({ provider }) => {
                               type="button"
                               variant="tertiary"
                             >
-                              <Text.Root
-                                className={tagClassName.text()}
-                                weight="medium"
-                              >
-                                {tag.label}
-                              </Text.Root>
+                              {tag.label}
                             </Button.Root>
                           );
                         })
                     )
                     .otherwise(() => {
-                      const tagColor = TagComponent.getTagColor(search);
-                      const tagClassName = TagComponent.tagVariants({
-                        color: tagColor,
-                      });
-
                       return (
                         <Text.Root
                           className="text-balance text-center"
@@ -182,14 +172,7 @@ export const TagInput: React.FC<TagInputProps> = ({ provider }) => {
                           size="sm"
                         >
                           No tags found. Press Enter to create{" "}
-                          <span
-                            className={tagClassName.text({
-                              className: "font-weight-500",
-                            })}
-                          >
-                            {search}
-                          </span>{" "}
-                          tag
+                          <span className="font-weight-500">{search}</span> tag
                         </Text.Root>
                       );
                     })}

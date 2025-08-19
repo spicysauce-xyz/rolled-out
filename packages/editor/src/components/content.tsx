@@ -3,11 +3,11 @@ import { EditorContent, useCurrentEditor } from "@tiptap/react";
 
 export const editorContentClassName = cn(
   // base
-  "prose min-w-full prose-headings:font-weight-500 tracking-tight [&>div]:outline-none",
+  "prose min-w-full prose-headings:font-weight-500 tracking-tight [&>*]:last:mb-0 [&>div]:outline-none [&>div]:[&>*]:last:mb-0",
   // placeholder
   "[&>div>*]:before:pointer-events-none [&>div>*]:before:absolute [&>div>*]:before:text-neutral-500 [&>div>*]:before:content-[attr(data-placeholder)]",
   // paragraph
-  "prose-p:text-md prose-p:text-neutral-900",
+  "prose-p:text-lg prose-p:text-neutral-900",
   // heading
   "prose-headings:font-weight-500 prose-headings:text-neutral-900",
   // h1
@@ -15,7 +15,7 @@ export const editorContentClassName = cn(
   // h2
   "prose-h2:text-display-xs",
   // h3
-  "prose-h3:text-lg",
+  "prose-h3:text-[1.125rem]",
   // strong
   "prose-strong:font-weight-600 prose-strong:text-inherit",
   // img

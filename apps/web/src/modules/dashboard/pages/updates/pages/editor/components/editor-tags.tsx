@@ -1,7 +1,7 @@
 import type { HocuspocusProvider } from "@hocuspocus/provider";
-import { Button, Dialog, Tag as TagComponent, Tooltip } from "@mono/ui";
+import { Button, Dialog, IconButton, Tag, Tooltip } from "@mono/ui";
 import { useDisclosure } from "@mono/ui/hooks";
-import { TagsIcon } from "lucide-react";
+import { TagIcon } from "lucide-react";
 import { useDocumentTagManager } from "../hooks/use-document-tag-manager";
 import { TagInput } from "./tag-input";
 
@@ -32,12 +32,6 @@ const TagsDialog: React.FC<TagsDialogProps> = ({
           <Tooltip.Provider>
             <div className="flex flex-wrap gap-2">
               {tagManager.tags.map(([tag, value]) => {
-                const tagColor = TagComponent.getTagColor(value);
-                const tagClassName = TagComponent.tagVariants({
-                  isInteractive: true,
-                  color: tagColor,
-                });
-
                 return (
                   <Tooltip.Root key={tag}>
                     <Tooltip.Trigger>{value}</Tooltip.Trigger>
@@ -69,17 +63,29 @@ export const EditorTags: React.FC<EditorTags> = ({ provider }) => {
   return (
     <div className="flex items-center gap-2">
       {tagManager.tags.map(([tag, value]) => (
-        <TagComponent.Root className="h-auto rounded-sm px-1" key={tag}>
+        <Tag.Root key={tag} size="sm">
           {value}
-        </TagComponent.Root>
+        </Tag.Root>
       ))}
-      <Button.Root
-        className="flex size-5 items-center justify-center gap-1 rounded-sm bg-neutral-50 px-1"
-        onClick={tagsDialog.open}
-        variant="tertiary"
-      >
-        <Button.Icon render={<TagsIcon />} />
-      </Button.Root>
+      {tagManager.tags.length === 0 ? (
+        <Button.Root
+          className="bg-neutral-50"
+          onClick={tagsDialog.open}
+          size="sm"
+          variant="tertiary"
+        >
+          Manage Tags
+        </Button.Root>
+      ) : (
+        <IconButton.Root
+          className="bg-neutral-50"
+          onClick={tagsDialog.open}
+          size="sm"
+          variant="tertiary"
+        >
+          <IconButton.Icon render={<TagIcon />} />
+        </IconButton.Root>
+      )}
       <TagsDialog
         onOpenChange={tagsDialog.setOpen}
         open={tagsDialog.isOpen}

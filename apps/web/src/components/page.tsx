@@ -8,7 +8,7 @@ const pageVariants = tv({
     wrapper:
       "flex h-full flex-1 flex-col overflow-hidden border-neutral-100 bg-white",
     header: "flex justify-between gap-6 border-neutral-100 border-b p-4 px-6",
-    content: "grid h-full gap-8 px-6 py-6",
+    content: "flex flex-1 flex-col gap-8 p-6",
   },
 });
 
@@ -42,24 +42,21 @@ const PageHeader = React.forwardRef<HTMLDivElement, PageHeaderProps>(
   }
 );
 
-type PageContentProps = React.HTMLAttributes<HTMLDivElement>;
+const PageContent = ({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => {
+  const { content } = pageVariants();
 
-const PageContent = React.forwardRef<HTMLDivElement, PageContentProps>(
-  ({ className, ...props }, ref) => {
-    const { content } = pageVariants();
-
-    return (
-      <ScrollArea.Root type="scroll">
-        <ScrollArea.Scrollbar orientation="vertical">
-          <ScrollArea.Thumb />
-        </ScrollArea.Scrollbar>
-        <ScrollArea.Viewport className="flex-1">
-          <div className={content({ className })} ref={ref} {...props} />
-        </ScrollArea.Viewport>
-      </ScrollArea.Root>
-    );
-  }
-);
+  return (
+    <ScrollArea.Root className="flex-1 overflow-hidden">
+      <ScrollArea.Scrollbar orientation="vertical">
+        <ScrollArea.Thumb />
+      </ScrollArea.Scrollbar>
+      <ScrollArea.Viewport className={content({ className })} {...props} />
+    </ScrollArea.Root>
+  );
+};
 
 export const Page = {
   Root: PageRoot,

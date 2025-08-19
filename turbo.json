@@ -8,7 +8,7 @@
     },
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", "dist/**/*.map"]
+      "outputs": ["dist/**", "dist/**/*.map", ".output/**"]
     }
   }
 }

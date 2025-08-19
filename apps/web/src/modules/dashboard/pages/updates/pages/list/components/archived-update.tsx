@@ -1,13 +1,13 @@
 import { Confirmer } from "@components/confirmer";
 import { UpdateEntry } from "@modules/dashboard/components/update-list";
-
-import { useArchiveUpdateMutation } from "@modules/dashboard/hooks/use-archive-update-mutation";
-import { DropdownMenu, IconButton } from "@mono/ui";
+import { useUnarchiveUpdateMutation } from "@modules/dashboard/hooks/use-unarchive-update-mutation";
+import { DropdownMenu, IconButton, Text } from "@mono/ui";
 import { Link } from "@tanstack/react-router";
 import { ArchiveIcon, EllipsisVerticalIcon } from "lucide-react";
 import type React from "react";
+import { useMemo, useState } from "react";
 
-interface DraftUpdateProps {
+interface ArchivedUpdateProps {
   order: number;
   title: string;
   id: string;
@@ -19,7 +19,7 @@ interface DraftUpdateProps {
   organizationId: string;
 }
 
-export const DraftUpdate: React.FC<DraftUpdateProps> = ({
+export const ArchivedUpdate: React.FC<ArchivedUpdateProps> = ({
   order,
   title,
   id,
@@ -30,15 +30,15 @@ export const DraftUpdate: React.FC<DraftUpdateProps> = ({
   organizationSlug,
   organizationId,
 }) => {
-  const archiveUpdateMutation = useArchiveUpdateMutation();
+  const unarchiveUpdateMutation = useUnarchiveUpdateMutation();
 
-  const handleArchiveUpdate = async () => {
+  const handleUnarchiveUpdate = async () => {
     const confirmed = await Confirmer.confirm({
-      title: "Archive Update",
+      title: "Unarchive Update",
       description:
-        "Are you sure you want to archive this update? This update will be moved to the archived section.",
+        "Are you sure you want to unarchive this update? This update will be moved back to the drafts section.",
       action: {
-        label: "Archive",
+        label: "Unarchive",
         icon: ArchiveIcon,
       },
     });
@@ -47,7 +47,7 @@ export const DraftUpdate: React.FC<DraftUpdateProps> = ({
       return;
     }
 
-    await archiveUpdateMutation.mutateAsync({
+    await unarchiveUpdateMutation.mutateAsync({
       organizationId,
       id,
     });
@@ -57,9 +57,8 @@ export const DraftUpdate: React.FC<DraftUpdateProps> = ({
     <UpdateEntry.Root
       render={
         <Link
-          className="flex w-full gap-6"
           params={{ organizationSlug, id }}
-          to="/$organizationSlug/editor/$id"
+          to="/$organizationSlug/updates/$id"
         />
       }
     >
@@ -78,10 +77,6 @@ export const DraftUpdate: React.FC<DraftUpdateProps> = ({
       </UpdateEntry.Meta>
       <DropdownMenu.Root>
         <DropdownMenu.Trigger
-          onClick={(e: React.MouseEvent) => {
-            e.stopPropagation();
-            e.preventDefault();
-          }}
           render={<IconButton.Root className="-my-2" variant="tertiary" />}
         >
           <IconButton.Icon>
@@ -96,12 +91,60 @@ export const DraftUpdate: React.FC<DraftUpdateProps> = ({
           }}
           side="bottom"
         >
-          <DropdownMenu.Item onClick={handleArchiveUpdate}>
+          <DropdownMenu.Item onClick={handleUnarchiveUpdate}>
             <DropdownMenu.ItemIcon render={<ArchiveIcon />} />
-            Archive
+            Unarchive
           </DropdownMenu.Item>
         </DropdownMenu.Content>
       </DropdownMenu.Root>
     </UpdateEntry.Root>
   );
+};
+
+interface ArchivedUpdatesButtonProps {
+  count: number;
+  isOpen: boolean;
+  onClick: () => void;
+}
+
+export const ArchivedUpdatesButton: React.FC<ArchivedUpdatesButtonProps> = ({
+  count,
+  isOpen,
+  onClick,
+}) => {
+  return (
+    <button
+      className="flex items-center justify-center gap-2 rounded-none px-6 py-4"
+      onClick={onClick}
+      type="button"
+    >
+      {isOpen ? (
+        <Text.Root className="text-center" color="muted">
+          Click here to hide archived updates
+        </Text.Root>
+      ) : (
+        <Text.Root className="text-center" color="muted">
+          You have {count} archived update{count === 1 ? "" : "s"}. Click here
+          to view them
+        </Text.Root>
+      )}
+    </button>
+  );
+};
+
+export const useArchivedUpdates = (data: { status: string }[]) => {
+  const [archivedVisible, setArchivedVisible] = useState(false);
+
+  const count = useMemo(() => {
+    return data.filter((post) => post.status === "archived").length;
+  }, [data]);
+
+  const allPostsAreArchived = data.length > 0 && data.length === count;
+
+  return {
+    count,
+    isOpen: allPostsAreArchived || archivedVisible,
+    toggle: () => setArchivedVisible((v) => !v),
+    buttonVisible: count > 0 && !allPostsAreArchived,
+  };
 };

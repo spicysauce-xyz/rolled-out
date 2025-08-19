@@ -41,7 +41,9 @@ const SidebarGroup = React.forwardRef<HTMLDivElement, SidebarGroupProps>(
       >
         {label && (
           <div className="flex h-9 items-center px-2">
-            <Text.Root className="text-neutral-500">{label}</Text.Root>
+            <Text.Root className="text-neutral-500 uppercase" size="sm">
+              {label}
+            </Text.Root>
           </div>
         )}
         {children}

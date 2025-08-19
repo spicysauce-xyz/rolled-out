@@ -1,4 +1,7 @@
-export const renderCollaborationCaret = (peer: { color: string; name: string }) => {
+export const renderCollaborationCaret = (peer: {
+  color: string;
+  name: string;
+}) => {
   const cursor = document.createElement("span");
 
   cursor.classList.add("border-x", "-mx-px", "relative");
@@ -8,7 +11,7 @@ export const renderCollaborationCaret = (peer: { color: string; name: string }) 
 
   label.classList.add(
     "rounded-sm",
-    "text-xs",
+    "text-sm",
     "leading-4",
     "font-weight-500",
     "left-1/2",
@@ -27,4 +30,4 @@ export const renderCollaborationCaret = (peer: { color: string; name: string }) 
   cursor.insertBefore(label, null);
 
   return cursor;
-}; 
+};

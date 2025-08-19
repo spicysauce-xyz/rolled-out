@@ -10,6 +10,7 @@ import {
   Scripts,
   useRouterState,
 } from "@tanstack/react-router";
+import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 
@@ -65,6 +66,7 @@ function RootComponent() {
 
   return (
     <RootDocument>
+      <TanStackRouterDevtools />
       <Transition.Root>
         {isLoading && (
           <Transition.Item
