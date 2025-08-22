@@ -3,8 +3,10 @@ import { editorContentClassName, generateHtml } from "@mono/editor";
 import { Avatar, Button, Tag, Text } from "@mono/ui";
 import "highlight.js/styles/atom-one-light.min.css";
 import { cn } from "@mono/ui/utils";
+import hljs from "highlight.js";
 import { createFileRoute } from "@tanstack/react-router";
 import { format } from "date-fns";
+import { useEffect, useRef } from "react";
 import {
   CircleIcon,
   GlobeIcon,
@@ -45,6 +47,20 @@ export const Route = createFileRoute("/")({
 
 function RouteComponent() {
   const { posts } = Route.useLoaderData();
+  const postsContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Highlight all code blocks after the component mounts
+    if (postsContainerRef.current) {
+      const codeBlocks = postsContainerRef.current.querySelectorAll('pre code');
+      codeBlocks.forEach((block) => {
+        // Only highlight if not already highlighted
+        if (!block.classList.contains('hljs')) {
+          hljs.highlightElement(block as HTMLElement);
+        }
+      });
+    }
+  }, [posts]);
 
   return (
     <div className="flex flex-col">
@@ -82,7 +98,7 @@ function RouteComponent() {
         </div>
       </div>
 
-      <div className="flex flex-col divide-y divide-neutral-100">
+      <div className="flex flex-col divide-y divide-neutral-100" ref={postsContainerRef}>
         {posts.map((post) => (
           <div className="mx-auto flex w-full" key={post.id}>
             <div className="relative flex flex-1 items-start justify-end gap-4 p-6">
