@@ -2,10 +2,9 @@ import { api } from "@lib/api";
 import { editorContentClassName, generateHtml } from "@mono/editor";
 import { Avatar, Button, Tag, Text } from "@mono/ui";
 import { cn } from "@mono/ui/utils";
-import hljs from "highlight.js";
 import { createFileRoute } from "@tanstack/react-router";
 import { format } from "date-fns";
-import { useEffect, useRef } from "react";
+import hljs from "highlight.js";
 import {
   CircleIcon,
   GlobeIcon,
@@ -35,10 +34,37 @@ export const Route = createFileRoute("/")({
     }
 
     return {
-      posts: json.data.map((post) => ({
-        ...post,
-        contentHTML: generateHtml(post.contentJSON.default),
-      })),
+      posts: json.data.map((post) => {
+        const htmlContent = generateHtml(post.contentJSON.default);
+
+        const codeBlockRegex =
+          /<pre><code[^>]*class="[^"]*language-(\w+)[^"]*"[^>]*>([\s\S]*?)<\/code><\/pre>/g;
+
+        const processedHtmlContent = htmlContent.replace(
+          codeBlockRegex,
+          (match, language, code) => {
+            console.log(language, code);
+            const decodedCode = code
+              .replace(/&lt;/g, "<")
+              .replace(/&gt;/g, ">")
+              .replace(/&amp;/g, "&")
+              .replace(/&quot;/g, '"')
+              .replace(/&#39;/g, "'");
+
+            try {
+              const highlighted = hljs.highlight(decodedCode, { language });
+              return `<pre><code class="language-${language}">${highlighted.value}</code></pre>`;
+            } catch {
+              return match;
+            }
+          }
+        );
+
+        return {
+          ...post,
+          contentHTML: processedHtmlContent,
+        };
+      }),
     };
   },
   component: RouteComponent,
@@ -46,20 +72,6 @@ export const Route = createFileRoute("/")({
 
 function RouteComponent() {
   const { posts } = Route.useLoaderData();
-  const postsContainerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    // Highlight all code blocks after the component mounts
-    if (postsContainerRef.current) {
-      const codeBlocks = postsContainerRef.current.querySelectorAll('pre code');
-      codeBlocks.forEach((block) => {
-        // Only highlight if not already highlighted
-        if (!block.classList.contains('hljs')) {
-          hljs.highlightElement(block as HTMLElement);
-        }
-      });
-    }
-  }, [posts]);
 
   return (
     <div className="flex flex-col">
@@ -97,7 +109,7 @@ function RouteComponent() {
         </div>
       </div>
 
-      <div className="flex flex-col divide-y divide-neutral-100" ref={postsContainerRef}>
+      <div className="flex flex-col divide-y divide-neutral-100">
         {posts.map((post) => (
           <div className="mx-auto flex w-full" key={post.id}>
             <div className="relative flex flex-1 items-start justify-end gap-4 p-6">

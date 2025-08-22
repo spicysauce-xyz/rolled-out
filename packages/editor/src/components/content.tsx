@@ -23,7 +23,7 @@ export const editorContentClassName = cn(
   // code
   "prose-p:prose-code:rounded-xs prose-p:prose-code:bg-neutral-50 prose-p:prose-code:px-1 prose-code:font-mono prose-code:font-weight-400 prose-code:text-md prose-code:before:content-none prose-code:after:content-none",
   // code block
-  "prose-pre:my-4 prose-pre:overflow-x-auto prose-pre:rounded-xl prose-pre:bg-neutral-50 prose-pre:p-4 prose-pre:text-neutral-700",
+  "prose-pre:my-4 prose-pre:overflow-x-auto prose-pre:rounded-xl prose-pre:bg-neutral-50 prose-pre:p-4 prose-pre:text-md prose-pre:text-neutral-700",
   // blockquote
   "prose-blockquote:border-neutral-200 prose-blockquote:border-l-4 prose-blockquote:pl-4 prose-blockquote:[&>p]:text-neutral-900 prose-blockquote:[&>p]:not-italic prose-blockquote:[&>p]:before:content-none",
   // lists
