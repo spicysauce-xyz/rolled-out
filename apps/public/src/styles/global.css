@@ -1,7 +1,6 @@
 @layer theme, base, components, utilities;
 
 @import "@mono/ui/theme" layer(theme);
-@import "highlight.js/styles/atom-one-light.min.css";
 @plugin "@tailwindcss/typography";
 
 @import "tailwindcss/preflight" layer(base) source(none);
@@ -13,6 +12,8 @@
 @source "../../../../packages/ui/**/*.{ts,tsx}";
 @source "../../../../packages/editor/**/*.{ts,tsx}";
 
+@import "highlight.js/styles/atom-one-light.min.css";
+
 html {
   font-size: 16px;
 }
@@ -21,9 +22,4 @@ body {
   overscroll-behavior-y: none;
   font-family: "Inter", sans-serif;
   @apply selection:bg-accent-200;
-}
-
-/* Override hljs default padding to use our own styling */
-pre code.hljs {
-  padding: 0 !important;
 }
