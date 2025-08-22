@@ -24,6 +24,7 @@
     "@types/node": "^22.15.29",
     "@vitejs/plugin-react": "^4.3.4",
     "date-fns": "^4.1.0",
+    "highlight.js": "^11.11.1",
     "hono": "catalog:",
     "immer": "^10.1.1",
     "lodash": "^4.17.21",

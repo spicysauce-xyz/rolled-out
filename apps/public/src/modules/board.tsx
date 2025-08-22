@@ -1,6 +1,7 @@
 import { api } from "@lib/api";
 import { editorContentClassName, generateHtml } from "@mono/editor";
 import { Avatar, Button, Tag, Text } from "@mono/ui";
+import "highlight.js/styles/atom-one-light.min.css";
 import { cn } from "@mono/ui/utils";
 import { createFileRoute } from "@tanstack/react-router";
 import { format } from "date-fns";
