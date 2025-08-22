@@ -40,7 +40,7 @@ function Login() {
 
   return (
     <div className="flex min-h-dvh flex-1 flex-col items-center justify-center bg-neutral-50">
-      <div className="flex w-full flex-col items-center gap-6 rounded-2xl border border-neutral-100 bg-white p-6 sm:max-w-96">
+      <div className="flex w-full flex-col items-center gap-6 rounded-2xl border border-neutral-100 bg-white p-6 shadow-xl sm:max-w-80">
         <div className="flex w-full flex-col items-center gap-2">
           <Text.Root size="lg" weight="medium">
             Sign in to your account
@@ -91,7 +91,6 @@ function Login() {
             {({ isSubmitting, isFieldsValid }) => (
               <Button.Root
                 className="w-full"
-                color="accent"
                 isDisabled={!isFieldsValid}
                 isLoading={isSubmitting}
                 size="lg"
