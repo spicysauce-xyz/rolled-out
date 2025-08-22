@@ -1,0 +1,1 @@
+export { imageExtension } from "./extension";

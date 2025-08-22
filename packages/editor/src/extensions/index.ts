@@ -4,9 +4,10 @@ import { bulletListExtension } from "./bullet-list";
 import { codeExtension } from "./code";
 import { codeBlockLowlightExtension } from "./code-block-lowlight";
 import { documentExtension } from "./document";
+import { dropCursorExtension } from "./drop-cursor";
+import { gapCursorExtension } from "./gap-cursor";
 import { hardBreakExtension } from "./hard-break";
 import { headingExtension } from "./heading";
-import { imageExtension } from "./image";
 import { italicExtension } from "./italic";
 import { linkExtension } from "./link";
 import { listItemExtension } from "./list-item";
@@ -18,17 +19,16 @@ import { strikeExtension } from "./strike";
 import { textExtension } from "./text";
 import { titleExtension } from "./title";
 import { underlineExtension } from "./underline";
+import { uniqueIdExtension } from "./unique-id";
 
 export default [
   documentExtension,
   placeholderExtension,
-  titleExtension,
   headingExtension,
   paragraphExtension,
   textExtension,
   hardBreakExtension,
   blockquoteExtension,
-  imageExtension,
   boldExtension,
   italicExtension,
   strikeExtension,
@@ -40,4 +40,8 @@ export default [
   bulletListExtension,
   orderedListExtension,
   listItemExtension,
+  gapCursorExtension,
+  dropCursorExtension,
+  titleExtension,
+  uniqueIdExtension,
 ];

@@ -1,4 +1,3 @@
-import { Button, Text } from "@mono/ui";
 import { cn } from "@mono/ui/utils";
 import type { Editor, Range } from "@tiptap/react";
 import type { LucideIcon } from "lucide-react";
@@ -51,7 +50,7 @@ export const SlashCommandMenu = forwardRef<
   };
 
   return (
-    <div className="flex-col gap-px rounded-xl border border-neutral-100 bg-white p-2 shadow-xl">
+    <div className="min-w-40 flex-col gap-px rounded-xl border border-neutral-100 bg-white p-2 shadow-xl">
       {items.map((item, index) => (
         <button
           className={cn(

@@ -4,7 +4,7 @@ import { UpdateEntry } from "@modules/dashboard/components/update-list";
 import { useArchiveUpdateMutation } from "@modules/dashboard/hooks/use-archive-update-mutation";
 import { DropdownMenu, IconButton } from "@mono/ui";
 import { Link } from "@tanstack/react-router";
-import { ArchiveIcon, EllipsisVerticalIcon, Trash2Icon } from "lucide-react";
+import { ArchiveIcon, EllipsisVerticalIcon } from "lucide-react";
 import type React from "react";
 
 interface DraftUpdateProps {
