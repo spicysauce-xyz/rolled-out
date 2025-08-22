@@ -1,7 +1,7 @@
 import { Confirmer } from "@components/confirmer";
 import { UpdateEntry } from "@modules/dashboard/components/update-list";
 import { useUnarchiveUpdateMutation } from "@modules/dashboard/hooks/use-unarchive-update-mutation";
-import { DropdownMenu, IconButton, Text } from "@mono/ui";
+import { Button, DropdownMenu, IconButton, Text } from "@mono/ui";
 import { Link } from "@tanstack/react-router";
 import { ArchiveIcon, EllipsisVerticalIcon } from "lucide-react";
 import type React from "react";
@@ -12,7 +12,6 @@ interface ArchivedUpdateProps {
   title: string;
   id: string;
   editors: Array<{ user: { id: string; name: string; image: string | null } }>;
-  tags: Array<{ tag: { label: string } }>;
   createdAt: string;
   updatedAt: string;
   organizationSlug: string;
@@ -24,7 +23,6 @@ export const ArchivedUpdate: React.FC<ArchivedUpdateProps> = ({
   title,
   id,
   editors,
-  tags,
   createdAt,
   updatedAt,
   organizationSlug,
@@ -66,10 +64,7 @@ export const ArchivedUpdate: React.FC<ArchivedUpdateProps> = ({
         <UpdateEntry.Number number={order} />
         <UpdateEntry.Title title={title} />
       </UpdateEntry.Group>
-      <UpdateEntry.Tags
-        className="flex-1"
-        tags={tags.map(({ tag }) => tag.label)}
-      />
+      <div className="flex-1" />
       <UpdateEntry.Meta>
         {editors.length > 0 && <UpdateEntry.Editors editors={editors} />}
         <UpdateEntry.Date date={updatedAt} label="Last edited on" />
@@ -113,22 +108,18 @@ export const ArchivedUpdatesButton: React.FC<ArchivedUpdatesButtonProps> = ({
   onClick,
 }) => {
   return (
-    <button
-      className="flex items-center justify-center gap-2 rounded-none px-6 py-4"
+    <Button.Root
+      className="flex h-auto items-center justify-center gap-2 rounded-none px-6 py-4"
       onClick={onClick}
-      type="button"
+      variant="tertiary"
     >
-      {isOpen ? (
-        <Text.Root className="text-center" color="muted">
-          Click here to hide archived updates
-        </Text.Root>
-      ) : (
-        <Text.Root className="text-center" color="muted">
-          You have {count} archived update{count === 1 ? "" : "s"}. Click here
-          to view them
-        </Text.Root>
-      )}
-    </button>
+      <Text.Root className="w-full text-center" color="muted">
+        {isOpen
+          ? "Click here to hide archived updates"
+          : `You have ${count} archived update${count === 1 ? "" : "s"}. Click here
+          to view them`}
+      </Text.Root>
+    </Button.Root>
   );
 };
 

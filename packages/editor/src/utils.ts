@@ -1,6 +1,7 @@
 import { generateHTML as generateTiptapHTML } from "@tiptap/html";
 import type { Editor, JSONContent } from "@tiptap/react";
 import extensions from "./extensions";
+import { imageExtension } from "./extensions/image";
 
 export const onlyInAllowedNodesForMarks = (
   editor: Editor,
@@ -19,5 +20,5 @@ export const onlyInAllowedNodesForMarks = (
 export type { JSONContent } from "@tiptap/react";
 
 export const generateHtml = (content: JSONContent) => {
-  return generateTiptapHTML(content, extensions);
+  return generateTiptapHTML(content, [...extensions, imageExtension]);
 };

@@ -12,6 +12,7 @@ import { tryCatch } from "@utils/promise";
 import { CheckCheckIcon, CheckIcon, ClockIcon, SendIcon } from "lucide-react";
 import { ConnectedPeers } from "./components/connected-peers";
 import { useHocuspocusProvider } from "./hooks/use-hocuspocus-provider";
+import { useUploadAssetMutation } from "./hooks/use-upload-asset-mutation";
 
 export const Route = createFileRoute(
   "/_authorized/_has-organization/$organizationSlug/_layout/updates/$id"
@@ -72,6 +73,7 @@ function RouteComponent() {
   };
 
   const hocuspocus = useHocuspocusProvider(id);
+  const uploadAsset = useUploadAssetMutation();
 
   return (
     <Page.Wrapper>
@@ -136,8 +138,15 @@ function RouteComponent() {
       <Page.Content>
         <Transition.Root>
           {hocuspocus.isReady ? (
-            <Transition.Item className="mx-auto w-full max-w-180" key="editor">
-              <Editor.Root provider={hocuspocus.provider} user={{ ...user }}>
+            <Transition.Item
+              className="mx-auto flex w-full max-w-180 flex-1 flex-col"
+              key="editor"
+            >
+              <Editor.Root
+                provider={hocuspocus.provider}
+                uploadImage={uploadAsset}
+                user={{ ...user }}
+              >
                 <Editor.Content />
                 <Editor.BubbleMenu />
               </Editor.Root>

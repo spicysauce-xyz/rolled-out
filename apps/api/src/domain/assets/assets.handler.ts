@@ -34,4 +34,17 @@ export const AssetsHandler = new Hono()
         }),
       (error) => notOk(c, { message: error.message }, 500)
     );
+  })
+  .post("/image", validator("query", z.object({ type: z.string() })), (c) => {
+    const filename = uuidv4();
+
+    return S3.createUploadUrl(filename).match(
+      (uploadUrl) =>
+        ok(c, {
+          uploadUrl,
+          filename,
+          url: `${Config.s3.assetsBase}/${filename}`,
+        }),
+      (error) => notOk(c, { message: error.message }, 500)
+    );
   });

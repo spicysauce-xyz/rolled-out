@@ -1,3 +1,4 @@
+import type { EditorState } from "@tiptap/pm/state";
 import {
   type Editor,
   Extension,
@@ -9,6 +10,7 @@ import {
   CodeIcon,
   Heading2Icon,
   Heading3Icon,
+  ImageIcon,
   ListIcon,
   ListOrderedIcon,
   QuoteIcon,
@@ -27,6 +29,7 @@ export const slashExtension = Extension.create({
     return {
       suggestion: {
         char: "/",
+        startOfLine: true,
         command: ({
           editor,
           range,
@@ -38,81 +41,180 @@ export const slashExtension = Extension.create({
         }) => {
           props.command({ editor, range });
         },
-        items: () => [
-          {
-            icon: Heading2Icon,
-            title: "Heading 2",
-            command: ({ editor, range }: { editor: Editor; range: Range }) => {
-              editor
-                .chain()
-                .focus()
-                .deleteRange(range)
-                .setNode("heading", { level: 2 })
-                .run();
+        items: ({ query }: { query: string }) =>
+          [
+            {
+              icon: Heading2Icon,
+              title: "Heading 2",
+              command: ({
+                editor,
+                range,
+              }: {
+                editor: Editor;
+                range: Range;
+              }) => {
+                editor
+                  .chain()
+                  .focus()
+                  .deleteRange(range)
+                  .setNode("heading", { level: 2 })
+                  .run();
+              },
             },
-          },
-          {
-            icon: Heading3Icon,
-            title: "Heading 3",
-            command: ({ editor, range }: { editor: Editor; range: Range }) => {
-              editor
-                .chain()
-                .focus()
-                .deleteRange(range)
-                .setNode("heading", { level: 3 })
-                .run();
+            {
+              icon: Heading3Icon,
+              title: "Heading 3",
+              command: ({
+                editor,
+                range,
+              }: {
+                editor: Editor;
+                range: Range;
+              }) => {
+                editor
+                  .chain()
+                  .focus()
+                  .deleteRange(range)
+                  .setNode("heading", { level: 3 })
+                  .run();
+              },
             },
-          },
-          {
-            icon: ListIcon,
-            title: "Bullet List",
-            command: ({ editor, range }: { editor: Editor; range: Range }) => {
-              editor
-                .chain()
-                .focus()
-                .deleteRange(range)
-                .toggleBulletList()
-                .run();
+            {
+              icon: ImageIcon,
+              title: "Image",
+              command: ({
+                editor,
+                range,
+              }: {
+                editor: Editor;
+                range: Range;
+              }) => {
+                // Create file input element
+                const input = document.createElement("input");
+                input.type = "file";
+                input.accept = "image/*";
+
+                input.onchange = (event) => {
+                  const file = (event.target as HTMLInputElement).files?.[0];
+
+                  if (file) {
+                    editor
+                      .chain()
+                      .focus()
+                      .deleteRange(range)
+                      .uploadImage(file, (node) => {
+                        return editor.state.tr.replaceSelectionWith(node);
+                      })
+                      .run();
+                  }
+                };
+
+                input.click();
+              },
             },
-          },
-          {
-            icon: ListOrderedIcon,
-            title: "Ordered List",
-            command: ({ editor, range }: { editor: Editor; range: Range }) => {
-              editor
-                .chain()
-                .focus()
-                .deleteRange(range)
-                .toggleOrderedList()
-                .run();
+            {
+              icon: ListIcon,
+              title: "Bullet List",
+              command: ({
+                editor,
+                range,
+              }: {
+                editor: Editor;
+                range: Range;
+              }) => {
+                editor
+                  .chain()
+                  .focus()
+                  .deleteRange(range)
+                  .toggleBulletList()
+                  .run();
+              },
             },
-          },
-          {
-            icon: QuoteIcon,
-            title: "Quote",
-            command: ({ editor, range }: { editor: Editor; range: Range }) => {
-              editor
-                .chain()
-                .focus()
-                .deleteRange(range)
-                .toggleNode("paragraph", "paragraph")
-                .toggleBlockquote()
-                .run();
+            {
+              icon: ListOrderedIcon,
+              title: "Ordered List",
+              command: ({
+                editor,
+                range,
+              }: {
+                editor: Editor;
+                range: Range;
+              }) => {
+                editor
+                  .chain()
+                  .focus()
+                  .deleteRange(range)
+                  .toggleOrderedList()
+                  .run();
+              },
             },
-          },
-          {
-            icon: CodeIcon,
-            title: "Code Block",
-            command: ({ editor, range }: { editor: Editor; range: Range }) => {
-              editor
-                .chain()
-                .focus()
-                .deleteRange(range)
-                .setNode("codeBlock")
-                .run();
+            {
+              icon: QuoteIcon,
+              title: "Quote",
+              command: ({
+                editor,
+                range,
+              }: {
+                editor: Editor;
+                range: Range;
+              }) => {
+                editor
+                  .chain()
+                  .focus()
+                  .deleteRange(range)
+                  .toggleNode("paragraph", "paragraph")
+                  .toggleBlockquote()
+                  .run();
+              },
             },
-          },
-        ],
+            {
+              icon: CodeIcon,
+              title: "Code Block",
+              command: ({
+                editor,
+                range,
+              }: {
+                editor: Editor;
+                range: Range;
+              }) => {
+                editor
+                  .chain()
+                  .focus()
+                  .deleteRange(range)
+                  .setNode("codeBlock")
+                  .run();
+              },
+            },
+          ].filter((item) =>
+            item.title.toLowerCase().includes(query.toLowerCase())
+          ),
+        decorationClass:
+          "text-neutral-500 bg-neutral-50 rounded-xs ring-2 ring-neutral-50",
+        allow: (props: {
+          editor: Editor;
+          state: EditorState;
+          range: Range;
+          isActive?: boolean;
+        }) => {
+          const { selection } = props.editor.state;
+
+          const parentNode = selection.$from.node(selection.$from.depth);
+          const blockType = parentNode.type.name;
+          const grandParentNode = selection.$from.node(
+            selection.$from.depth - 1
+          );
+
+          if (
+            !["paragraph", "heading"].includes(blockType) ||
+            ["listItem", "blockquote"].includes(
+              grandParentNode?.type.name ?? ""
+            )
+          ) {
+            return false;
+          }
+
+          return true;
+        },
         render: () => {
           let component: ReactRenderer | null = null;
           let popup: Instance<Props>[] | null = null;
@@ -123,15 +225,6 @@ export const slashExtension = Extension.create({
                 props,
                 editor: props.editor,
               });
-
-              const { selection } = props.editor.state;
-
-              const parentNode = selection.$from.node(selection.$from.depth);
-              const blockType = parentNode.type.name;
-
-              if (["title", "codeBlock"].includes(blockType)) {
-                return;
-              }
 
               if (!props.clientRect) {
                 return;

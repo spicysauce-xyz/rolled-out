@@ -105,7 +105,6 @@ export const MarksMenu: React.FC = () => {
       <ButtonGroup.Root
         className="shadow-xl"
         onClick={(e) => e.stopPropagation()}
-        size="sm"
       >
         {marksOptions.map((option) => {
           const Icon = option.icon;
@@ -116,9 +115,7 @@ export const MarksMenu: React.FC = () => {
               key={option.name}
               onClick={() => option.command(editor)}
             >
-              <ButtonGroup.Icon>
-                <Icon />
-              </ButtonGroup.Icon>
+              <ButtonGroup.Icon render={<Icon />} />
             </ButtonGroup.Item>
           );
         })}

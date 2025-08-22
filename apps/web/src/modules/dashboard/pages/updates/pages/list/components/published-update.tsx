@@ -7,14 +7,12 @@ interface PublishedUpdateProps {
   order: number;
   title: string;
   editors: Array<{ user: { id: string; name: string; image: string | null } }>;
-  tags: Array<{ tag: { label: string } }>;
   publishedAt: string | null;
 }
 
 export const PublishedUpdate: React.FC<PublishedUpdateProps> = ({
   order,
   title,
-  tags,
   editors,
   publishedAt,
 }) => {
@@ -24,10 +22,7 @@ export const PublishedUpdate: React.FC<PublishedUpdateProps> = ({
         <UpdateEntry.Number number={order} />
         <UpdateEntry.Title title={title} />
       </UpdateEntry.Group>
-      <UpdateEntry.Tags
-        className="flex-1"
-        tags={tags.map(({ tag }) => tag.label)}
-      />
+      <div className="flex-1" />
       {/* <UpdateEntry.Meta>
         <Tooltip.Root>
           <Tooltip.Trigger asChild>

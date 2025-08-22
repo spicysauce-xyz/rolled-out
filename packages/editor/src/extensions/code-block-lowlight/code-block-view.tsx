@@ -18,8 +18,14 @@ export const CodeBlockView: React.FC<ReactNodeViewProps> = ({
       value={defaultLanguage}
     >
       <Select.Trigger
-        className="absolute top-4 right-4 opacity-0 transition-opacity group-hover/code-block:opacity-100 data-[state=open]:opacity-100"
-        render={<Button.Root type="button" variant="tertiary" />}
+        className="absolute top-2 right-2 opacity-0 transition-opacity group-hover/code-block:opacity-100 data-[popup-open]:opacity-100"
+        render={
+          <Button.Root
+            className="bg-neutral-50"
+            type="button"
+            variant="tertiary"
+          />
+        }
       >
         <Select.Value />
         <Button.Icon render={<Select.Icon />} />

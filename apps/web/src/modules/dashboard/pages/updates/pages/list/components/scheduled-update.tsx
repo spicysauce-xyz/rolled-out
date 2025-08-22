@@ -19,7 +19,7 @@ export const ScheduledUpdate: React.FC<ScheduledUpdateProps> = ({
         <UpdateEntry.Number number={order} />
         <UpdateEntry.Title title={title} />
       </UpdateEntry.Group>
-      <UpdateEntry.Tags className="flex-1" tags={["Feature", "Scheduled"]} />
+      <div className="flex-1" />
       <UpdateEntry.Meta>
         {editors.length > 0 && <UpdateEntry.Editors editors={editors} />}
         <UpdateEntry.Date

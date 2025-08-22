@@ -6,20 +6,26 @@ import { OutsideClick } from "./components/outside-click";
 import extensions from "./extensions";
 import { collaborationExtension } from "./extensions/collaboration";
 import { collaborationCaretExtension } from "./extensions/collaboration-caret";
+import { imageExtension } from "./extensions/image";
 
 interface RootProps extends Omit<UseEditorOptions, "extensions"> {
   provider?: HocuspocusProvider;
   user?: { id: string; name: string; image?: string | null };
+  uploadImage: (file: File) => Promise<string>;
 }
 
 const Root: React.FC<React.PropsWithChildren<RootProps>> = ({
   children,
   provider,
   user,
+  uploadImage,
   ...options
 }) => {
   const editor = useEditor({
     extensions: [
+      imageExtension.configure({
+        uploadImage,
+      }),
       ...extensions,
       ...(provider
         ? [
