@@ -43,7 +43,6 @@ export const Route = createFileRoute("/")({
         const processedHtmlContent = htmlContent.replace(
           codeBlockRegex,
           (match, language, code) => {
-            console.log(language, code);
             const decodedCode = code
               .replace(/&lt;/g, "<")
               .replace(/&gt;/g, ">")
