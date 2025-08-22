@@ -1,13 +1,8 @@
 import { Skeleton, Text } from "@mono/ui";
-import {
-  ArchiveIcon,
-  CircleCheckIcon,
-  CircleDashedIcon,
-  ClockIcon,
-} from "lucide-react";
+import { CircleCheckIcon, CircleDashedIcon, ClockIcon } from "lucide-react";
 
 export const GroupDivider: React.FC<{
-  status: "draft" | "scheduled" | "published" | "archived";
+  status: "draft" | "scheduled" | "published";
 }> & {
   Skeleton: React.FC;
 } = ({ status }) => {
@@ -23,10 +18,6 @@ export const GroupDivider: React.FC<{
     published: {
       icon: <CircleCheckIcon className="size-4 text-success-500" />,
       label: "Published",
-    },
-    archived: {
-      icon: <ArchiveIcon className="size-4 text-neutral-500" />,
-      label: "Archived",
     },
   };
 

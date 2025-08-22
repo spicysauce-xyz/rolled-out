@@ -32,7 +32,7 @@ export const PostsService = {
   updatePostStatusById: (
     member: { organizationId: string },
     id: string,
-    status: "published" | "archived" | "draft"
+    status: "published" | "draft" | "scheduled"
   ) => {
     return PostsRepository.findPostById(id, member.organizationId).andThen(
       (post) => {

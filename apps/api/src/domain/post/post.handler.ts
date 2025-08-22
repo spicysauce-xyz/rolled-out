@@ -63,36 +63,4 @@ export const PostHandler = organizationFactory
         (error) => notOk(c, { message: error.message }, 500)
       );
     }
-  )
-
-  .post(
-    "/:id/archive",
-    validator("param", z.object({ id: z.string().uuid() })),
-    (c) => {
-      const postId = c.req.param("id");
-      const member = c.get("member");
-
-      return PostsService.updatePostStatusById(
-        member,
-        postId,
-        "archived"
-      ).match(
-        (post) => ok(c, post),
-        (error) => notOk(c, { message: error.message }, 500)
-      );
-    }
-  )
-
-  .post(
-    "/:id/unarchive",
-    validator("param", z.object({ id: z.string().uuid() })),
-    (c) => {
-      const postId = c.req.param("id");
-      const member = c.get("member");
-
-      return PostsService.updatePostStatusById(member, postId, "draft").match(
-        (post) => ok(c, post),
-        (error) => notOk(c, { message: error.message }, 500)
-      );
-    }
   );

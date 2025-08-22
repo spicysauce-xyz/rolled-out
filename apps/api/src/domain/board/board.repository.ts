@@ -100,7 +100,6 @@ export const BoardsRepository = {
           order: true,
           createdAt: true,
           updatedAt: true,
-          archivedAt: true,
           publishedAt: true,
         },
         with: {

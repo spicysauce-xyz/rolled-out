@@ -1,10 +1,14 @@
-import { Confirmer } from "@components/confirmer";
 import { UpdateEntry } from "@modules/dashboard/components/update-list";
-
-import { useArchiveUpdateMutation } from "@modules/dashboard/hooks/use-archive-update-mutation";
 import { DropdownMenu, IconButton } from "@mono/ui";
 import { Link } from "@tanstack/react-router";
-import { ArchiveIcon, EllipsisVerticalIcon } from "lucide-react";
+import {
+  CalendarIcon,
+  CopyIcon,
+  EllipsisVerticalIcon,
+  PencilLineIcon,
+  SendIcon,
+  Trash2Icon,
+} from "lucide-react";
 import type React from "react";
 
 interface DraftUpdateProps {
@@ -26,31 +30,7 @@ export const DraftUpdate: React.FC<DraftUpdateProps> = ({
   createdAt,
   updatedAt,
   organizationSlug,
-  organizationId,
 }) => {
-  const archiveUpdateMutation = useArchiveUpdateMutation();
-
-  const handleArchiveUpdate = async () => {
-    const confirmed = await Confirmer.confirm({
-      title: "Archive Update",
-      description:
-        "Are you sure you want to archive this update? This update will be moved to the archived section.",
-      action: {
-        label: "Archive",
-        icon: ArchiveIcon,
-      },
-    });
-
-    if (!confirmed) {
-      return;
-    }
-
-    await archiveUpdateMutation.mutateAsync({
-      organizationId,
-      id,
-    });
-  };
-
   return (
     <UpdateEntry.Root
       render={
@@ -90,9 +70,34 @@ export const DraftUpdate: React.FC<DraftUpdateProps> = ({
           }}
           side="bottom"
         >
-          <DropdownMenu.Item onClick={handleArchiveUpdate}>
-            <DropdownMenu.ItemIcon render={<ArchiveIcon />} />
-            Archive
+          <DropdownMenu.Item
+            render={
+              <Link
+                params={{ organizationSlug, id }}
+                to="/$organizationSlug/updates/$id"
+              />
+            }
+          >
+            <DropdownMenu.ItemIcon render={<PencilLineIcon />} />
+            Edit
+          </DropdownMenu.Item>
+          <DropdownMenu.Separator />
+          <DropdownMenu.Item>
+            <DropdownMenu.ItemIcon render={<CalendarIcon />} />
+            Schedule
+          </DropdownMenu.Item>
+          <DropdownMenu.Item>
+            <DropdownMenu.ItemIcon render={<SendIcon />} />
+            Publish now
+          </DropdownMenu.Item>
+          <DropdownMenu.Separator />
+          <DropdownMenu.Item>
+            <DropdownMenu.ItemIcon render={<CopyIcon />} />
+            Duplicate
+          </DropdownMenu.Item>
+          <DropdownMenu.Item>
+            <DropdownMenu.ItemIcon render={<Trash2Icon />} />
+            Delete
           </DropdownMenu.Item>
         </DropdownMenu.Content>
       </DropdownMenu.Root>

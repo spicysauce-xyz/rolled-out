@@ -54,7 +54,6 @@ export const PostsRepository = {
           createdAt: true,
           updatedAt: true,
           publishedAt: true,
-          archivedAt: true,
         },
         where: eq(schema.post.organizationId, organizationId),
         with: {
@@ -85,13 +84,11 @@ export const PostsRepository = {
         WHEN ${schema.post.status} = 'draft' THEN 1
         WHEN ${schema.post.status} = 'scheduled' THEN 2
         WHEN ${schema.post.status} = 'published' THEN 3
-        WHEN ${schema.post.status} = 'archived' THEN 4
       END`,
           sql`CASE
         WHEN ${schema.post.status} = 'draft' THEN ${schema.post.createdAt}
         WHEN ${schema.post.status} = 'scheduled' THEN ${schema.post.updatedAt}
         WHEN ${schema.post.status} = 'published' THEN ${schema.post.updatedAt}
-        WHEN ${schema.post.status} = 'archived' THEN ${schema.post.archivedAt}
         END DESC`,
         ],
       }),
@@ -103,7 +100,7 @@ export const PostsRepository = {
   updatePostStatus: (
     id: string,
     organizationId: string,
-    status: "published" | "archived" | "draft"
+    status: "published" | "draft" | "scheduled"
   ) => {
     return ResultAsync.fromPromise(
       Database.update(schema.post)
@@ -112,10 +109,7 @@ export const PostsRepository = {
           ...(status === "published"
             ? { status, publishedAt: new Date() }
             : {}),
-          ...(status === "archived" ? { status, archivedAt: new Date() } : {}),
-          ...(status === "draft"
-            ? { status, publishedAt: null, archivedAt: null }
-            : {}),
+          ...(status === "draft" ? { status, publishedAt: null } : {}),
         })
         .where(
           and(

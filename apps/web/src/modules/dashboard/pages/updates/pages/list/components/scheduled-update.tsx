@@ -1,12 +1,21 @@
 import { UpdateEntry } from "@modules/dashboard/components/update-list";
-import { IconButton } from "@mono/ui";
-import { EllipsisVerticalIcon } from "lucide-react";
+import { DropdownMenu, IconButton } from "@mono/ui";
+import {
+  CopyIcon,
+  EllipsisVerticalIcon,
+  SendIcon,
+  TimerOffIcon,
+  TimerResetIcon,
+  Trash2Icon,
+} from "lucide-react";
 import type React from "react";
 
 interface ScheduledUpdateProps {
   order: number;
   title: string;
   editors: Array<{ user: { id: string; name: string; image: string | null } }>;
+  organizationSlug: string;
+  id: string;
 }
 export const ScheduledUpdate: React.FC<ScheduledUpdateProps> = ({
   title,
@@ -27,11 +36,50 @@ export const ScheduledUpdate: React.FC<ScheduledUpdateProps> = ({
           label="Scheduled for"
         />
       </UpdateEntry.Meta>
-      <IconButton.Root className="-my-2" variant="tertiary">
-        <IconButton.Icon>
-          <EllipsisVerticalIcon />
-        </IconButton.Icon>
-      </IconButton.Root>
+      <DropdownMenu.Root>
+        <DropdownMenu.Trigger
+          onClick={(e: React.MouseEvent) => {
+            e.stopPropagation();
+            e.preventDefault();
+          }}
+          render={<IconButton.Root className="-my-2" variant="tertiary" />}
+        >
+          <IconButton.Icon>
+            <EllipsisVerticalIcon />
+          </IconButton.Icon>
+        </DropdownMenu.Trigger>
+        <DropdownMenu.Content
+          align="end"
+          onClick={(e: React.MouseEvent) => {
+            e.stopPropagation();
+            e.preventDefault();
+          }}
+          side="bottom"
+        >
+          <DropdownMenu.Item>
+            <DropdownMenu.ItemIcon render={<SendIcon />} />
+            Publish now
+          </DropdownMenu.Item>
+          <DropdownMenu.Separator />
+          <DropdownMenu.Item>
+            <DropdownMenu.ItemIcon render={<TimerResetIcon />} />
+            Reschedule
+          </DropdownMenu.Item>
+          <DropdownMenu.Item>
+            <DropdownMenu.ItemIcon render={<TimerOffIcon />} />
+            Cancel scheduling
+          </DropdownMenu.Item>
+          <DropdownMenu.Separator />
+          <DropdownMenu.Item>
+            <DropdownMenu.ItemIcon render={<CopyIcon />} />
+            Duplicate
+          </DropdownMenu.Item>
+          <DropdownMenu.Item>
+            <DropdownMenu.ItemIcon render={<Trash2Icon />} />
+            Delete
+          </DropdownMenu.Item>
+        </DropdownMenu.Content>
+      </DropdownMenu.Root>
     </UpdateEntry.Root>
   );
 };
