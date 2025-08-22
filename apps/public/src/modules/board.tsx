@@ -80,28 +80,20 @@ function RouteComponent() {
             <ScrollTextIcon className="size-4 text-neutral-900" />
           </div>
           <div className="flex items-center gap-2">
-            <Button.Root className="!text-neutral-900" variant="tertiary">
-              <Button.Icon className="!text-neutral-900">
-                <CircleIcon />
-              </Button.Icon>
+            <Button.Root variant="tertiary">
+              <Button.Icon render={() => <CircleIcon />} />
               Main
             </Button.Root>
             <Button.Root variant="tertiary">
-              <Button.Icon>
-                <TabletSmartphoneIcon />
-              </Button.Icon>
+              <Button.Icon render={() => <TabletSmartphoneIcon />} />
               Mobile
             </Button.Root>
             <Button.Root variant="tertiary">
-              <Button.Icon>
-                <GlobeIcon />
-              </Button.Icon>
+              <Button.Icon render={() => <GlobeIcon />} />
               Web
             </Button.Root>
             <Button.Root variant="tertiary">
-              <Button.Icon>
-                <ServerIcon />
-              </Button.Icon>
+              <Button.Icon render={() => <ServerIcon />} />
               Self-hosted
             </Button.Root>
           </div>
@@ -135,37 +127,24 @@ function RouteComponent() {
               />
               <div className="flex w-full items-center justify-between border-neutral-100 border-t p-6">
                 <div className="flex flex-col gap-0.5">
-                  <Text.Root color="muted" size="xs">
+                  <Text.Root color="muted" size="sm">
                     Published by:
                   </Text.Root>
                   <div className="flex items-center gap-2">
                     {post.editors.map((editor) => (
-                      <div className="flex items-center gap-1" key={editor.id}>
-                        <Avatar.Root className="size-4 rounded-sm">
-                          <Avatar.Image src={editor.user.image || ""} />
-                          <Avatar.Fallback>
-                            {editor.user.name[0]}
-                          </Avatar.Fallback>
-                        </Avatar.Root>
-                        <Text.Root size="sm" weight="medium">
-                          {editor.user.name}
-                        </Text.Root>
-                      </div>
+                      <Text.Root key={editor.id} weight="medium">
+                        {editor.user.name}
+                      </Text.Root>
                     ))}
                   </div>
                 </div>
                 <div className="flex gap-2">
-                  <Button.Root color="success" variant="secondary">
-                    <Button.Icon>
-                      <ThumbsUpIcon />
-                    </Button.Icon>
+                  <Button.Root variant="tertiary">
+                    <Button.Icon render={() => <ThumbsUpIcon />} />
                     12
                   </Button.Root>
-                  <Button.Root color="danger" variant="secondary">
-                    <Button.Icon>
-                      <ThumbsDownIcon />
-                    </Button.Icon>
-                    3
+                  <Button.Root variant="tertiary">
+                    <Button.Icon render={() => <ThumbsDownIcon />} />3
                   </Button.Root>
                 </div>
               </div>
