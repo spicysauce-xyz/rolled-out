@@ -4,6 +4,7 @@ import { Avatar, Button, Tag, Text } from "@mono/ui";
 import { cn } from "@mono/ui/utils";
 import { createFileRoute } from "@tanstack/react-router";
 import { format } from "date-fns";
+import hljs from "highlight.js";
 import {
   CircleIcon,
   GlobeIcon,
@@ -33,10 +34,36 @@ export const Route = createFileRoute("/")({
     }
 
     return {
-      posts: json.data.map((post) => ({
-        ...post,
-        contentHTML: generateHtml(post.contentJSON.default),
-      })),
+      posts: json.data.map((post) => {
+        const htmlContent = generateHtml(post.contentJSON.default);
+
+        const codeBlockRegex =
+          /<pre><code[^>]*class="[^"]*language-(\w+)[^"]*"[^>]*>([\s\S]*?)<\/code><\/pre>/g;
+
+        const processedHtmlContent = htmlContent.replace(
+          codeBlockRegex,
+          (match, language, code) => {
+            const decodedCode = code
+              .replace(/&lt;/g, "<")
+              .replace(/&gt;/g, ">")
+              .replace(/&amp;/g, "&")
+              .replace(/&quot;/g, '"')
+              .replace(/&#39;/g, "'");
+
+            try {
+              const highlighted = hljs.highlight(decodedCode, { language });
+              return `<pre><code class="language-${language}">${highlighted.value}</code></pre>`;
+            } catch {
+              return match;
+            }
+          }
+        );
+
+        return {
+          ...post,
+          contentHTML: processedHtmlContent,
+        };
+      }),
     };
   },
   component: RouteComponent,
