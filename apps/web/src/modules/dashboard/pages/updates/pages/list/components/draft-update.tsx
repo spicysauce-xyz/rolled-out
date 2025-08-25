@@ -1,4 +1,6 @@
+import { Confirmer } from "@components/confirmer";
 import { UpdateEntry } from "@modules/dashboard/components/update-list";
+import { usePublishUpdateMutation } from "@modules/dashboard/hooks/use-publish-update-mutation";
 import { DropdownMenu, IconButton } from "@mono/ui";
 import { Link } from "@tanstack/react-router";
 import {
@@ -30,7 +32,26 @@ export const DraftUpdate: React.FC<DraftUpdateProps> = ({
   createdAt,
   updatedAt,
   organizationSlug,
+  organizationId,
 }) => {
+  const { mutate: publishPost, isPending: isPublishing } =
+    usePublishUpdateMutation();
+
+  const handlePublishPost = async () => {
+    const confirmed = await Confirmer.confirm({
+      title: "Publish update",
+      description:
+        "Are you sure you want to publish this update? The update will be published immediately and will be visible to all users. You can unpublish it later if needed.",
+      action: {
+        label: "Publish",
+      },
+    });
+
+    if (confirmed) {
+      publishPost({ organizationId, id });
+    }
+  };
+
   return (
     <UpdateEntry.Root
       render={
@@ -56,7 +77,13 @@ export const DraftUpdate: React.FC<DraftUpdateProps> = ({
             e.stopPropagation();
             e.preventDefault();
           }}
-          render={<IconButton.Root className="-my-2" variant="tertiary" />}
+          render={
+            <IconButton.Root
+              className="-my-2"
+              isLoading={isPublishing}
+              variant="tertiary"
+            />
+          }
         >
           <IconButton.Icon>
             <EllipsisVerticalIcon />
@@ -86,7 +113,7 @@ export const DraftUpdate: React.FC<DraftUpdateProps> = ({
             <DropdownMenu.ItemIcon render={<CalendarIcon />} />
             Schedule
           </DropdownMenu.Item>
-          <DropdownMenu.Item>
+          <DropdownMenu.Item onClick={handlePublishPost}>
             <DropdownMenu.ItemIcon render={<SendIcon />} />
             Publish now
           </DropdownMenu.Item>

@@ -1,4 +1,6 @@
+import { Confirmer } from "@components/confirmer";
 import { UpdateEntry } from "@modules/dashboard/components/update-list";
+import { useUnpublishPostMutation } from "@modules/dashboard/hooks/use-unpublish-update-mutation";
 import { DropdownMenu, IconButton } from "@mono/ui";
 import {
   BanIcon,
@@ -14,6 +16,7 @@ interface PublishedUpdateProps {
   editors: Array<{ user: { id: string; name: string; image: string | null } }>;
   publishedAt: string | null;
   organizationSlug: string;
+  organizationId: string;
   id: string;
 }
 
@@ -22,7 +25,27 @@ export const PublishedUpdate: React.FC<PublishedUpdateProps> = ({
   title,
   editors,
   publishedAt,
+  organizationId,
+  id,
 }) => {
+  const { mutate: unpublishPost, isPending: isUnpublishing } =
+    useUnpublishPostMutation();
+
+  const handleUnpublishPost = async () => {
+    const confirmed = await Confirmer.confirm({
+      title: "Unpublish update",
+      description:
+        "Are you sure you want to unpublish this update? The update will be hidden from all users. You can publish it again later if needed.",
+      action: {
+        label: "Unpublish",
+      },
+    });
+
+    if (confirmed) {
+      unpublishPost({ organizationId, id });
+    }
+  };
+
   return (
     <UpdateEntry.Root>
       <UpdateEntry.Group>
@@ -98,7 +121,13 @@ export const PublishedUpdate: React.FC<PublishedUpdateProps> = ({
             e.stopPropagation();
             e.preventDefault();
           }}
-          render={<IconButton.Root className="-my-2" variant="tertiary" />}
+          render={
+            <IconButton.Root
+              className="-my-2"
+              isLoading={isUnpublishing}
+              variant="tertiary"
+            />
+          }
         >
           <IconButton.Icon>
             <EllipsisVerticalIcon />
@@ -112,7 +141,7 @@ export const PublishedUpdate: React.FC<PublishedUpdateProps> = ({
           }}
           side="bottom"
         >
-          <DropdownMenu.Item>
+          <DropdownMenu.Item onClick={handleUnpublishPost}>
             <DropdownMenu.ItemIcon render={<BanIcon />} />
             Unpublish
           </DropdownMenu.Item>

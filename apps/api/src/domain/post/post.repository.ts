@@ -1,5 +1,5 @@
 import { Database, schema } from "@database";
-import { and, count, eq, sql } from "drizzle-orm";
+import { and, count, desc, eq, sql } from "drizzle-orm";
 import { err, ok, ResultAsync } from "neverthrow";
 
 export const PostsRepository = {
@@ -86,11 +86,7 @@ export const PostsRepository = {
         WHEN ${schema.post.status} = 'scheduled' THEN 2
         WHEN ${schema.post.status} = 'published' THEN 3
       END`,
-          sql`CASE
-        WHEN ${schema.post.status} = 'draft' THEN ${schema.post.createdAt}
-        WHEN ${schema.post.status} = 'scheduled' THEN ${schema.post.updatedAt}
-        WHEN ${schema.post.status} = 'published' THEN ${schema.post.updatedAt}
-        END DESC`,
+          desc(schema.post.createdAt),
         ],
       }),
       (error) =>
@@ -98,19 +94,12 @@ export const PostsRepository = {
     );
   },
 
-  updatePostStatus: (
-    id: string,
-    organizationId: string,
-    status: "published" | "draft" | "scheduled"
-  ) => {
+  publishPost: (id: string, organizationId: string) => {
     return ResultAsync.fromPromise(
       Database.update(schema.post)
         .set({
-          status,
-          ...(status === "published"
-            ? { status, publishedAt: new Date() }
-            : {}),
-          ...(status === "draft" ? { status, publishedAt: null } : {}),
+          status: "published",
+          publishedAt: new Date(),
         })
         .where(
           and(
@@ -119,7 +108,7 @@ export const PostsRepository = {
           )
         )
         .returning(),
-      (error) => new Error("Failed to update post status", { cause: error })
+      (error) => new Error("Failed to publish post", { cause: error })
     ).andThen(([post]) => {
       if (!post) {
         return err(new Error("Post not found"));
@@ -129,11 +118,31 @@ export const PostsRepository = {
     });
   },
 
-  schedulePost: (
-    id: string,
-    organizationId: string,
-    scheduledAt: Date
-  ) => {
+  unpublishPost: (id: string, organizationId: string) => {
+    return ResultAsync.fromPromise(
+      Database.update(schema.post)
+        .set({
+          status: "draft",
+          publishedAt: null,
+        })
+        .where(
+          and(
+            eq(schema.post.id, id),
+            eq(schema.post.organizationId, organizationId)
+          )
+        )
+        .returning(),
+      (error) => new Error("Failed to unpublish post", { cause: error })
+    ).andThen(([post]) => {
+      if (!post) {
+        return err(new Error("Post not found"));
+      }
+
+      return ok(post);
+    });
+  },
+
+  schedulePost: (id: string, organizationId: string, scheduledAt: Date) => {
     return ResultAsync.fromPromise(
       Database.update(schema.post)
         .set({

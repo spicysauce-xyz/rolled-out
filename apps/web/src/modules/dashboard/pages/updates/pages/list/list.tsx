@@ -35,7 +35,11 @@ const UpdateByStatus: React.FC<UpdateByStatusProps> = ({
         <ScheduledUpdate {...data} organizationSlug={organization.slug} />
       )}
       {data.status === "published" && (
-        <PublishedUpdate {...data} organizationSlug={organization.slug} />
+        <PublishedUpdate
+          {...data}
+          organizationId={organization.id}
+          organizationSlug={organization.slug}
+        />
       )}
     </div>
   );

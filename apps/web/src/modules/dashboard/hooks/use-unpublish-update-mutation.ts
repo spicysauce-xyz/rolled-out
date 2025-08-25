@@ -3,14 +3,14 @@ import { updatesQuery } from "@lib/api/queries";
 import { Toaster } from "@mono/ui";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export const usePublishUpdateMutation = () => {
+export const useUnpublishPostMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (args: { organizationId: string; id: string }) => {
       const response = await api.organizations[":organizationId"].posts[
         ":id"
-      ].publish.$post({
+      ].unpublish.$post({
         param: {
           organizationId: args.organizationId,
           id: args.id,
@@ -42,7 +42,7 @@ export const usePublishUpdateMutation = () => {
               return old
                 .map((post) => {
                   if (post.id === variables.id) {
-                    return { ...post, status: "published" as const };
+                    return { ...post, status: "draft" as const };
                   }
 
                   return post;
@@ -68,7 +68,7 @@ export const usePublishUpdateMutation = () => {
         );
       }
 
-      return { previousData, toastId: Toaster.loading("Publishing update...") };
+      return { previousData };
     },
     onSettled: async (_, __, variables) => {
       await queryClient.invalidateQueries(
@@ -77,9 +77,8 @@ export const usePublishUpdateMutation = () => {
     },
     onError: (error, { organizationId }, context) => {
       if (context) {
-        Toaster.error("Error publishing update", {
+        Toaster.error("Error unpublishing update", {
           description: error.message,
-          id: context.toastId,
         });
 
         if (context.previousData) {

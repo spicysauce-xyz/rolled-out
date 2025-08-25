@@ -11,7 +11,7 @@ export const PostHandler = organizationFactory
   .get("/", (c) => {
     const member = c.get("member");
 
-    return PostsService.getPostsFromOrganization(member).match(
+    return PostsService.findPostsByOrganization(member).match(
       (posts) => ok(c, posts),
       (error) => notOk(c, { message: error.message }, 500)
     );
@@ -41,7 +41,7 @@ export const PostHandler = organizationFactory
     const postId = c.req.param("id");
     const member = c.get("member");
 
-    return PostsService.getPostById(member, postId).match(
+    return PostsService.findPostById(member, postId).match(
       (post) => ok(c, post),
       (error) => notOk(c, { message: error.message }, 500)
     );
@@ -54,11 +54,21 @@ export const PostHandler = organizationFactory
       const postId = c.req.param("id");
       const member = c.get("member");
 
-      return PostsService.updatePostStatusById(
-        member,
-        postId,
-        "published"
-      ).match(
+      return PostsService.publishPostById(member, postId).match(
+        (post) => ok(c, post),
+        (error) => notOk(c, { message: error.message }, 500)
+      );
+    }
+  )
+
+  .post(
+    "/:id/unpublish",
+    validator("param", z.object({ id: z.string().uuid() })),
+    (c) => {
+      const postId = c.req.param("id");
+      const member = c.get("member");
+
+      return PostsService.unpublishPostById(member, postId).match(
         (post) => ok(c, post),
         (error) => notOk(c, { message: error.message }, 500)
       );
@@ -74,7 +84,7 @@ export const PostHandler = organizationFactory
       const member = c.get("member");
       const { scheduledAt } = c.req.valid("json");
 
-      return PostsService.schedulePost(
+      return PostsService.schedulePostById(
         member,
         postId,
         new Date(scheduledAt)

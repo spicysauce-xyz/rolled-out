@@ -1,5 +1,4 @@
 import type { schema } from "@database";
-import { okAsync } from "neverthrow";
 import { PostsRepository } from "./post.repository";
 
 export const PostsService = {
@@ -21,45 +20,37 @@ export const PostsService = {
     );
   },
 
-  getPostById: (member: { organizationId: string }, id: string) => {
+  findPostById: (member: { organizationId: string }, id: string) => {
     return PostsRepository.findPostById(id, member.organizationId);
   },
 
-  getPostsFromOrganization: (member: { organizationId: string }) => {
+  findPostsByOrganization: (member: { organizationId: string }) => {
     return PostsRepository.findPostsByOrganization(member.organizationId);
   },
 
-  updatePostStatusById: (
-    member: { organizationId: string },
-    id: string,
-    status: "published" | "draft" | "scheduled"
-  ) => {
+  publishPostById: (member: { organizationId: string }, id: string) => {
     return PostsRepository.findPostById(id, member.organizationId).andThen(
-      (post) => {
-        if (post?.status === status) {
-          return okAsync(post);
-        }
-
-        return PostsRepository.updatePostStatus(
-          id,
-          member.organizationId,
-          status
-        );
+      () => {
+        return PostsRepository.publishPost(id, member.organizationId);
       }
     );
   },
 
-  schedulePost: (
+  unpublishPostById: (member: { organizationId: string }, id: string) => {
+    return PostsRepository.findPostById(id, member.organizationId).andThen(
+      () => {
+        return PostsRepository.unpublishPost(id, member.organizationId);
+      }
+    );
+  },
+
+  schedulePostById: (
     member: { organizationId: string },
     id: string,
     scheduledAt: Date
   ) => {
     return PostsRepository.findPostById(id, member.organizationId).andThen(
-      (post) => {
-        if (post?.status === "scheduled" && post?.scheduledAt?.getTime() === scheduledAt.getTime()) {
-          return okAsync(post);
-        }
-
+      () => {
         return PostsRepository.schedulePost(
           id,
           member.organizationId,
