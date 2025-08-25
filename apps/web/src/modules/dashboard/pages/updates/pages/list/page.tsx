@@ -6,7 +6,7 @@ import { useCreateUpdateMutation } from "@modules/dashboard/hooks/use-create-upd
 import { Button, Text } from "@mono/ui";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { ListFilterIcon } from "lucide-react";
+
 import { match, P } from "ts-pattern";
 import { Empty } from "./empty";
 import { List } from "./list";
@@ -43,14 +43,6 @@ function RouteComponent() {
       <Page.Header className="justify-between py-2">
         <Breadcrumbs page="Updates" />
         <div className="flex items-center gap-2">
-          <Button.Root
-            isLoading={createPostMutation.isPending}
-            onClick={handleCreatePost}
-            variant="secondary"
-          >
-            <Button.Icon render={<ListFilterIcon />} />
-            Filters
-          </Button.Root>
           <Button.Root
             isLoading={createPostMutation.isPending}
             onClick={handleCreatePost}
