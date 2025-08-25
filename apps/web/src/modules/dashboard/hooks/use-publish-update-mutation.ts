@@ -42,7 +42,11 @@ export const usePublishUpdateMutation = () => {
               return old
                 .map((post) => {
                   if (post.id === variables.id) {
-                    return { ...post, status: "published" as const };
+                    return {
+                      ...post,
+                      status: "published" as const,
+                      publishedAt: new Date().toISOString(),
+                    };
                   }
 
                   return post;
