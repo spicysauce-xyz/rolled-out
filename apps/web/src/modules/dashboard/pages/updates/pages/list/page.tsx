@@ -42,14 +42,12 @@ function RouteComponent() {
     <Page.Wrapper>
       <Page.Header className="justify-between py-2">
         <Breadcrumbs page="Updates" />
-        <div className="flex items-center gap-2">
-          <Button.Root
-            isLoading={createPostMutation.isPending}
-            onClick={handleCreatePost}
-          >
-            New Draft
-          </Button.Root>
-        </div>
+        <Button.Root
+          isLoading={createPostMutation.isPending}
+          onClick={handleCreatePost}
+        >
+          New Draft
+        </Button.Root>
       </Page.Header>
       <Page.Content className="flex-1 gap-0 p-0">
         <Transition.Root>
