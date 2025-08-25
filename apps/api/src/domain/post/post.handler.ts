@@ -63,4 +63,24 @@ export const PostHandler = organizationFactory
         (error) => notOk(c, { message: error.message }, 500)
       );
     }
+  )
+
+  .put(
+    "/:id/schedule",
+    validator("param", z.object({ id: z.string().uuid() })),
+    validator("json", z.object({ scheduledAt: z.string().datetime() })),
+    (c) => {
+      const postId = c.req.param("id");
+      const member = c.get("member");
+      const { scheduledAt } = c.req.valid("json");
+
+      return PostsService.schedulePost(
+        member,
+        postId,
+        new Date(scheduledAt)
+      ).match(
+        (post) => ok(c, post),
+        (error) => notOk(c, { message: error.message }, 500)
+      );
+    }
   );

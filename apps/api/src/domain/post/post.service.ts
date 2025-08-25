@@ -48,4 +48,24 @@ export const PostsService = {
       }
     );
   },
+
+  schedulePost: (
+    member: { organizationId: string },
+    id: string,
+    scheduledAt: Date
+  ) => {
+    return PostsRepository.findPostById(id, member.organizationId).andThen(
+      (post) => {
+        if (post?.status === "scheduled" && post?.scheduledAt?.getTime() === scheduledAt.getTime()) {
+          return okAsync(post);
+        }
+
+        return PostsRepository.schedulePost(
+          id,
+          member.organizationId,
+          scheduledAt
+        );
+      }
+    );
+  },
 };

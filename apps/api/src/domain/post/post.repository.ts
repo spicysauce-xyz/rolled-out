@@ -54,6 +54,7 @@ export const PostsRepository = {
           createdAt: true,
           updatedAt: true,
           publishedAt: true,
+          scheduledAt: true,
         },
         where: eq(schema.post.organizationId, organizationId),
         with: {
@@ -119,6 +120,34 @@ export const PostsRepository = {
         )
         .returning(),
       (error) => new Error("Failed to update post status", { cause: error })
+    ).andThen(([post]) => {
+      if (!post) {
+        return err(new Error("Post not found"));
+      }
+
+      return ok(post);
+    });
+  },
+
+  schedulePost: (
+    id: string,
+    organizationId: string,
+    scheduledAt: Date
+  ) => {
+    return ResultAsync.fromPromise(
+      Database.update(schema.post)
+        .set({
+          status: "scheduled",
+          scheduledAt,
+        })
+        .where(
+          and(
+            eq(schema.post.id, id),
+            eq(schema.post.organizationId, organizationId)
+          )
+        )
+        .returning(),
+      (error) => new Error("Failed to schedule post", { cause: error })
     ).andThen(([post]) => {
       if (!post) {
         return err(new Error("Post not found"));
