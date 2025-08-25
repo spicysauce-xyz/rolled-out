@@ -68,7 +68,7 @@ export const usePublishUpdateMutation = () => {
         );
       }
 
-      return { previousData, toastId: Toaster.loading("Publishing update...") };
+      return { previousData };
     },
     onSettled: async (_, __, variables) => {
       await queryClient.invalidateQueries(
@@ -79,7 +79,6 @@ export const usePublishUpdateMutation = () => {
       if (context) {
         Toaster.error("Error publishing update", {
           description: error.message,
-          id: context.toastId,
         });
 
         if (context.previousData) {
