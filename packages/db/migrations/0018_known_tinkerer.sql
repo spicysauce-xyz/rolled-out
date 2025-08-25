@@ -1,0 +1,1 @@
+ALTER TABLE "post" ADD COLUMN "schedule_job_id" text;

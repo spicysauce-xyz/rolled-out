@@ -132,13 +132,15 @@ export const PostsRepository = {
   schedulePost: (
     id: string,
     organizationId: string,
-    scheduledAt: Date
+    scheduledAt: Date,
+    scheduleJobId?: string
   ) => {
     return ResultAsync.fromPromise(
       Database.update(schema.post)
         .set({
           status: "scheduled",
           scheduledAt,
+          ...(scheduleJobId ? { scheduleJobId } : {}),
         })
         .where(
           and(
@@ -148,6 +150,55 @@ export const PostsRepository = {
         )
         .returning(),
       (error) => new Error("Failed to schedule post", { cause: error })
+    ).andThen(([post]) => {
+      if (!post) {
+        return err(new Error("Post not found"));
+      }
+
+      return ok(post);
+    });
+  },
+
+  updateScheduleJobId: (
+    id: string,
+    organizationId: string,
+    scheduleJobId: string
+  ) => {
+    return ResultAsync.fromPromise(
+      Database.update(schema.post)
+        .set({ scheduleJobId })
+        .where(
+          and(
+            eq(schema.post.id, id),
+            eq(schema.post.organizationId, organizationId)
+          )
+        )
+        .returning(),
+      (error) => new Error("Failed to update schedule job id", { cause: error })
+    ).andThen(([post]) => {
+      if (!post) {
+        return err(new Error("Post not found"));
+      }
+
+      return ok(post);
+    });
+  },
+
+  clearScheduleData: (id: string, organizationId: string) => {
+    return ResultAsync.fromPromise(
+      Database.update(schema.post)
+        .set({
+          scheduledAt: null,
+          scheduleJobId: null,
+        })
+        .where(
+          and(
+            eq(schema.post.id, id),
+            eq(schema.post.organizationId, organizationId)
+          )
+        )
+        .returning(),
+      (error) => new Error("Failed to clear schedule data", { cause: error })
     ).andThen(([post]) => {
       if (!post) {
         return err(new Error("Post not found"));

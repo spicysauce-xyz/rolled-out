@@ -17,6 +17,8 @@ import { logger } from "hono/logger";
 import "@domain/editor";
 import { InvitationHandler } from "@domain/invitation";
 import { NotificationHandler } from "@domain/notification";
+// Initialize the queue system
+import "@lib/queue";
 
 export const app = new Hono()
   .use(async (_, next) => {

@@ -48,4 +48,5 @@ export const post = pgTable("post", {
 
   publishedAt: timestamp("published_at", { withTimezone: true }),
   scheduledAt: timestamp("scheduled_at", { withTimezone: true }),
+  scheduleJobId: text("schedule_job_id"),
 });
