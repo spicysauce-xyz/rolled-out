@@ -1,5 +1,6 @@
 import { Confirmer } from "@components/confirmer";
 import { UpdateEntry } from "@modules/dashboard/components/update-list";
+import { useDeleteUpdateMutation } from "@modules/dashboard/hooks/use-delete-update-mutation";
 import { usePublishUpdateMutation } from "@modules/dashboard/hooks/use-publish-update-mutation";
 import { DropdownMenu, IconButton } from "@mono/ui";
 import { Link } from "@tanstack/react-router";
@@ -34,8 +35,7 @@ export const DraftUpdate: React.FC<DraftUpdateProps> = ({
   organizationSlug,
   organizationId,
 }) => {
-  const { mutate: publishPost, isPending: isPublishing } =
-    usePublishUpdateMutation();
+  const { mutate: publishPost } = usePublishUpdateMutation();
 
   const handlePublishPost = async () => {
     const confirmed = await Confirmer.confirm({
@@ -49,6 +49,24 @@ export const DraftUpdate: React.FC<DraftUpdateProps> = ({
 
     if (confirmed) {
       publishPost({ organizationId, id });
+    }
+  };
+
+  const { mutate: deletePost } = useDeleteUpdateMutation();
+
+  const handleDeletePost = async () => {
+    const confirmed = await Confirmer.confirm({
+      title: "Delete update",
+      description:
+        "Are you sure you want to delete this update? This action cannot be undone.",
+      action: {
+        label: "Delete",
+        color: "danger",
+      },
+    });
+
+    if (confirmed) {
+      deletePost({ organizationId, id });
     }
   };
 
@@ -77,13 +95,7 @@ export const DraftUpdate: React.FC<DraftUpdateProps> = ({
             e.stopPropagation();
             e.preventDefault();
           }}
-          render={
-            <IconButton.Root
-              className="-my-2"
-              isLoading={isPublishing}
-              variant="tertiary"
-            />
-          }
+          render={<IconButton.Root className="-my-2" variant="tertiary" />}
         >
           <IconButton.Icon>
             <EllipsisVerticalIcon />
@@ -122,7 +134,7 @@ export const DraftUpdate: React.FC<DraftUpdateProps> = ({
             <DropdownMenu.ItemIcon render={<CopyIcon />} />
             Duplicate
           </DropdownMenu.Item>
-          <DropdownMenu.Item>
+          <DropdownMenu.Item onClick={handleDeletePost}>
             <DropdownMenu.ItemIcon render={<Trash2Icon />} />
             Delete
           </DropdownMenu.Item>

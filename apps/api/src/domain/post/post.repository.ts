@@ -25,6 +25,22 @@ export const PostsRepository = {
     });
   },
 
+  deletePost: (id: string, organizationId: string) => {
+    return ResultAsync.fromPromise(
+      Database.delete(schema.post)
+        .where(
+          and(
+            eq(schema.post.id, id),
+            eq(schema.post.organizationId, organizationId)
+          )
+        )
+        .returning(),
+      (error) => new Error("Failed to delete post", { cause: error })
+    ).andThen(([post]) => {
+      return ok(post);
+    });
+  },
+
   findPostById: (id: string, organizationId: string) => {
     return ResultAsync.fromPromise(
       Database.query.post.findFirst({
