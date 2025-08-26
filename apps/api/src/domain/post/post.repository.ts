@@ -116,6 +116,7 @@ export const PostsRepository = {
         .set({
           status: "published",
           publishedAt: new Date(),
+          scheduledAt: null,
         })
         .where(
           and(

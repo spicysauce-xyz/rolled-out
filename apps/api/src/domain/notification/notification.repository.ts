@@ -28,6 +28,12 @@ export const NotificationRepository = {
               name: true,
             },
           },
+          post: {
+            columns: {
+              id: true,
+              title: true,
+            },
+          },
         },
         orderBy: desc(schema.notification.createdAt),
         limit,

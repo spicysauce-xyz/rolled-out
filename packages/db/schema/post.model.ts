@@ -39,13 +39,13 @@ export const post = pgTable("post", {
   title: text("title").notNull(),
   byteContent: bytea("byte_content"),
 
+  publishedAt: timestamp("published_at", { withTimezone: true }),
+  scheduledAt: timestamp("scheduled_at", { withTimezone: true }),
+
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
     .defaultNow(),
-
-  publishedAt: timestamp("published_at", { withTimezone: true }),
-  scheduledAt: timestamp("scheduled_at", { withTimezone: true }),
 });

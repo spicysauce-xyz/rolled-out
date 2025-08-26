@@ -2,6 +2,7 @@ import { relations } from "drizzle-orm";
 import { pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 import { member } from "./member.model";
 import { organization } from "./organization.model";
+import { post } from "./post.model";
 
 export const notification = pgTable("notification", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -17,7 +18,11 @@ export const notification = pgTable("notification", {
     onDelete: "cascade",
   }),
 
-  type: varchar("type", { enum: ["organization_created"] }).notNull(),
+  postId: uuid("post_id").references(() => post.id, { onDelete: "cascade" }),
+
+  type: varchar("type", {
+    enum: ["organization_created", "scheduled_post_published"],
+  }).notNull(),
 
   createdAt: timestamp("created_at", { withTimezone: true })
     .defaultNow()
@@ -31,5 +36,9 @@ export const notificationRelations = relations(notification, ({ one }) => ({
   organization: one(organization, {
     fields: [notification.organizationId],
     references: [organization.id],
+  }),
+  post: one(post, {
+    fields: [notification.postId],
+    references: [post.id],
   }),
 }));
