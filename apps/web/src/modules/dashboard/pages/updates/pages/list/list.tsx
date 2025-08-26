@@ -32,7 +32,11 @@ const UpdateByStatus: React.FC<UpdateByStatusProps> = ({
         />
       )}
       {data.status === "scheduled" && (
-        <ScheduledUpdate {...data} organizationSlug={organization.slug} />
+        <ScheduledUpdate
+          {...data}
+          organizationId={organization.id}
+          organizationSlug={organization.slug}
+        />
       )}
       {data.status === "published" && (
         <PublishedUpdate
