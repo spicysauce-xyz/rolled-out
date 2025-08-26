@@ -1,8 +1,10 @@
 import { Confirmer } from "@components/confirmer";
+import { SchedulePostDialog } from "@modules/dashboard/components/schedule-post-dialog";
 import { UpdateEntry } from "@modules/dashboard/components/update-list";
 import { useDeleteUpdateMutation } from "@modules/dashboard/hooks/use-delete-update-mutation";
 import { usePublishUpdateMutation } from "@modules/dashboard/hooks/use-publish-update-mutation";
 import { DropdownMenu, IconButton } from "@mono/ui";
+import { useDisclosure } from "@mono/ui/hooks";
 import { Link } from "@tanstack/react-router";
 import {
   CalendarIcon,
@@ -35,6 +37,7 @@ export const DraftUpdate: React.FC<DraftUpdateProps> = ({
   organizationSlug,
   organizationId,
 }) => {
+  const schedulePostDialog = useDisclosure();
   const { mutate: publishPost } = usePublishUpdateMutation();
 
   const handlePublishPost = async () => {
@@ -71,75 +74,83 @@ export const DraftUpdate: React.FC<DraftUpdateProps> = ({
   };
 
   return (
-    <UpdateEntry.Root
-      render={
-        <Link
-          params={{ organizationSlug, id }}
-          to="/$organizationSlug/updates/$id"
-        />
-      }
-    >
-      <UpdateEntry.Group>
-        <UpdateEntry.Number number={order} />
-        <UpdateEntry.Title title={title} />
-      </UpdateEntry.Group>
-      <div className="flex-1" />
-      <UpdateEntry.Meta>
-        {editors.length > 0 && <UpdateEntry.Editors editors={editors} />}
-        <UpdateEntry.Date date={updatedAt} label="Last edited on" />
-        <UpdateEntry.Date date={createdAt} label="Created on" />
-      </UpdateEntry.Meta>
-      <DropdownMenu.Root>
-        <DropdownMenu.Trigger
-          onClick={(e: React.MouseEvent) => {
-            e.stopPropagation();
-            e.preventDefault();
-          }}
-          render={<IconButton.Root className="-my-2" variant="tertiary" />}
-        >
-          <IconButton.Icon>
-            <EllipsisVerticalIcon />
-          </IconButton.Icon>
-        </DropdownMenu.Trigger>
-        <DropdownMenu.Content
-          align="end"
-          onClick={(e: React.MouseEvent) => {
-            e.stopPropagation();
-            e.preventDefault();
-          }}
-          side="bottom"
-        >
-          <DropdownMenu.Item
-            render={
-              <Link
-                params={{ organizationSlug, id }}
-                to="/$organizationSlug/updates/$id"
-              />
-            }
+    <>
+      <UpdateEntry.Root
+        render={
+          <Link
+            params={{ organizationSlug, id }}
+            to="/$organizationSlug/updates/$id"
+          />
+        }
+      >
+        <UpdateEntry.Group>
+          <UpdateEntry.Number number={order} />
+          <UpdateEntry.Title title={title} />
+        </UpdateEntry.Group>
+        <div className="flex-1" />
+        <UpdateEntry.Meta>
+          {editors.length > 0 && <UpdateEntry.Editors editors={editors} />}
+          <UpdateEntry.Date date={updatedAt} label="Last edited on" />
+          <UpdateEntry.Date date={createdAt} label="Created on" />
+        </UpdateEntry.Meta>
+        <DropdownMenu.Root>
+          <DropdownMenu.Trigger
+            onClick={(e: React.MouseEvent) => {
+              e.stopPropagation();
+              e.preventDefault();
+            }}
+            render={<IconButton.Root className="-my-2" variant="tertiary" />}
           >
-            <DropdownMenu.ItemIcon render={<PencilLineIcon />} />
-            Edit
-          </DropdownMenu.Item>
-          <DropdownMenu.Separator />
-          <DropdownMenu.Item>
-            <DropdownMenu.ItemIcon render={<CalendarIcon />} />
-            Schedule
-          </DropdownMenu.Item>
-          <DropdownMenu.Item onClick={handlePublishPost}>
-            <DropdownMenu.ItemIcon render={<SendIcon />} />
-            Publish now
-          </DropdownMenu.Item>
-          <DropdownMenu.Separator />
-          <DropdownMenu.Item>
-            <DropdownMenu.ItemIcon render={<CopyIcon />} />
-            Duplicate
-          </DropdownMenu.Item>
-          <DropdownMenu.Item onClick={handleDeletePost}>
-            <DropdownMenu.ItemIcon render={<Trash2Icon />} />
-            Delete
-          </DropdownMenu.Item>
-        </DropdownMenu.Content>
-      </DropdownMenu.Root>
-    </UpdateEntry.Root>
+            <IconButton.Icon>
+              <EllipsisVerticalIcon />
+            </IconButton.Icon>
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Content
+            align="end"
+            onClick={(e: React.MouseEvent) => {
+              e.stopPropagation();
+              e.preventDefault();
+            }}
+            side="bottom"
+          >
+            <DropdownMenu.Item
+              render={
+                <Link
+                  params={{ organizationSlug, id }}
+                  to="/$organizationSlug/updates/$id"
+                />
+              }
+            >
+              <DropdownMenu.ItemIcon render={<PencilLineIcon />} />
+              Edit
+            </DropdownMenu.Item>
+            <DropdownMenu.Separator />
+            <DropdownMenu.Item onClick={schedulePostDialog.open}>
+              <DropdownMenu.ItemIcon render={<CalendarIcon />} />
+              Schedule
+            </DropdownMenu.Item>
+            <DropdownMenu.Item onClick={handlePublishPost}>
+              <DropdownMenu.ItemIcon render={<SendIcon />} />
+              Publish now
+            </DropdownMenu.Item>
+            <DropdownMenu.Separator />
+            <DropdownMenu.Item>
+              <DropdownMenu.ItemIcon render={<CopyIcon />} />
+              Duplicate
+            </DropdownMenu.Item>
+            <DropdownMenu.Item onClick={handleDeletePost}>
+              <DropdownMenu.ItemIcon render={<Trash2Icon />} />
+              Delete
+            </DropdownMenu.Item>
+          </DropdownMenu.Content>
+        </DropdownMenu.Root>
+      </UpdateEntry.Root>
+      <SchedulePostDialog
+        isOpen={schedulePostDialog.isOpen}
+        onOpenChange={schedulePostDialog.setOpen}
+        organizationId={organizationId}
+        postId={id}
+      />
+    </>
   );
 };
