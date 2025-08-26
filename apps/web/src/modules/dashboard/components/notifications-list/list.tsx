@@ -5,6 +5,7 @@ import { isAfter } from "date-fns";
 import type { InferResponseType } from "hono";
 import { useEffect, useMemo, useRef } from "react";
 import { OrganizationCreatedNotification } from "./notifications/organization-created";
+import { ScheduledPostPublishedNotification } from "./notifications/scheduled-post-published";
 
 type Notification = SuccessResponse<
   InferResponseType<
@@ -95,16 +96,32 @@ export const List = ({
                     </div>
                   </div>
                 ) : (
-                  <OrganizationCreatedNotification
-                    createdAt={notification.createdAt}
-                    isUnread={
-                      lastReadAt
-                        ? isAfter(notification.createdAt, lastReadAt)
-                        : true
-                    }
-                    key={notification.id}
-                    organization={notification.organization}
-                  />
+                  <>
+                    {notification.type === "organization_created" && (
+                      <OrganizationCreatedNotification
+                        createdAt={notification.createdAt}
+                        isUnread={
+                          lastReadAt
+                            ? isAfter(notification.createdAt, lastReadAt)
+                            : true
+                        }
+                        key={notification.id}
+                        organization={notification.organization}
+                      />
+                    )}
+                    {notification.type === "scheduled_post_published" && (
+                      <ScheduledPostPublishedNotification
+                        createdAt={notification.createdAt}
+                        isUnread={
+                          lastReadAt
+                            ? isAfter(notification.createdAt, lastReadAt)
+                            : true
+                        }
+                        key={notification.id}
+                        post={notification.post}
+                      />
+                    )}
+                  </>
                 )}
               </div>
             );

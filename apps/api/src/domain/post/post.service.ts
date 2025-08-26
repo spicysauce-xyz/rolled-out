@@ -1,4 +1,6 @@
 import type { schema } from "@database";
+import { errAsync, okAsync } from "neverthrow";
+import { SchedulePostPublishJobs } from "./post.jobs";
 import { PostsRepository } from "./post.repository";
 
 export const PostsService = {
@@ -37,11 +39,15 @@ export const PostsService = {
   },
 
   publishPostById: (member: { organizationId: string }, id: string) => {
-    return PostsRepository.findPostById(id, member.organizationId).andThen(
-      () => {
-        return PostsRepository.publishPost(id, member.organizationId);
-      }
-    );
+    return PostsRepository.findPostById(id, member.organizationId)
+      .andThrough((post) => {
+        if (post.status === "scheduled" && post.scheduledAt) {
+          return new SchedulePostPublishJobs().remove(post.id);
+        }
+
+        return okAsync(post);
+      })
+      .andThen(() => PostsRepository.publishPost(id, member.organizationId));
   },
 
   unpublishPostById: (member: { organizationId: string }, id: string) => {
@@ -57,14 +63,31 @@ export const PostsService = {
     id: string,
     scheduledAt: Date
   ) => {
-    return PostsRepository.findPostById(id, member.organizationId).andThen(
-      () => {
+    return PostsRepository.findPostById(id, member.organizationId)
+      .andThrough((post) => {
+        if (post.status === "scheduled" && post.scheduledAt) {
+          return new SchedulePostPublishJobs().remove(post.id);
+        }
+
+        return okAsync(post);
+      })
+      .andThen(() => {
         return PostsRepository.schedulePost(
           id,
           member.organizationId,
           scheduledAt
         );
-      }
-    );
+      })
+      .andThrough((post) => {
+        if (post.status === "scheduled" && post.scheduledAt) {
+          return new SchedulePostPublishJobs().add(
+            post.id,
+            post.organizationId,
+            post.scheduledAt
+          );
+        }
+
+        return errAsync(new Error("Post is not scheduled"));
+      });
   },
 };
