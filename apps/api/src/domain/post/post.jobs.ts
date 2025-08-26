@@ -27,8 +27,8 @@ export class SchedulePostPublishJobs {
     return `${SchedulePostPublishJobs.prefix}:${postId}`;
   }
 
-    const ms = differenceInMilliseconds(scheduledAt, new Date());
-    return ms < 0 ? 0 : ms;
+  private delay(scheduledAt: Date) {
+    return Math.max(differenceInMilliseconds(scheduledAt, new Date()), 0);
   }
 
   add(postId: string, organizationId: string, scheduledAt: Date) {
