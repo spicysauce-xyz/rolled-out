@@ -1,5 +1,7 @@
+import { Confirmer } from "@components/confirmer";
 import { SchedulePostDialog } from "@modules/dashboard/components/schedule-post-dialog";
 import { UpdateEntry } from "@modules/dashboard/components/update-list";
+import { useUnschedulePostMutation } from "@modules/dashboard/hooks/use-unschedule-update-mutation";
 import { DropdownMenu, IconButton } from "@mono/ui";
 import { useDisclosure } from "@mono/ui/hooks";
 import {
@@ -30,6 +32,24 @@ export const ScheduledUpdate: React.FC<ScheduledUpdateProps> = ({
   id,
 }) => {
   const schedulePostDialog = useDisclosure();
+
+  const { mutate: unschedulePost } = useUnschedulePostMutation();
+
+  const handleUnschedulePost = async () => {
+    const confirmed = await Confirmer.confirm({
+      title: "Cancel scheduling",
+      description:
+        "Are you sure you want to remove the schedule for this post? You can set a new time later.",
+      action: {
+        label: "Yes, remove schedule",
+        color: "danger",
+      },
+    });
+
+    if (confirmed) {
+      unschedulePost({ organizationId, id });
+    }
+  };
 
   return (
     <>
@@ -74,7 +94,7 @@ export const ScheduledUpdate: React.FC<ScheduledUpdateProps> = ({
               <DropdownMenu.ItemIcon render={<TimerResetIcon />} />
               Reschedule
             </DropdownMenu.Item>
-            <DropdownMenu.Item>
+            <DropdownMenu.Item onClick={handleUnschedulePost}>
               <DropdownMenu.ItemIcon render={<TimerOffIcon />} />
               Cancel scheduling
             </DropdownMenu.Item>

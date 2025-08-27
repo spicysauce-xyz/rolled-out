@@ -90,4 +90,18 @@ export const PostsService = {
         return errAsync(new Error("Post is not scheduled"));
       });
   },
+
+  unschedulePostById: (member: { organizationId: string }, id: string) => {
+    return PostsRepository.findPostById(id, member.organizationId)
+      .andThrough((post) => {
+        if (post.status === "scheduled" && post.scheduledAt) {
+          return new SchedulePostPublishJobs().remove(post.id);
+        }
+
+        return okAsync(post);
+      })
+      .andThen(() => {
+        return PostsRepository.unschedulePost(id, member.organizationId);
+      });
+  },
 };

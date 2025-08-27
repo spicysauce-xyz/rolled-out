@@ -95,6 +95,20 @@ export const PostHandler = organizationFactory
     }
   )
 
+  .put(
+    "/:id/unschedule",
+    validator("param", z.object({ id: z.string().uuid() })),
+    (c) => {
+      const postId = c.req.param("id");
+      const member = c.get("member");
+
+      return PostsService.unschedulePostById(member, postId).match(
+        (post) => ok(c, post),
+        (error) => notOk(c, { message: error.message }, 500)
+      );
+    }
+  )
+
   .delete(
     "/:id",
     validator("param", z.object({ id: z.string().uuid() })),
