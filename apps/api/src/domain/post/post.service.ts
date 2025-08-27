@@ -1,5 +1,5 @@
 import type { schema } from "@database";
-import { errAsync, okAsync } from "neverthrow";
+import { errAsync, okAsync, ResultAsync } from "neverthrow";
 import { SchedulePostPublishJobs } from "./post.jobs";
 import { PostsRepository } from "./post.repository";
 
@@ -103,5 +103,19 @@ export const PostsService = {
       .andThen(() => {
         return PostsRepository.unschedulePost(id, member.organizationId);
       });
+  },
+
+  duplicatePostById: (member: { organizationId: string }, id: string) => {
+    return ResultAsync.combine([
+      PostsRepository.findPostById(id, member.organizationId),
+      PostsRepository.getPostsCount(member.organizationId),
+    ]).andThen(([post, [{ count }]]) => {
+      return PostsRepository.createPost({
+        byteContent: post.byteContent,
+        title: `Copy of ${post.title}`,
+        order: count + 1,
+        organizationId: member.organizationId,
+      });
+    });
   },
 };
