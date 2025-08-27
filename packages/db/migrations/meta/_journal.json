@@ -127,6 +127,13 @@
       "when": 1756124118574,
       "tag": "0017_common_baron_strucker",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1756310426427,
+      "tag": "0018_useful_slipstream",
+      "breakpoints": true
     }
   ]
 }
