@@ -1,11 +1,23 @@
+import { DatePicker } from "@components/date-picker";
 import useAppForm from "@lib/form";
 import { Button, Dialog, Label, Select, Text, Toaster } from "@mono/ui";
-import { addDays, addHours, addMinutes, format, startOfDay } from "date-fns";
+import {
+  addDays,
+  addHours,
+  addMinutes,
+  format,
+  getDate,
+  getMonth,
+  getYear,
+  set,
+  startOfDay,
+} from "date-fns";
 import { CalendarIcon, ClockIcon } from "lucide-react";
 import z from "zod";
 import { useSchedulePostMutation } from "../hooks/use-schedule-update-mutation";
 
 interface SchedulePostDialogProps {
+  mode?: "schedule" | "update";
   defaultValue?: string | null;
   organizationId: string;
   postId: string;
@@ -14,6 +26,7 @@ interface SchedulePostDialogProps {
 }
 
 export const SchedulePostDialog: React.FC<SchedulePostDialogProps> = ({
+  mode = "schedule",
   defaultValue,
   organizationId,
   postId,
@@ -42,7 +55,9 @@ export const SchedulePostDialog: React.FC<SchedulePostDialogProps> = ({
         },
         {
           onSuccess: () => {
-            Toaster.success("Post scheduled");
+            Toaster.success(
+              mode === "schedule" ? "Post scheduled" : "Post updated"
+            );
             onOpenChange(false);
             formApi.reset();
           },
@@ -54,9 +69,13 @@ export const SchedulePostDialog: React.FC<SchedulePostDialogProps> = ({
     <Dialog.Root onOpenChange={onOpenChange} open={isOpen}>
       <Dialog.Content className="max-w-100">
         <Dialog.Header>
-          <Dialog.Title>Schedule Post</Dialog.Title>
+          <Dialog.Title>
+            {mode === "schedule" ? "Schedule Post" : "Update Schedule"}
+          </Dialog.Title>
           <Dialog.Description>
-            Schedule your posts to go live at a later time.
+            {mode === "schedule"
+              ? "Schedule your posts to go live at a later time."
+              : "Update the schedule for this post."}
           </Dialog.Description>
         </Dialog.Header>
         <form
@@ -76,14 +95,32 @@ export const SchedulePostDialog: React.FC<SchedulePostDialogProps> = ({
                     <Label.Asterisk />
                   </Label.Root>
                   <div className="flex w-full gap-2">
-                    <Button.Root
-                      className="flex-1"
-                      type="button"
-                      variant="secondary"
+                    <DatePicker
+                      onChange={(value) => {
+                        const date = getDate(value);
+                        const month = getMonth(value);
+                        const year = getYear(value);
+
+                        field.handleChange(
+                          set(field.state.value, {
+                            date,
+                            month,
+                            year,
+                          }).toISOString()
+                        );
+                      }}
+                      render={
+                        <Button.Root
+                          className="flex-1"
+                          type="button"
+                          variant="secondary"
+                        />
+                      }
+                      value={field.state.value}
                     >
                       <Button.Icon render={<CalendarIcon />} />
                       {format(field.state.value, "iii, d LLL")}
-                    </Button.Root>
+                    </DatePicker>
                     <Select.Root
                       onValueChange={(value) => {
                         field.handleChange(value);
@@ -137,7 +174,7 @@ export const SchedulePostDialog: React.FC<SchedulePostDialogProps> = ({
                     isLoading={isSubmitting}
                   >
                     <Button.Icon render={<CalendarIcon />} />
-                    Schedule post
+                    {mode === "schedule" ? "Schedule post" : "Update Schedule"}
                   </Dialog.Action>
                 </>
               )}

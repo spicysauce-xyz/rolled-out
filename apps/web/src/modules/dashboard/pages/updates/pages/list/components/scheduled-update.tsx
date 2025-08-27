@@ -93,6 +93,7 @@ export const ScheduledUpdate: React.FC<ScheduledUpdateProps> = ({
       <SchedulePostDialog
         defaultValue={scheduledAt}
         isOpen={schedulePostDialog.isOpen}
+        mode="update"
         onOpenChange={schedulePostDialog.setOpen}
         organizationId={organizationId}
         postId={id}

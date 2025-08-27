@@ -14,7 +14,12 @@ function PopoverContent({
   Pick<React.ComponentPropsWithoutRef<typeof Popover.Positioner>, "side">) {
   return (
     <Popover.Portal>
-      <Popover.Positioner collisionPadding={8} side={side} sideOffset={4}>
+      <Popover.Positioner
+        className="z-50"
+        collisionPadding={8}
+        side={side}
+        sideOffset={4}
+      >
         <Popover.Popup
           className={cn(
             "z-50 rounded-xl border border-neutral-100 bg-white p-2 shadow-lg",
