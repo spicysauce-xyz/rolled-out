@@ -109,6 +109,27 @@ export const PostHandler = organizationFactory
     }
   )
 
+  .put(
+    "/:id/duplicate",
+    validator("param", z.object({ id: z.string().uuid() })),
+    (c) => {
+      const postId = c.req.param("id");
+      const member = c.get("member");
+
+      return PostsService.duplicatePostById(member, postId)
+        .andThrough((post) =>
+          Emitter.emitAsync(
+            PostCreatedEvent.eventName,
+            new PostCreatedEvent(post, member)
+          )
+        )
+        .match(
+          (post) => ok(c, post),
+          (error) => notOk(c, { message: error.message }, 500)
+        );
+    }
+  )
+
   .delete(
     "/:id",
     validator("param", z.object({ id: z.string().uuid() })),

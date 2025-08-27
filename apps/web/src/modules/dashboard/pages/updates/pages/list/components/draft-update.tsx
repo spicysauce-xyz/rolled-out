@@ -2,6 +2,7 @@ import { Confirmer } from "@components/confirmer";
 import { SchedulePostDialog } from "@modules/dashboard/components/schedule-post-dialog";
 import { UpdateEntry } from "@modules/dashboard/components/update-list";
 import { useDeleteUpdateMutation } from "@modules/dashboard/hooks/use-delete-update-mutation";
+import { useDuplicatePostMutation } from "@modules/dashboard/hooks/use-duplicate-update-mutation";
 import { usePublishUpdateMutation } from "@modules/dashboard/hooks/use-publish-update-mutation";
 import { DropdownMenu, IconButton } from "@mono/ui";
 import { useDisclosure } from "@mono/ui/hooks";
@@ -73,6 +74,22 @@ export const DraftUpdate: React.FC<DraftUpdateProps> = ({
     }
   };
 
+  const { mutate: duplicatePost } = useDuplicatePostMutation();
+
+  const handleDuplicatePost = async () => {
+    const confirmed = await Confirmer.confirm({
+      title: "Duplicate update",
+      description: "Are you sure you want to duplicate this update?",
+      action: {
+        label: "Duplicate",
+      },
+    });
+
+    if (confirmed) {
+      duplicatePost({ organizationId, id });
+    }
+  };
+
   return (
     <>
       <UpdateEntry.Root
@@ -134,7 +151,7 @@ export const DraftUpdate: React.FC<DraftUpdateProps> = ({
               Publish now
             </DropdownMenu.Item>
             <DropdownMenu.Separator />
-            <DropdownMenu.Item>
+            <DropdownMenu.Item onClick={handleDuplicatePost}>
               <DropdownMenu.ItemIcon render={<CopyIcon />} />
               Duplicate
             </DropdownMenu.Item>
