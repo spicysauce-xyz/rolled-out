@@ -182,4 +182,28 @@ export const PostsRepository = {
       return ok(post);
     });
   },
+
+  unschedulePost: (id: string, organizationId: string) => {
+    return ResultAsync.fromPromise(
+      Database.update(schema.post)
+        .set({
+          status: "draft",
+          scheduledAt: null,
+        })
+        .where(
+          and(
+            eq(schema.post.id, id),
+            eq(schema.post.organizationId, organizationId)
+          )
+        )
+        .returning(),
+      (error) => new Error("Failed to unschedule post", { cause: error })
+    ).andThen(([post]) => {
+      if (!post) {
+        return err(new Error("Post not found"));
+      }
+
+      return ok(post);
+    });
+  },
 };
