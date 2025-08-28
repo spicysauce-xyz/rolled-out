@@ -23,6 +23,7 @@ interface SchedulePostDialogProps {
   postId: string;
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
+  onSuccess?: () => void;
 }
 
 export const SchedulePostDialog: React.FC<SchedulePostDialogProps> = ({
@@ -32,6 +33,7 @@ export const SchedulePostDialog: React.FC<SchedulePostDialogProps> = ({
   postId,
   isOpen = false,
   onOpenChange,
+  onSuccess,
 }) => {
   const { mutateAsync: schedulePost } = useSchedulePostMutation();
 
@@ -55,6 +57,7 @@ export const SchedulePostDialog: React.FC<SchedulePostDialogProps> = ({
         },
         {
           onSuccess: () => {
+            onSuccess?.();
             Toaster.success(
               mode === "schedule" ? "Post scheduled" : "Post updated"
             );
