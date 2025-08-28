@@ -1,7 +1,7 @@
 import { AlertDialog, Button, Input, Text } from "@mono/ui";
 import { produce } from "immer";
 import type { LucideIcon } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { create } from "zustand";
 
 interface Confirm {
@@ -9,12 +9,12 @@ interface Confirm {
   title: string;
   description: React.ReactNode;
   phrase?: string;
-  action?: {
+  action: {
     icon?: LucideIcon;
     label?: string;
     color?: "accent" | "danger" | "success" | "warning";
+    run: () => Promise<unknown> | unknown;
   };
-  resolve: (result: boolean) => void;
   dismissed: boolean;
 }
 
@@ -26,27 +26,22 @@ const confirmStore = create<ConfirmState>(() => ({
   confirms: [],
 }));
 
-const confirm = (payload: Omit<Confirm, "id" | "resolve" | "dismissed">) => {
+const confirm = (payload: Omit<Confirm, "id" | "dismissed">) => {
   const id = Math.random().toString(36).substring(2, 15);
 
-  const promise = new Promise<boolean>((resolve) => {
-    confirmStore.setState((state) => ({
-      confirms: [
-        ...state.confirms.filter((c) => !c.dismissed),
-        {
-          id,
-          title: payload.title,
-          description: payload.description,
-          phrase: payload.phrase,
-          action: payload.action,
-          dismissed: false,
-          resolve,
-        },
-      ],
-    }));
-  });
-
-  return promise;
+  confirmStore.setState((state) => ({
+    confirms: [
+      ...state.confirms.filter((c) => !c.dismissed),
+      {
+        id,
+        title: payload.title,
+        description: payload.description,
+        phrase: payload.phrase,
+        action: payload.action,
+        dismissed: false,
+      },
+    ],
+  }));
 };
 
 const ConfirmAlert: React.FC<Confirm> = ({
@@ -54,10 +49,8 @@ const ConfirmAlert: React.FC<Confirm> = ({
   title,
   description,
   phrase,
-  resolve,
   action,
 }: Confirm) => {
-  const resolvedRef = useRef(false);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -65,6 +58,19 @@ const ConfirmAlert: React.FC<Confirm> = ({
   }, []);
 
   const [phraseConfirm, setPhraseConfirm] = useState("");
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleConfirm = async () => {
+    try {
+      setIsLoading(true);
+      await action.run();
+
+      setOpen(false);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleOpenChange = (value: boolean) => {
     if (!value) {
@@ -79,10 +85,6 @@ const ConfirmAlert: React.FC<Confirm> = ({
           }
         })
       );
-
-      if (!resolvedRef.current) {
-        resolve(false);
-      }
     }
   };
 
@@ -119,15 +121,15 @@ const ConfirmAlert: React.FC<Confirm> = ({
             </div>
           )}
           <AlertDialog.Footer>
-            <AlertDialog.Cancel type="button">Cancel</AlertDialog.Cancel>
+            <AlertDialog.Cancel isDisabled={isLoading} type="button">
+              Cancel
+            </AlertDialog.Cancel>
             <AlertDialog.Action
               autoFocus
               color={action?.color}
               isDisabled={!!phrase && phraseConfirm !== phrase}
-              onClick={() => {
-                resolvedRef.current = true;
-                resolve(true);
-              }}
+              isLoading={isLoading}
+              onClick={handleConfirm}
               type="submit"
             >
               {action?.icon && <Button.Icon render={<action.icon />} />}

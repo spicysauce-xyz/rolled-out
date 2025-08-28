@@ -18,23 +18,15 @@ export const useCancelInvitationMutation = () => {
 
       return response.data;
     },
-    onMutate: () => {
-      return { toastId: Toaster.loading("Cancelling invitation...") };
-    },
-    onSuccess: async (data, __, context) => {
-      await queryClient.invalidateQueries(
-        organizationQuery(data.organizationId)
-      );
-
-      Toaster.success("Invitation cancelled", { id: context.toastId });
-    },
-    onError: (error, __, context) => {
-      if (context) {
-        Toaster.error("Failed to cancel invitation", {
-          description: error.message,
-          id: context?.toastId,
-        });
+    onSettled: async (data) => {
+      if (data) {
+        await queryClient.invalidateQueries(
+          organizationQuery(data.organizationId)
+        );
       }
+    },
+    onError: () => {
+      Toaster.error("Failed to cancel invitation");
     },
   });
 };

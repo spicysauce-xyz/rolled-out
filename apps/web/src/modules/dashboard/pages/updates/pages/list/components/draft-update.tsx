@@ -4,7 +4,7 @@ import { UpdateEntry } from "@modules/dashboard/components/update-list";
 import { useDeleteUpdateMutation } from "@modules/dashboard/hooks/use-delete-update-mutation";
 import { useDuplicatePostMutation } from "@modules/dashboard/hooks/use-duplicate-update-mutation";
 import { usePublishUpdateMutation } from "@modules/dashboard/hooks/use-publish-update-mutation";
-import { DropdownMenu, IconButton } from "@mono/ui";
+import { DropdownMenu, IconButton, Toaster } from "@mono/ui";
 import { useDisclosure } from "@mono/ui/hooks";
 import { Link } from "@tanstack/react-router";
 import {
@@ -39,55 +39,96 @@ export const DraftUpdate: React.FC<DraftUpdateProps> = ({
   organizationId,
 }) => {
   const schedulePostDialog = useDisclosure();
-  const { mutate: publishPost } = usePublishUpdateMutation();
 
-  const handlePublishPost = async () => {
-    const confirmed = await Confirmer.confirm({
+  const { mutateAsync: publishPost } = usePublishUpdateMutation();
+
+  const handlePublishPost = () => {
+    Confirmer.confirm({
       title: "Publish update",
       description:
-        "Are you sure you want to publish this update? The update will be published immediately and will be visible to all users. You can unpublish it later if needed.",
+        "Are you sure you want to publish this update? It’ll go live right away and be visible to everyone. You can unpublish it later if needed.",
       action: {
-        label: "Publish",
+        label: "Yes, publish",
+        color: "success",
+        icon: SendIcon,
+        run: () =>
+          publishPost(
+            { organizationId, id },
+            {
+              onSuccess() {
+                Toaster.success("Update published", {
+                  description: "Your update is now live.",
+                });
+              },
+              onError() {
+                Toaster.error("Couldn't publish update", {
+                  description: "Something went wrong. Please try again.",
+                });
+              },
+            }
+          ),
       },
     });
-
-    if (confirmed) {
-      publishPost({ organizationId, id });
-    }
   };
 
-  const { mutate: deletePost } = useDeleteUpdateMutation();
+  const { mutateAsync: deletePost } = useDeleteUpdateMutation();
 
-  const handleDeletePost = async () => {
-    const confirmed = await Confirmer.confirm({
+  const handleDeletePost = () => {
+    Confirmer.confirm({
       title: "Delete update",
       description:
-        "Are you sure you want to delete this update? This action cannot be undone.",
+        "Are you sure you want to delete this update? This can’t be undone.",
       action: {
-        label: "Delete",
+        icon: Trash2Icon,
+        label: "Yes, delete",
         color: "danger",
+        run: () =>
+          deletePost(
+            { organizationId, id },
+            {
+              onSuccess() {
+                Toaster.success("Update deleted", {
+                  description: "The update has been removed.",
+                });
+              },
+              onError() {
+                Toaster.error("Couldn't delete update", {
+                  description: "Something went wrong. Please try again.",
+                });
+              },
+            }
+          ),
       },
     });
-
-    if (confirmed) {
-      deletePost({ organizationId, id });
-    }
   };
 
-  const { mutate: duplicatePost } = useDuplicatePostMutation();
+  const { mutateAsync: duplicatePost } = useDuplicatePostMutation();
 
-  const handleDuplicatePost = async () => {
-    const confirmed = await Confirmer.confirm({
+  const handleDuplicatePost = () => {
+    Confirmer.confirm({
       title: "Duplicate update",
       description: "Are you sure you want to duplicate this update?",
       action: {
-        label: "Duplicate",
+        label: "Yes, duplicate",
+        icon: CopyIcon,
+        run: () =>
+          duplicatePost(
+            { organizationId, id },
+            {
+              onSuccess() {
+                Toaster.success("Update duplicated", {
+                  description: "A copy of this update has been created.",
+                });
+              },
+              onError() {
+                Toaster.error("Couldn't duplicate update", {
+                  description: "Something went wrong. Please try again.",
+                });
+              },
+            }
+          ),
       },
     });
-
-    if (confirmed) {
-      duplicatePost({ organizationId, id });
-    }
   };
 
   return (

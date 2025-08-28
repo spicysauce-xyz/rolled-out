@@ -2,7 +2,7 @@ import { Confirmer } from "@components/confirmer";
 import type { authClient } from "@lib/auth";
 import { config } from "@lib/config";
 import { useLogoutMutation } from "@modules/auth/hooks/use-logout-mutation";
-import { Avatar, Button, DropdownMenu, Text } from "@mono/ui";
+import { Avatar, Button, DropdownMenu, Text, Toaster } from "@mono/ui";
 import { Link } from "@tanstack/react-router";
 import {
   EllipsisVerticalIcon,
@@ -20,24 +20,31 @@ export const UserMenu: React.FC<UserMenuProps> = ({
   user,
   currentOrganizationSlug,
 }) => {
-  const logoutMutation = useLogoutMutation();
+  const { mutateAsync: logout } = useLogoutMutation();
 
-  const handleLogout = async () => {
-    const confirmed = await Confirmer.confirm({
-      title: "Logout",
-      description: "Are you sure you want to logout?",
+  const handleLogout = () => {
+    Confirmer.confirm({
+      title: "Log out",
+      description: "Are you sure you want to log out?",
       action: {
         icon: LogOutIcon,
-        label: "Logout",
+        label: "Yes, log out",
         color: "danger",
+        run: () =>
+          logout(undefined, {
+            onSuccess() {
+              Toaster.success("Logged out", {
+                description: "You’ve been successfully logged out.",
+              });
+            },
+            onError() {
+              Toaster.error("Couldn't log out", {
+                description: "Something went wrong. Please try again.",
+              });
+            },
+          }),
       },
     });
-
-    if (!confirmed) {
-      return;
-    }
-
-    await logoutMutation.mutateAsync();
   };
 
   return (

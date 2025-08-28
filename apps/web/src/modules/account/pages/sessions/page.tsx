@@ -5,7 +5,7 @@ import { sessionsQuery } from "@lib/api/queries";
 import type { authClient } from "@lib/auth";
 import { useLogoutMutation } from "@modules/auth/hooks/use-logout-mutation";
 import { useSession } from "@modules/auth/hooks/use-session";
-import { Button, Skeleton, Text } from "@mono/ui";
+import { Button, Skeleton, Text, Toaster } from "@mono/ui";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { format } from "date-fns";
@@ -27,21 +27,20 @@ export const Route = createFileRoute("/_authorized/account/sessions")({
 
 function RouteComponent() {
   const { data: currentSessionData } = useSession();
-  const logoutMutation = useLogoutMutation();
 
   const sessionsData = useQuery(sessionsQuery());
 
-  const terminateSessionMutation = useTerminateSessionMutation();
+  const { mutateAsync: terminateSession } = useTerminateSessionMutation();
 
-  const handleTerminateSession = async (
+  const handleTerminateSession = (
     session: (typeof authClient.$Infer.Session)["session"]
   ) => {
     const parser = new UAParser(session.userAgent || "");
     const browser = parser.getBrowser();
     const os = parser.getOS();
 
-    const confirmed = await Confirmer.confirm({
-      title: "Terminate Session",
+    Confirmer.confirm({
+      title: "Terminate session",
       description: (
         <>
           Are you sure you want to terminate{" "}
@@ -53,57 +52,84 @@ function RouteComponent() {
       ),
       action: {
         icon: BanIcon,
-        label: "Terminate",
+        label: "Yes, terminate",
         color: "danger",
+        run: () =>
+          terminateSession(
+            {
+              sessionToken: session.token,
+            },
+            {
+              onSuccess() {
+                Toaster.success("Session terminated", {
+                  description: `The session on ${browser.name} (${os.name} ${os.version}) has been terminated.`,
+                });
+              },
+              onError() {
+                Toaster.error("Couldn't terminate session", {
+                  description: "Something went wrong. Please try again.",
+                });
+              },
+            }
+          ),
       },
-    });
-
-    if (!confirmed) {
-      return;
-    }
-
-    await terminateSessionMutation.mutateAsync({
-      sessionToken: session.token,
     });
   };
 
-  const terminateOtherSessionsMutation = useTerminateOtherSessionsMutation();
+  const { mutateAsync: terminateOtherSessions } =
+    useTerminateOtherSessionsMutation();
 
-  const handleTerminateOtherSessions = async () => {
-    const confirmed = await Confirmer.confirm({
-      title: "Terminate Other Sessions",
-      description: "Are you sure you want to terminate all other sessions?",
-      phrase: "yes",
+  const handleTerminateOtherSessions = () => {
+    Confirmer.confirm({
+      title: "Terminate other sessions",
+      description:
+        "Are you sure you want to terminate all other active sessions? You’ll stay signed in on this one.",
       action: {
         icon: BanIcon,
-        label: "Terminate",
+        label: "Yes, terminate",
         color: "danger",
+        run: () =>
+          terminateOtherSessions(undefined, {
+            onSuccess() {
+              Toaster.success("Sessions terminated", {
+                description: "All other active sessions have been terminated.",
+              });
+            },
+            onError() {
+              Toaster.error("Couldn't terminate other sessions", {
+                description: "Something went wrong. Please try again.",
+              });
+            },
+          }),
       },
     });
-
-    if (!confirmed) {
-      return;
-    }
-
-    await terminateOtherSessionsMutation.mutateAsync();
   };
 
-  const handleLogout = async () => {
-    const confirmed = await Confirmer.confirm({
-      title: "Logout",
-      description: "Are you sure you want to logout?",
+  const { mutateAsync: logout } = useLogoutMutation();
+
+  const handleLogout = () => {
+    Confirmer.confirm({
+      title: "Log out",
+      description: "Are you sure you want to log out?",
       action: {
         icon: LogOutIcon,
-        label: "Logout",
+        label: "Yes, log out",
         color: "danger",
+        run: () =>
+          logout(undefined, {
+            onSuccess() {
+              Toaster.success("Logged out", {
+                description: "You’ve been successfully logged out.",
+              });
+            },
+            onError() {
+              Toaster.error("Couldn't log out", {
+                description: "Something went wrong. Please try again.",
+              });
+            },
+          }),
       },
     });
-
-    if (!confirmed) {
-      return;
-    }
-
-    await logoutMutation.mutateAsync();
   };
 
   return (

@@ -1,7 +1,9 @@
 import { Confirmer } from "@components/confirmer";
 import { UpdateEntry } from "@modules/dashboard/components/update-list";
+import { useDeleteUpdateMutation } from "@modules/dashboard/hooks/use-delete-update-mutation";
+import { useDuplicatePostMutation } from "@modules/dashboard/hooks/use-duplicate-update-mutation";
 import { useUnpublishPostMutation } from "@modules/dashboard/hooks/use-unpublish-update-mutation";
-import { DropdownMenu, IconButton } from "@mono/ui";
+import { DropdownMenu, IconButton, Toaster } from "@mono/ui";
 import {
   BanIcon,
   CopyIcon,
@@ -28,22 +30,95 @@ export const PublishedUpdate: React.FC<PublishedUpdateProps> = ({
   organizationId,
   id,
 }) => {
-  const { mutate: unpublishPost, isPending: isUnpublishing } =
-    useUnpublishPostMutation();
+  const { mutateAsync: unpublishPost } = useUnpublishPostMutation();
 
-  const handleUnpublishPost = async () => {
-    const confirmed = await Confirmer.confirm({
+  const handleUnpublishPost = () => {
+    Confirmer.confirm({
       title: "Unpublish update",
       description:
-        "Are you sure you want to unpublish this update? The update will be hidden from all users. You can publish it again later if needed.",
+        "Are you sure you want to unpublish this update? It’ll be hidden from everyone and moved to Drafts. You can publish it again anytime.",
       action: {
-        label: "Unpublish",
+        label: "Yes, unpublish",
+        icon: BanIcon,
+        color: "danger",
+        run: () =>
+          unpublishPost(
+            { organizationId, id },
+            {
+              onSuccess() {
+                Toaster.success("Update unpublished", {
+                  description: "The update is now in Drafts.",
+                });
+              },
+              onError() {
+                Toaster.error("Couldn't unpublish update", {
+                  description: "Something went wrong. Please try again.",
+                });
+              },
+            }
+          ),
       },
     });
+  };
 
-    if (confirmed) {
-      unpublishPost({ organizationId, id });
-    }
+  const { mutateAsync: deletePost } = useDeleteUpdateMutation();
+
+  const handleDeletePost = () => {
+    Confirmer.confirm({
+      title: "Delete update",
+      description:
+        "Are you sure you want to delete this update? This can’t be undone.",
+      action: {
+        label: "Yes, delete",
+        icon: Trash2Icon,
+        color: "danger",
+        run: () =>
+          deletePost(
+            { organizationId, id },
+            {
+              onSuccess() {
+                Toaster.success("Update deleted", {
+                  description: "The update has been removed.",
+                });
+              },
+              onError() {
+                Toaster.error("Couldn't delete update", {
+                  description: "Something went wrong. Please try again.",
+                });
+              },
+            }
+          ),
+      },
+    });
+  };
+
+  const { mutateAsync: duplicatePost } = useDuplicatePostMutation();
+
+  const handleDuplicatePost = () => {
+    Confirmer.confirm({
+      title: "Duplicate update",
+      description: "Are you sure you want to duplicate this update?",
+      action: {
+        label: "Yes, duplicate",
+        icon: CopyIcon,
+        run: () =>
+          duplicatePost(
+            { organizationId, id },
+            {
+              onSuccess() {
+                Toaster.success("Update duplicated", {
+                  description: "A copy of this update has been created.",
+                });
+              },
+              onError() {
+                Toaster.error("Couldn't duplicate update", {
+                  description: "Something went wrong. Please try again.",
+                });
+              },
+            }
+          ),
+      },
+    });
   };
 
   return (
@@ -121,13 +196,7 @@ export const PublishedUpdate: React.FC<PublishedUpdateProps> = ({
             e.stopPropagation();
             e.preventDefault();
           }}
-          render={
-            <IconButton.Root
-              className="-my-2"
-              isLoading={isUnpublishing}
-              variant="tertiary"
-            />
-          }
+          render={<IconButton.Root className="-my-2" variant="tertiary" />}
         >
           <IconButton.Icon>
             <EllipsisVerticalIcon />
@@ -146,11 +215,11 @@ export const PublishedUpdate: React.FC<PublishedUpdateProps> = ({
             Unpublish
           </DropdownMenu.Item>
           <DropdownMenu.Separator />
-          <DropdownMenu.Item>
+          <DropdownMenu.Item onClick={handleDuplicatePost}>
             <DropdownMenu.ItemIcon render={<CopyIcon />} />
             Duplicate
           </DropdownMenu.Item>
-          <DropdownMenu.Item>
+          <DropdownMenu.Item onClick={handleDeletePost}>
             <DropdownMenu.ItemIcon render={<Trash2Icon />} />
             Delete
           </DropdownMenu.Item>

@@ -1,8 +1,7 @@
 import { Confirmer } from "@components/confirmer";
 import { useHasPermission } from "@modules/shared/hooks/use-has-permission";
-import { Button, DropdownMenu } from "@mono/ui";
+import { Button, DropdownMenu, Toaster } from "@mono/ui";
 import { EllipsisVerticalIcon, Trash2Icon } from "lucide-react";
-import { useCallback } from "react";
 import { useCancelInvitationMutation } from "../hooks/use-cancel-invitation-mutation";
 
 interface InvitationMenuProps {
@@ -14,33 +13,43 @@ export const InvitationMenu = ({
   invitation,
   organizationId,
 }: InvitationMenuProps) => {
-  const cancelInvitationMutation = useCancelInvitationMutation();
+  const { mutateAsync: cancelInvitation } = useCancelInvitationMutation();
 
   const cancelInvitationPermission = useHasPermission({
     organizationId,
     permission: { invitation: ["cancel"] },
   });
 
-  const handleCancelInvitation = useCallback(async () => {
-    const confirmed = await Confirmer.confirm({
+  const handleCancelInvitation = () => {
+    Confirmer.confirm({
       title: "Cancel Invitation",
-      description: `Are you sure you want to cancel invitation for ${invitation.email}?`,
+      description: `Are you sure you want to cancel the invitation for ${invitation.email}?`,
       phrase: invitation.email.toLowerCase().trim(),
       action: {
         icon: Trash2Icon,
-        label: "Cancel",
+        label: "Yes, cancel",
         color: "danger",
+        run: () =>
+          cancelInvitation(
+            {
+              invitationId: invitation.id,
+            },
+            {
+              onSuccess() {
+                Toaster.success("Invitation cancelled", {
+                  description: `The invitation for ${invitation.email} has been canceled.`,
+                });
+              },
+              onError() {
+                Toaster.error("Couldn't cancel invitation", {
+                  description: "Something went wrong. Please try again.",
+                });
+              },
+            }
+          ),
       },
     });
-
-    if (!confirmed) {
-      return;
-    }
-
-    await cancelInvitationMutation.mutateAsync({
-      invitationId: invitation.id,
-    });
-  }, [cancelInvitationMutation, invitation]);
+  };
 
   if (cancelInvitationPermission.isPending) {
     return null;
