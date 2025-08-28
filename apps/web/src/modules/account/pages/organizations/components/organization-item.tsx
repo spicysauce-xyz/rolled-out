@@ -1,9 +1,8 @@
 import { Confirmer } from "@components/confirmer";
 import type { api, SuccessResponse } from "@lib/api";
-import { Avatar, Button, Text } from "@mono/ui";
+import { Avatar, Button, Text, Toaster } from "@mono/ui";
 import type { InferResponseType } from "hono";
 import { DoorClosedIcon } from "lucide-react";
-import { useCallback } from "react";
 import { useLeaveOrganizationMutation } from "../hooks/use-leave-organization";
 
 type Organization = SuccessResponse<
@@ -19,28 +18,38 @@ export const OrganizationItem: React.FC<OrganizationItemProps> = ({
   data,
   isActive,
 }) => {
-  const leaveOrganizationMutation = useLeaveOrganizationMutation();
+  const { mutateAsync: leaveOrganization } = useLeaveOrganizationMutation();
 
-  const handleLeave = useCallback(async () => {
-    const confirmed = await Confirmer.confirm({
-      title: "Leave Organization",
+  const handleLeave = () => {
+    Confirmer.confirm({
+      title: "Leave organization",
       description: `Are you sure you want to leave ${data.name}?`,
       phrase: data.slug,
       action: {
         icon: DoorClosedIcon,
-        label: "Leave",
+        label: "Yes, leave",
         color: "danger",
+        run: () =>
+          leaveOrganization(
+            {
+              id: data.id,
+            },
+            {
+              onSuccess() {
+                Toaster.success("Left organization", {
+                  description: `You’ve successfully left ${data.name}.`,
+                });
+              },
+              onError() {
+                Toaster.error("Couldn't leave organization", {
+                  description: "Something went wrong. Please try again.",
+                });
+              },
+            }
+          ),
       },
     });
-
-    if (!confirmed) {
-      return;
-    }
-
-    await leaveOrganizationMutation.mutateAsync({
-      id: data.id,
-    });
-  }, [data, leaveOrganizationMutation]);
+  };
 
   return (
     <div className="group flex items-start justify-between gap-4">

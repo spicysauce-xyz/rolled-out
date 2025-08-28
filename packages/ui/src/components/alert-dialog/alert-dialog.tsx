@@ -79,7 +79,7 @@ const AlertDialogDescription = (
 
 const AlertDialogAction = (
   props: React.ComponentPropsWithRef<typeof Button.Root>
-) => <AlertDialog.Close render={<Button.Root {...props} />} />;
+) => <Button.Root {...props} />;
 
 const AlertDialogCancel = (
   props: React.ComponentPropsWithRef<typeof Button.Root>

@@ -1,9 +1,8 @@
 import { Confirmer } from "@components/confirmer";
 import { useHasPermission } from "@modules/shared/hooks/use-has-permission";
-import { DropdownMenu, IconButton, Text } from "@mono/ui";
+import { DropdownMenu, IconButton, Text, Toaster } from "@mono/ui";
 import _ from "lodash";
 import { EllipsisVerticalIcon, Trash2Icon, UserCog2Icon } from "lucide-react";
-import { useCallback } from "react";
 import { useRemoveMemberMutation } from "../hooks/use-remove-member-mutation";
 import { useUpdateMemberRoleMutation } from "../hooks/use-update-member-role-mutation";
 
@@ -13,15 +12,15 @@ interface MemberMenuProps {
 }
 
 export const MemberMenu = ({ member, organizationId }: MemberMenuProps) => {
-  const removeMemberMutation = useRemoveMemberMutation();
+  const { mutateAsync: removeMember } = useRemoveMemberMutation();
 
   const deleteMemberPermission = useHasPermission({
     organizationId,
     permission: { member: ["delete"] },
   });
 
-  const handleRemoveMember = useCallback(async () => {
-    const confirmed = await Confirmer.confirm({
+  const handleRemoveMember = () => {
+    Confirmer.confirm({
       title: "Remove Member",
       description: `Are you sure you want to remove ${member.user.name} from the organization?`,
       phrase: member.user.name.toLowerCase().replaceAll(" ", "-").trim(),
@@ -29,45 +28,67 @@ export const MemberMenu = ({ member, organizationId }: MemberMenuProps) => {
         icon: Trash2Icon,
         label: "Remove",
         color: "danger",
+        run: () =>
+          removeMember(
+            {
+              organizationId,
+              memberId: member.id,
+            },
+            {
+              onSuccess() {
+                Toaster.success("Member removed", {
+                  description: `${member.user.name} has been removed from the organization.`,
+                });
+              },
+              onError() {
+                Toaster.error("Couldn't remove member", {
+                  description: "Something went wrong. Please try again.",
+                });
+              },
+            }
+          ),
       },
     });
+  };
 
-    if (!confirmed) {
-      return;
-    }
-
-    await removeMemberMutation.mutateAsync({
-      organizationId,
-      memberId: member.id,
-    });
-  }, [member, organizationId, removeMemberMutation]);
-
-  const updateMemberRoleMutation = useUpdateMemberRoleMutation();
+  const { mutateAsync: updateMemberRole } = useUpdateMemberRoleMutation();
 
   const updateMemberPermission = useHasPermission({
     organizationId,
     permission: { member: ["update"] },
   });
 
-  const handleUpdateMemberRole = useCallback(
-    async (role: "member" | "admin" | "owner") => {
-      const confirmed = await Confirmer.confirm({
-        title: "Update Member Role",
-        description: `Are you sure you want to update ${member.user.name}'s role to ${role}?`,
-      });
-
-      if (!confirmed) {
-        return;
-      }
-
-      await updateMemberRoleMutation.mutateAsync({
-        organizationId,
-        memberId: member.id,
-        role,
-      });
-    },
-    [member, organizationId, updateMemberRoleMutation]
-  );
+  const handleUpdateMemberRole = (role: "member" | "admin" | "owner") => {
+    Confirmer.confirm({
+      title: "Update member role",
+      description: `Are you sure you want to change ${member.user.name}'s role to ${role}?`,
+      action: {
+        label: "Yes, update",
+        color: "success",
+        icon: UserCog2Icon,
+        run: () =>
+          updateMemberRole(
+            {
+              organizationId,
+              memberId: member.id,
+              role,
+            },
+            {
+              onSuccess() {
+                Toaster.success("Role updated", {
+                  description: `${member.user.name} is now an ${_.capitalize(role)}.`,
+                });
+              },
+              onError() {
+                Toaster.error("Couldn't update role", {
+                  description: "Something went wrong. Please try again.",
+                });
+              },
+            }
+          ),
+      },
+    });
+  };
 
   if (deleteMemberPermission.isPending || updateMemberPermission.isPending) {
     return null;

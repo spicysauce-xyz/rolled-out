@@ -1,15 +1,8 @@
 import { organizationsQuery } from "@lib/api/queries";
 import { authClient } from "@lib/auth";
-import { Toaster } from "@mono/ui";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-interface UseLeaveOrganizationMutationProps {
-  onSuccess?: () => void;
-}
-
-export const useLeaveOrganizationMutation = (
-  args?: UseLeaveOrganizationMutationProps
-) => {
+export const useLeaveOrganizationMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -24,25 +17,8 @@ export const useLeaveOrganizationMutation = (
 
       return response.data;
     },
-    onMutate: () => {
-      return { toastId: Toaster.loading("Leaving organization...") };
-    },
-    onSuccess: async (_, __, context) => {
+    onSettled: async () => {
       await queryClient.invalidateQueries(organizationsQuery());
-
-      args?.onSuccess?.();
-
-      Toaster.success("You've left the organization", {
-        id: context.toastId,
-      });
-    },
-    onError: (error, __, context) => {
-      if (context) {
-        Toaster.error("Failed to leave organization", {
-          description: error.message,
-          id: context?.toastId,
-        });
-      }
     },
   });
 };

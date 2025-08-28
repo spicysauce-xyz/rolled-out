@@ -1,6 +1,5 @@
 import { api } from "@lib/api";
 import { updatesQuery } from "@lib/api/queries";
-import { Toaster } from "@mono/ui";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const useSchedulePostMutation = () => {
@@ -36,13 +35,6 @@ export const useSchedulePostMutation = () => {
       await queryClient.invalidateQueries(
         updatesQuery(variables.organizationId)
       );
-    },
-    onError: (error, context) => {
-      if (context) {
-        Toaster.error("Error scheduling update", {
-          description: error.message,
-        });
-      }
     },
   });
 };

@@ -1,11 +1,10 @@
 import { Confirmer } from "@components/confirmer";
 import type { api, SuccessResponse } from "@lib/api";
-import { Avatar, IconButton, Text } from "@mono/ui";
+import { Avatar, IconButton, Text, Toaster } from "@mono/ui";
 import { useNavigate } from "@tanstack/react-router";
 import { formatDistance } from "date-fns";
 import type { InferResponseType } from "hono";
 import { CheckIcon, XIcon } from "lucide-react";
-import { useCallback } from "react";
 import { useAcceptInvitationMutation } from "../hooks/use-accept-invitation";
 import { useRejectInvitationMutation } from "../hooks/use-reject-invitation";
 
@@ -20,63 +19,81 @@ interface InvitationItemProps {
 export const InvitationItem: React.FC<InvitationItemProps> = ({ data }) => {
   const navigate = useNavigate();
 
-  const acceptInvitationMutation = useAcceptInvitationMutation({
-    onSuccess: () => {
-      if (!data.organization.slug) {
-        return;
-      }
+  const { mutateAsync: acceptInvitation } = useAcceptInvitationMutation();
 
-      navigate({
-        to: ".",
-        params: {
-          organizationSlug: data.organization.slug,
-        },
-      });
-    },
-  });
-
-  const handleAcceptInvitation = useCallback(async () => {
-    const confirmed = await Confirmer.confirm({
-      title: "Accept Invitation",
-      description: `Are you sure you want to accept invitation for ${data.organization.name}?`,
+  const handleAcceptInvitation = () => {
+    Confirmer.confirm({
+      title: "Accept invitation",
+      description: `Are you sure you want to accept the invitation to join ${data.organization.name}?`,
       action: {
         icon: CheckIcon,
-        label: "Accept",
+        label: "Yes, accept",
         color: "success",
+        run: () =>
+          acceptInvitation(
+            {
+              id: data.id,
+            },
+            {
+              onSuccess() {
+                Toaster.success("Invitation accepted", {
+                  description: `You’ve successfully joined ${data.organization.name}.`,
+                });
+
+                if (!data.organization.slug) {
+                  return;
+                }
+
+                navigate({
+                  to: ".",
+                  params: {
+                    organizationSlug: data.organization.slug,
+                  },
+                });
+              },
+              onError() {
+                Toaster.error("Couldn't accept invitation", {
+                  description: "Something went wrong. Please try again.",
+                });
+              },
+            }
+          ),
       },
     });
+  };
 
-    if (!confirmed) {
-      return;
-    }
+  const { mutateAsync: rejectInvitation } = useRejectInvitationMutation();
 
-    await acceptInvitationMutation.mutateAsync({
-      id: data.id,
-    });
-  }, [acceptInvitationMutation, data]);
-
-  const rejectInvitationMutation = useRejectInvitationMutation();
-
-  const handleRejectInvitation = useCallback(async () => {
-    const confirmed = await Confirmer.confirm({
-      title: "Reject Invitation",
-      description: `Are you sure you want to reject invitation for ${data.organization.name}?`,
+  const handleRejectInvitation = () => {
+    Confirmer.confirm({
+      title: "Reject invitation",
+      description: `Are you sure you want to reject the invitation to join ${data.organization.name}?`,
       phrase: data.organization.name.toLowerCase().trim(),
       action: {
         icon: XIcon,
-        label: "Reject",
+        label: "Yes, reject",
         color: "danger",
+        run: () =>
+          rejectInvitation(
+            {
+              id: data.id,
+            },
+            {
+              onSuccess() {
+                Toaster.success("Invitation rejected", {
+                  description: `The invitation to join ${data.organization.name} has been rejected.`,
+                });
+              },
+              onError() {
+                Toaster.error("Couldn't reject invitation", {
+                  description: "Something went wrong. Please try again.",
+                });
+              },
+            }
+          ),
       },
     });
-
-    if (!confirmed) {
-      return;
-    }
-
-    await rejectInvitationMutation.mutateAsync({
-      id: data.id,
-    });
-  }, [data, rejectInvitationMutation]);
+  };
 
   return (
     <div className="group flex items-start justify-between gap-4">

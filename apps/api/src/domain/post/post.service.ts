@@ -23,11 +23,15 @@ export const PostsService = {
   },
 
   deletePostById: (member: { organizationId: string }, id: string) => {
-    return PostsRepository.findPostById(id, member.organizationId).andThen(
-      () => {
-        return PostsRepository.deletePost(id, member.organizationId);
-      }
-    );
+    return PostsRepository.findPostById(id, member.organizationId)
+      .andThrough((post) => {
+        if (post.status === "scheduled" && post.scheduledAt) {
+          return new SchedulePostPublishJobs().remove(post.id);
+        }
+
+        return okAsync(post);
+      })
+      .andThen(() => PostsRepository.deletePost(id, member.organizationId));
   },
 
   findPostById: (member: { organizationId: string }, id: string) => {

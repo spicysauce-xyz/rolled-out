@@ -6,7 +6,7 @@ import { Breadcrumbs } from "@modules/dashboard/components/breadcrumbs";
 import { useGoBack } from "@modules/dashboard/hooks/use-go-back";
 import { usePublishUpdateMutation } from "@modules/dashboard/hooks/use-publish-update-mutation";
 import { Editor } from "@mono/editor";
-import { Button, Skeleton, Text } from "@mono/ui";
+import { Button, Skeleton, Text, Toaster } from "@mono/ui";
 import { createFileRoute, redirect, useParams } from "@tanstack/react-router";
 import { tryCatch } from "@utils/promise";
 import { CheckCheckIcon, CheckIcon, ClockIcon, SendIcon } from "lucide-react";
@@ -45,31 +45,36 @@ function RouteComponent() {
     params: { organizationSlug },
   });
 
-  const publishPostMutation = usePublishUpdateMutation();
+  const { mutateAsync: publishPost } = usePublishUpdateMutation();
 
-  const handlePublish = async () => {
-    const confirmed = await Confirmer.confirm({
-      title: "Publish Post",
-      description: "Are you sure you want to publish this post?",
+  const handlePublish = () => {
+    Confirmer.confirm({
+      title: "Publish update",
+      description:
+        "Are you sure you want to publish this update? It’ll go live right away and be visible to everyone. You can unpublish it later if needed.",
       action: {
-        label: "Publish",
+        label: "Yes, publish",
+        color: "success",
         icon: SendIcon,
+        run: () =>
+          publishPost(
+            { organizationId: organization.id, id },
+            {
+              onSuccess() {
+                handleGoBack();
+                Toaster.success("Update published", {
+                  description: "Your update is now live.",
+                });
+              },
+              onError() {
+                Toaster.error("Couldn't publish update", {
+                  description: "Something went wrong. Please try again.",
+                });
+              },
+            }
+          ),
       },
     });
-
-    if (!confirmed) {
-      return;
-    }
-
-    await publishPostMutation.mutateAsync(
-      {
-        organizationId: organization.id,
-        id,
-      },
-      {
-        onSuccess: handleGoBack,
-      }
-    );
   };
 
   const hocuspocus = useHocuspocusProvider(id);
@@ -126,7 +131,6 @@ function RouteComponent() {
             </Button.Root>
             <Button.Root
               isDisabled={!hocuspocus.isReady}
-              isLoading={publishPostMutation.isPending}
               onClick={handlePublish}
             >
               <Button.Icon render={<SendIcon />} />
