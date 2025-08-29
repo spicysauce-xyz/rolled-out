@@ -1,7 +1,7 @@
 import { Menu } from "@base-ui-components/react/menu";
 import { mergeProps } from "@base-ui-components/react/merge-props";
 import { useRender } from "@base-ui-components/react/use-render";
-import { CheckIcon } from "lucide-react";
+import { CheckIcon, ChevronDownIcon, ChevronRightIcon } from "lucide-react";
 import type React from "react";
 import { cn } from "../../utils";
 import { ScrollArea } from "../scroll-area";
@@ -31,8 +31,11 @@ const DropdownMenuSubTrigger = ({
     )}
     {...props}
   >
-    <div className="flex items-center gap-2 font-weight-500 text-md text-neutral-900">
+    <div className="flex w-full items-center gap-2 font-weight-500 text-md text-neutral-900">
       {children}
+      <div className="flex min-w-6 flex-1 justify-end">
+        <DropdownMenuItemIcon render={<ChevronRightIcon />} />
+      </div>
     </div>
   </Menu.SubmenuTrigger>
 );
