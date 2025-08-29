@@ -1,15 +1,8 @@
 import { organizationQuery } from "@lib/api/queries";
 import { authClient } from "@lib/auth";
-import { Toaster } from "@mono/ui";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-interface UseInviteMemberMutationProps {
-  onSuccess?: () => void;
-}
-
-export const useInviteMemberMutation = (
-  args?: UseInviteMemberMutationProps
-) => {
+export const useInviteMemberMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -31,25 +24,10 @@ export const useInviteMemberMutation = (
 
       return response.data;
     },
-    onMutate: () => {
-      return { toastId: Toaster.loading("Inviting member...") };
-    },
-    onSuccess: async (data, __, context) => {
+    onSettled: async (_, __, variables) => {
       await queryClient.invalidateQueries(
-        organizationQuery(data.organizationId)
+        organizationQuery(variables.organizationId)
       );
-
-      args?.onSuccess?.();
-
-      Toaster.success("Member invited", { id: context.toastId });
-    },
-    onError: (error, __, context) => {
-      if (context) {
-        Toaster.error("Failed to invite member", {
-          description: error.message,
-          id: context?.toastId,
-        });
-      }
     },
   });
 };
