@@ -3,7 +3,7 @@ import { Transition } from "@components/transition";
 import { updatesQuery } from "@lib/api/queries";
 import { Breadcrumbs } from "@modules/dashboard/components/breadcrumbs";
 import { useCreateUpdateMutation } from "@modules/dashboard/hooks/use-create-update-mutation";
-import { Button, Text } from "@mono/ui";
+import { Button, Text, Toaster } from "@mono/ui";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 
@@ -25,14 +25,24 @@ function RouteComponent() {
 
   const postsQuery = useQuery(updatesQuery(organization.id));
 
-  const createPostMutation = useCreateUpdateMutation();
+  const { mutateAsync: createPost, isPending: isCreatingPost } =
+    useCreateUpdateMutation();
 
   const handleCreatePost = () => {
-    createPostMutation.mutate(organization.id, {
+    createPost(organization.id, {
       onSuccess: (post) => {
+        Toaster.success("Draft created", {
+          description: "A new draft has been created and saved.",
+        });
         navigate({
           to: "/$organizationSlug/updates/$id",
           params: { id: post.id, organizationSlug },
+        });
+      },
+      onError: () => {
+        Toaster.error("Couldn't create draft", {
+          description:
+            "Something went wrong while creating your draft. Please try again.",
         });
       },
     });
@@ -42,10 +52,7 @@ function RouteComponent() {
     <Page.Wrapper>
       <Page.Header className="justify-between py-2">
         <Breadcrumbs page="Updates" />
-        <Button.Root
-          isLoading={createPostMutation.isPending}
-          onClick={handleCreatePost}
-        >
+        <Button.Root isLoading={isCreatingPost} onClick={handleCreatePost}>
           New Draft
         </Button.Root>
       </Page.Header>
@@ -72,7 +79,7 @@ function RouteComponent() {
                   key="empty"
                 >
                   <Empty
-                    isCreatingPost={createPostMutation.isPending}
+                    isCreatingPost={isCreatingPost}
                     onCreatePost={handleCreatePost}
                   />
                 </Transition.Item>

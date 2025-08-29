@@ -1,5 +1,5 @@
 import useAppForm from "@lib/form";
-import { Button, Dialog, Input, Label, Select, Text } from "@mono/ui";
+import { Button, Dialog, Input, Label, Select, Text, Toaster } from "@mono/ui";
 import _ from "lodash";
 import { SendIcon } from "lucide-react";
 import { useEffect } from "react";
@@ -17,11 +17,7 @@ export const InviteMemberDialog: React.FC<InviteMemberDialogProps> = ({
   onOpenChange,
   organizationId,
 }) => {
-  const inviteMemberMutation = useInviteMemberMutation({
-    onSuccess: () => {
-      onOpenChange(false);
-    },
-  });
+  const { mutateAsync: inviteMember } = useInviteMemberMutation();
 
   const form = useAppForm({
     defaultValues: {
@@ -34,12 +30,28 @@ export const InviteMemberDialog: React.FC<InviteMemberDialogProps> = ({
         role: z.enum(["member", "admin", "owner"]),
       }),
     },
-    onSubmit: async ({ value }) =>
-      inviteMemberMutation.mutateAsync({
-        organizationId,
-        email: value.email,
-        role: value.role,
-      }),
+    onSubmit: ({ value }) =>
+      inviteMember(
+        {
+          organizationId,
+          email: value.email,
+          role: value.role,
+        },
+        {
+          onSuccess: ({ email }) => {
+            onOpenChange(false);
+            Toaster.success("Invitation sent", {
+              description: `An invitation has been sent to ${email}.`,
+            });
+          },
+          onError: () => {
+            Toaster.error("Couldn't send invitation", {
+              description:
+                "Something went wrong while sending the invite. Please try again.",
+            });
+          },
+        }
+      ),
   });
 
   useEffect(() => {
@@ -146,14 +158,15 @@ export const InviteMemberDialog: React.FC<InviteMemberDialogProps> = ({
               Cancel
             </Dialog.Cancel>
             <form.Subscribe
-              selector={({ isSubmitting, isFieldsValid }) => ({
+              selector={({ isSubmitting, canSubmit }) => ({
                 isSubmitting,
-                isFieldsValid,
+                canSubmit,
               })}
             >
-              {({ isSubmitting, isFieldsValid }) => (
+              {({ isSubmitting, canSubmit }) => (
                 <Button.Root
-                  isDisabled={!isFieldsValid || isSubmitting}
+                  isDisabled={!canSubmit}
+                  isLoading={isSubmitting}
                   type="submit"
                 >
                   <Button.Icon render={<SendIcon />} />

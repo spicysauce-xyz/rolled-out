@@ -1,6 +1,5 @@
 import { organizationQuery } from "@lib/api/queries";
 import { authClient } from "@lib/auth";
-import { Toaster } from "@mono/ui";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const useUpdateMemberRoleMutation = () => {
@@ -25,23 +24,11 @@ export const useUpdateMemberRoleMutation = () => {
 
       return response.data;
     },
-    onMutate: () => {
-      return { toastId: Toaster.loading("Updating member role...") };
-    },
-    onSuccess: async (data, __, context) => {
-      await queryClient.invalidateQueries(
-        organizationQuery(data.organizationId)
-      );
 
-      Toaster.success("Member role updated", { id: context.toastId });
-    },
-    onError: (error, __, context) => {
-      if (context) {
-        Toaster.error("Failed to update member role", {
-          description: error.message,
-          id: context?.toastId,
-        });
-      }
+    onSettled: async (_, __, variables) => {
+      await queryClient.invalidateQueries(
+        organizationQuery(variables.organizationId)
+      );
     },
   });
 };

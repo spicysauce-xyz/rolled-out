@@ -2,7 +2,7 @@ import { Card } from "@components/card";
 import { sessionQuery } from "@lib/api/queries";
 import useAppForm from "@lib/form";
 import { FileUpload } from "@modules/shared/components/file-upload";
-import { Avatar, Button, Input, Label } from "@mono/ui";
+import { Avatar, Button, Input, Label, Toaster } from "@mono/ui";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { ImageIcon, MailIcon, UserIcon } from "lucide-react";
@@ -18,7 +18,7 @@ function RouteComponent() {
   const { user: initialUser, session: initialSession } =
     Route.useRouteContext();
 
-  const updateUserMutation = useUpdateUserMutation();
+  const { mutateAsync: updateUser } = useUpdateUserMutation();
 
   const { data: sessionQueryData, isPending: isSessionQueryPending } = useQuery(
     {
@@ -49,14 +49,23 @@ function RouteComponent() {
       }),
     },
     onSubmit: ({ value, formApi }) =>
-      updateUserMutation.mutateAsync(
+      updateUser(
         {
           name: value.name.trim(),
           image: value.image,
         },
         {
-          onSuccess: () => {
+          onSuccess() {
             formApi.reset();
+            Toaster.success("Account updated", {
+              description: "Your account details have been saved successfully.",
+            });
+          },
+          onError() {
+            Toaster.error("Couldn't update account", {
+              description:
+                "Something went wrong while saving your changes. Please try again.",
+            });
           },
         }
       ),
