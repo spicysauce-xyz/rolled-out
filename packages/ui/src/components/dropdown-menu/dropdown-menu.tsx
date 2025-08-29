@@ -1,7 +1,7 @@
 import { Menu } from "@base-ui-components/react/menu";
 import { mergeProps } from "@base-ui-components/react/merge-props";
 import { useRender } from "@base-ui-components/react/use-render";
-import { CheckIcon, ChevronDownIcon, ChevronRightIcon } from "lucide-react";
+import { CheckIcon, ChevronRightIcon } from "lucide-react";
 import type React from "react";
 import { cn } from "../../utils";
 import { ScrollArea } from "../scroll-area";
