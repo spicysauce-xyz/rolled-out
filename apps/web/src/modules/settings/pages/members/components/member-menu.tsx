@@ -105,26 +105,17 @@ export const MemberMenu = ({ member, organizationId }: MemberMenuProps) => {
 
   return (
     <DropdownMenu.Root>
-      <DropdownMenu.Trigger asChild>
-        <IconButton.Root variant="tertiary">
-          <IconButton.Icon>
-            <EllipsisVerticalIcon />
-          </IconButton.Icon>
-        </IconButton.Root>
+      <DropdownMenu.Trigger render={<IconButton.Root variant="tertiary" />}>
+        <IconButton.Icon render={<EllipsisVerticalIcon />} />
       </DropdownMenu.Trigger>
       <DropdownMenu.Content align="end">
         {updateMemberPermission.hasPermission && (
           <DropdownMenu.Sub>
             <DropdownMenu.SubTrigger>
-              <DropdownMenu.Item.Icon>
-                <UserCog2Icon />
-              </DropdownMenu.Item.Icon>
-              <Text.Root asChild color="muted" weight="medium">
-                <span>Role:</span>
-              </Text.Root>{" "}
+              <DropdownMenu.ItemIcon render={<UserCog2Icon />} />
               {_.capitalize(member.role)}
             </DropdownMenu.SubTrigger>
-            <DropdownMenu.SubContent>
+            <DropdownMenu.Content alignOffset={-8} side="right" sideOffset={12}>
               <DropdownMenu.RadioGroup
                 onValueChange={(value) => {
                   handleUpdateMemberRole(value as "member" | "admin" | "owner");
@@ -132,25 +123,20 @@ export const MemberMenu = ({ member, organizationId }: MemberMenuProps) => {
                 value={member.role}
               >
                 {["owner", "admin", "member"].map((role) => (
-                  <DropdownMenu.RadioItem.Root key={role} value={role}>
-                    <DropdownMenu.RadioItem.Content>
-                      {_.capitalize(role)}
-                    </DropdownMenu.RadioItem.Content>
-                  </DropdownMenu.RadioItem.Root>
+                  <DropdownMenu.RadioItem key={role} value={role}>
+                    {_.capitalize(role)}
+                  </DropdownMenu.RadioItem>
                 ))}
               </DropdownMenu.RadioGroup>
-            </DropdownMenu.SubContent>
+            </DropdownMenu.Content>
           </DropdownMenu.Sub>
         )}
+        <DropdownMenu.Separator />
         {deleteMemberPermission.hasPermission && (
-          <DropdownMenu.Item.Root onClick={handleRemoveMember}>
-            <DropdownMenu.Item.Content>
-              <DropdownMenu.Item.Icon>
-                <Trash2Icon />
-              </DropdownMenu.Item.Icon>
-              Remove Member
-            </DropdownMenu.Item.Content>
-          </DropdownMenu.Item.Root>
+          <DropdownMenu.Item onClick={handleRemoveMember}>
+            <DropdownMenu.ItemIcon render={<Trash2Icon />} />
+            Remove Member
+          </DropdownMenu.Item>
         )}
       </DropdownMenu.Content>
     </DropdownMenu.Root>
