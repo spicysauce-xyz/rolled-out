@@ -7,7 +7,7 @@ import { SchedulePostDialog } from "@modules/dashboard/components/schedule-post-
 import { useGoBack } from "@modules/dashboard/hooks/use-go-back";
 import { usePublishUpdateMutation } from "@modules/dashboard/hooks/use-publish-update-mutation";
 import { Editor } from "@mono/editor";
-import { Button, Skeleton, Text, Toaster } from "@mono/ui";
+import { Button, Skeleton, Toaster } from "@mono/ui";
 import { useDisclosure } from "@mono/ui/hooks";
 import { createFileRoute, redirect, useParams } from "@tanstack/react-router";
 import { tryCatch } from "@utils/promise";
@@ -176,9 +176,6 @@ function RouteComponent() {
           )}
         </Transition.Root>
       </Page.Content>
-      <div className="flex justify-center border-neutral-100 border-t px-6 py-4">
-        <Text.Root color="muted">1230 words · 10 min</Text.Root>
-      </div>
       <SchedulePostDialog
         isOpen={schedulePostDialog.isOpen}
         onOpenChange={schedulePostDialog.setOpen}
