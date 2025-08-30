@@ -9,6 +9,7 @@ export const POST_QUEUE_NAME = "post";
 
 const queue = new Queue(POST_QUEUE_NAME, {
   connection: {
+    family: 0,
     host: redisUrl?.hostname,
     port: Number(redisUrl?.port),
     password: redisUrl?.password,
