@@ -9,12 +9,10 @@ export const Route = createFileRoute(
 });
 
 function RouteComponent() {
-  const { organization } = Route.useRouteContext();
-
   return (
     <Page.Wrapper>
       <Page.Header className="justify-between">
-        <Breadcrumbs organization={organization} page="Dashboard" />
+        <Breadcrumbs pages={["Dashboard"]} />
       </Page.Header>
       <Page.Content>Analytics</Page.Content>
     </Page.Wrapper>

@@ -51,7 +51,7 @@ function RouteComponent() {
   return (
     <Page.Wrapper>
       <Page.Header className="justify-between py-2">
-        <Breadcrumbs page="Updates" />
+        <Breadcrumbs pages={["Updates"]} />
         <Button.Root isLoading={isCreatingPost} onClick={handleCreatePost}>
           New Draft
         </Button.Root>

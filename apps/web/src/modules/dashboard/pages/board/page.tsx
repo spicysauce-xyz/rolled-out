@@ -50,7 +50,7 @@ function RouteComponent() {
   return (
     <Page.Wrapper>
       <Page.Header className="justify-between">
-        <Breadcrumbs page={board.name} />
+        <Breadcrumbs pages={[board.name]} />
         <LinkButton.Root onClick={editBoardDialog.open}>
           <LinkButton.Icon>
             <SettingsIcon />

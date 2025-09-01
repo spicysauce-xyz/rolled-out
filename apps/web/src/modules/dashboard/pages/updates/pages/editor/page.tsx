@@ -91,7 +91,16 @@ function RouteComponent() {
             {hocuspocus.isReady ? (
               <Transition.Item className="flex items-center gap-4" key="title">
                 <Breadcrumbs
-                  page={["Updates", hocuspocus.title || "Untitled Update"]}
+                  pages={[
+                    {
+                      label: "Updates",
+                      link: {
+                        to: "/$organizationSlug/updates",
+                        params: { organizationSlug },
+                      },
+                    },
+                    hocuspocus.title || "Untitled Update",
+                  ]}
                 />
                 {/* <EditorTags provider={hocuspocus.provider} /> */}
               </Transition.Item>
