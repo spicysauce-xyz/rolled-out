@@ -1,6 +1,5 @@
 import { Confirmer } from "@components/confirmer";
 import type { authClient } from "@lib/auth";
-import { config } from "@lib/config";
 import { useLogoutMutation } from "@modules/auth/hooks/use-logout-mutation";
 import { Avatar, Button, DropdownMenu, Text, Toaster } from "@mono/ui";
 import { Link } from "@tanstack/react-router";
@@ -94,22 +93,6 @@ export const UserMenu: React.FC<UserMenuProps> = ({
             Logout
           </DropdownMenu.Item>
         </DropdownMenu.Group>
-        <DropdownMenu.Separator />
-        <Text.Root
-          className="px-4 py-1"
-          color="muted"
-          render={
-            <a
-              className="hover:underline"
-              href={`https://github.com/spicysauce-xyz/rolled-out/releases/tag/${config.version}`}
-              rel="noreferrer"
-              target="_blank"
-            >
-              Version: {config.version}
-            </a>
-          }
-          size="sm"
-        />
       </DropdownMenu.Content>
     </DropdownMenu.Root>
   );
