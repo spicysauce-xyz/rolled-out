@@ -2,6 +2,7 @@ import type { schema } from "@database";
 import { errAsync, okAsync, ResultAsync } from "neverthrow";
 import { SchedulePostPublishJobs } from "./post.jobs";
 import { PostsRepository } from "./post.repository";
+import { applyTitleToDocumentState } from "./post.utils";
 
 export const PostsService = {
   createPost: (
@@ -114,9 +115,11 @@ export const PostsService = {
       PostsRepository.findPostById(id, member.organizationId),
       PostsRepository.getPostsCount(member.organizationId),
     ]).andThen(([post, [{ count }]]) => {
+      const title = `Copy of ${post.title}`;
+
       return PostsRepository.createPost({
-        byteContent: post.byteContent,
-        title: `Copy of ${post.title}`,
+        byteContent: applyTitleToDocumentState(post.byteContent, title),
+        title,
         order: count + 1,
         organizationId: member.organizationId,
       });
