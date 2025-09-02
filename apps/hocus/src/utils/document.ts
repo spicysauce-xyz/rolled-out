@@ -10,7 +10,7 @@ export const getDocumentTags = (document: Y.Doc) => {
 };
 
 export const getDocumentTitle = (document: Y.Doc) => {
-  let title = DEFAULT_TITLE;
+  let title: string | undefined;
 
   const yContent = document.getXmlFragment("default");
 
@@ -26,5 +26,5 @@ export const getDocumentTitle = (document: Y.Doc) => {
     }
   }
 
-  return title;
+  return title || DEFAULT_TITLE;
 };
