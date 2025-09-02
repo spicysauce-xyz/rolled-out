@@ -27,7 +27,7 @@ export const Route = createFileRoute(
       )
     );
 
-    if (!post) {
+    if (!post || post.status !== "draft") {
       throw redirect({
         to: "/$organizationSlug",
         params: { organizationSlug: context.organization.slug },

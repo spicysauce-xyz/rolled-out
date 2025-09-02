@@ -21,9 +21,12 @@ import { cors } from "hono/cors";
 const editorsMap = new Map<string, Set<string>>();
 
 const hocuspocus = new Hocuspocus({
-  // @ts-expect-error no need to have promise here
-  onChange: ({ documentName, context }) => {
-    return addUserIdToEditorsMap(editorsMap, documentName, context.user.id);
+  onChange: async ({ documentName, context }) => {
+    const post = await getPostByDocumentName(documentName);
+
+    if (post) {
+      addUserIdToEditorsMap(editorsMap, documentName, context.user.id);
+    }
   },
   extensions: [
     new Logger(),
