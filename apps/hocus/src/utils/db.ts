@@ -1,9 +1,12 @@
 import { Database, schema } from "@database";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 
 export const getPostByDocumentName = async (documentName: string) => {
   const post = await Database.query.post.findFirst({
-    where: eq(schema.post.id, documentName),
+    where: and(
+      eq(schema.post.id, documentName),
+      eq(schema.post.status, "draft")
+    ),
   });
 
   return post;
@@ -19,7 +22,9 @@ export const updatePostByDocumentName = (
       title: data.title,
       updatedAt: new Date(),
     })
-    .where(eq(schema.post.id, documentName));
+    .where(
+      and(eq(schema.post.id, documentName), eq(schema.post.status, "draft"))
+    );
 };
 
 export const upsertEditorsByDocumentName = (
