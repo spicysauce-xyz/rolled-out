@@ -1,5 +1,5 @@
-import { organizationQuery } from "@lib/api/queries";
-import { authClient } from "@lib/auth";
+import { api } from "@lib/api";
+import { membersQuery } from "@lib/api/queries";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const useRemoveMemberMutation = () => {
@@ -7,22 +7,26 @@ export const useRemoveMemberMutation = () => {
 
   return useMutation({
     mutationFn: async (data: { memberId: string; organizationId: string }) => {
-      const response = await authClient.organization.removeMember({
-        organizationId: data.organizationId,
-        memberIdOrEmail: data.memberId,
+      const response = await api.organizations[":organizationId"].members[
+        ":id"
+      ].$delete({
+        param: {
+          organizationId: data.organizationId,
+          id: data.memberId,
+        },
       });
 
-      if (response.error) {
-        throw response.error;
+      const json = await response.json();
+
+      if (!json.success) {
+        throw json.error;
       }
 
-      return response.data.member;
+      return json.data;
     },
     onSettled: async (data) => {
       if (data) {
-        await queryClient.invalidateQueries(
-          organizationQuery(data.organizationId)
-        );
+        await queryClient.invalidateQueries(membersQuery(data.organizationId));
       }
     },
   });

@@ -16,8 +16,8 @@ catalogs:
       specifier: ^1.3.4
       version: 1.3.4
     hono:
-      specifier: 4.8.1
-      version: 4.8.1
+      specifier: 4.9.6
+      version: 4.9.6
     react:
       specifier: 19.1.0
       version: 19.1.0
@@ -68,16 +68,16 @@ importers:
         version: 3.1.7(@tiptap/core@3.0.0-beta.16(@tiptap/pm@3.0.0-beta.16))(@tiptap/pm@3.0.0-beta.16)(y-prosemirror@1.3.5(prosemirror-model@1.25.1)(prosemirror-state@1.4.3)(prosemirror-view@1.40.0)(y-protocols@1.0.6(yjs@13.6.27))(yjs@13.6.27))(yjs@13.6.27)
       '@hono/event-emitter':
         specifier: ^2.0.0
-        version: 2.0.0(hono@4.8.1)
+        version: 2.0.0(hono@4.9.6)
       '@hono/node-server':
         specifier: ^1.14.3
-        version: 1.14.4(hono@4.8.1)
+        version: 1.14.4(hono@4.9.6)
       '@hono/node-ws':
         specifier: ^1.1.7
-        version: 1.2.0(@hono/node-server@1.14.4(hono@4.8.1))(hono@4.8.1)
+        version: 1.2.0(@hono/node-server@1.14.4(hono@4.9.6))(hono@4.9.6)
       '@hono/zod-validator':
         specifier: ^0.4.3
-        version: 0.4.3(hono@4.8.1)(zod@3.25.67)
+        version: 0.4.3(hono@4.9.6)(zod@3.25.67)
       '@mono/auth':
         specifier: workspace:*
         version: link:../../packages/auth
@@ -116,7 +116,7 @@ importers:
         version: 6.4.9
       hono:
         specifier: 'catalog:'
-        version: 4.8.1
+        version: 4.9.6
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -189,10 +189,10 @@ importers:
         version: 3.1.7(@tiptap/core@3.0.0-beta.16(@tiptap/pm@3.0.0-beta.16))(@tiptap/pm@3.0.0-beta.16)(y-prosemirror@1.3.5(prosemirror-model@1.25.1)(prosemirror-state@1.4.3)(prosemirror-view@1.40.0)(y-protocols@1.0.6(yjs@13.6.27))(yjs@13.6.27))(yjs@13.6.27)
       '@hono/node-server':
         specifier: ^1.14.3
-        version: 1.14.4(hono@4.8.1)
+        version: 1.14.4(hono@4.9.6)
       '@hono/node-ws':
         specifier: ^1.1.7
-        version: 1.2.0(@hono/node-server@1.14.4(hono@4.8.1))(hono@4.8.1)
+        version: 1.2.0(@hono/node-server@1.14.4(hono@4.9.6))(hono@4.9.6)
       '@mono/auth':
         specifier: workspace:*
         version: link:../../packages/auth
@@ -210,7 +210,7 @@ importers:
         version: 0.40.1(@types/pg@8.15.4)(bun-types@1.2.17)(gel@2.1.0)(kysely@0.28.2)(pg@8.16.2)
       hono:
         specifier: 'catalog:'
-        version: 4.8.1
+        version: 4.9.6
       pg:
         specifier: ^8.13.3
         version: 8.16.2
@@ -329,7 +329,7 @@ importers:
         version: 11.11.1
       hono:
         specifier: 'catalog:'
-        version: 4.8.1
+        version: 4.9.6
       immer:
         specifier: ^10.1.1
         version: 10.1.1
@@ -444,7 +444,7 @@ importers:
         version: 4.1.0
       hono:
         specifier: 'catalog:'
-        version: 4.8.1
+        version: 4.9.6
       immer:
         specifier: ^10.1.1
         version: 10.1.1
@@ -5348,8 +5348,8 @@ packages:
     resolution: {integrity: sha512-Xwwo44whKBVCYoliBQwaPvtd/2tYFkRQtXDWj1nackaV2JPXx3L0+Jvd8/qCJ2p+ML0/XVkJ2q+Mr+UVdpJK5w==}
     engines: {node: '>=12.0.0'}
 
-  hono@4.8.1:
-    resolution: {integrity: sha512-ErA2ifywnSmcnB5XDuFqGDfXJ9xuAJR2C/8cZAk6vDaOCzofB8eNlha/wZWIiamREzWk94S9Z7wHsnKQHn7Niw==}
+  hono@4.9.6:
+    resolution: {integrity: sha512-doVjXhSFvYZ7y0dNokjwwSahcrAfdz+/BCLvAMa/vHLzjj8+CFyV5xteThGUsKdkaasgN+gF2mUxao+SGLpUeA==}
     engines: {node: '>=16.9.0'}
 
   hookable@5.5.3:
@@ -9389,26 +9389,26 @@ snapshots:
       y-prosemirror: 1.3.5(prosemirror-model@1.25.1)(prosemirror-state@1.4.3)(prosemirror-view@1.40.0)(y-protocols@1.0.6(yjs@13.6.27))(yjs@13.6.27)
       yjs: 13.6.27
 
-  '@hono/event-emitter@2.0.0(hono@4.8.1)':
+  '@hono/event-emitter@2.0.0(hono@4.9.6)':
     dependencies:
-      hono: 4.8.1
+      hono: 4.9.6
 
-  '@hono/node-server@1.14.4(hono@4.8.1)':
+  '@hono/node-server@1.14.4(hono@4.9.6)':
     dependencies:
-      hono: 4.8.1
+      hono: 4.9.6
 
-  '@hono/node-ws@1.2.0(@hono/node-server@1.14.4(hono@4.8.1))(hono@4.8.1)':
+  '@hono/node-ws@1.2.0(@hono/node-server@1.14.4(hono@4.9.6))(hono@4.9.6)':
     dependencies:
-      '@hono/node-server': 1.14.4(hono@4.8.1)
-      hono: 4.8.1
+      '@hono/node-server': 1.14.4(hono@4.9.6)
+      hono: 4.9.6
       ws: 8.18.2
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  '@hono/zod-validator@0.4.3(hono@4.8.1)(zod@3.25.67)':
+  '@hono/zod-validator@0.4.3(hono@4.9.6)(zod@3.25.67)':
     dependencies:
-      hono: 4.8.1
+      hono: 4.9.6
       zod: 3.25.67
 
   '@img/sharp-darwin-arm64@0.33.5':
@@ -13666,7 +13666,7 @@ snapshots:
 
   highlight.js@11.11.1: {}
 
-  hono@4.8.1: {}
+  hono@4.9.6: {}
 
   hookable@5.5.3: {}
 

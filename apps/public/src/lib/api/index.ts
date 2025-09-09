@@ -3,7 +3,7 @@ import { hc } from "hono/client";
 import "@tanstack/react-query";
 import { config } from "@config";
 
-export const api = hc<Api>(config.apiUrl, {
+export const { v1: api } = hc<Api>(config.apiUrl, {
   init: {
     credentials: "include",
   },

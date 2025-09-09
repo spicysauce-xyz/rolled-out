@@ -1,4 +1,4 @@
-import { Database, schema } from "@database";
+import { Database, schema } from "@services/db";
 import { eq } from "drizzle-orm";
 import { ResultAsync } from "neverthrow";
 import { NotificationRepository } from "./notification.repository";

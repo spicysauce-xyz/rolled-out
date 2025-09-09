@@ -1,14 +1,27 @@
-import type { authClient } from "@lib/auth";
+import type { api, SuccessResponse } from "@lib/api";
 import { Skeleton, Text } from "@mono/ui";
 import { formatDistance } from "date-fns";
+import type { InferResponseType } from "hono";
 import _ from "lodash";
 import { useMemo } from "react";
 import { InvitationMenu } from "./invite-menu";
 import { MemberEntry } from "./member-entry";
 import { MemberMenu } from "./member-menu";
 
+type Member = SuccessResponse<
+  InferResponseType<
+    (typeof api.organizations)[":organizationId"]["members"]["$get"]
+  >
+>[number];
+
+type Invitation = SuccessResponse<
+  InferResponseType<
+    (typeof api.organizations)[":organizationId"]["invitations"]["$get"]
+  >
+>[number];
+
 interface MemberProps {
-  data: (typeof authClient.$Infer.ActiveOrganization)["members"][number];
+  data: Member;
   currentUserId?: string;
   organizationId: string;
 }
@@ -46,7 +59,7 @@ const Member: React.FC<MemberProps> = ({
 
 interface InvitationProps {
   organizationId: string;
-  data: (typeof authClient.$Infer.ActiveOrganization)["invitations"][number];
+  data: Invitation;
 }
 
 const Invitation: React.FC<InvitationProps> = ({ data, organizationId }) => {
@@ -66,7 +79,7 @@ const Invitation: React.FC<InvitationProps> = ({ data, organizationId }) => {
   return (
     <MemberEntry.Root key={data.id}>
       <MemberEntry.Group>
-        <MemberEntry.Avatar email={data.email} />
+        <MemberEntry.Avatar email={data.email || ""} />
         <MemberEntry.Content>
           <MemberEntry.Heading>{data.email}</MemberEntry.Heading>
           <MemberEntry.Subheading>
@@ -85,30 +98,21 @@ const Invitation: React.FC<InvitationProps> = ({ data, organizationId }) => {
 interface MembersListProps {
   currentUserId?: string;
   organizationId: string;
-  members: (
-    | (typeof authClient.$Infer.ActiveOrganization)["members"][number]
-    | (typeof authClient.$Infer.ActiveOrganization)["invitations"][number]
+  data: (
+    | { type: "member"; member: Member }
+    | { type: "invitation"; invitation: Invitation }
   )[];
 }
 export const MembersList: React.FC<MembersListProps> & {
   Skeleton: React.FC;
-} = ({ members, currentUserId, organizationId }) => {
-  const filteredMembers = useMemo(() => {
-    return members.filter((member) => {
-      if ("userId" in member) {
-        return true;
-      }
-      return member.status === "pending";
-    });
-  }, [members]);
-
-  return filteredMembers.map((member) => {
-    if ("userId" in member) {
+} = ({ data, currentUserId, organizationId }) => {
+  return data.map((item) => {
+    if (item.type === "member") {
       return (
         <Member
           currentUserId={currentUserId}
-          data={member}
-          key={member.id}
+          data={item.member}
+          key={item.member.id}
           organizationId={organizationId}
         />
       );
@@ -116,8 +120,8 @@ export const MembersList: React.FC<MembersListProps> & {
 
     return (
       <Invitation
-        data={member}
-        key={member.id}
+        data={item.invitation}
+        key={item.invitation.id}
         organizationId={organizationId}
       />
     );

@@ -1,4 +1,4 @@
-import type { schema } from "@database";
+import type { schema } from "@services/db";
 
 export class PostCreatedEvent {
   static readonly eventName = "post.created";

@@ -1,32 +1,38 @@
-import { organizationQuery } from "@lib/api/queries";
-import { authClient } from "@lib/auth";
-import { Toaster } from "@mono/ui";
+import { api } from "@lib/api";
+import { invitationsQuery } from "@lib/api/queries";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const useCancelInvitationMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: { invitationId: string }) => {
-      const response = await authClient.organization.cancelInvitation({
-        invitationId: data.invitationId,
+    mutationFn: async (data: {
+      invitationId: string;
+      organizationId: string;
+    }) => {
+      const response = await api.organizations[":organizationId"].invitations[
+        ":invitationId"
+      ].$delete({
+        param: {
+          organizationId: data.organizationId,
+          invitationId: data.invitationId,
+        },
       });
 
-      if (response.error) {
-        throw response.error;
+      const json = await response.json();
+
+      if (!json.success) {
+        throw json.error;
       }
 
-      return response.data;
+      return json.data;
     },
     onSettled: async (data) => {
       if (data) {
         await queryClient.invalidateQueries(
-          organizationQuery(data.organizationId)
+          invitationsQuery(data.organizationId)
         );
       }
-    },
-    onError: () => {
-      Toaster.error("Failed to cancel invitation");
     },
   });
 };

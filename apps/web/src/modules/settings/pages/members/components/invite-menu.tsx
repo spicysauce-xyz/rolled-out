@@ -33,6 +33,7 @@ export const InvitationMenu = ({
           cancelInvitation(
             {
               invitationId: invitation.id,
+              organizationId,
             },
             {
               onSuccess() {

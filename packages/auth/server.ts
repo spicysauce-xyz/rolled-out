@@ -3,14 +3,8 @@ import {
   type BetterAuthOptions,
   betterAuth,
   type SecondaryStorage,
-  type User,
 } from "better-auth";
-import {
-  type Member,
-  magicLink,
-  type Organization,
-  organization,
-} from "better-auth/plugins";
+import { magicLink } from "better-auth/plugins";
 
 interface Params {
   domain: string;
@@ -19,19 +13,10 @@ interface Params {
   database: (options: BetterAuthOptions) => Adapter;
   secondaryStorage: SecondaryStorage;
   trustedOrigins: string[];
-  sendInvitationEmail?: (data: {
-    inviter: Member & { user: User };
-    email: string;
-    organization: Organization;
-  }) => Promise<void>;
   sendMagicLinkEmail?: (data: {
     email: string;
     url: string;
     token: string;
-  }) => Promise<void>;
-  afterOrganizationCreate?: (data: {
-    organization: Organization;
-    member: Member;
   }) => Promise<void>;
 }
 
@@ -85,22 +70,6 @@ export const createServerAuth = (
       },
     },
     plugins: [
-      organization({
-        sendInvitationEmail: (data) => {
-          if (!params.sendInvitationEmail) {
-            return new Promise((resolve) => resolve());
-          }
-
-          return params.sendInvitationEmail({
-            inviter: data.inviter,
-            email: data.email,
-            organization: data.organization,
-          });
-        },
-        organizationCreation: {
-          afterCreate: async (data) => params.afterOrganizationCreate?.(data),
-        },
-      }),
       magicLink({
         sendMagicLink: (data) => {
           if (!params.sendMagicLinkEmail) {

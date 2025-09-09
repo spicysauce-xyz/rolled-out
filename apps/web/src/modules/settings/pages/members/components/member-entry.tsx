@@ -37,7 +37,7 @@ interface MemberEntryAvatarProps
   extends React.ComponentPropsWithRef<typeof Avatar.Root> {
   name?: string;
   email?: string;
-  image?: string;
+  image?: string | null;
 }
 
 const MemberEntryAvatar = forwardRef<
@@ -62,7 +62,7 @@ const MemberEntryAvatar = forwardRef<
   return (
     <div className="relative">
       <Avatar.Root className={className} ref={ref} {...props}>
-        <Avatar.Image src={image} />
+        <Avatar.Image src={image || ""} />
         <Avatar.Fallback>{fallback}</Avatar.Fallback>
       </Avatar.Root>
       {children}

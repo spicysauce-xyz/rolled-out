@@ -1,26 +1,34 @@
-import { invitationsQuery, organizationsQuery } from "@lib/api/queries";
-import { authClient } from "@lib/auth";
+import { api } from "@lib/api";
+import { organizationsQuery, userInvitationsQuery } from "@lib/api/queries";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRouteContext } from "@tanstack/react-router";
 
 export const useRejectInvitationMutation = () => {
+  const { user } = useRouteContext({ from: "/_authorized" });
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: { id: string }) => {
-      const response = await authClient.organization.rejectInvitation({
-        invitationId: data.id,
+    mutationFn: async (data: { invitationId: string }) => {
+      const response = await api.users[":id"].invitations[
+        ":invitationId"
+      ].reject.$put({
+        param: {
+          id: user.id,
+          invitationId: data.invitationId,
+        },
       });
 
-      if (response.error) {
-        throw response.error;
+      const json = await response.json();
+
+      if (!json.success) {
+        throw json.error;
       }
 
-      return response.data;
+      return json.data;
     },
     onSettled: async () => {
-      await queryClient.invalidateQueries(invitationsQuery());
-
-      await queryClient.invalidateQueries(organizationsQuery());
+      await queryClient.invalidateQueries(organizationsQuery(user.id));
+      await queryClient.invalidateQueries(userInvitationsQuery(user.id));
     },
   });
 };

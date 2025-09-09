@@ -1,7 +1,6 @@
 import {
   inferAdditionalFields,
   magicLinkClient,
-  organizationClient,
 } from "better-auth/client/plugins";
 import { type BetterFetchPlugin, createAuthClient } from "better-auth/react";
 
@@ -19,7 +18,6 @@ export const createClientAuth = (params: Params) =>
     baseURL: params.baseURL,
     basePath: params.basePath,
     plugins: [
-      organizationClient(),
       magicLinkClient(),
       inferAdditionalFields({
         user: {

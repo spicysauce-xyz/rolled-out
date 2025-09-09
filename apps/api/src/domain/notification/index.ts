@@ -1,3 +1,2 @@
-import "./notification.subscriptions";
-
-export { NotificationHandler } from "./notification.handler";
+export { NotificationService } from "./notification.service";
+export { registerNotificationSubscriptions } from "./notification.subscriptions";

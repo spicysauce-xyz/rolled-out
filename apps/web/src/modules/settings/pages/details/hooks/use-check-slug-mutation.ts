@@ -1,16 +1,22 @@
-import { authClient } from "@lib/auth";
+import { api } from "@lib/api";
 import { useMutation } from "@tanstack/react-query";
 
 export const useCheckSlugMutation = () => {
   return useMutation({
     mutationFn: async (slug: string) => {
-      const response = await authClient.organization.checkSlug({ slug });
+      const response = await api.organizations["check-slug"].$get({
+        query: {
+          slug,
+        },
+      });
 
-      if (response.error) {
-        throw response.error;
+      const json = await response.json();
+
+      if (!json.success) {
+        throw json.error;
       }
 
-      return response.data;
+      return json.data;
     },
   });
 };

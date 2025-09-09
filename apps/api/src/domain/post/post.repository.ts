@@ -1,4 +1,4 @@
-import { Database, schema } from "@database";
+import { Database, schema } from "@services/db";
 import { and, count, desc, eq, sql } from "drizzle-orm";
 import { err, ok, ResultAsync } from "neverthrow";
 

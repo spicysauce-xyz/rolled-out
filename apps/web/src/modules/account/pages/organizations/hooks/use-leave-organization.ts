@@ -1,24 +1,33 @@
+import { api } from "@lib/api";
 import { organizationsQuery } from "@lib/api/queries";
-import { authClient } from "@lib/auth";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRouteContext } from "@tanstack/react-router";
 
 export const useLeaveOrganizationMutation = () => {
+  const { user } = useRouteContext({ from: "/_authorized" });
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: { id: string }) => {
-      const response = await authClient.organization.leave({
-        organizationId: data.id,
+    mutationFn: async (data: { organizationId: string }) => {
+      const response = await api.users[":id"].organizations[
+        ":organizationId"
+      ].leave.$put({
+        param: {
+          id: user.id,
+          organizationId: data.organizationId,
+        },
       });
 
-      if (response.error) {
-        throw response.error;
+      const json = await response.json();
+
+      if (!json.success) {
+        throw json.error;
       }
 
-      return response.data;
+      return json.data;
     },
     onSettled: async () => {
-      await queryClient.invalidateQueries(organizationsQuery());
+      await queryClient.invalidateQueries(organizationsQuery(user.id));
     },
   });
 };

@@ -1,16 +1,15 @@
 import { Card } from "@components/card";
 import { Transition } from "@components/transition";
-import { organizationQuery } from "@lib/api/queries";
+import { invitationsQuery, membersQuery } from "@lib/api/queries";
 import { useHasPermission } from "@modules/shared/hooks/use-has-permission";
 import { Button } from "@mono/ui";
 import { useDisclosure } from "@mono/ui/hooks";
-import { useQuery } from "@tanstack/react-query";
+import { useQueries } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { UserPlus2Icon } from "lucide-react";
 import { match } from "ts-pattern";
 import { InviteMemberDialog } from "../../../shared/components/invite-member-dialog";
 import { MembersList } from "./components/members-list";
-import { filterExpiredInvitations } from "./utils";
 
 export const Route = createFileRoute(
   "/_authorized/_has-organization/$organizationSlug/settings/members"
@@ -21,7 +20,25 @@ export const Route = createFileRoute(
 function RouteComponent() {
   const { organization, user } = Route.useRouteContext();
 
-  const organizationData = useQuery(organizationQuery(organization.id));
+  const membersData = useQueries({
+    queries: [membersQuery(organization.id), invitationsQuery(organization.id)],
+    combine: (result) => {
+      return {
+        data: [
+          ...(result[0].data || []).map((item) => ({
+            type: "member" as const,
+            member: item,
+          })),
+          ...(result[1].data || []).map((item) => ({
+            type: "invitation" as const,
+            invitation: item,
+          })),
+        ],
+        isPending: result[0].isPending || result[1].isPending,
+        isError: result[0].isError || result[1].isError,
+      };
+    },
+  });
 
   const inviteMemberDialog = useDisclosure();
   const inviteMemberPermission = useHasPermission({
@@ -43,7 +60,7 @@ function RouteComponent() {
       </Card.Header>
       <Card.Content>
         <Transition.Root>
-          {match(organizationData)
+          {match(membersData)
             .with({ isPending: true }, () => (
               <Transition.Item key="loading">
                 <MembersList.Skeleton />
@@ -58,11 +75,8 @@ function RouteComponent() {
               <Transition.Item className="flex flex-col gap-4" key="list">
                 <MembersList
                   currentUserId={user.id}
-                  members={[
-                    ...data.members,
-                    ...filterExpiredInvitations(data.invitations),
-                  ]}
-                  organizationId={data.id}
+                  data={data}
+                  organizationId={organization.id}
                 />
               </Transition.Item>
             ))}
@@ -71,7 +85,7 @@ function RouteComponent() {
       {inviteMemberPermission.hasPermission && (
         <Card.Footer>
           <Button.Root
-            isDisabled={organizationData.isPending}
+            isDisabled={membersData.isPending}
             onClick={inviteMemberDialog.open}
             variant="secondary"
           >

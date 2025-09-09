@@ -1,3 +1,3 @@
 export * from "./post.events";
-export { PostHandler } from "./post.handler";
-import "./post.worker";
+export * from "./post.jobs";
+export { PostService } from "./post.service";

@@ -1,5 +1,5 @@
-import { organizationQuery } from "@lib/api/queries";
-import { authClient } from "@lib/auth";
+import { api } from "@lib/api";
+import { invitationsQuery } from "@lib/api/queries";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const useInviteMemberMutation = () => {
@@ -12,21 +12,29 @@ export const useInviteMemberMutation = () => {
       // TODO: Update member types here
       role: "member" | "admin" | "owner";
     }) => {
-      const response = await authClient.organization.inviteMember({
-        organizationId: data.organizationId,
-        email: data.email,
-        role: data.role,
+      const response = await api.organizations[
+        ":organizationId"
+      ].invitations.$post({
+        param: {
+          organizationId: data.organizationId,
+        },
+        json: {
+          email: data.email,
+          role: data.role,
+        },
       });
 
-      if (response.error) {
-        throw response.error;
+      const json = await response.json();
+
+      if (!json.success) {
+        throw json.error;
       }
 
-      return response.data;
+      return json.data;
     },
     onSettled: async (_, __, variables) => {
       await queryClient.invalidateQueries(
-        organizationQuery(variables.organizationId)
+        invitationsQuery(variables.organizationId)
       );
     },
   });

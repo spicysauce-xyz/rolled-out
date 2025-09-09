@@ -1,4 +1,4 @@
-import { Database, schema } from "@database";
+import { Database, schema } from "@services/db";
 import { err, ok, ResultAsync } from "neverthrow";
 
 export const EditorRepository = {

@@ -4,26 +4,25 @@ import { NewOrganizationDialog } from "@modules/dashboard/components/new-organiz
 import { Avatar, Button, DropdownMenu, Skeleton, Text } from "@mono/ui";
 import { useDisclosure } from "@mono/ui/hooks";
 import { useQuery } from "@tanstack/react-query";
-import { Link, useNavigate, useRouter } from "@tanstack/react-router";
+import {
+  Link,
+  useNavigate,
+  useRouteContext,
+  useRouter,
+} from "@tanstack/react-router";
 import _ from "lodash";
 import { BuildingIcon, ChevronsUpDownIcon } from "lucide-react";
 import { match } from "ts-pattern";
 
-interface OrganizationSwitchProps {
-  organization: {
-    name: string;
-    logo: string | null;
-    slug: string;
-  };
-}
+export const OrganizationSwitch = () => {
+  const { user, organization } = useRouteContext({
+    from: "/_authorized/_has-organization/$organizationSlug",
+  });
 
-export const OrganizationSwitch = ({
-  organization,
-}: OrganizationSwitchProps) => {
   const navigate = useNavigate();
   const router = useRouter();
 
-  const organizations = useQuery(organizationsQuery());
+  const organizations = useQuery(organizationsQuery(user.id));
 
   const handleUpdateActiveOrganization = async (organizationSlug: string) => {
     const lastMatch = _.last(router.state.matches);

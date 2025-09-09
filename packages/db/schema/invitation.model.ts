@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 import { organization } from "./organization.model";
 import { user } from "./user.model";
 
@@ -13,7 +13,9 @@ export const invitation = pgTable("invitation", {
     .references(() => user.id, { onDelete: "cascade" }),
 
   email: text("email").notNull(),
-  role: text("role"),
+  role: varchar("role", { enum: ["member", "admin", "owner"] })
+    .notNull()
+    .default("member"),
   status: text("status").notNull(),
   expiresAt: timestamp("expires_at").notNull(),
 

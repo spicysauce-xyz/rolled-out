@@ -1,3 +1,2 @@
-export { organizationFactory } from "./organization.factory";
-export { OrganizationHandler } from "./organization.handler";
-export { organizationMiddleware } from "./organization.middleware";
+export * from "./organization.events";
+export { OrganizationService } from "./organization.service";

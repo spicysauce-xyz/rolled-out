@@ -1,18 +1,16 @@
-import { Config } from "@config";
-import { Emitter } from "@events";
-import { type Job, Worker } from "bullmq";
+import { Emitter } from "@services/events";
+import { createQueueWorker } from "@services/queue";
+import type { Job as BullJob } from "bullmq";
 import { ScheduledPostPublishedEvent } from "./post.events";
-import {
-  POST_QUEUE_NAME,
-  type PostPublishJob,
-  SchedulePostPublishJobs,
-} from "./post.jobs";
-import { PostsService } from "./post.service";
+import { SchedulePostPublishJobs } from "./post.jobs";
+import { PostService } from "./post.service";
 
-const handlePostPublishJob = async (job: Job<PostPublishJob>) => {
+const handlePostPublishJob = async (
+  job: BullJob<SchedulePostPublishJobs["payload"]>
+) => {
   const { postId, organizationId } = job.data;
 
-  const result = await PostsService.publishPostById(
+  const result = await PostService.publishPostById(
     { organizationId },
     postId
   ).andThrough((post) =>
@@ -27,29 +25,10 @@ const handlePostPublishJob = async (job: Job<PostPublishJob>) => {
   }
 };
 
-const redisUrl = URL.parse(Config.redis.url);
+const registerPostWorker = () => {
+  createQueueWorker("post", {
+    [SchedulePostPublishJobs.prefix]: handlePostPublishJob,
+  });
+};
 
-new Worker(
-  POST_QUEUE_NAME,
-  (job) => {
-    if (!job.id) {
-      return Promise.reject(new Error("Job ID is required"));
-    }
-
-    if (job.name.startsWith(SchedulePostPublishJobs.prefix)) {
-      return handlePostPublishJob(job);
-    }
-
-    return Promise.reject(new Error("Unknown job type"));
-  },
-  {
-    connection: {
-      family: 0,
-      host: redisUrl?.hostname,
-      port: Number(redisUrl?.port),
-      password: redisUrl?.password,
-    },
-    removeOnComplete: { count: 0 },
-    concurrency: 10,
-  }
-);
+export { registerPostWorker };

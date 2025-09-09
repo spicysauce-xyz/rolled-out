@@ -1,4 +1,4 @@
-import type { schema } from "@database";
+import type { schema } from "@services/db";
 import { BoardsRepository } from "./board.repository";
 
 export const BoardsService = {

@@ -1,5 +1,6 @@
-import { Config } from "@config";
 import MagicLinkEmail from "@email/templates/magic-link";
+import { Config } from "@services/config";
+import { ResultAsync } from "neverthrow";
 import { Resend } from "resend";
 import MemberInviteEmail from "./templates/member-invite";
 
@@ -28,22 +29,20 @@ export const Email = {
 
     return response.data;
   },
-  async sendMemberInviteEmail(
+  sendMemberInviteEmail(
     payload: EmailPayload<
       React.ComponentPropsWithoutRef<typeof MemberInviteEmail>
     >
   ) {
-    const response = await resend.emails.send({
-      from: `Rolled Out <invite@${Config.resend.domain}>`,
-      to: payload.to,
-      subject: `You've been invited to join ${payload.props.organizationName} on Rolled Out`,
-      react: <MemberInviteEmail {...payload.props} />,
-    });
-
-    if (response.error) {
-      throw response.error;
-    }
-
-    return response.data;
+    return ResultAsync.fromPromise(
+      resend.emails.send({
+        from: `Rolled Out <invite@${Config.resend.domain}>`,
+        to: payload.to,
+        subject: `You've been invited to join ${payload.props.organizationName} on Rolled Out`,
+        react: <MemberInviteEmail {...payload.props} />,
+      }),
+      (error) =>
+        new Error("Failed to send member invite email", { cause: error })
+    );
   },
 };

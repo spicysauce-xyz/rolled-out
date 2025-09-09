@@ -12,7 +12,7 @@ export const Route = createFileRoute("/_authorized/_has-organization")({
     }
 
     const { data: organizations } = await tryCatch(
-      context.queryClient.ensureQueryData(organizationsQuery())
+      context.queryClient.ensureQueryData(organizationsQuery(context.user.id))
     );
 
     if (!organizations?.length) {

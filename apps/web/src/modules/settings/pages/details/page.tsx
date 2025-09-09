@@ -2,7 +2,7 @@ import { Card } from "@components/card";
 import { organizationQuery, organizationsQuery } from "@lib/api/queries";
 import useAppForm from "@lib/form";
 import { FileUpload } from "@modules/shared/components/file-upload";
-import { Avatar, Button, Input, Label } from "@mono/ui";
+import { Avatar, Button, Input, Label, Toaster } from "@mono/ui";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { ImageIcon, Loader2Icon, SaveIcon } from "lucide-react";
@@ -19,18 +19,14 @@ export const Route = createFileRoute(
 
 function RouteComponent() {
   const navigate = Route.useNavigate();
-  const { organization, organizations } = Route.useRouteContext();
+  const { user, organization, organizations } = Route.useRouteContext();
 
-  useQuery({ ...organizationsQuery(), initialData: organizations });
+  useQuery({ ...organizationsQuery(user.id), initialData: organizations });
 
   const { data: organizationQueryData, isPending: isOrganizationQueryPending } =
     useQuery({
       ...organizationQuery(organization.id),
-      placeholderData: {
-        ...organization,
-        members: [],
-        invitations: [],
-      },
+      placeholderData: organization,
     });
 
   const checkSlugMutation = useCheckSlugMutation();
@@ -60,6 +56,10 @@ function RouteComponent() {
         },
         {
           onSuccess: () => {
+            Toaster.success("Organization updated", {
+              description: "Your organization details have been updated.",
+            });
+
             if (value.slug !== organization.slug) {
               navigate({
                 to: ".",
@@ -71,6 +71,11 @@ function RouteComponent() {
             }
 
             formApi.reset();
+          },
+          onError: () => {
+            Toaster.error("Couldn't update organization", {
+              description: "Something went wrong. Please try again.",
+            });
           },
         }
       ),
@@ -179,8 +184,8 @@ function RouteComponent() {
                 }
 
                 try {
-                  const response = await checkSlugMutation.mutateAsync(value);
-                  isSlugAvailable = Boolean(response.status);
+                  const data = await checkSlugMutation.mutateAsync(value);
+                  isSlugAvailable = data.available;
                 } catch {
                   isSlugAvailable = false;
                 }

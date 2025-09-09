@@ -37,3 +37,11 @@ export const applyTitleToDocumentState = (
 
   return encodeStateAsUpdate(doc);
 };
+
+export const isPostScheduled = <
+  T extends { status: string; scheduledAt: Date | null },
+>(
+  post: T
+): post is T & { status: "scheduled"; scheduledAt: Date } => {
+  return post.status === "scheduled" && !!post.scheduledAt;
+};

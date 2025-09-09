@@ -1,6 +1,6 @@
 import { Card } from "@components/card";
 import { Transition } from "@components/transition";
-import { invitationsQuery, organizationsQuery } from "@lib/api/queries";
+import { organizationsQuery, userInvitationsQuery } from "@lib/api/queries";
 import { NewOrganizationDialog } from "@modules/dashboard/components/new-organization-dialog";
 import { Button, Skeleton } from "@mono/ui";
 import { useDisclosure } from "@mono/ui/hooks";
@@ -16,12 +16,14 @@ export const Route = createFileRoute("/_authorized/account/organizations")({
 });
 
 function RouteComponent() {
+  const { user } = Route.useRouteContext();
+
   const { organization: activeOrganizationSlug } = useSearch({
     from: "/_authorized/account",
   });
 
   const organizationsData = useQueries({
-    queries: [organizationsQuery(), invitationsQuery()],
+    queries: [organizationsQuery(user.id), userInvitationsQuery(user.id)],
     combine(result) {
       return {
         data: [

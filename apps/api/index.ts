@@ -1,55 +1,21 @@
 import "dotenv/config";
-import { Config } from "@config";
-import { AssetsHandler } from "@domain/assets";
-import { AuthHandler } from "@domain/auth";
-import { BoardHandler } from "@domain/board";
-import {
-  OrganizationHandler,
-  organizationMiddleware,
-} from "@domain/organizaiton";
-import { PostHandler } from "@domain/post";
-import { PublicHandler } from "@domain/public";
-import { TagHandler } from "@domain/tag";
+import { internalApi } from "@api/internal";
+import { throttleDevEnvironment } from "@api/middleware/throttle";
+import { v1Api } from "@api/v1";
+import { registerEvents, registerWorkers } from "@domain";
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
-import { cors } from "hono/cors";
 import { logger } from "hono/logger";
-import "@domain/editor";
-import { InvitationHandler } from "@domain/invitation";
-import { NotificationHandler } from "@domain/notification";
+
+registerEvents();
+registerWorkers();
 
 export const app = new Hono()
-  .use(async (_, next) => {
-    if (process.env.NODE_ENV !== "production") {
-      await new Promise((resolve) =>
-        setTimeout(resolve, Math.random() * 1000 + 250)
-      );
-    }
-    await next();
-  })
+  .use(throttleDevEnvironment(250, 500))
   .use(logger())
-  .route("/public", PublicHandler)
-  .use(
-    cors({
-      origin: [Config.client.base],
-      credentials: true,
-    })
-  )
-  .route("/auth", AuthHandler)
-  .route("/assets", AssetsHandler)
-  .route("/invitations", InvitationHandler)
-  .route(
-    "/organizations",
-    OrganizationHandler.route(
-      "/:organizationId",
-      new Hono()
-        .use(organizationMiddleware)
-        .route("/posts", PostHandler)
-        .route("/tags", TagHandler)
-        .route("/boards", BoardHandler)
-        .route("/notifications", NotificationHandler)
-    )
-  );
+  .get("/health", (c) => c.json({ status: "ok" }))
+  .route("/v1", v1Api)
+  .route("/", internalApi);
 
 serve(
   {

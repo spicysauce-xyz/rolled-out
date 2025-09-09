@@ -1,10 +1,11 @@
-import type { schema } from "@database";
+import type { schema } from "@services/db";
+import { Queue } from "@services/queue";
 import { errAsync, okAsync, ResultAsync } from "neverthrow";
 import { SchedulePostPublishJobs } from "./post.jobs";
 import { PostsRepository } from "./post.repository";
-import { applyTitleToDocumentState } from "./post.utils";
+import { applyTitleToDocumentState, isPostScheduled } from "./post.utils";
 
-export const PostsService = {
+export const PostService = {
   createPost: (
     member: { organizationId: string; userId: string },
     data?: Omit<
@@ -26,8 +27,8 @@ export const PostsService = {
   deletePostById: (member: { organizationId: string }, id: string) => {
     return PostsRepository.findPostById(id, member.organizationId)
       .andThrough((post) => {
-        if (post.status === "scheduled" && post.scheduledAt) {
-          return new SchedulePostPublishJobs().remove(post.id);
+        if (isPostScheduled(post)) {
+          return Queue.remove(new SchedulePostPublishJobs(post));
         }
 
         return okAsync(post);
@@ -46,8 +47,8 @@ export const PostsService = {
   publishPostById: (member: { organizationId: string }, id: string) => {
     return PostsRepository.findPostById(id, member.organizationId)
       .andThrough((post) => {
-        if (post.status === "scheduled" && post.scheduledAt) {
-          return new SchedulePostPublishJobs().remove(post.id);
+        if (isPostScheduled(post)) {
+          return Queue.remove(new SchedulePostPublishJobs(post));
         }
 
         return okAsync(post);
@@ -70,8 +71,8 @@ export const PostsService = {
   ) => {
     return PostsRepository.findPostById(id, member.organizationId)
       .andThrough((post) => {
-        if (post.status === "scheduled" && post.scheduledAt) {
-          return new SchedulePostPublishJobs().remove(post.id);
+        if (isPostScheduled(post)) {
+          return Queue.remove(new SchedulePostPublishJobs(post));
         }
 
         return okAsync(post);
@@ -84,12 +85,8 @@ export const PostsService = {
         );
       })
       .andThrough((post) => {
-        if (post.status === "scheduled" && post.scheduledAt) {
-          return new SchedulePostPublishJobs().add(
-            post.id,
-            post.organizationId,
-            post.scheduledAt
-          );
+        if (isPostScheduled(post)) {
+          return Queue.add(new SchedulePostPublishJobs(post));
         }
 
         return errAsync(new Error("Post is not scheduled"));
@@ -99,8 +96,8 @@ export const PostsService = {
   unschedulePostById: (member: { organizationId: string }, id: string) => {
     return PostsRepository.findPostById(id, member.organizationId)
       .andThrough((post) => {
-        if (post.status === "scheduled" && post.scheduledAt) {
-          return new SchedulePostPublishJobs().remove(post.id);
+        if (isPostScheduled(post)) {
+          return Queue.remove(new SchedulePostPublishJobs(post));
         }
 
         return okAsync(post);

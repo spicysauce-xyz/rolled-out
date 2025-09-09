@@ -1,6 +1,6 @@
 import { Confirmer } from "@components/confirmer";
 import { useHasPermission } from "@modules/shared/hooks/use-has-permission";
-import { DropdownMenu, IconButton, Text, Toaster } from "@mono/ui";
+import { DropdownMenu, IconButton, Toaster } from "@mono/ui";
 import _ from "lodash";
 import { EllipsisVerticalIcon, Trash2Icon, UserCog2Icon } from "lucide-react";
 import { useRemoveMemberMutation } from "../hooks/use-remove-member-mutation";

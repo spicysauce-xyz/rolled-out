@@ -6,7 +6,7 @@ import { DoorClosedIcon } from "lucide-react";
 import { useLeaveOrganizationMutation } from "../hooks/use-leave-organization";
 
 type Organization = SuccessResponse<
-  InferResponseType<(typeof api.organizations)["$get"]>
+  InferResponseType<(typeof api.users)[":id"]["organizations"]["$get"]>
 >[number];
 
 interface OrganizationItemProps {
@@ -32,7 +32,7 @@ export const OrganizationItem: React.FC<OrganizationItemProps> = ({
         run: () =>
           leaveOrganization(
             {
-              id: data.id,
+              organizationId: data.id,
             },
             {
               onSuccess() {

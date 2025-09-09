@@ -1,4 +1,4 @@
-import { Database, type DatabaseTransaction, schema } from "@database";
+import { Database, type DatabaseTransaction, schema } from "@services/db";
 import { eq } from "drizzle-orm";
 import { ResultAsync } from "neverthrow";
 

@@ -1,1 +1,1 @@
-export { InvitationHandler } from "./invitation.handler";
+export { InvitationService } from "./invitation.service";

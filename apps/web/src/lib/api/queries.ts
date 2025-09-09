@@ -31,11 +31,15 @@ export const sessionsQuery = () =>
     },
   });
 
-export const organizationsQuery = () =>
+export const organizationsQuery = (userId: string) =>
   queryOptions({
-    queryKey: ["organizations"],
-    queryFn: async () => {
-      const response = await api.organizations.$get();
+    queryKey: ["organizations", userId],
+    queryFn: async ({ queryKey }) => {
+      const response = await api.me.organizations.$get({
+        param: {
+          id: queryKey[1],
+        },
+      });
 
       const json = await response.json();
 
@@ -47,11 +51,17 @@ export const organizationsQuery = () =>
     },
   });
 
-export const invitationsQuery = () => {
+export const invitationsQuery = (organizationId: string) => {
   return queryOptions({
-    queryKey: ["invitations"],
-    queryFn: async () => {
-      const response = await api.invitations.$get();
+    queryKey: ["invitations", organizationId],
+    queryFn: async ({ queryKey }) => {
+      const response = await api.organizations[
+        ":organizationId"
+      ].invitations.$get({
+        param: {
+          organizationId: queryKey[1],
+        },
+      });
 
       const json = await response.json();
 
@@ -64,21 +74,23 @@ export const invitationsQuery = () => {
   });
 };
 
-export const invitationQuery = (id: string) =>
+export const userInvitationsQuery = (userId: string) =>
   queryOptions({
-    queryKey: ["invitation", id],
+    queryKey: ["user-invitations", userId],
     queryFn: async ({ queryKey }) => {
-      const response = await authClient.organization.getInvitation({
-        query: {
+      const response = await api.me.invitations.$get({
+        param: {
           id: queryKey[1],
         },
       });
 
-      if (response.error) {
-        throw response.error;
+      const json = await response.json();
+
+      if (!json.success) {
+        throw json.error;
       }
 
-      return response.data;
+      return json.data;
     },
   });
 
@@ -86,17 +98,39 @@ export const organizationQuery = (id: string) =>
   queryOptions({
     queryKey: ["organization", id],
     queryFn: async ({ queryKey }) => {
-      const response = await authClient.organization.getFullOrganization({
-        query: {
+      const response = await api.organizations[":organizationId"].$get({
+        param: {
           organizationId: queryKey[1],
         },
       });
 
-      if (response.error) {
-        throw response.error;
+      const json = await response.json();
+
+      if (!json.success) {
+        throw json.error;
       }
 
-      return response.data;
+      return json.data;
+    },
+  });
+
+export const membersQuery = (id: string) =>
+  queryOptions({
+    queryKey: ["members", id],
+    queryFn: async ({ queryKey }) => {
+      const response = await api.organizations[":organizationId"].members.$get({
+        param: {
+          organizationId: queryKey[1],
+        },
+      });
+
+      const json = await response.json();
+
+      if (!json.success) {
+        throw json.error;
+      }
+
+      return json.data;
     },
   });
 
@@ -156,7 +190,7 @@ export const organizationTagsQuery = (organizationId: string) =>
       const json = await response.json();
 
       if (!json.success) {
-        throw new Error(json.error);
+        throw json.error;
       }
 
       return json.data;

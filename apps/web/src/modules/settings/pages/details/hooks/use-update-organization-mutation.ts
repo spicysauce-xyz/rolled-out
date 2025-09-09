@@ -1,9 +1,10 @@
+import { api } from "@lib/api";
 import { organizationQuery, organizationsQuery } from "@lib/api/queries";
-import { authClient } from "@lib/auth";
-import { Toaster } from "@mono/ui";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRouteContext } from "@tanstack/react-router";
 
 export const useUpdateOrganizationMutation = () => {
+  const { user } = useRouteContext({ from: "/_authorized" });
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -13,38 +14,30 @@ export const useUpdateOrganizationMutation = () => {
       logo: string | undefined;
       organizationId: string;
     }) => {
-      const response = await authClient.organization.update({
-        organizationId: data.organizationId,
-        data: {
+      const response = await api.organizations[":organizationId"].$put({
+        param: {
+          organizationId: data.organizationId,
+        },
+        json: {
           name: data.name,
           slug: data.slug,
           logo: data.logo,
         },
       });
 
-      if (response.error) {
-        throw response.error;
+      const json = await response.json();
+
+      if (!json.success) {
+        throw json.error;
       }
 
-      return response.data;
+      return json.data;
     },
-    onSuccess: async (data) => {
-      console.time("invalidating organization");
-      await queryClient.invalidateQueries(organizationQuery(data.id));
-      console.timeEnd("invalidating organization");
-
-      console.time("refetching organizations");
-      await queryClient.refetchQueries(organizationsQuery());
-      console.timeEnd("refetching organizations");
-
-      Toaster.success("Organization updated.");
-    },
-    onError: (error, __, context) => {
-      if (context) {
-        Toaster.error("Failed to update organization", {
-          description: error.message,
-        });
-      }
+    onSettled: async (_, __, variables) => {
+      await queryClient.invalidateQueries(
+        organizationQuery(variables.organizationId)
+      );
+      await queryClient.refetchQueries(organizationsQuery(user.id));
     },
   });
 };

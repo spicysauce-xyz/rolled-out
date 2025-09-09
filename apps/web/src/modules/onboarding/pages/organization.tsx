@@ -116,8 +116,8 @@ function RouteComponent() {
                   let isSlugAvailable = false;
 
                   try {
-                    const response = await checkSlugMutation.mutateAsync(value);
-                    isSlugAvailable = Boolean(response.status);
+                    const data = await checkSlugMutation.mutateAsync(value);
+                    isSlugAvailable = data.available;
                   } catch {
                     isSlugAvailable = false;
                   }

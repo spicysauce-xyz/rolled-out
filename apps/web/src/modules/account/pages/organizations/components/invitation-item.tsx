@@ -9,7 +9,7 @@ import { useAcceptInvitationMutation } from "../hooks/use-accept-invitation";
 import { useRejectInvitationMutation } from "../hooks/use-reject-invitation";
 
 type Invitation = SuccessResponse<
-  InferResponseType<(typeof api.invitations)["$get"]>
+  InferResponseType<(typeof api.users)[":id"]["invitations"]["$get"]>
 >[number];
 
 interface InvitationItemProps {
@@ -32,7 +32,7 @@ export const InvitationItem: React.FC<InvitationItemProps> = ({ data }) => {
         run: () =>
           acceptInvitation(
             {
-              id: data.id,
+              invitationId: data.id,
             },
             {
               onSuccess() {
@@ -76,7 +76,7 @@ export const InvitationItem: React.FC<InvitationItemProps> = ({ data }) => {
         run: () =>
           rejectInvitation(
             {
-              id: data.id,
+              invitationId: data.id,
             },
             {
               onSuccess() {
@@ -109,7 +109,7 @@ export const InvitationItem: React.FC<InvitationItemProps> = ({ data }) => {
         </div>
         <div className="flex flex-col gap-0.5">
           <Text.Root weight="medium">{data?.organization?.name}</Text.Root>
-          <Text.Root color="muted">
+          <Text.Root color="muted" size="sm">
             {data.inviter.name} invited you to join {data.organization.name},
             expires{" "}
             {formatDistance(data.expiresAt, new Date(), {
@@ -119,18 +119,10 @@ export const InvitationItem: React.FC<InvitationItemProps> = ({ data }) => {
         </div>
       </div>
       <div className="flex items-center gap-2">
-        <IconButton.Root
-          color="success"
-          onClick={handleAcceptInvitation}
-          variant="tertiary"
-        >
+        <IconButton.Root onClick={handleAcceptInvitation} variant="tertiary">
           <IconButton.Icon render={<CheckIcon />} />
         </IconButton.Root>
-        <IconButton.Root
-          color="danger"
-          onClick={handleRejectInvitation}
-          variant="tertiary"
-        >
+        <IconButton.Root onClick={handleRejectInvitation} variant="tertiary">
           <IconButton.Icon render={<XIcon />} />
         </IconButton.Root>
       </div>

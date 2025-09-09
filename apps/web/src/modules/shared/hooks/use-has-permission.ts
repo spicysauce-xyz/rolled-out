@@ -1,32 +1,15 @@
-import { authClient } from "@lib/auth";
-import { useQuery } from "@tanstack/react-query";
+import type { authClient } from "@lib/auth";
 
 type Permission = Parameters<
   typeof authClient.organization.hasPermission
 >[0]["permission"];
 
-export const useHasPermission = (args: {
+export const useHasPermission = (_: {
   organizationId: string;
   permission: Permission;
 }) => {
-  const { data, isPending } = useQuery({
-    queryKey: ["permission", args.organizationId, args.permission] as const,
-    queryFn: async ({ queryKey }) => {
-      const response = await authClient.organization.hasPermission({
-        organizationId: queryKey[1],
-        permission: queryKey[2],
-      });
-
-      if (response.error) {
-        throw response.error;
-      }
-
-      return response.data;
-    },
-  });
-
   return {
-    hasPermission: Boolean(data?.success),
-    isPending,
+    hasPermission: true,
+    isPending: false,
   };
 };

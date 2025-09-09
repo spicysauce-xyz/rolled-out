@@ -64,6 +64,12 @@ export const SchedulePostDialog: React.FC<SchedulePostDialogProps> = ({
             onOpenChange(false);
             formApi.reset();
           },
+          onError: (error) => {
+            Toaster.error("Couldn't schedule post", {
+              description:
+                error.message || "Something went wrong, please try again.",
+            });
+          },
         }
       ),
   });

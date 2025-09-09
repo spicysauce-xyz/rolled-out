@@ -1,64 +1,33 @@
-import { Config } from "@config";
-import { Queue } from "bullmq";
+import type { Job } from "@services/queue";
 import { differenceInMilliseconds } from "date-fns";
-import { ResultAsync } from "neverthrow";
 
-const redisUrl = URL.parse(Config.redis.url);
-
-export const POST_QUEUE_NAME = "post";
-
-const queue = new Queue(POST_QUEUE_NAME, {
-  connection: {
-    family: 0,
-    host: redisUrl?.hostname,
-    port: Number(redisUrl?.port),
-    password: redisUrl?.password,
-  },
-});
-
-export type PostPublishJob = {
-  postId: string;
-  organizationId: string;
-};
-
-export class SchedulePostPublishJobs {
+export class SchedulePostPublishJobs
+  implements Job<{ postId: string; organizationId: string }>
+{
   static readonly prefix = "publish";
+  name = "publish-scheduled-post";
+  queue = "post" as const;
 
-  private id(postId: string) {
-    return `${SchedulePostPublishJobs.prefix}:${postId}`;
+  constructor(
+    private readonly post: {
+      id: string;
+      organizationId: string;
+      scheduledAt: Date;
+    }
+  ) {}
+
+  get id() {
+    return `${SchedulePostPublishJobs.prefix}:${this.post.id}`;
   }
 
-  private delay(scheduledAt: Date) {
-    return Math.max(differenceInMilliseconds(scheduledAt, new Date()), 0);
+  get payload() {
+    return { postId: this.post.id, organizationId: this.post.organizationId };
   }
 
-  add(postId: string, organizationId: string, scheduledAt: Date) {
-    const id = this.id(postId);
-    const delay = this.delay(scheduledAt);
-
-    return ResultAsync.fromPromise(
-      queue.add(
-        id,
-        { postId, organizationId },
-        {
-          jobId: id,
-          delay,
-          attempts: 5,
-          backoff: {
-            type: "exponential",
-            delay: 1000,
-          },
-        }
-      ),
-      (error) => new Error("Failed to add job to queue", { cause: error })
-    );
-  }
-
-  remove(postId: string) {
-    const id = this.id(postId);
-    return ResultAsync.fromPromise(
-      queue.remove(id),
-      (error) => new Error("Failed to remove job from queue", { cause: error })
+  get delay() {
+    return Math.max(
+      differenceInMilliseconds(this.post.scheduledAt, new Date()),
+      0
     );
   }
 }
