@@ -4,7 +4,11 @@ import { EditorService } from "./editor.service";
 
 const registerEditorSubscriptions = () => {
   Emitter.on<PostCreatedEvent>(PostCreatedEvent.eventName, (event) => {
-    return EditorService.createEditor(event.post.id, event.member.userId);
+    return EditorService.createEditor(
+      event.post.id,
+      event.member.id,
+      "creator"
+    );
   });
 };
 

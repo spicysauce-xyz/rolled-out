@@ -21,7 +21,12 @@ interface DraftUpdateProps {
   order: number;
   title: string;
   id: string;
-  editors: Array<{ user: { id: string; name: string; image: string | null } }>;
+  editors: Array<{
+    role: "creator" | "editor";
+    createdAt: string;
+    updatedAt: string;
+    member: { user: { id: string; name: string; image: string | null } };
+  }>;
   createdAt: string;
   updatedAt: string;
   organizationSlug: string;

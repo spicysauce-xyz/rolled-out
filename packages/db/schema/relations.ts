@@ -2,10 +2,10 @@ import { relations } from "drizzle-orm";
 import { board } from "./board.model";
 import { boardTag } from "./board-tag.model";
 import { editor } from "./editor.model";
+import { member } from "./member.model";
 import { post } from "./post.model";
 import { postTag } from "./post-tag.model";
 import { tag } from "./tag.model";
-import { user } from "./user.model";
 
 export const postRelations = relations(post, ({ many }) => ({
   editors: many(editor),
@@ -21,9 +21,9 @@ export const editorRelations = relations(editor, ({ one }) => ({
     fields: [editor.postId],
     references: [post.id],
   }),
-  user: one(user, {
-    fields: [editor.userId],
-    references: [user.id],
+  member: one(member, {
+    fields: [editor.memberId],
+    references: [member.id],
   }),
 }));
 

@@ -1,6 +1,6 @@
-import { pgTable, timestamp, unique, uuid } from "drizzle-orm/pg-core";
+import { pgTable, timestamp, unique, uuid, varchar } from "drizzle-orm/pg-core";
+import { member } from "./member.model";
 import { post } from "./post.model";
-import { user } from "./user.model";
 
 export const editor = pgTable(
   "editor",
@@ -9,9 +9,15 @@ export const editor = pgTable(
     postId: uuid("post_id")
       .references(() => post.id, { onDelete: "cascade" })
       .notNull(),
-    userId: uuid("user_id")
-      .references(() => user.id, { onDelete: "cascade" })
+    memberId: uuid("member_id")
+      .references(() => member.id, { onDelete: "cascade" })
       .notNull(),
+
+    role: varchar("role", {
+      enum: ["creator", "editor"],
+    })
+      .notNull()
+      .default("editor"),
 
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
@@ -20,5 +26,5 @@ export const editor = pgTable(
       .notNull()
       .defaultNow(),
   },
-  (table) => [unique().on(table.postId, table.userId)]
+  (table) => [unique().on(table.postId, table.memberId)]
 );

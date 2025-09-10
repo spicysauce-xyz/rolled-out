@@ -29,13 +29,13 @@ export const updatePostByDocumentName = (
 
 export const upsertEditorsByDocumentName = (
   documentName: string,
-  editorsIds: string[]
+  memberIds: string[]
 ) => {
   return Database.insert(schema.editor)
     .values(
-      editorsIds.map((id) => ({
+      memberIds.map((id) => ({
         postId: documentName,
-        userId: id,
+        memberId: id,
       }))
     )
     .onConflictDoNothing();

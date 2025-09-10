@@ -79,7 +79,7 @@ function RouteComponent() {
     });
   };
 
-  const hocuspocus = useHocuspocusProvider(id);
+  const hocuspocus = useHocuspocusProvider(organization.id, id);
   const uploadAsset = useUploadAssetMutation();
   const schedulePostDialog = useDisclosure();
 

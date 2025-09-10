@@ -2,12 +2,17 @@ import { Database, schema } from "@services/db";
 import { err, ok, ResultAsync } from "neverthrow";
 
 export const EditorRepository = {
-  createEditor: (postId: string, userId: string) => {
+  createEditor: (
+    postId: string,
+    memberId: string,
+    role: "creator" | "editor"
+  ) => {
     return ResultAsync.fromPromise(
       Database.insert(schema.editor)
         .values({
           postId,
-          userId,
+          memberId,
+          role,
         })
         .returning(),
       (error) => new Error("Failed to create editor for post", { cause: error })

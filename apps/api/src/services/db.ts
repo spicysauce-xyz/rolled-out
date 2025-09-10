@@ -17,3 +17,15 @@ export type DatabaseTransaction = PgTransaction<
   typeof schema,
   ExtractTablesWithRelations<typeof schema>
 >;
+
+export type Post = typeof schema.post.$inferSelect;
+export type PostInsert = typeof schema.post.$inferInsert;
+
+export type Editor = typeof schema.editor.$inferSelect;
+export type EditorInsert = typeof schema.editor.$inferInsert;
+
+export type Member = typeof schema.member.$inferSelect;
+export type MemberInsert = typeof schema.member.$inferInsert;
+
+export type User = typeof schema.user.$inferSelect;
+export type UserInsert = typeof schema.user.$inferInsert;

@@ -28,11 +28,15 @@ export const PublicRepository = {
         with: {
           editors: {
             with: {
-              user: {
-                columns: {
-                  id: true,
-                  name: true,
-                  image: true,
+              member: {
+                with: {
+                  user: {
+                    columns: {
+                      id: true,
+                      name: true,
+                      image: true,
+                    },
+                  },
                 },
               },
             },

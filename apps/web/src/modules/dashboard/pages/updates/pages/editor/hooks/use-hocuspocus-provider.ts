@@ -14,6 +14,7 @@ export interface ConnectedPeer {
 }
 
 export const useHocuspocusProvider = (
+  organizationId: string,
   documentName: string
 ):
   | { isReady: false }
@@ -36,7 +37,7 @@ export const useHocuspocusProvider = (
     }
 
     providerRef.current = new HocuspocusProvider({
-      url: config.hocusUrl,
+      url: `${config.hocusUrl}/${organizationId}`,
       name: documentName,
       onSynced: () => {
         setIsReady(true);
@@ -52,7 +53,7 @@ export const useHocuspocusProvider = (
     return () => {
       providerRef.current?.destroy();
     };
-  }, [documentName]);
+  }, [documentName, organizationId]);
 
   useEffect(() => {
     if (!providerRef.current) {

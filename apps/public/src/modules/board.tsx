@@ -133,7 +133,7 @@ function RouteComponent() {
                   <div className="flex items-center gap-2">
                     {post.editors.map((editor) => (
                       <Text.Root key={editor.id} weight="medium">
-                        {editor.user.name}
+                        {editor.member.user.name}
                       </Text.Root>
                     ))}
                   </div>

@@ -1,5 +1,6 @@
 import { Database, schema } from "@services/db";
 import { and, count, desc, eq, sql } from "drizzle-orm";
+import _ from "lodash";
 import { err, ok, ResultAsync } from "neverthrow";
 
 export const PostsRepository = {
@@ -9,7 +10,13 @@ export const PostsRepository = {
         .from(schema.post)
         .where(eq(schema.post.organizationId, organizationId)),
       (error) => new Error("Failed to get posts count", { cause: error })
-    );
+    ).andThen(([countData]) => {
+      if (!(countData && _.isNumber(countData.count))) {
+        return err(new Error("Invalid posts count response"));
+      }
+
+      return ok(countData.count);
+    });
   },
 
   createPost: (data: typeof schema.post.$inferInsert) => {
@@ -48,6 +55,45 @@ export const PostsRepository = {
           eq(schema.post.id, id),
           eq(schema.post.organizationId, organizationId)
         ),
+        with: {
+          editors: {
+            columns: {
+              id: true,
+              role: true,
+              createdAt: true,
+              updatedAt: true,
+            },
+            with: {
+              member: {
+                columns: {
+                  id: true,
+                  role: true,
+                  createdAt: true,
+                  updatedAt: true,
+                },
+                with: {
+                  user: {
+                    columns: {
+                      id: true,
+                      name: true,
+                      image: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          tags: {
+            with: {
+              tag: {
+                columns: {
+                  id: true,
+                  label: true,
+                },
+              },
+            },
+          },
+        },
       }),
       (error) => new Error("Failed to get post by id", { cause: error })
     ).andThen((post) => {
@@ -75,12 +121,28 @@ export const PostsRepository = {
         where: eq(schema.post.organizationId, organizationId),
         with: {
           editors: {
+            columns: {
+              id: true,
+              role: true,
+              createdAt: true,
+              updatedAt: true,
+            },
             with: {
-              user: {
+              member: {
                 columns: {
                   id: true,
-                  name: true,
-                  image: true,
+                  role: true,
+                  createdAt: true,
+                  updatedAt: true,
+                },
+                with: {
+                  user: {
+                    columns: {
+                      id: true,
+                      name: true,
+                      image: true,
+                    },
+                  },
                 },
               },
             },

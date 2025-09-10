@@ -1,4 +1,5 @@
-import type { schema } from "@services/db";
+import type { Member, schema } from "@services/db";
+import { Policy } from "@services/policy";
 import { Queue } from "@services/queue";
 import { errAsync, okAsync, ResultAsync } from "neverthrow";
 import { SchedulePostPublishJobs } from "./post.jobs";
@@ -6,26 +7,36 @@ import { PostsRepository } from "./post.repository";
 import { applyTitleToDocumentState, isPostScheduled } from "./post.utils";
 
 export const PostService = {
-  createPost: (
-    member: { organizationId: string; userId: string },
-    data?: Omit<
-      typeof schema.post.$inferInsert,
-      "order" | "title" | "organizationId"
-    >
-  ) => {
-    return PostsRepository.getPostsCount(member.organizationId).andThen(
-      ([{ count }]) =>
+  createPost: (member: typeof schema.member.$inferSelect) => {
+    const postData = {
+      title: "Untitled Update",
+      organizationId: member.organizationId,
+    };
+
+    const ability = Policy.defineAbilityForMember(member);
+
+    return ability
+      .can("create", "post", postData, {
+        notAllowedErrorMessage: "You are not allowed to create a draft.",
+      })
+      .asyncAndThen(() => PostsRepository.getPostsCount(member.organizationId))
+      .andThen((count) =>
         PostsRepository.createPost({
-          ...(data ?? {}),
-          title: "Untitled Update",
+          ...postData,
           order: count + 1,
-          organizationId: member.organizationId,
         })
-    );
+      );
   },
 
-  deletePostById: (member: { organizationId: string }, id: string) => {
+  deletePostById: (member: Member, id: string) => {
+    const ability = Policy.defineAbilityForMember(member);
+
     return PostsRepository.findPostById(id, member.organizationId)
+      .andThrough((post) =>
+        ability.can("delete", "post", post, {
+          notAllowedErrorMessage: "You are not allowed to delete this post.",
+        })
+      )
       .andThrough((post) => {
         if (isPostScheduled(post)) {
           return Queue.remove(new SchedulePostPublishJobs(post));
@@ -111,7 +122,7 @@ export const PostService = {
     return ResultAsync.combine([
       PostsRepository.findPostById(id, member.organizationId),
       PostsRepository.getPostsCount(member.organizationId),
-    ]).andThen(([post, [{ count }]]) => {
+    ]).andThen(([post, count]) => {
       const title = `Copy of ${post.title}`;
 
       return PostsRepository.createPost({

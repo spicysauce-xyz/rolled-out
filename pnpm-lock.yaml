@@ -9,9 +9,6 @@ catalogs:
     '@types/react':
       specifier: 19.1.0
       version: 19.1.0
-    '@types/react-dom':
-      specifier: 19.1.0
-      version: 19.1.0
     better-auth:
       specifier: ^1.3.4
       version: 1.3.4
@@ -27,9 +24,6 @@ catalogs:
     typescript:
       specifier: 5.8.2
       version: 5.8.2
-    vite:
-      specifier: 6.3.5
-      version: 6.3.5
 
 importers:
 

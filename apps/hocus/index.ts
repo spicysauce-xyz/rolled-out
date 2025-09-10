@@ -12,6 +12,7 @@ import {
   insertPostTagsByDocumentName,
   updatePostByDocumentName,
   upsertEditorsByDocumentName,
+  // upsertEditorsByDocumentName,
 } from "@utils/db";
 import { getDocumentTags, getDocumentTitle } from "@utils/document";
 import { addUserIdToEditorsMap } from "@utils/map";
@@ -25,7 +26,7 @@ const hocuspocus = new Hocuspocus({
     const post = await getPostByDocumentName(documentName);
 
     if (post) {
-      addUserIdToEditorsMap(editorsMap, documentName, context.user.id);
+      addUserIdToEditorsMap(editorsMap, documentName, context.member.id);
     }
   },
   extensions: [
@@ -75,15 +76,16 @@ const { injectWebSocket, upgradeWebSocket } = createNodeWebSocket({
 });
 
 hocusApp.get(
-  "/",
-  authMiddleware({ required: true }),
+  "/:organizationId",
+  authMiddleware(),
   upgradeWebSocket((c) => {
     const user = c.get("user");
+    const member = c.get("member");
 
     return {
       onOpen(_evt, ws) {
         // @ts-expect-error Request type mismatch
-        hocuspocus.handleConnection(ws.raw, c.req.raw, { user });
+        hocuspocus.handleConnection(ws.raw, c.req.raw, { user, member });
       },
     };
   })

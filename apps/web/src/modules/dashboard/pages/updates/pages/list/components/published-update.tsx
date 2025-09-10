@@ -15,7 +15,12 @@ import type React from "react";
 interface PublishedUpdateProps {
   order: number;
   title: string;
-  editors: Array<{ user: { id: string; name: string; image: string | null } }>;
+  editors: Array<{
+    role: "creator" | "editor";
+    createdAt: string;
+    updatedAt: string;
+    member: { user: { id: string; name: string; image: string | null } };
+  }>;
   publishedAt: string | null;
   organizationSlug: string;
   organizationId: string;

@@ -103,17 +103,22 @@ const UpdateEntryMeta: React.FC<
 };
 
 interface UpdateEntryEditorsProps {
-  editors: { user: { id: string; name: string; image: string | null } }[];
+  editors: {
+    role: "creator" | "editor";
+    createdAt: string;
+    updatedAt: string;
+    member: { user: { id: string; name: string; image: string | null } };
+  }[];
 }
 
 const UpdateEntryEditors: React.FC<UpdateEntryEditorsProps> = ({ editors }) => {
-  const creator = editors[0].user;
-  const otherEditors = editors.slice(1);
+  const creator = editors.find((editor) => editor.role === "creator");
+  const otherEditors = editors.filter((editor) => editor.role === "editor");
 
   return (
     <Tooltip.Root>
       <div className="flex items-center gap-1">
-        <Text.Root weight="medium">{creator?.name}</Text.Root>
+        <Text.Root weight="medium">{creator?.member.user.name}</Text.Root>
         {otherEditors.length > 0 && (
           <Tooltip.Trigger>
             <Text.Root
@@ -129,7 +134,7 @@ const UpdateEntryEditors: React.FC<UpdateEntryEditorsProps> = ({ editors }) => {
       </div>
       <Tooltip.Content>
         <Tooltip.Title>
-          {otherEditors.map((editor) => editor.user.name).join(", ")}
+          {otherEditors.map((editor) => editor.member.user.name).join(", ")}
         </Tooltip.Title>
       </Tooltip.Content>
     </Tooltip.Root>
