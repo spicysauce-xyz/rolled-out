@@ -1,5 +1,5 @@
 import { Database, schema } from "@services/db";
-import { and, count, desc, eq, sql } from "drizzle-orm";
+import { count, desc, eq, sql } from "drizzle-orm";
 import _ from "lodash";
 import { err, ok, ResultAsync } from "neverthrow";
 
@@ -32,29 +32,19 @@ export const PostsRepository = {
     });
   },
 
-  deletePost: (id: string, organizationId: string) => {
+  deletePost: (id: string) => {
     return ResultAsync.fromPromise(
-      Database.delete(schema.post)
-        .where(
-          and(
-            eq(schema.post.id, id),
-            eq(schema.post.organizationId, organizationId)
-          )
-        )
-        .returning(),
+      Database.delete(schema.post).where(eq(schema.post.id, id)).returning(),
       (error) => new Error("Failed to delete post", { cause: error })
     ).andThen(([post]) => {
       return ok(post);
     });
   },
 
-  findPostById: (id: string, organizationId: string) => {
+  findPostById: (id: string) => {
     return ResultAsync.fromPromise(
       Database.query.post.findFirst({
-        where: and(
-          eq(schema.post.id, id),
-          eq(schema.post.organizationId, organizationId)
-        ),
+        where: eq(schema.post.id, id),
         with: {
           editors: {
             columns: {
@@ -172,7 +162,7 @@ export const PostsRepository = {
     );
   },
 
-  publishPost: (id: string, organizationId: string) => {
+  publishPost: (id: string) => {
     return ResultAsync.fromPromise(
       Database.update(schema.post)
         .set({
@@ -180,12 +170,7 @@ export const PostsRepository = {
           publishedAt: new Date(),
           scheduledAt: null,
         })
-        .where(
-          and(
-            eq(schema.post.id, id),
-            eq(schema.post.organizationId, organizationId)
-          )
-        )
+        .where(eq(schema.post.id, id))
         .returning(),
       (error) => new Error("Failed to publish post", { cause: error })
     ).andThen(([post]) => {
@@ -197,19 +182,14 @@ export const PostsRepository = {
     });
   },
 
-  unpublishPost: (id: string, organizationId: string) => {
+  unpublishPost: (id: string) => {
     return ResultAsync.fromPromise(
       Database.update(schema.post)
         .set({
           status: "draft",
           publishedAt: null,
         })
-        .where(
-          and(
-            eq(schema.post.id, id),
-            eq(schema.post.organizationId, organizationId)
-          )
-        )
+        .where(eq(schema.post.id, id))
         .returning(),
       (error) => new Error("Failed to unpublish post", { cause: error })
     ).andThen(([post]) => {
@@ -221,19 +201,14 @@ export const PostsRepository = {
     });
   },
 
-  schedulePost: (id: string, organizationId: string, scheduledAt: Date) => {
+  schedulePost: (id: string, scheduledAt: Date) => {
     return ResultAsync.fromPromise(
       Database.update(schema.post)
         .set({
           status: "scheduled",
           scheduledAt,
         })
-        .where(
-          and(
-            eq(schema.post.id, id),
-            eq(schema.post.organizationId, organizationId)
-          )
-        )
+        .where(eq(schema.post.id, id))
         .returning(),
       (error) => new Error("Failed to schedule post", { cause: error })
     ).andThen(([post]) => {
@@ -245,19 +220,14 @@ export const PostsRepository = {
     });
   },
 
-  unschedulePost: (id: string, organizationId: string) => {
+  unschedulePost: (id: string) => {
     return ResultAsync.fromPromise(
       Database.update(schema.post)
         .set({
           status: "draft",
           scheduledAt: null,
         })
-        .where(
-          and(
-            eq(schema.post.id, id),
-            eq(schema.post.organizationId, organizationId)
-          )
-        )
+        .where(eq(schema.post.id, id))
         .returning(),
       (error) => new Error("Failed to unschedule post", { cause: error })
     ).andThen(([post]) => {

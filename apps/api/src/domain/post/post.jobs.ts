@@ -1,19 +1,24 @@
+import type { Member, Post } from "@services/db";
 import type { Job } from "@services/queue";
 import { differenceInMilliseconds } from "date-fns";
 
+type SchedulePostPublishJobsPayload = {
+  post: Post & {
+    scheduledAt: Date;
+  };
+  member: Member;
+};
+
 export class SchedulePostPublishJobs
-  implements Job<{ postId: string; organizationId: string }>
+  implements Job<SchedulePostPublishJobsPayload>
 {
   static readonly prefix = "publish";
   name = "publish-scheduled-post";
   queue = "post" as const;
 
   constructor(
-    private readonly post: {
-      id: string;
-      organizationId: string;
-      scheduledAt: Date;
-    }
+    private readonly post: SchedulePostPublishJobsPayload["post"],
+    private readonly member: SchedulePostPublishJobsPayload["member"]
   ) {}
 
   get id() {
@@ -21,7 +26,7 @@ export class SchedulePostPublishJobs
   }
 
   get payload() {
-    return { postId: this.post.id, organizationId: this.post.organizationId };
+    return { post: this.post, member: this.member };
   }
 
   get delay() {

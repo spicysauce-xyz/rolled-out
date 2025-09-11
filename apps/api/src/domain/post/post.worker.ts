@@ -8,15 +8,13 @@ import { PostService } from "./post.service";
 const handlePostPublishJob = async (
   job: BullJob<SchedulePostPublishJobs["payload"]>
 ) => {
-  const { postId, organizationId } = job.data;
-
   const result = await PostService.publishPostById(
-    { organizationId },
-    postId
+    job.data.member,
+    job.data.post.id
   ).andThrough((post) =>
     Emitter.emitAsync(
       ScheduledPostPublishedEvent.eventName,
-      new ScheduledPostPublishedEvent(post, organizationId)
+      new ScheduledPostPublishedEvent(post, job.data.member.organizationId)
     )
   );
 

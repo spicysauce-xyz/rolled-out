@@ -1,13 +1,13 @@
-import type { Member, schema } from "@services/db";
+import type { Member } from "@services/db";
 import { Policy } from "@services/policy";
 import { Queue } from "@services/queue";
-import { errAsync, okAsync, ResultAsync } from "neverthrow";
+import { okAsync, ResultAsync } from "neverthrow";
 import { SchedulePostPublishJobs } from "./post.jobs";
 import { PostsRepository } from "./post.repository";
 import { applyTitleToDocumentState, isPostScheduled } from "./post.utils";
 
 export const PostService = {
-  createPost: (member: typeof schema.member.$inferSelect) => {
+  createPost(member: Member) {
     const postData = {
       title: "Untitled Update",
       organizationId: member.organizationId,
@@ -16,9 +16,7 @@ export const PostService = {
     const ability = Policy.defineAbilityForMember(member);
 
     return ability
-      .can("create", "post", postData, {
-        notAllowedErrorMessage: "You are not allowed to create a draft.",
-      })
+      .can("create", "post", postData)
       .asyncAndThen(() => PostsRepository.getPostsCount(member.organizationId))
       .andThen((count) =>
         PostsRepository.createPost({
@@ -28,109 +26,110 @@ export const PostService = {
       );
   },
 
-  deletePostById: (member: Member, id: string) => {
+  deletePostById(member: Member, id: string) {
     const ability = Policy.defineAbilityForMember(member);
 
-    return PostsRepository.findPostById(id, member.organizationId)
-      .andThrough((post) =>
-        ability.can("delete", "post", post, {
-          notAllowedErrorMessage: "You are not allowed to delete this post.",
-        })
-      )
+    return PostsRepository.findPostById(id)
+      .andThrough((post) => ability.can("delete", "post", post))
       .andThrough((post) => {
         if (isPostScheduled(post)) {
-          return Queue.remove(new SchedulePostPublishJobs(post));
+          return Queue.remove(new SchedulePostPublishJobs(post, member));
         }
 
         return okAsync(post);
       })
-      .andThen(() => PostsRepository.deletePost(id, member.organizationId));
+      .andThen((post) => PostsRepository.deletePost(post.id));
   },
 
-  findPostById: (member: { organizationId: string }, id: string) => {
-    return PostsRepository.findPostById(id, member.organizationId);
-  },
+  findPostById(member: Member, id: string) {
+    const ability = Policy.defineAbilityForMember(member);
 
-  findPostsByOrganization: (member: { organizationId: string }) => {
-    return PostsRepository.findPostsByOrganization(member.organizationId);
-  },
-
-  publishPostById: (member: { organizationId: string }, id: string) => {
-    return PostsRepository.findPostById(id, member.organizationId)
-      .andThrough((post) => {
-        if (isPostScheduled(post)) {
-          return Queue.remove(new SchedulePostPublishJobs(post));
-        }
-
-        return okAsync(post);
-      })
-      .andThen(() => PostsRepository.publishPost(id, member.organizationId));
-  },
-
-  unpublishPostById: (member: { organizationId: string }, id: string) => {
-    return PostsRepository.findPostById(id, member.organizationId).andThen(
-      () => {
-        return PostsRepository.unpublishPost(id, member.organizationId);
-      }
+    return PostsRepository.findPostById(id).andThrough((post) =>
+      ability.can("read", "post", post)
     );
   },
 
-  schedulePostById: (
-    member: { organizationId: string },
-    id: string,
-    scheduledAt: Date
-  ) => {
-    return PostsRepository.findPostById(id, member.organizationId)
+  findPostsByOrganization(member: Member) {
+    return PostsRepository.findPostsByOrganization(member.organizationId);
+  },
+
+  publishPostById(member: Member, id: string) {
+    const ability = Policy.defineAbilityForMember(member);
+
+    return PostsRepository.findPostById(id)
+      .andThrough((post) => ability.can("publish", "post", post))
       .andThrough((post) => {
         if (isPostScheduled(post)) {
-          return Queue.remove(new SchedulePostPublishJobs(post));
+          return Queue.remove(new SchedulePostPublishJobs(post, member));
         }
 
         return okAsync(post);
       })
-      .andThen(() => {
-        return PostsRepository.schedulePost(
-          id,
-          member.organizationId,
-          scheduledAt
-        );
-      })
-      .andThrough((post) => {
-        if (isPostScheduled(post)) {
-          return Queue.add(new SchedulePostPublishJobs(post));
-        }
-
-        return errAsync(new Error("Post is not scheduled"));
-      });
+      .andThen((post) => PostsRepository.publishPost(post.id));
   },
 
-  unschedulePostById: (member: { organizationId: string }, id: string) => {
-    return PostsRepository.findPostById(id, member.organizationId)
+  unpublishPostById(member: Member, id: string) {
+    const ability = Policy.defineAbilityForMember(member);
+
+    return PostsRepository.findPostById(id)
+      .andThrough((post) => ability.can("unpublish", "post", post))
+      .andThen((post) => PostsRepository.unpublishPost(post.id));
+  },
+
+  schedulePostById(member: Member, id: string, scheduledAt: Date) {
+    const ability = Policy.defineAbilityForMember(member);
+
+    return PostsRepository.findPostById(id)
+      .andThrough((post) => ability.can("schedule", "post", post))
       .andThrough((post) => {
         if (isPostScheduled(post)) {
-          return Queue.remove(new SchedulePostPublishJobs(post));
+          return Queue.remove(new SchedulePostPublishJobs(post, member));
         }
 
         return okAsync(post);
       })
-      .andThen(() => {
-        return PostsRepository.unschedulePost(id, member.organizationId);
+      .andThen((post) => PostsRepository.schedulePost(post.id, scheduledAt))
+      .andThrough((post) => {
+        if (isPostScheduled(post)) {
+          return Queue.add(new SchedulePostPublishJobs(post, member));
+        }
+
+        return okAsync(post);
       });
   },
 
-  duplicatePostById: (member: { organizationId: string }, id: string) => {
+  unschedulePostById(member: Member, id: string) {
+    const ability = Policy.defineAbilityForMember(member);
+
+    return PostsRepository.findPostById(id)
+      .andThrough((post) => ability.can("unschedule", "post", post))
+      .andThrough((post) => {
+        if (isPostScheduled(post)) {
+          return Queue.remove(new SchedulePostPublishJobs(post, member));
+        }
+
+        return okAsync(post);
+      })
+      .andThen((post) => PostsRepository.unschedulePost(post.id));
+  },
+
+  duplicatePostById(member: Member, id: string) {
+    const ability = Policy.defineAbilityForMember(member);
+
     return ResultAsync.combine([
-      PostsRepository.findPostById(id, member.organizationId),
+      PostsRepository.findPostById(id),
       PostsRepository.getPostsCount(member.organizationId),
-    ]).andThen(([post, count]) => {
-      const title = `Copy of ${post.title}`;
+    ])
+      .andThrough(([post]) => ability.can("duplicate", "post", post))
+      .andThen(([post, count]) => {
+        const title = `Copy of ${post.title}`;
 
-      return PostsRepository.createPost({
-        byteContent: applyTitleToDocumentState(post.byteContent, title),
-        title,
-        order: count + 1,
-        organizationId: member.organizationId,
+        return PostsRepository.createPost({
+          byteContent: applyTitleToDocumentState(post.byteContent, title),
+          title,
+          order: count + 1,
+          organizationId: member.organizationId,
+        });
       });
-    });
   },
 };
