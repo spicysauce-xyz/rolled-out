@@ -16,7 +16,6 @@ export interface Job<
 > {
   id: string;
   name: string;
-  queue: QueueName;
   payload: T;
   delay?: number;
 }
@@ -34,18 +33,18 @@ const QUEUE_MAP: Record<QueueName, BullQueue> = {
 };
 
 export const Queue = {
-  add(job: Job) {
+  add(queue: QueueName, job: Job) {
     return ResultAsync.fromPromise(
-      QUEUE_MAP[job.queue].add(job.name, job.payload, {
+      QUEUE_MAP[queue].add(job.name, job.payload, {
         jobId: job.id,
         delay: job.delay ?? 0,
       }),
       (error) => new Error("Failed to add job to queue", { cause: error })
     );
   },
-  remove(job: Job) {
+  remove(queue: QueueName, id: Job["id"]) {
     return ResultAsync.fromPromise(
-      QUEUE_MAP[job.queue].remove(job.id),
+      QUEUE_MAP[queue].remove(id),
       (error) => new Error("Failed to remove job from queue", { cause: error })
     );
   },
@@ -53,11 +52,11 @@ export const Queue = {
 
 export const createQueueWorker = (
   name: string,
-  handlers: Record<string, (job: BullJob) => Promise<unknown>>
+  handlers: Record<string, (job: BullJob) => ResultAsync<unknown, Error>>
 ) => {
   new Worker(
     name,
-    (job) => {
+    async (job) => {
       if (!job.id) {
         return Promise.reject(new Error("Job id is required"));
       }
@@ -69,7 +68,13 @@ export const createQueueWorker = (
         return Promise.reject(new Error(`No handler found for job ${job.id}`));
       }
 
-      return handler(job);
+      const result = await handler(job);
+
+      if (result.isErr()) {
+        return Promise.reject(result.error);
+      }
+
+      return result.value;
     },
     {
       connection,

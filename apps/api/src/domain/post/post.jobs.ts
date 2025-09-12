@@ -13,25 +13,25 @@ export class SchedulePostPublishJobs
   implements Job<SchedulePostPublishJobsPayload>
 {
   static readonly prefix = "publish";
+  static readonly queue = "post" as const;
+
+  static id(post: SchedulePostPublishJobsPayload["post"]) {
+    return `${SchedulePostPublishJobs.prefix}:${post.id}`;
+  }
+
+  id: string;
+  payload: SchedulePostPublishJobsPayload;
+  delay: number;
   name = "publish-scheduled-post";
-  queue = "post" as const;
 
   constructor(
-    private readonly post: SchedulePostPublishJobsPayload["post"],
-    private readonly member: SchedulePostPublishJobsPayload["member"]
-  ) {}
-
-  get id() {
-    return `${SchedulePostPublishJobs.prefix}:${this.post.id}`;
-  }
-
-  get payload() {
-    return { post: this.post, member: this.member };
-  }
-
-  get delay() {
-    return Math.max(
-      differenceInMilliseconds(this.post.scheduledAt, new Date()),
+    post: SchedulePostPublishJobsPayload["post"],
+    member: SchedulePostPublishJobsPayload["member"]
+  ) {
+    this.id = SchedulePostPublishJobs.id(post);
+    this.payload = { post, member };
+    this.delay = Math.max(
+      differenceInMilliseconds(post.scheduledAt, new Date()),
       0
     );
   }

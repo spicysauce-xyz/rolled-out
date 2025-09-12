@@ -5,10 +5,10 @@ import { ScheduledPostPublishedEvent } from "./post.events";
 import { SchedulePostPublishJobs } from "./post.jobs";
 import { PostService } from "./post.service";
 
-const handlePostPublishJob = async (
+const handlePostPublishJob = (
   job: BullJob<SchedulePostPublishJobs["payload"]>
 ) => {
-  const result = await PostService.publishPostById(
+  return PostService.publishPostById(
     job.data.member,
     job.data.post.id
   ).andThrough((post) =>
@@ -17,10 +17,6 @@ const handlePostPublishJob = async (
       new ScheduledPostPublishedEvent(post, job.data.member.organizationId)
     )
   );
-
-  if (result.isErr()) {
-    throw result.error;
-  }
 };
 
 const registerPostWorker = () => {

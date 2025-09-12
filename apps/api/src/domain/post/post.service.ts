@@ -33,7 +33,10 @@ export const PostService = {
       .andThrough((post) => ability.can("delete", "post", post))
       .andThrough((post) => {
         if (isPostScheduled(post)) {
-          return Queue.remove(new SchedulePostPublishJobs(post, member));
+          return Queue.remove(
+            SchedulePostPublishJobs.queue,
+            SchedulePostPublishJobs.id(post)
+          );
         }
 
         return okAsync(post);
@@ -60,7 +63,10 @@ export const PostService = {
       .andThrough((post) => ability.can("publish", "post", post))
       .andThrough((post) => {
         if (isPostScheduled(post)) {
-          return Queue.remove(new SchedulePostPublishJobs(post, member));
+          return Queue.remove(
+            SchedulePostPublishJobs.queue,
+            SchedulePostPublishJobs.id(post)
+          );
         }
 
         return okAsync(post);
@@ -83,7 +89,10 @@ export const PostService = {
       .andThrough((post) => ability.can("schedule", "post", post))
       .andThrough((post) => {
         if (isPostScheduled(post)) {
-          return Queue.remove(new SchedulePostPublishJobs(post, member));
+          return Queue.remove(
+            SchedulePostPublishJobs.queue,
+            SchedulePostPublishJobs.id(post)
+          );
         }
 
         return okAsync(post);
@@ -91,7 +100,10 @@ export const PostService = {
       .andThen((post) => PostsRepository.schedulePost(post.id, scheduledAt))
       .andThrough((post) => {
         if (isPostScheduled(post)) {
-          return Queue.add(new SchedulePostPublishJobs(post, member));
+          return Queue.add(
+            SchedulePostPublishJobs.queue,
+            new SchedulePostPublishJobs(post, member)
+          );
         }
 
         return okAsync(post);
@@ -105,7 +117,10 @@ export const PostService = {
       .andThrough((post) => ability.can("unschedule", "post", post))
       .andThrough((post) => {
         if (isPostScheduled(post)) {
-          return Queue.remove(new SchedulePostPublishJobs(post, member));
+          return Queue.remove(
+            SchedulePostPublishJobs.queue,
+            SchedulePostPublishJobs.id(post)
+          );
         }
 
         return okAsync(post);
