@@ -1,7 +1,7 @@
 import { relations } from "drizzle-orm";
 import { pgTable, text, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
+import { member } from "./member.model";
 import { organization } from "./organization.model";
-import { user } from "./user.model";
 
 export const invitation = pgTable("invitation", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -10,7 +10,7 @@ export const invitation = pgTable("invitation", {
     .references(() => organization.id, { onDelete: "cascade" }),
   inviterId: uuid("inviter_id")
     .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
+    .references(() => member.id, { onDelete: "cascade" }),
 
   email: text("email").notNull(),
   role: varchar("role", { enum: ["member", "admin", "owner"] })
@@ -28,8 +28,8 @@ export const invitationRelations = relations(invitation, ({ one }) => ({
     fields: [invitation.organizationId],
     references: [organization.id],
   }),
-  inviter: one(user, {
+  inviter: one(member, {
     fields: [invitation.inviterId],
-    references: [user.id],
+    references: [member.id],
   }),
 }));

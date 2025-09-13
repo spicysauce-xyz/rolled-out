@@ -53,7 +53,15 @@ export const PostService = {
   },
 
   findPostsByOrganization(member: Member) {
-    return PostsRepository.findPostsByOrganization(member.organizationId);
+    const ability = Policy.defineAbilityForMember(member);
+
+    return PostsRepository.findPostsByOrganization(member.organizationId).map(
+      (posts) => {
+        return posts.filter((post) => {
+          return ability.can("read", "post", post).isOk();
+        });
+      }
+    );
   },
 
   publishPostById(member: Member, id: string) {

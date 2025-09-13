@@ -1,6 +1,6 @@
 import { Database, schema } from "@services/db";
 import { eq } from "drizzle-orm";
-import { ResultAsync } from "neverthrow";
+import { err, ok, ResultAsync } from "neverthrow";
 
 export const OrganizationRepository = {
   getOrganizationById: (id: string) => {
@@ -9,7 +9,12 @@ export const OrganizationRepository = {
         where: eq(schema.organization.id, id),
       }),
       () => new Error("Failed to get organization by id")
-    ).map((organization) => organization);
+    ).andThen((organization) => {
+      if (!organization) {
+        return err(new Error("Organization not found"));
+      }
+      return ok(organization);
+    });
   },
   getOrganizationBySlug: (slug: string) => {
     return ResultAsync.fromPromise(
@@ -17,7 +22,12 @@ export const OrganizationRepository = {
         where: eq(schema.organization.slug, slug),
       }),
       () => new Error("Failed to get organization by slug")
-    ).map((organization) => organization);
+    ).andThen((organization) => {
+      if (!organization) {
+        return err(new Error("Organization not found"));
+      }
+      return ok(organization);
+    });
   },
   createOrganization: (data: typeof schema.organization.$inferInsert) => {
     return ResultAsync.fromPromise(

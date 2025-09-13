@@ -1,13 +1,18 @@
 import { Database, schema } from "@services/db";
 import { eq } from "drizzle-orm";
-import { ResultAsync } from "neverthrow";
+import { errAsync, okAsync, ResultAsync } from "neverthrow";
 
 export const MemberRepository = {
   findMemberById: (id: string) => {
     return ResultAsync.fromPromise(
       Database.query.member.findFirst({ where: eq(schema.member.id, id) }),
       () => new Error("Failed to find member")
-    );
+    ).andThen((member) => {
+      if (!member) {
+        return errAsync(new Error("Member not found"));
+      }
+      return okAsync(member);
+    });
   },
   findMembersByOrganizationId: (organizationId: string) => {
     return ResultAsync.fromPromise(
@@ -37,7 +42,7 @@ export const MemberRepository = {
   },
   createMember: (data: typeof schema.member.$inferInsert) => {
     return ResultAsync.fromPromise(
-      Database.insert(schema.member).values(data),
+      Database.insert(schema.member).values(data).returning(),
       () => new Error("Failed to create member")
     );
   },
@@ -47,8 +52,11 @@ export const MemberRepository = {
         .where(eq(schema.member.id, id))
         .returning(),
       () => new Error("Failed to delete member")
-    ).map(([member]) => {
-      return member;
+    ).andThen((member) => {
+      if (!member) {
+        return errAsync(new Error("Member not found"));
+      }
+      return okAsync(member);
     });
   },
   updateMemberById: (
@@ -64,8 +72,11 @@ export const MemberRepository = {
         .where(eq(schema.member.id, id))
         .returning(),
       () => new Error("Failed to update member")
-    ).map(([member]) => {
-      return member;
+    ).andThen((member) => {
+      if (!member) {
+        return errAsync(new Error("Member not found"));
+      }
+      return okAsync(member);
     });
   },
 };

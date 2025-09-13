@@ -1,4 +1,5 @@
 import type { AuthMiddleware } from "@api/middleware/auth";
+import { organizationMiddleware } from "@api/middleware/organization";
 import { Emitter } from "@services/events";
 import { validator } from "@services/validator";
 import { notOk, ok } from "@utils/network";
@@ -42,16 +43,18 @@ export const OrganizationsRouter = new Hono<{ Variables: Variables }>()
         );
     }
   )
-  .get("/:organizationId", (c) => {
+  .get("/:organizationId", organizationMiddleware(), (c) => {
     const id = c.req.param("organizationId");
+    const member = c.get("member");
 
-    return OrganizationService.getOrganizationById(id).match(
+    return OrganizationService.getOrganizationById(member, id).match(
       (organization) => ok(c, organization),
       (error) => notOk(c, { message: error.message }, 500)
     );
   })
   .put(
     "/:organizationId",
+    organizationMiddleware(),
     validator(
       "json",
       z.object({
@@ -63,8 +66,9 @@ export const OrganizationsRouter = new Hono<{ Variables: Variables }>()
     (c) => {
       const id = c.req.param("organizationId");
       const data = c.req.valid("json");
+      const member = c.get("member");
 
-      return OrganizationService.updateOrganization(id, data).match(
+      return OrganizationService.updateOrganization(member, id, data).match(
         (organization) => ok(c, organization),
         (error) => notOk(c, { message: error.message }, 500)
       );

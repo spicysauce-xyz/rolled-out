@@ -1,11 +1,10 @@
-import { Database, schema } from "@services/db";
-import { eq } from "drizzle-orm";
+import type { Member } from "@services/db";
 import { ResultAsync } from "neverthrow";
 import { NotificationRepository } from "./notification.repository";
 
 export const NotificationService = {
-  getNotificationsForMember: (
-    member: { id: string },
+  getNotifications: (
+    member: Member,
     { limit, offset }: { limit: number; offset: number }
   ) => {
     return NotificationRepository.getNotificationsForMember(member, {
@@ -14,18 +13,7 @@ export const NotificationService = {
     });
   },
 
-  getAllOrganizationMembers: (organizationId: string) => {
-    return ResultAsync.fromPromise(
-      Database.query.member.findMany({
-        where: eq(schema.member.organizationId, organizationId),
-        columns: {
-          id: true,
-        },
-      }),
-      () => new Error("Failed to get all organization members")
-    );
-  },
-  getNotificationsStatusForMember: (member: { id: string }) => {
+  getNotificationsStatus: (member: Member) => {
     return NotificationRepository.getLastReadAtForMember(member)
       .andThen((lastReadAt) => {
         return ResultAsync.combine([
@@ -42,7 +30,8 @@ export const NotificationService = {
         lastReadAt: unreadCount.lastReadAt,
       }));
   },
-  markNotificationsAsReadForMember: (member: { id: string }) => {
+
+  markNotificationsAsRead: (member: Member) => {
     return NotificationRepository.markNotificationsAsReadForMember(member);
   },
 };

@@ -100,6 +100,7 @@ export const PostsRepository = {
       Database.query.post.findMany({
         columns: {
           id: true,
+          organizationId: true,
           title: true,
           status: true,
           order: true,

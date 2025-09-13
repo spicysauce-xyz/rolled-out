@@ -1,15 +1,16 @@
 import { auth } from "@services/auth";
+import type { User } from "@services/db";
 import { notOk } from "@utils/network";
 import { createMiddleware } from "hono/factory";
 
 export type AuthMiddleware<R extends boolean> = {
   Variables: R extends true
     ? {
-        user: typeof auth.$Infer.Session.user;
+        user: User;
         session: typeof auth.$Infer.Session.session;
       }
     : {
-        user: typeof auth.$Infer.Session.user | null;
+        user: User | null;
         session: typeof auth.$Infer.Session.session | null;
       };
 };
@@ -36,7 +37,7 @@ export const authMiddleware = <R extends boolean = true>(
       return next();
     }
 
-    c.set("user", session.user);
+    c.set("user", session.user as AuthMiddleware<R>["Variables"]["user"]);
     c.set("session", session.session);
     return next();
   });

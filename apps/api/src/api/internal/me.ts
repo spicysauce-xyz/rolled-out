@@ -11,7 +11,7 @@ export const MeRouter = new Hono<{ Variables: Variables }>()
   .get("/organizations", (c) => {
     const user = c.get("user");
 
-    return UserService.findOrganizations(user.id).match(
+    return UserService.findOrganizations(user).match(
       (organizations) => ok(c, organizations),
       (error) => notOk(c, { message: error.message }, 500)
     );
@@ -20,7 +20,7 @@ export const MeRouter = new Hono<{ Variables: Variables }>()
     const user = c.get("user");
     const organizationId = c.req.param("organizationId");
 
-    return UserService.leaveOrganization(user.id, organizationId).match(
+    return UserService.leaveOrganization(user, organizationId).match(
       (organization) => ok(c, organization),
       (error) => notOk(c, { message: error.message }, 500)
     );
@@ -28,7 +28,7 @@ export const MeRouter = new Hono<{ Variables: Variables }>()
   .get("/invitations", (c) => {
     const user = c.get("user");
 
-    return UserService.findPendingInvitations(user.email).match(
+    return UserService.findPendingInvitations(user).match(
       (invitations) => ok(c, invitations),
       (error) => notOk(c, { message: error.message }, 500)
     );
@@ -37,7 +37,7 @@ export const MeRouter = new Hono<{ Variables: Variables }>()
     const user = c.get("user");
     const invitationId = c.req.param("invitationId");
 
-    return UserService.acceptInvitation(user.email, invitationId)
+    return UserService.acceptInvitation(user, invitationId)
       .andThrough((invitation) =>
         Emitter.emitAsync(
           UserAcceptedInvitationEvent.eventName,
@@ -57,7 +57,7 @@ export const MeRouter = new Hono<{ Variables: Variables }>()
     const user = c.get("user");
     const invitationId = c.req.param("invitationId");
 
-    return UserService.rejectInvitation(user.email, invitationId).match(
+    return UserService.rejectInvitation(user, invitationId).match(
       (invitation) => ok(c, invitation),
       (error) => notOk(c, { message: error.message }, 500)
     );

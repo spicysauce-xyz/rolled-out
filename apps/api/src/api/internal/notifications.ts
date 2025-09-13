@@ -24,7 +24,7 @@ export const NotificationsRouter = new Hono<{ Variables: Variables }>()
       const member = c.get("member");
       const { limit, offset } = c.req.valid("query");
 
-      return NotificationService.getNotificationsForMember(member, {
+      return NotificationService.getNotifications(member, {
         limit,
         offset,
       }).match(
@@ -36,7 +36,7 @@ export const NotificationsRouter = new Hono<{ Variables: Variables }>()
   .get("/status", (c) => {
     const member = c.get("member");
 
-    return NotificationService.getNotificationsStatusForMember(member).match(
+    return NotificationService.getNotificationsStatus(member).match(
       (status) => ok(c, status),
       (error) => notOk(c, { message: error.message }, 500)
     );
@@ -44,7 +44,7 @@ export const NotificationsRouter = new Hono<{ Variables: Variables }>()
   .put("/status", (c) => {
     const member = c.get("member");
 
-    return NotificationService.markNotificationsAsReadForMember(member).match(
+    return NotificationService.markNotificationsAsRead(member).match(
       () => ok(c, undefined),
       (error) => notOk(c, { message: error.message }, 500)
     );

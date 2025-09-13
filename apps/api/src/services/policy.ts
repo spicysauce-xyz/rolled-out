@@ -1,5 +1,6 @@
+import type { Organization } from "better-auth/plugins/organization";
 import { err, ok, type Result } from "neverthrow";
-import type { Editor, Member, Post } from "./db";
+import type { Editor, Invitation, Member, Post } from "./db";
 
 type AnyEntity = Record<string | number | symbol, unknown> | undefined;
 
@@ -48,6 +49,16 @@ class Builder<T extends [string, string, AnyEntity]> {
   }
 }
 
+type ReadOrganizationPolicy = [
+  "read",
+  "organization",
+  Pick<Organization, "id">,
+];
+type UpdateOrganizationPolicy = [
+  "update",
+  "organization",
+  Pick<Organization, "id">,
+];
 type ReadPostPolicy = ["read", "post", Pick<Post, "organizationId">];
 type CreatePostPolicy = ["create", "post", Pick<Post, "organizationId">];
 type PublishPostPolicy = [
@@ -86,8 +97,36 @@ type DeletePostPolicy = [
   },
 ];
 type DuplicatePostPolicy = ["duplicate", "post", Pick<Post, "organizationId">];
+type ReadMemberPolicy = ["read", "member", Pick<Member, "organizationId">];
+type DeleteMemberPolicy = [
+  "delete",
+  "member",
+  Pick<Member, "id" | "organizationId" | "role">,
+];
+type UpdateMemberPolicy = [
+  "update",
+  "member",
+  Pick<Member, "id" | "organizationId" | "role">,
+];
+type ReadInvitationPolicy = [
+  "read",
+  "invitation",
+  Pick<Invitation, "organizationId">,
+];
+type CreateInvitationPolicy = [
+  "create",
+  "invitation",
+  Pick<Invitation, "organizationId" | "role">,
+];
+type DeleteInvitationPolicy = [
+  "delete",
+  "invitation",
+  Pick<Invitation, "id" | "organizationId" | "inviterId">,
+];
 
 type Policies =
+  | ReadOrganizationPolicy
+  | UpdateOrganizationPolicy
   | ReadPostPolicy
   | CreatePostPolicy
   | PublishPostPolicy
@@ -95,12 +134,26 @@ type Policies =
   | SchedulePostPolicy
   | UnschedulePostPolicy
   | DeletePostPolicy
-  | DuplicatePostPolicy;
+  | DuplicatePostPolicy
+  | ReadMemberPolicy
+  | DeleteMemberPolicy
+  | UpdateMemberPolicy
+  | ReadInvitationPolicy
+  | CreateInvitationPolicy
+  | DeleteInvitationPolicy;
 
 export const Policy = {
   defineAbilityForMember: (member: Member) => {
     const builder = new Builder<Policies>();
 
+    builder.can(
+      "read",
+      "organization",
+      (entity) => entity.id === member.organizationId
+    );
+    builder.can("update", "organization", (entity) => {
+      return entity.id === member.organizationId && member.role === "owner";
+    });
     builder.can(
       "read",
       "post",
@@ -111,61 +164,162 @@ export const Policy = {
       "post",
       (entity) => entity.organizationId === member.organizationId
     );
-    builder.can(
-      "publish",
-      "post",
-      (entity) =>
-        entity.organizationId === member.organizationId &&
-        entity.editors.some(
-          (editor) =>
-            editor.member.id === member.id && editor.role === "creator"
-        )
-    );
-    builder.can(
-      "unpublish",
-      "post",
-      (entity) =>
-        entity.organizationId === member.organizationId &&
-        entity.editors.some(
-          (editor) =>
-            editor.member.id === member.id && editor.role === "creator"
-        )
-    );
-    builder.can(
-      "schedule",
-      "post",
-      (entity) =>
-        entity.organizationId === member.organizationId &&
-        entity.editors.some(
-          (editor) =>
-            editor.member.id === member.id && editor.role === "creator"
-        )
-    );
-    builder.can(
-      "unschedule",
-      "post",
-      (entity) =>
-        entity.organizationId === member.organizationId &&
-        entity.editors.some(
-          (editor) =>
-            editor.member.id === member.id && editor.role === "creator"
-        )
-    );
+    builder.can("publish", "post", (entity) => {
+      if (entity.organizationId !== member.organizationId) {
+        return false;
+      }
+
+      if (["admin", "owner"].includes(member.role)) {
+        return true;
+      }
+
+      return entity.editors.some(
+        (editor) => editor.member.id === member.id && editor.role === "creator"
+      );
+    });
+    builder.can("unpublish", "post", (entity) => {
+      if (entity.organizationId !== member.organizationId) {
+        return false;
+      }
+
+      if (["admin", "owner"].includes(member.role)) {
+        return true;
+      }
+
+      return entity.editors.some(
+        (editor) => editor.member.id === member.id && editor.role === "creator"
+      );
+    });
+    builder.can("schedule", "post", (entity) => {
+      if (entity.organizationId !== member.organizationId) {
+        return false;
+      }
+
+      if (["admin", "owner"].includes(member.role)) {
+        return true;
+      }
+
+      return entity.editors.some(
+        (editor) => editor.member.id === member.id && editor.role === "creator"
+      );
+    });
+    builder.can("unschedule", "post", (entity) => {
+      if (entity.organizationId !== member.organizationId) {
+        return false;
+      }
+
+      if (["admin", "owner"].includes(member.role)) {
+        return true;
+      }
+
+      return entity.editors.some(
+        (editor) => editor.member.id === member.id && editor.role === "creator"
+      );
+    });
     builder.can(
       "duplicate",
       "post",
       (entity) => entity.organizationId === member.organizationId
     );
+    builder.can("delete", "post", (entity) => {
+      if (entity.organizationId !== member.organizationId) {
+        return false;
+      }
+
+      if (["admin", "owner"].includes(member.role)) {
+        return true;
+      }
+
+      return entity.editors.some(
+        (editor) => editor.member.id === member.id && editor.role === "creator"
+      );
+    });
+
     builder.can(
-      "delete",
-      "post",
-      (entity) =>
-        entity.organizationId === member.organizationId &&
-        entity.editors.some(
-          (editor) =>
-            editor.member.id === member.id && editor.role === "creator"
-        )
+      "read",
+      "member",
+      (entity) => entity.organizationId === member.organizationId
     );
+    builder.can("delete", "member", (entity) => {
+      if (entity.id === member.id) {
+        return false;
+      }
+
+      if (entity.organizationId !== member.organizationId) {
+        return false;
+      }
+
+      if (member.role === "owner") {
+        return true;
+      }
+
+      if (member.role === "admin") {
+        return entity.role === "member" || entity.role === "admin";
+      }
+
+      return false;
+    });
+    builder.can("update", "member", (entity) => {
+      if (entity.id === member.id) {
+        return false;
+      }
+
+      if (entity.organizationId !== member.organizationId) {
+        return false;
+      }
+
+      if (member.role === "owner") {
+        return true;
+      }
+
+      if (member.role === "admin") {
+        return entity.role === "member" || entity.role === "admin";
+      }
+
+      return false;
+    });
+
+    builder.can(
+      "read",
+      "invitation",
+      (entity) => entity.organizationId === member.organizationId
+    );
+    builder.can("create", "invitation", (entity) => {
+      if (entity.organizationId !== member.organizationId) {
+        return false;
+      }
+
+      if (
+        member.role === "owner" &&
+        ["owner", "admin", "member"].includes(entity.role)
+      ) {
+        return true;
+      }
+
+      if (
+        member.role === "admin" &&
+        ["admin", "member"].includes(entity.role)
+      ) {
+        return true;
+      }
+
+      return false;
+    });
+    builder.can("delete", "invitation", (entity) => {
+      if (entity.organizationId !== member.organizationId) {
+        return false;
+      }
+
+      if (member.role === "owner") {
+        return true;
+      }
+
+      if (member.role === "admin") {
+        return entity.inviterId === member.id;
+      }
+
+      return false;
+    });
 
     return builder.build();
   },

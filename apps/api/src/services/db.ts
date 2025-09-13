@@ -29,3 +29,6 @@ export type MemberInsert = typeof schema.member.$inferInsert;
 
 export type User = typeof schema.user.$inferSelect;
 export type UserInsert = typeof schema.user.$inferInsert;
+
+export type Invitation = typeof schema.invitation.$inferSelect;
+export type InvitationInsert = typeof schema.invitation.$inferInsert;

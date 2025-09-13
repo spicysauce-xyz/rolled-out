@@ -64,7 +64,14 @@ export const UserRepository = {
           inviter: {
             columns: {
               id: true,
-              name: true,
+            },
+            with: {
+              user: {
+                columns: {
+                  id: true,
+                  name: true,
+                },
+              },
             },
           },
           organization: {

@@ -16,6 +16,7 @@ export const InvitationsRouter = new Hono<{ Variables: Variables }>()
     const member = c.get("member");
 
     return InvitationService.findInvitationsByOrganizationId(
+      member,
       member.organizationId
     ).match(
       (invitations) => ok(c, invitations),
@@ -24,18 +25,24 @@ export const InvitationsRouter = new Hono<{ Variables: Variables }>()
   })
   .post(
     "/",
-    validator("json", z.object({ email: z.string(), role: z.string() })),
+    validator(
+      "json",
+      z.object({
+        email: z.string(),
+        role: z.enum(["member", "admin", "owner"]),
+      })
+    ),
     (c) => {
       const member = c.get("member");
       const user = c.get("user");
       const organization = c.get("organization");
       const data = c.req.valid("json");
 
-      return InvitationService.createInvitation({
+      return InvitationService.createInvitation(member, {
         email: data.email,
         role: data.role,
         organizationId: member.organizationId,
-        inviterId: member.userId,
+        inviterId: member.id,
       })
         .andThrough(() =>
           Email.sendMemberInviteEmail({
@@ -53,9 +60,10 @@ export const InvitationsRouter = new Hono<{ Variables: Variables }>()
     }
   )
   .delete("/:invitationId", (c) => {
-    return InvitationService.deleteInvitation(
-      c.req.param("invitationId")
-    ).match(
+    const member = c.get("member");
+    const id = c.req.param("invitationId");
+
+    return InvitationService.deleteInvitation(member, id).match(
       (invitation) => ok(c, invitation),
       (error) => notOk(c, { message: error.message }, 500)
     );

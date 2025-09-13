@@ -15,17 +15,19 @@ export const MembersRouter = new Hono<{ Variables: Variables }>()
     const member = c.get("member");
 
     return MemberService.findMembersByOrganizationId(
+      member,
       member.organizationId
     ).match(
-      (members) => ok(c, members),
+      (data) => ok(c, data),
       (error) => notOk(c, { message: error.message }, 500)
     );
   })
   .delete("/:id", (c) => {
     const id = c.req.param("id");
+    const member = c.get("member");
 
-    return MemberService.deleteMemberById(id).match(
-      (member) => ok(c, member),
+    return MemberService.deleteMemberById(member, id).match(
+      (data) => ok(c, data),
       (error) => notOk(c, { message: error.message }, 500)
     );
   })
@@ -35,9 +37,10 @@ export const MembersRouter = new Hono<{ Variables: Variables }>()
     (c) => {
       const id = c.req.param("id");
       const body = c.req.valid("json");
+      const member = c.get("member");
 
-      return MemberService.updateMemberById(id, body).match(
-        (member) => ok(c, member),
+      return MemberService.updateMemberById(member, id, body).match(
+        (data) => ok(c, data),
         (error) => notOk(c, { message: error.message }, 500)
       );
     }

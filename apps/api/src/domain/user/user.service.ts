@@ -1,19 +1,20 @@
+import type { User } from "@services/db";
 import { UserRepository } from "./user.repository";
 
 export const UserService = {
-  findOrganizations: (userId: string) => {
-    return UserRepository.findOrganizations(userId);
+  findOrganizations: (user: User) => {
+    return UserRepository.findOrganizations(user.id);
   },
-  leaveOrganization: (userId: string, organizationId: string) => {
-    return UserRepository.leaveOrganization(userId, organizationId);
+  leaveOrganization: (user: User, organizationId: string) => {
+    return UserRepository.leaveOrganization(user.id, organizationId);
   },
-  findPendingInvitations: (email: string) => {
-    return UserRepository.findPendingInvitations(email);
+  findPendingInvitations: (user: User) => {
+    return UserRepository.findPendingInvitations(user.email);
   },
-  acceptInvitation: (email: string, invitationId: string) => {
-    return UserRepository.acceptInvitationById(email, invitationId);
+  acceptInvitation: (user: User, invitationId: string) => {
+    return UserRepository.acceptInvitationById(user.email, invitationId);
   },
-  rejectInvitation: (email: string, invitationId: string) => {
-    return UserRepository.rejectInvitationById(email, invitationId);
+  rejectInvitation: (user: User, invitationId: string) => {
+    return UserRepository.rejectInvitationById(user.email, invitationId);
   },
 };

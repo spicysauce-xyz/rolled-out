@@ -3,13 +3,12 @@ import { ScheduledPostPublishedEvent } from "@domain/post";
 import { Emitter } from "@services/events";
 import { ResultAsync } from "neverthrow";
 import { NotificationRepository } from "./notification.repository";
-import { NotificationService } from "./notification.service";
 
 const registerNotificationSubscriptions = () => {
   Emitter.on<OrganizationCreatedEvent>(
     OrganizationCreatedEvent.eventName,
     (payload) => {
-      return NotificationService.getAllOrganizationMembers(
+      return NotificationRepository.getAllOrganizationMembers(
         payload.organization.id
       ).andThen((members) => {
         return ResultAsync.combine(
@@ -28,7 +27,7 @@ const registerNotificationSubscriptions = () => {
   Emitter.on<ScheduledPostPublishedEvent>(
     ScheduledPostPublishedEvent.eventName,
     (payload) => {
-      return NotificationService.getAllOrganizationMembers(
+      return NotificationRepository.getAllOrganizationMembers(
         payload.organizationId
       ).andThen((members) => {
         return ResultAsync.combine(

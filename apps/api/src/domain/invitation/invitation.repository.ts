@@ -1,8 +1,22 @@
-import { Database, schema } from "@services/db";
+import { Database, type InvitationInsert, schema } from "@services/db";
 import { and, eq, gte } from "drizzle-orm";
-import { ResultAsync } from "neverthrow";
+import { err, ok, ResultAsync } from "neverthrow";
 
 export const InvitationRepository = {
+  findInvitationById: (id: string) => {
+    return ResultAsync.fromPromise(
+      Database.query.invitation.findFirst({
+        where: eq(schema.invitation.id, id),
+      }),
+      () => new Error("Failed to find invitation")
+    ).andThen((invitation) => {
+      if (!invitation) {
+        return err(new Error("Invitation not found"));
+      }
+
+      return ok(invitation);
+    });
+  },
   findInvitationsByOrganizationId: (organizationId: string) => {
     return ResultAsync.fromPromise(
       Database.query.invitation.findMany({
@@ -13,6 +27,7 @@ export const InvitationRepository = {
         ),
         columns: {
           id: true,
+          organizationId: true,
           email: true,
           role: true,
           expiresAt: true,
@@ -20,16 +35,33 @@ export const InvitationRepository = {
           updatedAt: true,
           status: true,
         },
+        with: {
+          inviter: {
+            columns: {
+              id: true,
+              role: true,
+            },
+            with: {
+              user: {
+                columns: {
+                  id: true,
+                  name: true,
+                  email: true,
+                },
+              },
+            },
+          },
+        },
       }),
       () => new Error("Failed to fetch invitations")
     );
   },
-  createInvitation: (data: {
-    email: string;
-    role: string;
-    organizationId: string;
-    inviterId: string;
-  }) => {
+  createInvitation: (
+    data: Pick<
+      InvitationInsert,
+      "email" | "organizationId" | "inviterId" | "role"
+    >
+  ) => {
     return ResultAsync.fromPromise(
       Database.insert(schema.invitation)
         .values({
@@ -52,8 +84,12 @@ export const InvitationRepository = {
         .where(eq(schema.invitation.id, id))
         .returning(),
       () => new Error("Failed to delete invitation")
-    ).map(([invitation]) => {
-      return invitation;
+    ).andThen(([invitation]) => {
+      if (!invitation) {
+        return err(new Error("Invitation not found"));
+      }
+
+      return ok(invitation);
     });
   },
 };

@@ -87,4 +87,13 @@ export const NotificationRepository = {
       () => new Error("Failed to mark notifications as read for member")
     );
   },
+
+  getAllOrganizationMembers: (organizationId: string) => {
+    return ResultAsync.fromPromise(
+      Database.query.member.findMany({
+        where: eq(schema.member.organizationId, organizationId),
+      }),
+      () => new Error("Failed to get all organization members")
+    );
+  },
 };
