@@ -5,6 +5,7 @@ import { Hono } from "hono";
 import { AssetsRouter } from "./assets";
 import { AuthRouter } from "./auth";
 import { BoardsRouter } from "./boards";
+import { IntegrationsRouter } from "./integrations";
 import { InvitationsRouter } from "./invitations";
 import { MeRouter } from "./me";
 import { MembersRouter } from "./members";
@@ -20,7 +21,8 @@ const organizationNestedRouter = new Hono()
   .route("/posts", PostsRouter)
   .route("/tags", TagsRouter)
   .route("/boards", BoardsRouter)
-  .route("/notifications", NotificationsRouter);
+  .route("/notifications", NotificationsRouter)
+  .route("/integrations", IntegrationsRouter);
 
 export const internalApi = new Hono()
   .use(corsMiddleware())

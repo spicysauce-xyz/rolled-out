@@ -3,11 +3,13 @@ import { Transition } from "@components/transition";
 import { updatesQuery } from "@lib/api/queries";
 import { Breadcrumbs } from "@modules/dashboard/components/breadcrumbs";
 import { useCreateUpdateMutation } from "@modules/dashboard/hooks/use-create-update-mutation";
-import { Button, Text, Toaster } from "@mono/ui";
+import { Button, DropdownMenu, Text, Toaster } from "@mono/ui";
+import { useDisclosure } from "@mono/ui/hooks";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-
+import { ChevronDownIcon, FileIcon, GithubIcon } from "lucide-react";
 import { match, P } from "ts-pattern";
+import { StartWithGithubDialog } from "./components/start-with-github-dialog";
 import { Empty } from "./empty";
 import { List } from "./list";
 import { Skeleton } from "./skeleton";
@@ -28,11 +30,14 @@ function RouteComponent() {
   const { mutateAsync: createPost, isPending: isCreatingPost } =
     useCreateUpdateMutation();
 
-  const handleCreatePost = () => {
+  const handleCreateBlankDraft = () => {
+    const toastId = Toaster.loading("Creating draft...");
+
     createPost(organization.id, {
       onSuccess: (post) => {
         Toaster.success("Draft created", {
           description: "A new draft has been created and saved.",
+          id: toastId,
         });
         navigate({
           to: "/$organizationSlug/updates/$id",
@@ -43,18 +48,39 @@ function RouteComponent() {
         Toaster.error("Couldn't create draft", {
           description:
             "Something went wrong while creating your draft. Please try again.",
+          id: toastId,
         });
       },
     });
   };
 
+  const startWithGithubDialog = useDisclosure();
+
   return (
     <Page.Wrapper>
       <Page.Header className="justify-between py-2">
         <Breadcrumbs pages={["Updates"]} />
-        <Button.Root isLoading={isCreatingPost} onClick={handleCreatePost}>
-          New Draft
-        </Button.Root>
+        <DropdownMenu.Root>
+          <DropdownMenu.Trigger render={<Button.Root variant="secondary" />}>
+            New Draft
+            <Button.Icon render={<ChevronDownIcon />} />
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Content>
+            <DropdownMenu.Item onClick={handleCreateBlankDraft}>
+              <DropdownMenu.ItemIcon render={<FileIcon />} />
+              Blank
+            </DropdownMenu.Item>
+            <DropdownMenu.Item onClick={startWithGithubDialog.open}>
+              <DropdownMenu.ItemIcon render={<GithubIcon />} />
+              From Github
+            </DropdownMenu.Item>
+          </DropdownMenu.Content>
+        </DropdownMenu.Root>
+        <StartWithGithubDialog
+          onOpenChange={startWithGithubDialog.setOpen}
+          open={startWithGithubDialog.isOpen}
+          organizationId={organization.id}
+        />
       </Page.Header>
       <Page.Content className="flex-1 gap-0 p-0">
         <Transition.Root>

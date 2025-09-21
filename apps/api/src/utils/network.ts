@@ -9,6 +9,15 @@ export const ok = <T>(
   return c.json({ success: true, data }, status);
 };
 
+export const okWithMeta = <T, U>(
+  c: Context,
+  data: T,
+  meta: U,
+  status: ContentfulStatusCode = 200
+) => {
+  return c.json({ success: true, data, meta }, status);
+};
+
 export type ApiErrorPayload = { message: string; code?: string };
 
 export const notOk = <T extends ApiErrorPayload>(
