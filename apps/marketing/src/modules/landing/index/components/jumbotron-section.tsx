@@ -78,7 +78,17 @@ export const JumbotronSection = () => {
               <span className="text-lg">Get Started</span>
               <Button.Icon render={<ArrowRightIcon />} />
             </Button.Root>
-            <Button.Root size="lg" variant="tertiary">
+            <Button.Root
+              render={
+                <a
+                  href="https://changelog.rolledout.xyz/"
+                  rel="noopener"
+                  target="_blank"
+                />
+              }
+              size="lg"
+              variant="tertiary"
+            >
               <span className="text-lg">Live Demo</span>
             </Button.Root>
           </div>
