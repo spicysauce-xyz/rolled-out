@@ -2,6 +2,8 @@ export * from "./account.model";
 export * from "./board.model";
 export * from "./board-tag.model";
 export * from "./editor.model";
+export * from "./github-integration.model";
+export * from "./github-repository.model";
 export * from "./invitation.model";
 export * from "./member.model";
 export * from "./notification.model";

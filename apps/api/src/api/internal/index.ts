@@ -12,7 +12,9 @@ import { MembersRouter } from "./members";
 import { NotificationsRouter } from "./notifications";
 import { OrganizationsRouter } from "./organizations";
 import { PostsRouter } from "./posts";
+import { RepositoryRouter } from "./repository";
 import { TagsRouter } from "./tags";
+import { WebhooksRouter } from "./webhooks";
 
 const organizationNestedRouter = new Hono()
   .use(organizationMiddleware())
@@ -22,11 +24,13 @@ const organizationNestedRouter = new Hono()
   .route("/tags", TagsRouter)
   .route("/boards", BoardsRouter)
   .route("/notifications", NotificationsRouter)
+  .route("/repositories", RepositoryRouter)
   .route("/integrations", IntegrationsRouter);
 
 export const internalApi = new Hono()
   .use(corsMiddleware())
   .route("/auth", AuthRouter)
+  .route("/webhooks", WebhooksRouter)
   .use(authMiddleware())
   .route("/me", MeRouter)
   .route("/assets", AssetsRouter)

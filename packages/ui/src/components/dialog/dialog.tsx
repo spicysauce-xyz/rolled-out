@@ -33,9 +33,9 @@ const DialogContent = ({
         // transition
         "transition-all",
         // open
-        "data-[starting-style]:-mt-4 data-[starting-style]:opacity-0",
+        "data-[starting-style]:translate-y-[calc(-50%-1rem)] data-[starting-style]:opacity-0",
         // closed
-        "data-[ending-style]:-mt-4 data-[ending-style]:opacity-0",
+        "data-[ending-style]:translate-y-[calc(-50%-1rem)] data-[ending-style]:opacity-0",
         className
       )}
       {...props}

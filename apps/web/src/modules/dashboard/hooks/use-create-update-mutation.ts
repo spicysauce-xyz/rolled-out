@@ -6,12 +6,17 @@ export const useCreateUpdateMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (organizationId: string) => {
+    mutationFn: async (data: {
+      organizationId: string;
+      githubIds?: string[];
+    }) => {
       const response = await api.organizations[":organizationId"].posts.$post({
         param: {
-          organizationId,
+          organizationId: data.organizationId,
         },
-        json: {},
+        json: {
+          githubIds: data.githubIds,
+        },
       });
 
       const json = await response.json();
@@ -22,7 +27,7 @@ export const useCreateUpdateMutation = () => {
 
       return json.data;
     },
-    onSettled: async (_, __, organizationId) => {
+    onSettled: async (_, __, { organizationId }) => {
       await queryClient.invalidateQueries(updatesQuery(organizationId));
     },
   });

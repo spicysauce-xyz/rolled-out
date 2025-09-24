@@ -11,7 +11,6 @@ import {
   BellIcon,
   ExternalLinkIcon,
   FileTextIcon,
-  GithubIcon,
   HelpCircleIcon,
   LineChartIcon,
   ListIcon,
@@ -126,18 +125,6 @@ export const DashboardNavigation: React.FC<DashboardNavigationProps> = ({
                     activeOptions={{ exact: true }}
                     params={{ organizationSlug: organization.slug }}
                     to="/$organizationSlug/settings/details"
-                  />
-                }
-              />
-              {"85766599"}
-              <Sidebar.Button
-                icon={GithubIcon}
-                label="Connect Github"
-                render={
-                  <a
-                    href="https://github.com/apps/dev-rolled-out/installations/new"
-                    rel="noopener"
-                    target="_blank"
                   />
                 }
               />

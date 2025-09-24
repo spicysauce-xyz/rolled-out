@@ -3,7 +3,12 @@ import type { authClient } from "@lib/auth";
 import { UserMenu } from "@modules/shared/components/user-menu";
 import { Button } from "@mono/ui";
 import { Link } from "@tanstack/react-router";
-import { ArrowLeftIcon, NotebookTextIcon, Users2 } from "lucide-react";
+import {
+  ArrowLeftIcon,
+  BlocksIcon,
+  NotebookTextIcon,
+  Users2,
+} from "lucide-react";
 
 interface SettingsNavigationProps {
   organization: {
@@ -56,6 +61,17 @@ export const SettingsNavigation: React.FC<SettingsNavigationProps> = ({
                 className="data-[status=active]:border data-[status=active]:border-neutral-100 data-[status=active]:bg-white data-[status=active]:[&>svg]:stroke-neutral-900"
                 params={{ organizationSlug: organization.slug }}
                 to="/$organizationSlug/settings/members"
+              />
+            }
+          />
+          <Sidebar.Button
+            icon={BlocksIcon}
+            label="Integrations"
+            render={
+              <Link
+                className="data-[status=active]:border data-[status=active]:border-neutral-100 data-[status=active]:bg-white data-[status=active]:[&>svg]:stroke-neutral-900"
+                params={{ organizationSlug: organization.slug }}
+                to="/$organizationSlug/settings/integrations"
               />
             }
           />

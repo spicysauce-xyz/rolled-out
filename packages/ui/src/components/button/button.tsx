@@ -174,7 +174,14 @@ export const buttonVariants = tv({
       color: "danger",
       variant: "secondary",
       class: {
-        root: "hidden",
+        root: [
+          // hover
+          "hover:border-neutral-300 hover:bg-neutral-100 hover:text-danger-500",
+        ],
+        icon: [
+          // hover
+          "group-hover/button-root:stroke-danger-500",
+        ],
       },
     },
     {
