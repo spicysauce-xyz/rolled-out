@@ -14,6 +14,7 @@ export const configSchema = z.object({
   S3_ASSETS_BASE: z.string(),
   OPENAI_API_KEY: z.string(),
   JWT_SECRET: z.string(),
+  GITHUB_APP_NAME: z.string(),
   GITHUB_APP_ID: z.string(),
   GITHUB_CLIENT_ID: z.string(),
   GITHUB_PRIVATE_KEY: z.string(),
@@ -58,6 +59,7 @@ const formatConfig = () => {
       secret: config.JWT_SECRET,
     },
     github: {
+      appName: config.GITHUB_APP_NAME,
       appId: config.GITHUB_APP_ID,
       clientId: config.GITHUB_CLIENT_ID,
       privateKey: config.GITHUB_PRIVATE_KEY,

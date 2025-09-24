@@ -1,3 +1,4 @@
+import { Config } from "@services/config";
 import type { Member } from "@services/db";
 import { Github } from "@services/github";
 import { JWT } from "@services/jwt";
@@ -22,7 +23,7 @@ export const IntegrationService = {
       organizationId: member.organizationId,
     }).map(
       (token) =>
-        `https://github.com/apps/dev-rolled-out/installations/new?state=${token}`
+        `https://github.com/apps/${Config.github.appName}/installations/new?state=${token}`
     );
   },
   addGithubRepositoriesToIntegration: (
