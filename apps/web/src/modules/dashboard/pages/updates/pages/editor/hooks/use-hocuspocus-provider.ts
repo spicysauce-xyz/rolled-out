@@ -78,7 +78,7 @@ export const useHocuspocusProvider = (
       if (yContent.length) {
         const titleNode = (yContent.get(0) as Y.XmlElement).get(0);
 
-        setTitle(titleNode.toString() ?? "");
+        setTitle(titleNode?.toString() ?? "");
       }
     };
 

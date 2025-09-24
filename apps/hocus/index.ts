@@ -12,7 +12,6 @@ import {
   insertPostTagsByDocumentName,
   updatePostByDocumentName,
   upsertEditorsByDocumentName,
-  // upsertEditorsByDocumentName,
 } from "@utils/db";
 import { getDocumentTags, getDocumentTitle } from "@utils/document";
 import { addUserIdToEditorsMap } from "@utils/map";

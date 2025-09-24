@@ -41,7 +41,7 @@ export const DashboardNavigation: React.FC<DashboardNavigationProps> = ({
     <>
       <Sidebar.Root className="hidden w-64 bg-neutral-50 sm:flex">
         <Sidebar.Header className="flex">
-          <OrganizationSwitch organization={organization} />
+          <OrganizationSwitch />
         </Sidebar.Header>
         <Sidebar.ScrollArea>
           <div className="flex flex-col gap-4">

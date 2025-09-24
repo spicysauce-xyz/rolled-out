@@ -317,3 +317,84 @@ export const notificationsQuery = (organizationId: string, limit: number) =>
       return lastPageItemsLength === limit ? itemsLength : undefined;
     },
   });
+
+export const githubCommitsQuery = (
+  organizationId: string,
+  repositoryId?: string
+) =>
+  infiniteQueryOptions({
+    queryKey: ["github", organizationId, repositoryId] as const,
+    queryFn: async ({ pageParam, queryKey }) => {
+      const response = await api.organizations[":organizationId"].repositories[
+        ":repositoryId"
+      ].commits.$get({
+        param: {
+          organizationId: queryKey[1],
+          repositoryId: queryKey[2] as string,
+        },
+        query: {
+          cursor: pageParam,
+        },
+      });
+
+      const json = await response.json();
+
+      if (!json.success) {
+        throw json.error;
+      }
+
+      return {
+        data: json.data,
+        meta: json.meta,
+      };
+    },
+    initialPageParam: undefined as string | undefined,
+    getNextPageParam: (lastPage) => {
+      return lastPage.meta.cursor;
+    },
+    enabled: !!repositoryId,
+  });
+
+export const repositoriesQuery = (organizationId: string) =>
+  queryOptions({
+    queryKey: ["repositories", organizationId],
+    queryFn: async ({ queryKey }) => {
+      const response = await api.organizations[
+        ":organizationId"
+      ].repositories.$get({
+        param: {
+          organizationId: queryKey[1],
+        },
+      });
+
+      const json = await response.json();
+
+      if (!json.success) {
+        throw json.error;
+      }
+
+      return json.data;
+    },
+  });
+
+export const githubIntegrationQuery = (organizationId: string) =>
+  queryOptions({
+    queryKey: ["github-integration", organizationId],
+    queryFn: async ({ queryKey }) => {
+      const response = await api.organizations[
+        ":organizationId"
+      ].integrations.github.$get({
+        param: {
+          organizationId: queryKey[1],
+        },
+      });
+
+      const json = await response.json();
+
+      if (!json.success) {
+        throw json.error;
+      }
+
+      return json.data;
+    },
+  });

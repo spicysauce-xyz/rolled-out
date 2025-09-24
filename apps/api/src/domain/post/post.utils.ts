@@ -38,6 +38,43 @@ export const applyTitleToDocumentState = (
   return encodeStateAsUpdate(doc);
 };
 
+export const createYJSDocumentFromSchema = (object: {
+  title: string;
+  sections: Array<{
+    title: { text: string; level: "2" | "3" };
+    paragraphs: string[];
+  }>;
+}) => {
+  const doc = new Doc();
+  const fragment = doc.getXmlFragment("default") as XmlElement;
+
+  const titleElement = new XmlElement("title");
+  const titleText = new XmlText(object.title);
+
+  titleElement.setAttribute("level", "1");
+  titleElement.insert(0, [titleText]);
+
+  const sections = object.sections.map((section) => {
+    const sectionTitleElement = new XmlElement("heading");
+    const sectionTitleText = new XmlText(section.title.text);
+    sectionTitleElement.setAttribute("level", section.title.level);
+    sectionTitleElement.insert(0, [sectionTitleText]);
+
+    const paragraphs = section.paragraphs.map((paragraph) => {
+      const sectionParagraphElement = new XmlElement("paragraph");
+      const sectionText = new XmlText(paragraph);
+      sectionParagraphElement.insert(0, [sectionText]);
+      return sectionParagraphElement;
+    });
+
+    return [sectionTitleElement, ...paragraphs];
+  });
+
+  fragment.insert(0, [titleElement, ...sections.flat()]);
+
+  return encodeStateAsUpdate(doc);
+};
+
 export const isPostScheduled = <
   T extends { status: string; scheduledAt: Date | null },
 >(

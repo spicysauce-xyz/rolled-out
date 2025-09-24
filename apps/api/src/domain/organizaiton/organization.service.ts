@@ -1,5 +1,6 @@
 import type { Member, schema } from "@services/db";
 import { Policy } from "@services/policy";
+import { err, ok } from "neverthrow";
 import { OrganizationRepository } from "./organization.repository";
 
 export const OrganizationService = {
@@ -32,11 +33,20 @@ export const OrganizationService = {
       );
   },
   checkSlug: (slug: string) => {
-    return OrganizationRepository.getOrganizationBySlug(slug).map(
-      (organization) => ({
+    return OrganizationRepository.getOrganizationBySlug(slug)
+      .map((organization) => ({
         available: !organization,
         slug,
-      })
-    );
+      }))
+      .orElse((error) => {
+        if (error.message === "Organization not found") {
+          return ok({
+            available: true,
+            slug,
+          });
+        }
+
+        return err(error);
+      });
   },
 };

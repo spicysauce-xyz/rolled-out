@@ -25,6 +25,7 @@ import { Route as dashboardPagesIndexPageRouteImport } from './../modules/dashbo
 import { Route as settingsLayoutRouteImport } from './../modules/settings/layout'
 import { Route as dashboardLayoutRouteImport } from './../modules/dashboard/layout'
 import { Route as settingsPagesMembersPageRouteImport } from './../modules/settings/pages/members/page'
+import { Route as settingsPagesIntegrationsPageRouteImport } from './../modules/settings/pages/integrations/page'
 import { Route as settingsPagesDetailsPageRouteImport } from './../modules/settings/pages/details/page'
 import { Route as settingsPagesSplatPageRouteImport } from './../modules/settings/pages/splat/page'
 import { Route as dashboardPagesContactsPageRouteImport } from './../modules/dashboard/pages/contacts/page'
@@ -116,6 +117,12 @@ const settingsPagesMembersPageRoute =
     path: '/members',
     getParentRoute: () => settingsLayoutRoute,
   } as any)
+const settingsPagesIntegrationsPageRoute =
+  settingsPagesIntegrationsPageRouteImport.update({
+    id: '/integrations',
+    path: '/integrations',
+    getParentRoute: () => settingsLayoutRoute,
+  } as any)
 const settingsPagesDetailsPageRoute =
   settingsPagesDetailsPageRouteImport.update({
     id: '/details',
@@ -179,6 +186,7 @@ export interface FileRoutesByFullPath {
   '/$organizationSlug/contacts': typeof dashboardPagesContactsPageRoute
   '/$organizationSlug/settings/$': typeof settingsPagesSplatPageRoute
   '/$organizationSlug/settings/details': typeof settingsPagesDetailsPageRoute
+  '/$organizationSlug/settings/integrations': typeof settingsPagesIntegrationsPageRoute
   '/$organizationSlug/settings/members': typeof settingsPagesMembersPageRoute
   '/$organizationSlug/updates': typeof dashboardPagesUpdatesPagesListPageRoute
   '/$organizationSlug/boards/$id': typeof dashboardPagesBoardPageRoute
@@ -201,6 +209,7 @@ export interface FileRoutesByTo {
   '/$organizationSlug/contacts': typeof dashboardPagesContactsPageRoute
   '/$organizationSlug/settings/$': typeof settingsPagesSplatPageRoute
   '/$organizationSlug/settings/details': typeof settingsPagesDetailsPageRoute
+  '/$organizationSlug/settings/integrations': typeof settingsPagesIntegrationsPageRoute
   '/$organizationSlug/settings/members': typeof settingsPagesMembersPageRoute
   '/$organizationSlug/updates': typeof dashboardPagesUpdatesPagesListPageRoute
   '/$organizationSlug/boards/$id': typeof dashboardPagesBoardPageRoute
@@ -228,6 +237,7 @@ export interface FileRoutesById {
   '/_authorized/_has-organization/$organizationSlug/_layout/contacts': typeof dashboardPagesContactsPageRoute
   '/_authorized/_has-organization/$organizationSlug/settings/$': typeof settingsPagesSplatPageRoute
   '/_authorized/_has-organization/$organizationSlug/settings/details': typeof settingsPagesDetailsPageRoute
+  '/_authorized/_has-organization/$organizationSlug/settings/integrations': typeof settingsPagesIntegrationsPageRoute
   '/_authorized/_has-organization/$organizationSlug/settings/members': typeof settingsPagesMembersPageRoute
   '/_authorized/_has-organization/$organizationSlug/_layout/updates/': typeof dashboardPagesUpdatesPagesListPageRoute
   '/_authorized/_has-organization/$organizationSlug/_layout/boards/$id': typeof dashboardPagesBoardPageRoute
@@ -252,6 +262,7 @@ export interface FileRouteTypes {
     | '/$organizationSlug/contacts'
     | '/$organizationSlug/settings/$'
     | '/$organizationSlug/settings/details'
+    | '/$organizationSlug/settings/integrations'
     | '/$organizationSlug/settings/members'
     | '/$organizationSlug/updates'
     | '/$organizationSlug/boards/$id'
@@ -274,6 +285,7 @@ export interface FileRouteTypes {
     | '/$organizationSlug/contacts'
     | '/$organizationSlug/settings/$'
     | '/$organizationSlug/settings/details'
+    | '/$organizationSlug/settings/integrations'
     | '/$organizationSlug/settings/members'
     | '/$organizationSlug/updates'
     | '/$organizationSlug/boards/$id'
@@ -300,6 +312,7 @@ export interface FileRouteTypes {
     | '/_authorized/_has-organization/$organizationSlug/_layout/contacts'
     | '/_authorized/_has-organization/$organizationSlug/settings/$'
     | '/_authorized/_has-organization/$organizationSlug/settings/details'
+    | '/_authorized/_has-organization/$organizationSlug/settings/integrations'
     | '/_authorized/_has-organization/$organizationSlug/settings/members'
     | '/_authorized/_has-organization/$organizationSlug/_layout/updates/'
     | '/_authorized/_has-organization/$organizationSlug/_layout/boards/$id'
@@ -425,6 +438,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof settingsPagesMembersPageRouteImport
       parentRoute: typeof settingsLayoutRoute
     }
+    '/_authorized/_has-organization/$organizationSlug/settings/integrations': {
+      id: '/_authorized/_has-organization/$organizationSlug/settings/integrations'
+      path: '/integrations'
+      fullPath: '/$organizationSlug/settings/integrations'
+      preLoaderRoute: typeof settingsPagesIntegrationsPageRouteImport
+      parentRoute: typeof settingsLayoutRoute
+    }
     '/_authorized/_has-organization/$organizationSlug/settings/details': {
       id: '/_authorized/_has-organization/$organizationSlug/settings/details'
       path: '/details'
@@ -511,12 +531,14 @@ const dashboardLayoutRouteWithChildren = dashboardLayoutRoute._addFileChildren(
 interface settingsLayoutRouteChildren {
   settingsPagesSplatPageRoute: typeof settingsPagesSplatPageRoute
   settingsPagesDetailsPageRoute: typeof settingsPagesDetailsPageRoute
+  settingsPagesIntegrationsPageRoute: typeof settingsPagesIntegrationsPageRoute
   settingsPagesMembersPageRoute: typeof settingsPagesMembersPageRoute
 }
 
 const settingsLayoutRouteChildren: settingsLayoutRouteChildren = {
   settingsPagesSplatPageRoute: settingsPagesSplatPageRoute,
   settingsPagesDetailsPageRoute: settingsPagesDetailsPageRoute,
+  settingsPagesIntegrationsPageRoute: settingsPagesIntegrationsPageRoute,
   settingsPagesMembersPageRoute: settingsPagesMembersPageRoute,
 }
 

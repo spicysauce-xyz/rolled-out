@@ -12,6 +12,12 @@ export const configSchema = z.object({
   S3_SECRET_ACCESS_KEY: z.string(),
   S3_BUCKET_NAME: z.string(),
   S3_ASSETS_BASE: z.string(),
+  OPENAI_API_KEY: z.string(),
+  JWT_SECRET: z.string(),
+  GITHUB_APP_ID: z.string(),
+  GITHUB_CLIENT_ID: z.string(),
+  GITHUB_PRIVATE_KEY: z.string(),
+  GITHUB_WEBHOOK_SECRET: z.string(),
 });
 
 const formatConfig = () => {
@@ -44,6 +50,18 @@ const formatConfig = () => {
       secretAccessKey: config.S3_SECRET_ACCESS_KEY,
       bucketName: config.S3_BUCKET_NAME,
       assetsBase: config.S3_ASSETS_BASE,
+    },
+    openai: {
+      apiKey: config.OPENAI_API_KEY,
+    },
+    jwt: {
+      secret: config.JWT_SECRET,
+    },
+    github: {
+      appId: config.GITHUB_APP_ID,
+      clientId: config.GITHUB_CLIENT_ID,
+      privateKey: config.GITHUB_PRIVATE_KEY,
+      webhookSecret: config.GITHUB_WEBHOOK_SECRET,
     },
   };
 };

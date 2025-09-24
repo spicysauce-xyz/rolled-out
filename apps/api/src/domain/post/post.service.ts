@@ -1,13 +1,20 @@
-import type { Member } from "@services/db";
+import { AI } from "@services/ai";
+import { Database, type Member, schema } from "@services/db";
+import { Github } from "@services/github";
 import { Policy } from "@services/policy";
 import { Queue } from "@services/queue";
-import { okAsync, ResultAsync } from "neverthrow";
+import { eq } from "drizzle-orm";
+import { err, ok, okAsync, ResultAsync } from "neverthrow";
 import { SchedulePostPublishJobs } from "./post.jobs";
 import { PostsRepository } from "./post.repository";
-import { applyTitleToDocumentState, isPostScheduled } from "./post.utils";
+import {
+  applyTitleToDocumentState,
+  createYJSDocumentFromSchema,
+  isPostScheduled,
+} from "./post.utils";
 
 export const PostService = {
-  createPost(member: Member) {
+  createBlankPost(member: Member) {
     const postData = {
       title: "Untitled Update",
       organizationId: member.organizationId,
@@ -24,6 +31,56 @@ export const PostService = {
           order: count + 1,
         })
       );
+  },
+
+  createPostFromGithubCommit(member: Member, ids: string[]) {
+    const postData = {
+      title: "Untitled Update",
+      organizationId: member.organizationId,
+    };
+
+    const ability = Policy.defineAbilityForMember(member);
+
+    return ability
+      .can("create", "post", postData)
+      .asyncAndThen(() =>
+        ResultAsync.fromPromise(
+          Database.query.githubIntegration.findFirst({
+            where: eq(
+              schema.githubIntegration.organizationId,
+              member.organizationId
+            ),
+          }),
+          (error) =>
+            new Error("Failed to get github integration", { cause: error })
+        )
+      )
+      .andThen((integration) => {
+        if (!integration) {
+          return err(new Error("GitHub integration not found"));
+        }
+
+        return ok(integration);
+      })
+      .andThen((integration) =>
+        ResultAsync.combine([
+          PostsRepository.getPostsCount(member.organizationId),
+          Github.getCommitsContentByIds(
+            Number(integration.installationId),
+            ids
+          ).andThen((commits) =>
+            AI.generatePostContentFromGithubCommits(commits)
+          ),
+        ])
+      )
+      .andThen(([count, content]) => {
+        return PostsRepository.createPost({
+          ...postData,
+          order: count + 1,
+          byteContent: createYJSDocumentFromSchema(content),
+          title: content.title,
+        });
+      });
   },
 
   deletePostById(member: Member, id: string) {

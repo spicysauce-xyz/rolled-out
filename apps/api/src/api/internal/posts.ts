@@ -23,11 +23,16 @@ export const PostsRouter = new Hono<{ Variables: Variables }>()
 
   .post(
     "/",
-    validator("json", z.object({ title: z.string().optional() })),
+    validator("json", z.object({ githubIds: z.array(z.string()).optional() })),
     (c) => {
       const member = c.get("member");
+      const { githubIds } = c.req.valid("json");
 
-      return PostService.createPost(member)
+      return (
+        githubIds && githubIds.length > 0
+          ? PostService.createPostFromGithubCommit(member, githubIds)
+          : PostService.createBlankPost(member)
+      )
         .andThrough((post) =>
           Emitter.emitAsync(
             PostCreatedEvent.eventName,
