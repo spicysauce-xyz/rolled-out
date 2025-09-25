@@ -27,20 +27,20 @@ const createByteContentFromGithubIds = (
       )
     )
     .andThen((commits) => AI.generatePostContentFromGithubCommits(commits))
-    .map((content) => createYJSDocumentFromSchema(content));
+    .map((content) => ({
+      byteContent: createYJSDocumentFromSchema(content),
+      title: content.title,
+    }));
 };
 
 const deletePendingCommits = (member: Member) => {
-  return GithubIntegrationService.getByMember(member)
-    .andThen((integration) => {
-      if (!integration) {
-        return err(new Error("GitHub integration not found"));
-      }
-      return ok(integration);
-    })
-    .andThen((integration) =>
-      GithubPendingCommitService.deleteByIntegrationId(integration.id)
-    );
+  return GithubIntegrationService.getByMember(member).andThen((integration) => {
+    if (!integration) {
+      return ok([]);
+    }
+
+    return GithubPendingCommitService.deleteByIntegrationId(integration.id);
+  });
 };
 
 export const createPost = (member: Member, githubIds?: string[]) => {
@@ -53,10 +53,11 @@ export const createPost = (member: Member, githubIds?: string[]) => {
   const isFromGithub = githubIds && githubIds.length > 0;
 
   const postDataResult = isFromGithub
-    ? createByteContentFromGithubIds(member, githubIds).map((byteContent) => {
+    ? createByteContentFromGithubIds(member, githubIds).map((data) => {
         const postDataWithByteContent: PostInsert = {
           ...postData,
-          byteContent,
+          byteContent: data.byteContent,
+          title: data.title,
         };
 
         return postDataWithByteContent;

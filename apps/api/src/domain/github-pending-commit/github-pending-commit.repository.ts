@@ -29,9 +29,9 @@ export const GithubPendingCommitRepository = {
   },
   deleteByIntegrationId: (integrationId: string) => {
     return ResultAsync.fromPromise(
-      Database.delete(schema.githubPendingCommit).where(
-        eq(schema.githubPendingCommit.integrationId, integrationId)
-      ),
+      Database.delete(schema.githubPendingCommit)
+        .where(eq(schema.githubPendingCommit.integrationId, integrationId))
+        .returning(),
       () => new Error("Failed to delete pending commits by integration id")
     );
   },
