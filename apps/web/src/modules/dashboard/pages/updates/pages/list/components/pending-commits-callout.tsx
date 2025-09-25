@@ -46,7 +46,7 @@ const Content: React.FC<ContentProps> = ({
 
   return (
     <AnimatePresence>
-      {!isDismissed && (
+      {!isDismissed && pendingCommitsCount > 0 && (
         <motion.div
           animate={{ height: 53 }}
           className="flex-shrink-0 overflow-hidden border-neutral-100 border-b bg-neutral-50"
@@ -130,10 +130,6 @@ export const PendingCommitsCallout: React.FC<PendingCommitsCalloutProps> = ({
       }
     );
   };
-
-  if (pendingCommits.length === 0) {
-    return null;
-  }
 
   return (
     <Content

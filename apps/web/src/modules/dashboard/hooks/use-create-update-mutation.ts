@@ -1,6 +1,7 @@
 import { api } from "@lib/api";
 import {
   githubIntegrationPendingCommitsQuery,
+  updateQuery,
   updatesQuery,
 } from "@lib/api/queries";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -30,7 +31,11 @@ export const useCreateUpdateMutation = () => {
 
       return json.data;
     },
-    onSettled: async (_, __, { organizationId }) => {
+    onSettled: async (data, __, { organizationId }) => {
+      if (data) {
+        await queryClient.prefetchQuery(updateQuery(organizationId, data.id));
+      }
+
       await queryClient.invalidateQueries(updatesQuery(organizationId));
       await queryClient.invalidateQueries(
         githubIntegrationPendingCommitsQuery(organizationId)
