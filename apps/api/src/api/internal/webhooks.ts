@@ -1,6 +1,5 @@
 import { validate } from "@api/middleware/validate";
 import { Application } from "@application";
-import { IntegrationService } from "@domain/integration";
 import { Webhooks } from "@octokit/webhooks";
 import type { InstallationEvent, PushEvent } from "@octokit/webhooks-types";
 import { Config } from "@services/config";
@@ -8,7 +7,6 @@ import type { Member } from "@services/db";
 import { JWT } from "@services/jwt";
 import { notOk, ok } from "@utils/network";
 import { Hono } from "hono";
-import { okAsync } from "neverthrow";
 import { z } from "zod";
 
 const githubWebhooks = new Webhooks({
@@ -30,7 +28,7 @@ export const WebhooksRouter = new Hono()
       const payload = await c.req.json<InstallationEvent>();
 
       if (payload.action === "created") {
-        return IntegrationService.addGithubRepositoriesToIntegration(
+        return Application.addRepositoriesToIntegration(
           payload.installation.id,
           (payload.repositories || []).map((repository) => ({
             id: repository.id,
@@ -44,7 +42,7 @@ export const WebhooksRouter = new Hono()
       }
 
       if (payload.action === "deleted") {
-        return IntegrationService.deleteGithubIntegrationByInstallationId(
+        return Application.deleteGithubIntegration(
           payload.installation.id
         ).match(
           (integration) => ok(c, integration),
@@ -105,21 +103,10 @@ export const WebhooksRouter = new Hono()
         organizationId,
       } as Member;
 
-      IntegrationService.getGithubIntegration(member)
-        .andThrough((integration) => {
-          if (!integration) {
-            return IntegrationService.createGithubIntegration(
-              member,
-              installation_id
-            );
-          }
-
-          return okAsync(integration);
-        })
-        .match(
-          () => c.redirect(Config.client.raw),
-          () => c.redirect(Config.client.raw)
-        );
+      Application.setupGithubIntegration(member, installation_id).match(
+        () => c.redirect(Config.client.raw),
+        () => c.redirect(Config.client.raw)
+      );
 
       return c.redirect(Config.client.raw);
     }

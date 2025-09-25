@@ -1,6 +1,6 @@
 import type { AuthMiddleware } from "@api/middleware/auth";
 import type { OrganizationMiddleware } from "@api/middleware/organization";
-import { IntegrationService } from "@domain/integration";
+import { Application } from "@application";
 import { notOk, ok } from "@utils/network";
 import { Hono } from "hono";
 
@@ -11,7 +11,7 @@ export const IntegrationsRouter = new Hono<{ Variables: Variables }>()
   .get("/github", (c) => {
     const member = c.get("member");
 
-    return IntegrationService.getGithubIntegration(member).match(
+    return Application.getGithubIntegration(member).match(
       (integration) => ok(c, integration ?? null),
       (error) => notOk(c, { message: error.message }, 500)
     );
@@ -19,7 +19,7 @@ export const IntegrationsRouter = new Hono<{ Variables: Variables }>()
   .get("/github/setup-url", (c) => {
     const member = c.get("member");
 
-    return IntegrationService.createGithubSetupUrl(member).match(
+    return Application.createGithubSetupUrl(member).match(
       (link) => ok(c, { link }),
       (error) => notOk(c, { message: error.message }, 500)
     );
@@ -27,8 +27,8 @@ export const IntegrationsRouter = new Hono<{ Variables: Variables }>()
   .get("/github/pending-commits", (c) => {
     const member = c.get("member");
 
-    return IntegrationService.getGithubIntegrationPendingCommit(member).match(
-      (integration) => ok(c, integration),
+    return Application.getIntegrationWithPendingCommits(member).match(
+      (result) => ok(c, result.pendingCommits),
       (error) => notOk(c, { message: error.message }, 500)
     );
   });

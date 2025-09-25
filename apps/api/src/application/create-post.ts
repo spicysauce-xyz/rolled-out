@@ -1,8 +1,8 @@
 import { EditorService } from "@domain/editor";
-import { IntegrationService } from "@domain/integration";
+import { GithubIntegrationService } from "@domain/github-integration";
+import { GithubPendingCommitService } from "@domain/github-pending-commit";
 import { PostService } from "@domain/post";
 import { createYJSDocumentFromSchema } from "@domain/post/post.utils";
-import { RepositoryService } from "@domain/repository";
 import { AI } from "@services/ai";
 import type { Member, PostInsert } from "@services/db";
 import { Github } from "@services/github";
@@ -12,7 +12,7 @@ const createByteContentFromGithubIds = (
   member: Member,
   githubIds: string[]
 ) => {
-  return IntegrationService.getGithubIntegration(member)
+  return GithubIntegrationService.getByMember(member)
     .andThen((integration) => {
       if (!integration) {
         return err(new Error("GitHub integration not found"));
@@ -31,7 +31,7 @@ const createByteContentFromGithubIds = (
 };
 
 const deletePendingCommits = (member: Member) => {
-  return IntegrationService.getGithubIntegration(member)
+  return GithubIntegrationService.getByMember(member)
     .andThen((integration) => {
       if (!integration) {
         return err(new Error("GitHub integration not found"));
@@ -39,7 +39,7 @@ const deletePendingCommits = (member: Member) => {
       return ok(integration);
     })
     .andThen((integration) =>
-      RepositoryService.deletePendingCommitsByIntegrationId(integration.id)
+      GithubPendingCommitService.deleteByIntegrationId(integration.id)
     );
 };
 

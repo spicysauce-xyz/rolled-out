@@ -1,5 +1,8 @@
 import { api } from "@lib/api";
-import { updatesQuery } from "@lib/api/queries";
+import {
+  githubIntegrationPendingCommitsQuery,
+  updatesQuery,
+} from "@lib/api/queries";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const useCreateUpdateMutation = () => {
@@ -29,6 +32,9 @@ export const useCreateUpdateMutation = () => {
     },
     onSettled: async (_, __, { organizationId }) => {
       await queryClient.invalidateQueries(updatesQuery(organizationId));
+      await queryClient.invalidateQueries(
+        githubIntegrationPendingCommitsQuery(organizationId)
+      );
     },
   });
 };

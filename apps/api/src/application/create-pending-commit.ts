@@ -1,5 +1,5 @@
-import { IntegrationService } from "@domain/integration";
-import { RepositoryService } from "@domain/repository";
+import { GithubIntegrationService } from "@domain/github-integration";
+import { GithubPendingCommitService } from "@domain/github-pending-commit";
 import { Github } from "@services/github";
 import { err, ok, okAsync, ResultAsync } from "neverthrow";
 
@@ -9,7 +9,7 @@ export const createPendingCommit = (
   owner: string,
   repo: string
 ) => {
-  return IntegrationService.getGithubIntegrationByInstallationId(installationId)
+  return GithubIntegrationService.getByInstallationId(installationId)
     .andThen((integration) => {
       if (!integration) {
         return err(new Error("GitHub integration not found"));
@@ -31,7 +31,7 @@ export const createPendingCommit = (
     .andThen(([commit, integration]) => {
       const id = "commitId" in commit ? commit.commitId : commit.prId;
 
-      return RepositoryService.createPendingCommit({
+      return GithubPendingCommitService.create({
         commitId,
         integrationId: integration.id,
         objectId: id as string,
