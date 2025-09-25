@@ -2,6 +2,7 @@ import "dotenv/config";
 import { internalApi } from "@api/internal";
 import { throttleDevEnvironment } from "@api/middleware/throttle";
 import { v1Api } from "@api/v1";
+import { webhooksApi } from "@api/webhooks";
 import { registerEvents, registerWorkers } from "@domain";
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
@@ -15,6 +16,7 @@ export const app = new Hono()
   .use(logger())
   .get("/health", (c) => c.json({ status: "ok" }))
   .route("/v1", v1Api)
+  .route("/webhooks", webhooksApi)
   .route("/", internalApi);
 
 serve(

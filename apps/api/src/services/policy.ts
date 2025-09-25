@@ -96,7 +96,6 @@ type DeletePostPolicy = [
     editors: (Pick<Editor, "id" | "role"> & { member: Pick<Member, "id"> })[];
   },
 ];
-type DuplicatePostPolicy = ["duplicate", "post", Pick<Post, "organizationId">];
 type ReadMemberPolicy = ["read", "member", Pick<Member, "organizationId">];
 type DeleteMemberPolicy = [
   "delete",
@@ -134,7 +133,6 @@ type Policies =
   | SchedulePostPolicy
   | UnschedulePostPolicy
   | DeletePostPolicy
-  | DuplicatePostPolicy
   | ReadMemberPolicy
   | DeleteMemberPolicy
   | UpdateMemberPolicy
@@ -216,11 +214,6 @@ export const Policy = {
         (editor) => editor.member.id === member.id && editor.role === "creator"
       );
     });
-    builder.can(
-      "duplicate",
-      "post",
-      (entity) => entity.organizationId === member.organizationId
-    );
     builder.can("delete", "post", (entity) => {
       if (entity.organizationId !== member.organizationId) {
         return false;

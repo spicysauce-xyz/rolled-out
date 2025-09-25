@@ -14,7 +14,6 @@ import { OrganizationsRouter } from "./organizations";
 import { PostsRouter } from "./posts";
 import { RepositoryRouter } from "./repository";
 import { TagsRouter } from "./tags";
-import { WebhooksRouter } from "./webhooks";
 
 const organizationNestedRouter = new Hono()
   .use(organizationMiddleware())
@@ -30,7 +29,6 @@ const organizationNestedRouter = new Hono()
 export const internalApi = new Hono()
   .use(corsMiddleware())
   .route("/auth", AuthRouter)
-  .route("/webhooks", WebhooksRouter)
   .use(authMiddleware())
   .route("/me", MeRouter)
   .route("/assets", AssetsRouter)

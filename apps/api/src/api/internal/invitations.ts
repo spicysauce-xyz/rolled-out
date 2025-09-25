@@ -1,7 +1,7 @@
 import type { AuthMiddleware } from "@api/middleware/auth";
 import type { OrganizationMiddleware } from "@api/middleware/organization";
+import { validate } from "@api/middleware/validate";
 import { Email } from "@email";
-import { validator } from "@services/validator";
 import { notOk, ok } from "@utils/network";
 import { Hono } from "hono";
 import { z } from "zod";
@@ -25,7 +25,7 @@ export const InvitationsRouter = new Hono<{ Variables: Variables }>()
   })
   .post(
     "/",
-    validator(
+    validate(
       "json",
       z.object({
         email: z.string(),

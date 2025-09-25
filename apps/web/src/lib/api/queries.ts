@@ -398,3 +398,25 @@ export const githubIntegrationQuery = (organizationId: string) =>
       return json.data;
     },
   });
+
+export const githubIntegrationPendingCommitsQuery = (organizationId: string) =>
+  queryOptions({
+    queryKey: ["github-integration-pending-commits", organizationId],
+    queryFn: async ({ queryKey }) => {
+      const response = await api.organizations[
+        ":organizationId"
+      ].integrations.github["pending-commits"].$get({
+        param: {
+          organizationId: queryKey[1],
+        },
+      });
+
+      const json = await response.json();
+
+      if (!json.success) {
+        throw json.error;
+      }
+
+      return json.data;
+    },
+  });

@@ -28,7 +28,7 @@ export const handleValidationError = (
   }
 };
 
-export const validator = <
+export const validate = <
   T extends z.ZodTypeAny,
   Target extends keyof ValidationTargets,
 >(

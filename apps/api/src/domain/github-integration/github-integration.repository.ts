@@ -2,10 +2,8 @@ import { Database, schema } from "@services/db";
 import { eq } from "drizzle-orm";
 import { ResultAsync } from "neverthrow";
 
-export const IntegrationRepository = {
-  createGithubIntegration: (
-    data: typeof schema.githubIntegration.$inferInsert
-  ) => {
+export const GithubIntegrationRepository = {
+  create: (data: typeof schema.githubIntegration.$inferInsert) => {
     return ResultAsync.fromPromise(
       Database.insert(schema.githubIntegration)
         .values(data)
@@ -14,18 +12,7 @@ export const IntegrationRepository = {
       () => new Error("Failed to create github integration")
     );
   },
-  createGithubRepository: (
-    data: typeof schema.githubRepository.$inferInsert
-  ) => {
-    return ResultAsync.fromPromise(
-      Database.insert(schema.githubRepository)
-        .values(data)
-        .returning()
-        .onConflictDoNothing(),
-      () => new Error("Failed to create github repository")
-    );
-  },
-  getGithubIntegrationByOrganizationId: (organizationId: string) => {
+  getByOrganizationId: (organizationId: string) => {
     return ResultAsync.fromPromise(
       Database.query.githubIntegration.findFirst({
         where: eq(schema.githubIntegration.organizationId, organizationId),
@@ -33,7 +20,7 @@ export const IntegrationRepository = {
       () => new Error("Failed to get github integration by organization id")
     );
   },
-  getGithubIntegrationByInstallationId: (installationId: number) => {
+  getByInstallationId: (installationId: number) => {
     return ResultAsync.fromPromise(
       Database.query.githubIntegration.findFirst({
         where: eq(
@@ -44,7 +31,7 @@ export const IntegrationRepository = {
       () => new Error("Failed to get github integration by installation id")
     );
   },
-  deleteGithubIntegrationByInstallationId: (installationId: number) => {
+  deleteByInstallationId: (installationId: number) => {
     return ResultAsync.fromPromise(
       Database.delete(schema.githubIntegration)
         .where(

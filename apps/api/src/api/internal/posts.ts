@@ -1,11 +1,10 @@
 import type { AuthMiddleware } from "@api/middleware/auth";
 import type { OrganizationMiddleware } from "@api/middleware/organization";
-import { Emitter } from "@services/events";
-import { validator } from "@services/validator";
+import { validate } from "@api/middleware/validate";
+import { Application } from "@application";
 import { notOk, ok } from "@utils/network";
 import { Hono } from "hono";
 import { z } from "zod";
-import { PostCreatedEvent } from "../../domain/post/post.events";
 import { PostService } from "../../domain/post/post.service";
 
 type Variables = OrganizationMiddleware["Variables"] &
@@ -23,30 +22,19 @@ export const PostsRouter = new Hono<{ Variables: Variables }>()
 
   .post(
     "/",
-    validator("json", z.object({ githubIds: z.array(z.string()).optional() })),
+    validate("json", z.object({ githubIds: z.array(z.string()).optional() })),
     (c) => {
       const member = c.get("member");
       const { githubIds } = c.req.valid("json");
 
-      return (
-        githubIds && githubIds.length > 0
-          ? PostService.createPostFromGithubCommit(member, githubIds)
-          : PostService.createBlankPost(member)
-      )
-        .andThrough((post) =>
-          Emitter.emitAsync(
-            PostCreatedEvent.eventName,
-            new PostCreatedEvent(post, member)
-          )
-        )
-        .match(
-          (post) => ok(c, post),
-          (error) => notOk(c, { message: error.message }, 500)
-        );
+      return Application.createPost(member, githubIds).match(
+        (post) => ok(c, post),
+        (error) => notOk(c, { message: error.message }, 500)
+      );
     }
   )
 
-  .get("/:id", validator("param", z.object({ id: z.string().uuid() })), (c) => {
+  .get("/:id", validate("param", z.object({ id: z.string().uuid() })), (c) => {
     const postId = c.req.param("id");
     const member = c.get("member");
 
@@ -58,7 +46,7 @@ export const PostsRouter = new Hono<{ Variables: Variables }>()
 
   .post(
     "/:id/publish",
-    validator("param", z.object({ id: z.string().uuid() })),
+    validate("param", z.object({ id: z.string().uuid() })),
     (c) => {
       const postId = c.req.param("id");
       const member = c.get("member");
@@ -72,7 +60,7 @@ export const PostsRouter = new Hono<{ Variables: Variables }>()
 
   .post(
     "/:id/unpublish",
-    validator("param", z.object({ id: z.string().uuid() })),
+    validate("param", z.object({ id: z.string().uuid() })),
     (c) => {
       const postId = c.req.param("id");
       const member = c.get("member");
@@ -86,8 +74,8 @@ export const PostsRouter = new Hono<{ Variables: Variables }>()
 
   .put(
     "/:id/schedule",
-    validator("param", z.object({ id: z.string().uuid() })),
-    validator("json", z.object({ scheduledAt: z.string().datetime() })),
+    validate("param", z.object({ id: z.string().uuid() })),
+    validate("json", z.object({ scheduledAt: z.string().datetime() })),
     (c) => {
       const postId = c.req.param("id");
       const member = c.get("member");
@@ -106,7 +94,7 @@ export const PostsRouter = new Hono<{ Variables: Variables }>()
 
   .put(
     "/:id/unschedule",
-    validator("param", z.object({ id: z.string().uuid() })),
+    validate("param", z.object({ id: z.string().uuid() })),
     (c) => {
       const postId = c.req.param("id");
       const member = c.get("member");
@@ -120,28 +108,21 @@ export const PostsRouter = new Hono<{ Variables: Variables }>()
 
   .put(
     "/:id/duplicate",
-    validator("param", z.object({ id: z.string().uuid() })),
+    validate("param", z.object({ id: z.string().uuid() })),
     (c) => {
       const postId = c.req.param("id");
       const member = c.get("member");
 
-      return PostService.duplicatePostById(member, postId)
-        .andThrough((post) =>
-          Emitter.emitAsync(
-            PostCreatedEvent.eventName,
-            new PostCreatedEvent(post, member)
-          )
-        )
-        .match(
-          (post) => ok(c, post),
-          (error) => notOk(c, { message: error.message }, 500)
-        );
+      return Application.duplicatePost(member, postId).match(
+        (post) => ok(c, post),
+        (error) => notOk(c, { message: error.message }, 500)
+      );
     }
   )
 
   .delete(
     "/:id",
-    validator("param", z.object({ id: z.string().uuid() })),
+    validate("param", z.object({ id: z.string().uuid() })),
     (c) => {
       const postId = c.req.param("id");
       const member = c.get("member");

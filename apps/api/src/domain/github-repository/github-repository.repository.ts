@@ -1,22 +1,18 @@
 import { Database, schema } from "@services/db";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { err, ok, ResultAsync } from "neverthrow";
 
-export const RepositoryRepository = {
-  getGithubIntegrationByOrganizationId: (organizationId: string) => {
+export const GithubRepositoryRepository = {
+  create: (data: typeof schema.githubRepository.$inferInsert) => {
     return ResultAsync.fromPromise(
-      Database.query.githubIntegration.findFirst({
-        where: eq(schema.githubIntegration.organizationId, organizationId),
-      }),
-      () => new Error("Failed to get github integration by organization id")
-    ).andThen((integration) => {
-      if (!integration) {
-        return err(new Error("GitHub integration not found"));
-      }
-      return ok(integration);
-    });
+      Database.insert(schema.githubRepository)
+        .values(data)
+        .returning()
+        .onConflictDoNothing(),
+      () => new Error("Failed to create github repository")
+    );
   },
-  getGithubRepositoryById: (repositoryId: string) => {
+  getById: (repositoryId: string) => {
     return ResultAsync.fromPromise(
       Database.query.githubRepository.findFirst({
         where: eq(schema.githubRepository.id, repositoryId),
@@ -29,7 +25,7 @@ export const RepositoryRepository = {
       return ok(repository);
     });
   },
-  getRepositoriesByIntegrationId: (integrationId: string) => {
+  getByIntegrationId: (integrationId: string) => {
     return ResultAsync.fromPromise(
       Database.query.githubRepository.findMany({
         where: eq(schema.githubRepository.integrationId, integrationId),
@@ -43,6 +39,17 @@ export const RepositoryRepository = {
         },
       }),
       () => new Error("Failed to get repositories by integration id")
+    );
+  },
+  getByOwnerAndName: (owner: string, name: string) => {
+    return ResultAsync.fromPromise(
+      Database.query.githubRepository.findFirst({
+        where: and(
+          eq(schema.githubRepository.owner, owner),
+          eq(schema.githubRepository.name, name)
+        ),
+      }),
+      () => new Error("Failed to get repository by owner and name")
     );
   },
 };

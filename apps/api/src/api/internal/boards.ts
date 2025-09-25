@@ -1,7 +1,7 @@
 import type { AuthMiddleware } from "@api/middleware/auth";
 import type { OrganizationMiddleware } from "@api/middleware/organization";
+import { validate } from "@api/middleware/validate";
 import { Emitter } from "@services/events";
-import { validator } from "@services/validator";
 import { notOk, ok } from "@utils/network";
 import { Hono } from "hono";
 import { z } from "zod";
@@ -27,7 +27,7 @@ export const BoardsRouter = new Hono<{ Variables: Variables }>()
 
   .post(
     "/",
-    validator(
+    validate(
       "json",
       z.object({
         name: z.string().trim().min(1),
@@ -54,7 +54,7 @@ export const BoardsRouter = new Hono<{ Variables: Variables }>()
     }
   )
 
-  .get("/:id", validator("param", z.object({ id: z.string().uuid() })), (c) => {
+  .get("/:id", validate("param", z.object({ id: z.string().uuid() })), (c) => {
     const boardId = c.req.param("id");
     const member = c.get("member");
 
@@ -66,8 +66,8 @@ export const BoardsRouter = new Hono<{ Variables: Variables }>()
 
   .put(
     "/:id",
-    validator("param", z.object({ id: z.string().uuid() })),
-    validator(
+    validate("param", z.object({ id: z.string().uuid() })),
+    validate(
       "json",
       z.object({
         name: z.string().optional(),
@@ -97,7 +97,7 @@ export const BoardsRouter = new Hono<{ Variables: Variables }>()
 
   .get(
     "/:id/posts",
-    validator("param", z.object({ id: z.string().uuid() })),
+    validate("param", z.object({ id: z.string().uuid() })),
     (c) => {
       const boardId = c.req.param("id");
       const member = c.get("member");

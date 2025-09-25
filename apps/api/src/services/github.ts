@@ -16,6 +16,108 @@ const createAuthorizedOctokit = (installationId: number) => {
 };
 
 export const Github = {
+  getCommitById(
+    installationId: number,
+    id: string,
+    owner: string,
+    repo: string
+  ) {
+    const octokit = createAuthorizedOctokit(installationId);
+
+    return ResultAsync.fromPromise(
+      octokit.graphql<{
+        repository: {
+          object: {
+            id: string;
+            message: string;
+            committedDate: string;
+            author: {
+              user: {
+                login: string;
+              };
+              avatarUrl: string;
+            };
+            associatedPullRequests: {
+              nodes: {
+                id: string;
+                number: string;
+                title: string;
+                body: string;
+                url: string;
+                mergedAt: string;
+              }[];
+            };
+          };
+        };
+      }>(
+        `query($owner: String!, $repo: String!, $id: GitObjectID!) {
+          repository(owner: $owner, name: $repo) {
+            object(oid: $id) {
+              ... on Commit {
+                id
+                message
+                committedDate
+                author {
+                  user {
+                    login
+                  }
+                  avatarUrl
+                }
+                associatedPullRequests(first: 1) {
+                  nodes {
+                    id
+                    number
+                    title
+                    body
+                    url
+                    mergedAt
+                  }
+                }
+              }
+            }
+          }
+        }`,
+        { owner, repo, id }
+      ),
+      (error) =>
+        new Error("Failed to get commit by id from GitHub", {
+          cause: error,
+        })
+    ).map((response) => {
+      const commit = response?.repository?.object;
+
+      if (!commit) {
+        return null;
+      }
+
+      const isPr = commit.associatedPullRequests.nodes.length > 0;
+
+      if (isPr) {
+        const pr = commit.associatedPullRequests.nodes[0];
+
+        return {
+          prId: pr.id,
+          title: pr.title,
+          description: pr.body,
+          date: commit.committedDate,
+          committer: {
+            login: commit.author.user.login,
+            avatarUrl: commit.author.avatarUrl,
+          },
+        };
+      }
+
+      return {
+        commitId: commit.id,
+        title: commit.message,
+        date: commit.committedDate,
+        committer: {
+          login: commit.author.user.login,
+          avatarUrl: commit.author.avatarUrl,
+        },
+      };
+    });
+  },
   getCommitsFromRepository(
     installationId: number,
     owner: string,
@@ -110,11 +212,8 @@ export const Github = {
           limit: pagination?.limit ?? 25,
         }
       ),
-      (error) => {
-        console.error(error);
-
-        return new Error("Failed to get commits from GitHub", { cause: error });
-      }
+      (error) =>
+        new Error("Failed to get commits from GitHub", { cause: error })
     ).map((response) => {
       const commits = response?.repository?.ref?.target?.history.nodes;
       const paginationInfo =
@@ -246,13 +345,10 @@ export const Github = {
       `,
         { owner, repo }
       ),
-      (error) => {
-        console.error(error);
-
-        return new Error("Failed to get repository base branch from GitHub", {
+      (error) =>
+        new Error("Failed to get repository base branch from GitHub", {
           cause: error,
-        });
-      }
+        })
     ).andThen((response) => {
       return ok(response.repository.defaultBranchRef.name);
     });
