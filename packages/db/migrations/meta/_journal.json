@@ -155,6 +155,13 @@
       "when": 1758726849619,
       "tag": "0021_woozy_captain_cross",
       "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1758806964205,
+      "tag": "0022_spooky_tusk",
+      "breakpoints": true
     }
   ]
 }
