@@ -131,6 +131,10 @@ export const PendingCommitsCallout: React.FC<PendingCommitsCalloutProps> = ({
     );
   };
 
+  if (import.meta.env.SSR) {
+    return null;
+  }
+
   return (
     <Content
       handleCreateDraft={handleCreateDraft}

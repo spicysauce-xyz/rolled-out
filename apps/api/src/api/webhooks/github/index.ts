@@ -1,7 +1,9 @@
 import { validate } from "@api/middleware/validate";
+import { OrganizationService } from "@domain/organizaiton";
 import { Webhooks } from "@octokit/webhooks";
 import type { InstallationEvent, PushEvent } from "@octokit/webhooks-types";
 import { Config } from "@services/config";
+import type { Member } from "@services/db";
 import { JWT } from "@services/jwt";
 import { notOk, ok } from "@utils/network";
 import { Hono } from "hono";
@@ -83,9 +85,25 @@ export const GithubWebhooksRouter = new Hono()
         return notOk(c, { message: "Invalid state" }, 400);
       }
 
-      return handleSetupCompleted(organizationId, installation_id).match(
-        () => c.redirect(Config.client.raw),
-        () => c.redirect(Config.client.raw)
+      const organization = await OrganizationService.getOrganizationById(
+        // this is bad, but ok
+        { organizationId } as Member,
+        organizationId
+      ).unwrapOr(null);
+
+      if (!organization) {
+        return notOk(c, { message: "Organization not found" }, 404);
+      }
+
+      return handleSetupCompleted(organization.id, installation_id).match(
+        () =>
+          c.redirect(
+            `${Config.client.raw}/${organization.slug}/settings/integrations?github_setup_completed=true`
+          ),
+        () =>
+          c.redirect(
+            `${Config.client.raw}/${organization.slug}/settings/integrations?github_setup_completed=false`
+          )
       );
     }
   );
