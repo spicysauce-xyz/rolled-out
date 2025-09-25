@@ -9,6 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { ChevronDownIcon, FileIcon, GithubIcon } from "lucide-react";
 import { match, P } from "ts-pattern";
+import { PendingCommitsCallout } from "./components/pending-commits-callout";
 import { StartWithGithubDialog } from "./components/start-with-github-dialog";
 import { Empty } from "./empty";
 import { List } from "./list";
@@ -118,6 +119,10 @@ function RouteComponent() {
         />
       </Page.Header>
       <Page.Content className="flex-1 gap-0 p-0">
+        <PendingCommitsCallout
+          organizationId={organization.id}
+          organizationSlug={organizationSlug}
+        />
         <Transition.Root>
           {match(postsQuery)
             .with({ isPending: true }, () => (

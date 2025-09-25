@@ -13,7 +13,10 @@ export const MeRouter = new Hono<{ Variables: Variables }>()
 
     return UserService.findOrganizations(user).match(
       (organizations) => ok(c, organizations),
-      (error) => notOk(c, { message: error.message }, 500)
+      (error) => {
+        console.error(error);
+        return notOk(c, { message: error.message }, 500);
+      }
     );
   })
   .put("/organizations/:organizationId/leave", (c) => {

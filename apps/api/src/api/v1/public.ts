@@ -1,4 +1,4 @@
-import { validator } from "@services/validator";
+import { validate } from "@api/middleware/validate";
 import { notOk, ok } from "@utils/network";
 import { Hono } from "hono";
 import z from "zod";
@@ -8,7 +8,7 @@ export const PublicRouter = new Hono()
   .basePath("/public")
   .get(
     "/:organizationSlug/posts",
-    validator("param", z.object({ organizationSlug: z.string().min(1) })),
+    validate("param", z.object({ organizationSlug: z.string().min(1) })),
     (c) => {
       return PublicService.getPublishedPostsFromOrganization(
         c.req.param("organizationSlug")

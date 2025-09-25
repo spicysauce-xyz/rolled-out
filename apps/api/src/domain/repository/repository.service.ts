@@ -40,4 +40,22 @@ export const RepositoryService = {
         )
       );
   },
+
+  createPendingCommit: (data: {
+    commitId: string;
+    integrationId: string;
+    objectId: string;
+  }) => {
+    return RepositoryRepository.createPendingCommit({
+      commitId: data.commitId,
+      integrationId: data.integrationId,
+      objectId: data.objectId,
+    });
+  },
+
+  deletePendingCommitsByIntegrationId: (integrationId: string) => {
+    return RepositoryRepository.deletePendingCommitsByIntegrationId(
+      integrationId
+    );
+  },
 };

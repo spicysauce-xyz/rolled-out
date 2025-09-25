@@ -11,6 +11,27 @@ export const IntegrationService = {
       member.organizationId
     );
   },
+  getGithubIntegrationByInstallationId: (installationId: number) => {
+    return IntegrationRepository.getGithubIntegrationByInstallationId(
+      installationId
+    );
+  },
+  getGithubIntegrationPendingCommit: (member: Member) => {
+    return IntegrationRepository.getGithubIntegrationByOrganizationId(
+      member.organizationId
+    )
+      .andThen((integration) => {
+        if (!integration) {
+          return err(new Error("GitHub integration not found"));
+        }
+        return ok(integration);
+      })
+      .andThen((integration) => {
+        return IntegrationRepository.getGithubIntegrationPendingCommits(
+          integration.id
+        );
+      });
+  },
   createGithubIntegration: (member: Member, installationId: number) => {
     return IntegrationRepository.createGithubIntegration({
       organizationId: member.organizationId,

@@ -1,6 +1,6 @@
 import type { AuthMiddleware } from "@api/middleware/auth";
 import type { OrganizationMiddleware } from "@api/middleware/organization";
-import { validator } from "@services/validator";
+import { validate } from "@api/middleware/validate";
 import { notOk, ok } from "@utils/network";
 import { Hono } from "hono";
 import z from "zod";
@@ -13,7 +13,7 @@ export const TagsRouter = new Hono<{ Variables: Variables }>()
 
   .post(
     "/",
-    validator(
+    validate(
       "json",
       z.object({
         label: z

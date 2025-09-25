@@ -69,7 +69,7 @@ export const JumbotronSection = () => {
               <span>users</span> <span>hooked.</span>
             </LandingSection.Title>
             <LandingSection.Subtitle className="opacity-0" ref={subtitle}>
-              Rolled Out is the all-in-one toolkit for writing, organizing , and
+              Rolled Out is the all-in-one toolkit for writing, organizing, and
               publishing your app’s changelog.
             </LandingSection.Subtitle>
           </div>

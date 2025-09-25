@@ -1,7 +1,7 @@
 import type { AuthMiddleware } from "@api/middleware/auth";
 import { organizationMiddleware } from "@api/middleware/organization";
+import { validate } from "@api/middleware/validate";
 import { Emitter } from "@services/events";
-import { validator } from "@services/validator";
 import { notOk, ok } from "@utils/network";
 import { Hono } from "hono";
 import z from "zod";
@@ -13,7 +13,7 @@ type Variables = AuthMiddleware<true>["Variables"];
 export const OrganizationsRouter = new Hono<{ Variables: Variables }>()
   .get(
     "/check-slug",
-    validator("query", z.object({ slug: z.string() })),
+    validate("query", z.object({ slug: z.string() })),
     (c) => {
       const slug = c.req.valid("query").slug;
 
@@ -25,7 +25,7 @@ export const OrganizationsRouter = new Hono<{ Variables: Variables }>()
   )
   .post(
     "/",
-    validator("json", z.object({ name: z.string(), slug: z.string() })),
+    validate("json", z.object({ name: z.string(), slug: z.string() })),
     (c) => {
       const data = c.req.valid("json");
       const user = c.get("user");
@@ -55,7 +55,7 @@ export const OrganizationsRouter = new Hono<{ Variables: Variables }>()
   .put(
     "/:organizationId",
     organizationMiddleware(),
-    validator(
+    validate(
       "json",
       z.object({
         name: z.string(),

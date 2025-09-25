@@ -1,6 +1,6 @@
 import type { AuthMiddleware } from "@api/middleware/auth";
 import type { OrganizationMiddleware } from "@api/middleware/organization";
-import { validator } from "@services/validator";
+import { validate } from "@api/middleware/validate";
 import { notOk, ok } from "@utils/network";
 import { Hono } from "hono";
 import { z } from "zod";
@@ -33,7 +33,7 @@ export const MembersRouter = new Hono<{ Variables: Variables }>()
   })
   .put(
     "/:id",
-    validator("json", z.object({ role: z.enum(["member", "admin", "owner"]) })),
+    validate("json", z.object({ role: z.enum(["member", "admin", "owner"]) })),
     (c) => {
       const id = c.req.param("id");
       const body = c.req.valid("json");

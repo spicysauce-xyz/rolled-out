@@ -35,3 +35,8 @@ export type InvitationInsert = typeof schema.invitation.$inferInsert;
 
 export type Organization = typeof schema.organization.$inferSelect;
 export type OrganizationInsert = typeof schema.organization.$inferInsert;
+
+export type GithubPendingCommit =
+  typeof schema.githubPendingCommit.$inferSelect;
+export type GithubPendingCommitInsert =
+  typeof schema.githubPendingCommit.$inferInsert;

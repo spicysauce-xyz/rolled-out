@@ -54,4 +54,12 @@ export const IntegrationRepository = {
       () => new Error("Failed to delete github integration by installation id")
     );
   },
+  getGithubIntegrationPendingCommits: (integrationId: string) => {
+    return ResultAsync.fromPromise(
+      Database.query.githubPendingCommit.findMany({
+        where: eq(schema.githubPendingCommit.integrationId, integrationId),
+      }),
+      () => new Error("Failed to get github integration pending commits")
+    );
+  },
 };

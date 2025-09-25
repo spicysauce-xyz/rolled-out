@@ -1,7 +1,7 @@
 import type { AuthMiddleware } from "@api/middleware/auth";
 import type { OrganizationMiddleware } from "@api/middleware/organization";
+import { validate } from "@api/middleware/validate";
 import { RepositoryService } from "@domain/repository";
-import { validator } from "@services/validator";
 import { notOk, ok, okWithMeta } from "@utils/network";
 import { Hono } from "hono";
 import z from "zod";
@@ -20,7 +20,7 @@ export const RepositoryRouter = new Hono<{ Variables: Variables }>()
   })
   .get(
     ":repositoryId/commits",
-    validator(
+    validate(
       "query",
       z.object({
         cursor: z.string().optional(),

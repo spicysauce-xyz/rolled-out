@@ -24,7 +24,7 @@ export const UserRepository = {
           },
         },
       }),
-      () => new Error("Failed to fetch organizations")
+      (error) => new Error("Failed to fetch organizations", { cause: error })
     ).map((memberships) => {
       return memberships.map((membership) => ({
         id: membership.organization.id,
