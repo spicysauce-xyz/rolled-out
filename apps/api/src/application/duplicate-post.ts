@@ -1,7 +1,7 @@
-import { EditorService } from "@domain/editor";
-import { PostService } from "@domain/post";
-import { applyTitleToDocumentState } from "@domain/post/post.utils";
-import type { Member } from "@services/db";
+import { EditorService } from "../domain/editor";
+import { PostService } from "../domain/post";
+import { applyTitleToDocumentState } from "../domain/post/post.utils";
+import type { Member } from "../services/db";
 
 export const duplicatePost = (member: Member, id: string) => {
   return PostService.findPostById(member, id)

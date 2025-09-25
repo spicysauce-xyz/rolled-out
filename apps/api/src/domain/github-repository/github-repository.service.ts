@@ -9,6 +9,9 @@ export const GithubRepositoryService = {
   getByIntegrationId: (integrationId: string) => {
     return GithubRepositoryRepository.getByIntegrationId(integrationId);
   },
+  getByOwnerAndName: (owner: string, name: string) => {
+    return GithubRepositoryRepository.getByOwnerAndName(owner, name);
+  },
   create: (data: {
     integrationId: string;
     repositoryId: string;

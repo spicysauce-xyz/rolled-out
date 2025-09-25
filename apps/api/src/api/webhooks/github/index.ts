@@ -1,20 +1,22 @@
 import { validate } from "@api/middleware/validate";
-import { Application } from "@application";
 import { Webhooks } from "@octokit/webhooks";
 import type { InstallationEvent, PushEvent } from "@octokit/webhooks-types";
 import { Config } from "@services/config";
-import type { Member } from "@services/db";
 import { JWT } from "@services/jwt";
 import { notOk, ok } from "@utils/network";
 import { Hono } from "hono";
 import { z } from "zod";
+import { handleInstallationCreated } from "./events/installation-created";
+import { handleInstallationDeleted } from "./events/installation-deleted";
+import { handlePush } from "./events/push";
+import { handleSetupCompleted } from "./events/setup-completed";
 
 const githubWebhooks = new Webhooks({
   secret: Config.github.webhookSecret,
 });
 
-export const WebhooksRouter = new Hono()
-  .post("/github", async (c) => {
+export const GithubWebhooksRouter = new Hono()
+  .post("/", async (c) => {
     const signature = c.req.header("x-hub-signature-256");
     const body = await c.req.text();
 
@@ -28,23 +30,14 @@ export const WebhooksRouter = new Hono()
       const payload = await c.req.json<InstallationEvent>();
 
       if (payload.action === "created") {
-        return Application.addRepositoriesToIntegration(
-          payload.installation.id,
-          (payload.repositories || []).map((repository) => ({
-            id: repository.id,
-            name: repository.name,
-            owner: payload.installation.account.login,
-          }))
-        ).match(
+        return handleInstallationCreated(payload).match(
           (repositories) => ok(c, repositories),
           (error) => notOk(c, { message: error.message }, 500)
         );
       }
 
       if (payload.action === "deleted") {
-        return Application.deleteGithubIntegration(
-          payload.installation.id
-        ).match(
+        return handleInstallationDeleted(payload).match(
           (integration) => ok(c, integration),
           (error) => notOk(c, { message: error.message }, 500)
         );
@@ -53,26 +46,17 @@ export const WebhooksRouter = new Hono()
 
     if (event === "push") {
       const payload = await c.req.json<PushEvent>();
-      const headCommit = payload.head_commit;
-      const installation = payload.installation;
 
-      if (headCommit && installation) {
-        return Application.createPendingCommit(
-          headCommit.id,
-          installation.id,
-          payload.repository.owner.login,
-          payload.repository.name
-        ).match(
-          (integration) => ok(c, integration),
-          (error) => notOk(c, { message: error.message }, 500)
-        );
-      }
+      return handlePush(payload).match(
+        (integration) => ok(c, integration),
+        (error) => notOk(c, { message: error.message }, 500)
+      );
     }
 
     return ok(c, undefined);
   })
   .get(
-    "/github/setup",
+    "/setup",
     validate(
       "query",
       z.object({
@@ -99,15 +83,9 @@ export const WebhooksRouter = new Hono()
         return notOk(c, { message: "Invalid state" }, 400);
       }
 
-      const member = {
-        organizationId,
-      } as Member;
-
-      Application.setupGithubIntegration(member, installation_id).match(
+      return handleSetupCompleted(organizationId, installation_id).match(
         () => c.redirect(Config.client.raw),
         () => c.redirect(Config.client.raw)
       );
-
-      return c.redirect(Config.client.raw);
     }
   );

@@ -12,9 +12,12 @@ export const GithubIntegrationService = {
   getByInstallationId: (installationId: number) => {
     return GithubIntegrationRepository.getByInstallationId(installationId);
   },
-  create: (member: Member, installationId: number) => {
+  getByOrganizationId: (organizationId: string) => {
+    return GithubIntegrationRepository.getByOrganizationId(organizationId);
+  },
+  create: (organizationId: string, installationId: number) => {
     return GithubIntegrationRepository.create({
-      organizationId: member.organizationId,
+      organizationId,
       installationId: installationId.toString(),
     });
   },

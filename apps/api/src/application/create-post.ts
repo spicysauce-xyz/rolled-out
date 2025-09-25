@@ -1,12 +1,12 @@
-import { EditorService } from "@domain/editor";
-import { GithubIntegrationService } from "@domain/github-integration";
-import { GithubPendingCommitService } from "@domain/github-pending-commit";
-import { PostService } from "@domain/post";
-import { createYJSDocumentFromSchema } from "@domain/post/post.utils";
-import { AI } from "@services/ai";
-import type { Member, PostInsert } from "@services/db";
-import { Github } from "@services/github";
 import { err, ok, okAsync, ResultAsync } from "neverthrow";
+import { EditorService } from "../domain/editor";
+import { GithubIntegrationService } from "../domain/github-integration";
+import { GithubPendingCommitService } from "../domain/github-pending-commit";
+import { PostService } from "../domain/post";
+import { createYJSDocumentFromSchema } from "../domain/post/post.utils";
+import { AI } from "../services/ai";
+import type { Member, PostInsert } from "../services/db";
+import { Github } from "../services/github";
 
 const createByteContentFromGithubIds = (
   member: Member,

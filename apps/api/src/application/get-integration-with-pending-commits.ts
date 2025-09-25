@@ -1,7 +1,7 @@
-import { GithubIntegrationService } from "@domain/github-integration";
-import { GithubPendingCommitService } from "@domain/github-pending-commit";
-import type { Member } from "@services/db";
 import { err, ok } from "neverthrow";
+import { GithubIntegrationService } from "../domain/github-integration";
+import { GithubPendingCommitService } from "../domain/github-pending-commit";
+import type { Member } from "../services/db";
 
 export const getIntegrationWithPendingCommits = (member: Member) => {
   return GithubIntegrationService.getByMember(member)

@@ -1,7 +1,7 @@
-import { GithubIntegrationService } from "@domain/github-integration";
-import { GithubRepositoryService } from "@domain/github-repository";
-import type { Member } from "@services/db";
 import { err, ok, ResultAsync } from "neverthrow";
+import { GithubIntegrationService } from "../domain/github-integration";
+import { GithubRepositoryService } from "../domain/github-repository";
+import type { Member } from "../services/db";
 
 export const getRepositoryCommits = (
   member: Member,

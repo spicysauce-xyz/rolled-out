@@ -1,19 +1,41 @@
 import { GithubIntegrationService } from "@domain/github-integration";
 import { GithubPendingCommitService } from "@domain/github-pending-commit";
+import { GithubRepositoryService } from "@domain/github-repository";
+import type { PushEvent } from "@octokit/webhooks-types";
 import { Github } from "@services/github";
 import { err, ok, okAsync, ResultAsync } from "neverthrow";
 
-export const createPendingCommit = (
-  commitId: string,
-  installationId: number,
-  owner: string,
-  repo: string
-) => {
-  return GithubIntegrationService.getByInstallationId(installationId)
-    .andThen((integration) => {
+export const handlePush = (payload: PushEvent) => {
+  const installation = payload.installation;
+  const headCommit = payload.head_commit;
+
+  if (!(headCommit && installation)) {
+    return err(new Error("Head commit or installation not found"));
+  }
+
+  const commitId = headCommit.id;
+  const installationId = installation.id;
+  const owner = payload.repository.owner.login;
+  const repo = payload.repository.name;
+  const ref = payload.ref;
+
+  return ResultAsync.combine([
+    GithubIntegrationService.getByInstallationId(installationId),
+    GithubRepositoryService.getByOwnerAndName(owner, repo),
+  ])
+    .andThen(([integration, repository]) => {
       if (!integration) {
         return err(new Error("GitHub integration not found"));
       }
+
+      if (!repository) {
+        return err(new Error("Repository not found"));
+      }
+
+      if (`refs/heads/${repository.mainBranch}` !== ref) {
+        return err(new Error("Repository main branch does not match ref"));
+      }
+
       return ok(integration);
     })
     .andThen((integration) =>

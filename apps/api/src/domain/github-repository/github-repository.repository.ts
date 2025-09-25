@@ -1,5 +1,5 @@
 import { Database, schema } from "@services/db";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { err, ok, ResultAsync } from "neverthrow";
 
 export const GithubRepositoryRepository = {
@@ -39,6 +39,17 @@ export const GithubRepositoryRepository = {
         },
       }),
       () => new Error("Failed to get repositories by integration id")
+    );
+  },
+  getByOwnerAndName: (owner: string, name: string) => {
+    return ResultAsync.fromPromise(
+      Database.query.githubRepository.findFirst({
+        where: and(
+          eq(schema.githubRepository.owner, owner),
+          eq(schema.githubRepository.name, name)
+        ),
+      }),
+      () => new Error("Failed to get repository by owner and name")
     );
   },
 };

@@ -1,15 +1,18 @@
 import { GithubIntegrationService } from "@domain/github-integration";
 import { GithubRepositoryService } from "@domain/github-repository";
+import type { InstallationCreatedEvent } from "@octokit/webhooks-types";
 import { err, ok } from "neverthrow";
 
-export const addRepositoriesToIntegration = (
-  installationId: number,
-  repositories: {
-    id: number;
-    name: string;
-    owner: string;
-  }[]
+export const handleInstallationCreated = (
+  payload: InstallationCreatedEvent
 ) => {
+  const installationId = payload.installation.id;
+  const repositories = (payload.repositories || []).map((repository) => ({
+    id: repository.id,
+    name: repository.name,
+    owner: payload.installation.account.login,
+  }));
+
   return GithubIntegrationService.getByInstallationId(installationId)
     .andThen((integration) => {
       if (!integration) {
