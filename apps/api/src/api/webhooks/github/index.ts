@@ -1,7 +1,11 @@
 import { validate } from "@api/middleware/validate";
 import { OrganizationService } from "@domain/organizaiton";
 import { Webhooks } from "@octokit/webhooks";
-import type { InstallationEvent, PushEvent } from "@octokit/webhooks-types";
+import type {
+  InstallationEvent,
+  InstallationRepositoriesEvent,
+  PushEvent,
+} from "@octokit/webhooks-types";
 import { Config } from "@services/config";
 import type { Member } from "@services/db";
 import { JWT } from "@services/jwt";
@@ -10,6 +14,8 @@ import { Hono } from "hono";
 import { z } from "zod";
 import { handleInstallationCreated } from "./events/installation-created";
 import { handleInstallationDeleted } from "./events/installation-deleted";
+import { handleInstallationRepositoriesAdded } from "./events/installation-repositories-added";
+import { handleInstallationRepositoriesRemoved } from "./events/installation-repositories-deleted";
 import { handlePush } from "./events/push";
 import { handleSetupCompleted } from "./events/setup-completed";
 
@@ -40,6 +46,24 @@ export const GithubWebhooksRouter = new Hono()
 
       if (payload.action === "deleted") {
         return handleInstallationDeleted(payload).match(
+          (integration) => ok(c, integration),
+          (error) => notOk(c, { message: error.message }, 500)
+        );
+      }
+    }
+
+    if (event === "installation_repositories") {
+      const payload = await c.req.json<InstallationRepositoriesEvent>();
+
+      if (payload.action === "added") {
+        return handleInstallationRepositoriesAdded(payload).match(
+          (integration) => ok(c, integration),
+          (error) => notOk(c, { message: error.message }, 500)
+        );
+      }
+
+      if (payload.action === "removed") {
+        return handleInstallationRepositoriesRemoved(payload).match(
           (integration) => ok(c, integration),
           (error) => notOk(c, { message: error.message }, 500)
         );

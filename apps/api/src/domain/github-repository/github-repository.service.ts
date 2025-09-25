@@ -54,6 +54,21 @@ export const GithubRepositoryService = {
       })
     );
   },
+  deleteMultiple: (
+    integrationId: string,
+    repositories: {
+      id: number;
+    }[]
+  ) => {
+    return ResultAsync.combine(
+      repositories.map((repository) => {
+        return GithubRepositoryRepository.delete(
+          integrationId,
+          String(repository.id)
+        );
+      })
+    );
+  },
   getCommits: (
     installationId: number,
     repositoryId: string,

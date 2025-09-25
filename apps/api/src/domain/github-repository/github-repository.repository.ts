@@ -12,6 +12,19 @@ export const GithubRepositoryRepository = {
       () => new Error("Failed to create github repository")
     );
   },
+  delete: (integrationId: string, repositoryId: string) => {
+    return ResultAsync.fromPromise(
+      Database.delete(schema.githubRepository)
+        .where(
+          and(
+            eq(schema.githubRepository.repositoryId, repositoryId),
+            eq(schema.githubRepository.integrationId, integrationId)
+          )
+        )
+        .returning(),
+      () => new Error("Failed to delete github repository")
+    );
+  },
   getById: (repositoryId: string) => {
     return ResultAsync.fromPromise(
       Database.query.githubRepository.findFirst({
