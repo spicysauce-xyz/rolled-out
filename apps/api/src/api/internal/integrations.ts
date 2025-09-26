@@ -27,8 +27,8 @@ export const IntegrationsRouter = new Hono<{ Variables: Variables }>()
   .get("/github/pending-commits", (c) => {
     const member = c.get("member");
 
-    return Application.getIntegrationWithPendingCommits(member).match(
-      (result) => ok(c, result.pendingCommits),
+    return Application.getPendingCommits(member).match(
+      (pendingCommits) => ok(c, pendingCommits),
       (error) => notOk(c, { message: error.message }, 500)
     );
   });
