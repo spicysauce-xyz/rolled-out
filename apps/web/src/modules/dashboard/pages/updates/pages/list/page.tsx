@@ -3,7 +3,7 @@ import { Transition } from "@components/transition";
 import { githubIntegrationQuery, updatesQuery } from "@lib/api/queries";
 import { Breadcrumbs } from "@modules/dashboard/components/breadcrumbs";
 import { useCreateUpdateMutation } from "@modules/dashboard/hooks/use-create-update-mutation";
-import { Button, DropdownMenu, Skeleton, Text, Toaster } from "@mono/ui";
+import { Button, DropdownMenu, Text, Toaster } from "@mono/ui";
 import { useDisclosure } from "@mono/ui/hooks";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
@@ -69,11 +69,6 @@ function RouteComponent() {
 
         <Transition.Root>
           {match(githubIntegration)
-            .with({ isPending: true }, () => (
-              <Transition.Item key="skeleton">
-                <Skeleton.Root className="h-9 w-24 rounded-md" />
-              </Transition.Item>
-            ))
             .with(
               { isSuccess: true, data: P.when((data) => !!data?.id) },
               () => (
@@ -99,16 +94,22 @@ function RouteComponent() {
                 </Transition.Item>
               )
             )
+            .with(
+              { isSuccess: true, data: P.when((data) => !data?.id) },
+              () => (
+                <Transition.Item key="button">
+                  <Button.Root
+                    isDisabled={isCreatingPost}
+                    onClick={handleCreateBlankDraft}
+                    variant="tertiary"
+                  >
+                    New Draft
+                  </Button.Root>
+                </Transition.Item>
+              )
+            )
             .otherwise(() => (
-              <Transition.Item key="button">
-                <Button.Root
-                  isDisabled={isCreatingPost}
-                  onClick={handleCreateBlankDraft}
-                  variant="tertiary"
-                >
-                  New Draft
-                </Button.Root>
-              </Transition.Item>
+              <div className="h-9" />
             ))}
         </Transition.Root>
         <StartWithGithubDialog
