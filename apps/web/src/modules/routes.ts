@@ -8,7 +8,7 @@ import { index, layout, rootRoute, route } from "@tanstack/virtual-file-routes";
 export const routes = rootRoute("root.tsx", [
   layout("auth/guards/guest-only.tsx", auth),
   layout("auth/guards/authorized.tsx", [
-    route("/onboarding", onboarding),
+    route("/onboarding", "onboarding/layout.tsx", onboarding),
     route("/account", "account/layout.tsx", account),
     layout("dashboard/guards/has-organization.tsx", [
       index("dashboard/pages/index/page.tsx"),
