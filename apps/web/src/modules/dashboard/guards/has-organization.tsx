@@ -17,7 +17,7 @@ export const Route = createFileRoute("/_authorized/_has-organization")({
 
     if (!organizations?.length) {
       throw redirect({
-        to: "/onboarding/organization",
+        to: "/onboarding/workspace",
       });
     }
 

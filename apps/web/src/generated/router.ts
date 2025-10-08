@@ -12,10 +12,11 @@ import { Route as rootRouteImport } from './../modules/root'
 import { Route as authGuardsGuestOnlyRouteImport } from './../modules/auth/guards/guest-only'
 import { Route as authGuardsAuthorizedRouteImport } from './../modules/auth/guards/authorized'
 import { Route as authPagesLoginRouteImport } from './../modules/auth/pages/login'
+import { Route as onboardingLayoutRouteImport } from './../modules/onboarding/layout'
 import { Route as accountLayoutRouteImport } from './../modules/account/layout'
 import { Route as dashboardGuardsHasOrganizationRouteImport } from './../modules/dashboard/guards/has-organization'
-import { Route as onboardingPagesProfileRouteImport } from './../modules/onboarding/pages/profile'
 import { Route as onboardingPagesOrganizationRouteImport } from './../modules/onboarding/pages/organization'
+import { Route as onboardingPagesProfileRouteImport } from './../modules/onboarding/pages/profile'
 import { Route as accountPagesSessionsPageRouteImport } from './../modules/account/pages/sessions/page'
 import { Route as accountPagesProfilePageRouteImport } from './../modules/account/pages/profile/page'
 import { Route as accountPagesOrganizationsPageRouteImport } from './../modules/account/pages/organizations/page'
@@ -48,6 +49,11 @@ const authPagesLoginRoute = authPagesLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => authGuardsGuestOnlyRoute,
 } as any)
+const onboardingLayoutRoute = onboardingLayoutRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => authGuardsAuthorizedRoute,
+} as any)
 const accountLayoutRoute = accountLayoutRouteImport.update({
   id: '/account',
   path: '/account',
@@ -58,17 +64,17 @@ const dashboardGuardsHasOrganizationRoute =
     id: '/_has-organization',
     getParentRoute: () => authGuardsAuthorizedRoute,
   } as any)
-const onboardingPagesProfileRoute = onboardingPagesProfileRouteImport.update({
-  id: '/onboarding/profile',
-  path: '/onboarding/profile',
-  getParentRoute: () => authGuardsAuthorizedRoute,
-} as any)
 const onboardingPagesOrganizationRoute =
   onboardingPagesOrganizationRouteImport.update({
-    id: '/onboarding/organization',
-    path: '/onboarding/organization',
-    getParentRoute: () => authGuardsAuthorizedRoute,
+    id: '/workspace',
+    path: '/workspace',
+    getParentRoute: () => onboardingLayoutRoute,
   } as any)
+const onboardingPagesProfileRoute = onboardingPagesProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => onboardingLayoutRoute,
+} as any)
 const accountPagesSessionsPageRoute =
   accountPagesSessionsPageRouteImport.update({
     id: '/sessions',
@@ -171,6 +177,7 @@ const dashboardPagesUpdatesPagesListPageRoute =
 
 export interface FileRoutesByFullPath {
   '/account': typeof accountLayoutRouteWithChildren
+  '/onboarding': typeof onboardingLayoutRouteWithChildren
   '/login': typeof authPagesLoginRoute
   '/': typeof dashboardPagesIndexPageRoute
   '/$organizationSlug': typeof dashboardLayoutRouteWithChildren
@@ -178,8 +185,8 @@ export interface FileRoutesByFullPath {
   '/account/organizations': typeof accountPagesOrganizationsPageRoute
   '/account/profile': typeof accountPagesProfilePageRoute
   '/account/sessions': typeof accountPagesSessionsPageRoute
-  '/onboarding/organization': typeof onboardingPagesOrganizationRoute
   '/onboarding/profile': typeof onboardingPagesProfileRoute
+  '/onboarding/workspace': typeof onboardingPagesOrganizationRoute
   '/$organizationSlug/settings': typeof settingsLayoutRouteWithChildren
   '/$organizationSlug/$': typeof dashboardSplatRoute
   '/$organizationSlug/analytics': typeof dashboardPagesAnalyticsPageRoute
@@ -194,6 +201,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/account': typeof accountLayoutRouteWithChildren
+  '/onboarding': typeof onboardingLayoutRouteWithChildren
   '/login': typeof authPagesLoginRoute
   '/': typeof dashboardPagesIndexPageRoute
   '/$organizationSlug': typeof dashboardLayoutRouteWithChildren
@@ -201,8 +209,8 @@ export interface FileRoutesByTo {
   '/account/organizations': typeof accountPagesOrganizationsPageRoute
   '/account/profile': typeof accountPagesProfilePageRoute
   '/account/sessions': typeof accountPagesSessionsPageRoute
-  '/onboarding/organization': typeof onboardingPagesOrganizationRoute
   '/onboarding/profile': typeof onboardingPagesProfileRoute
+  '/onboarding/workspace': typeof onboardingPagesOrganizationRoute
   '/$organizationSlug/settings': typeof settingsLayoutRouteWithChildren
   '/$organizationSlug/$': typeof dashboardSplatRoute
   '/$organizationSlug/analytics': typeof dashboardPagesAnalyticsPageRoute
@@ -221,6 +229,7 @@ export interface FileRoutesById {
   '/_guest-only': typeof authGuardsGuestOnlyRouteWithChildren
   '/_authorized/_has-organization': typeof dashboardGuardsHasOrganizationRouteWithChildren
   '/_authorized/account': typeof accountLayoutRouteWithChildren
+  '/_authorized/onboarding': typeof onboardingLayoutRouteWithChildren
   '/_guest-only/login': typeof authPagesLoginRoute
   '/_authorized/_has-organization/': typeof dashboardPagesIndexPageRoute
   '/_authorized/_has-organization/$organizationSlug': typeof dashboardGuardsSelectedOrganizationRouteWithChildren
@@ -228,8 +237,8 @@ export interface FileRoutesById {
   '/_authorized/account/organizations': typeof accountPagesOrganizationsPageRoute
   '/_authorized/account/profile': typeof accountPagesProfilePageRoute
   '/_authorized/account/sessions': typeof accountPagesSessionsPageRoute
-  '/_authorized/onboarding/organization': typeof onboardingPagesOrganizationRoute
   '/_authorized/onboarding/profile': typeof onboardingPagesProfileRoute
+  '/_authorized/onboarding/workspace': typeof onboardingPagesOrganizationRoute
   '/_authorized/_has-organization/$organizationSlug/_layout': typeof dashboardLayoutRouteWithChildren
   '/_authorized/_has-organization/$organizationSlug/settings': typeof settingsLayoutRouteWithChildren
   '/_authorized/_has-organization/$organizationSlug/_layout/$': typeof dashboardSplatRoute
@@ -247,6 +256,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/account'
+    | '/onboarding'
     | '/login'
     | '/'
     | '/$organizationSlug'
@@ -254,8 +264,8 @@ export interface FileRouteTypes {
     | '/account/organizations'
     | '/account/profile'
     | '/account/sessions'
-    | '/onboarding/organization'
     | '/onboarding/profile'
+    | '/onboarding/workspace'
     | '/$organizationSlug/settings'
     | '/$organizationSlug/$'
     | '/$organizationSlug/analytics'
@@ -270,6 +280,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/account'
+    | '/onboarding'
     | '/login'
     | '/'
     | '/$organizationSlug'
@@ -277,8 +288,8 @@ export interface FileRouteTypes {
     | '/account/organizations'
     | '/account/profile'
     | '/account/sessions'
-    | '/onboarding/organization'
     | '/onboarding/profile'
+    | '/onboarding/workspace'
     | '/$organizationSlug/settings'
     | '/$organizationSlug/$'
     | '/$organizationSlug/analytics'
@@ -296,6 +307,7 @@ export interface FileRouteTypes {
     | '/_guest-only'
     | '/_authorized/_has-organization'
     | '/_authorized/account'
+    | '/_authorized/onboarding'
     | '/_guest-only/login'
     | '/_authorized/_has-organization/'
     | '/_authorized/_has-organization/$organizationSlug'
@@ -303,8 +315,8 @@ export interface FileRouteTypes {
     | '/_authorized/account/organizations'
     | '/_authorized/account/profile'
     | '/_authorized/account/sessions'
-    | '/_authorized/onboarding/organization'
     | '/_authorized/onboarding/profile'
+    | '/_authorized/onboarding/workspace'
     | '/_authorized/_has-organization/$organizationSlug/_layout'
     | '/_authorized/_has-organization/$organizationSlug/settings'
     | '/_authorized/_has-organization/$organizationSlug/_layout/$'
@@ -347,6 +359,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authPagesLoginRouteImport
       parentRoute: typeof authGuardsGuestOnlyRoute
     }
+    '/_authorized/onboarding': {
+      id: '/_authorized/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof onboardingLayoutRouteImport
+      parentRoute: typeof authGuardsAuthorizedRoute
+    }
     '/_authorized/account': {
       id: '/_authorized/account'
       path: '/account'
@@ -361,19 +380,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof dashboardGuardsHasOrganizationRouteImport
       parentRoute: typeof authGuardsAuthorizedRoute
     }
+    '/_authorized/onboarding/workspace': {
+      id: '/_authorized/onboarding/workspace'
+      path: '/workspace'
+      fullPath: '/onboarding/workspace'
+      preLoaderRoute: typeof onboardingPagesOrganizationRouteImport
+      parentRoute: typeof onboardingLayoutRoute
+    }
     '/_authorized/onboarding/profile': {
       id: '/_authorized/onboarding/profile'
-      path: '/onboarding/profile'
+      path: '/profile'
       fullPath: '/onboarding/profile'
       preLoaderRoute: typeof onboardingPagesProfileRouteImport
-      parentRoute: typeof authGuardsAuthorizedRoute
-    }
-    '/_authorized/onboarding/organization': {
-      id: '/_authorized/onboarding/organization'
-      path: '/onboarding/organization'
-      fullPath: '/onboarding/organization'
-      preLoaderRoute: typeof onboardingPagesOrganizationRouteImport
-      parentRoute: typeof authGuardsAuthorizedRoute
+      parentRoute: typeof onboardingLayoutRoute
     }
     '/_authorized/account/sessions': {
       id: '/_authorized/account/sessions'
@@ -597,19 +616,30 @@ const accountLayoutRouteWithChildren = accountLayoutRoute._addFileChildren(
   accountLayoutRouteChildren,
 )
 
+interface onboardingLayoutRouteChildren {
+  onboardingPagesProfileRoute: typeof onboardingPagesProfileRoute
+  onboardingPagesOrganizationRoute: typeof onboardingPagesOrganizationRoute
+}
+
+const onboardingLayoutRouteChildren: onboardingLayoutRouteChildren = {
+  onboardingPagesProfileRoute: onboardingPagesProfileRoute,
+  onboardingPagesOrganizationRoute: onboardingPagesOrganizationRoute,
+}
+
+const onboardingLayoutRouteWithChildren =
+  onboardingLayoutRoute._addFileChildren(onboardingLayoutRouteChildren)
+
 interface authGuardsAuthorizedRouteChildren {
   dashboardGuardsHasOrganizationRoute: typeof dashboardGuardsHasOrganizationRouteWithChildren
   accountLayoutRoute: typeof accountLayoutRouteWithChildren
-  onboardingPagesOrganizationRoute: typeof onboardingPagesOrganizationRoute
-  onboardingPagesProfileRoute: typeof onboardingPagesProfileRoute
+  onboardingLayoutRoute: typeof onboardingLayoutRouteWithChildren
 }
 
 const authGuardsAuthorizedRouteChildren: authGuardsAuthorizedRouteChildren = {
   dashboardGuardsHasOrganizationRoute:
     dashboardGuardsHasOrganizationRouteWithChildren,
   accountLayoutRoute: accountLayoutRouteWithChildren,
-  onboardingPagesOrganizationRoute: onboardingPagesOrganizationRoute,
-  onboardingPagesProfileRoute: onboardingPagesProfileRoute,
+  onboardingLayoutRoute: onboardingLayoutRouteWithChildren,
 }
 
 const authGuardsAuthorizedRouteWithChildren =

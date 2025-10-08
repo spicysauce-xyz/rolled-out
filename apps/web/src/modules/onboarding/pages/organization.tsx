@@ -1,12 +1,13 @@
+import { Page } from "@components/page";
 import useAppForm from "@lib/form";
 import { useCreateOrganizationMutation } from "@modules/dashboard/hooks/use-create-organization-mutation";
 import { useCheckSlugMutation } from "@modules/settings/pages/details/hooks/use-check-slug-mutation";
-import { Button, Input, Label } from "@mono/ui";
+import { Button, Input, Label, Text, Toaster } from "@mono/ui";
 import { createFileRoute } from "@tanstack/react-router";
 import { ArrowRightIcon, Loader2Icon } from "lucide-react";
 import { z } from "zod";
 
-export const Route = createFileRoute("/_authorized/onboarding/organization")({
+export const Route = createFileRoute("/_authorized/onboarding/workspace")({
   component: RouteComponent,
 });
 
@@ -36,6 +37,10 @@ function RouteComponent() {
         },
         {
           onSuccess: () => {
+            Toaster.success("Workspace created", {
+              description: "Your workspace has been created successfully.",
+            });
+
             navigate({
               to: "/$organizationSlug",
               replace: true,
@@ -44,132 +49,144 @@ function RouteComponent() {
               },
             });
           },
+          onError: () => {
+            Toaster.error("Couldn't create workspace", {
+              description: "Something went wrong. Please try again.",
+            });
+          },
         }
       );
     },
   });
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-center">
-      <div className="flex w-full flex-1 flex-col items-center justify-center gap-6 p-6 sm:max-w-96">
-        <div className="flex-1" />
-        <form
-          className="flex w-full flex-1 flex-col gap-6"
-          onSubmit={(e) => {
-            e.preventDefault();
-            form.handleSubmit();
-          }}
-        >
-          <div className="flex flex-col gap-4">
-            <form.Field
-              listeners={{
-                onChange: ({ value }) => {
-                  const slugState = form.getFieldMeta("slug");
-
-                  if (slugState?.isPristine) {
-                    form.setFieldValue(
-                      "slug",
-                      // TODO: unify slug rules
-                      value
-                        .toLowerCase()
-                        .replace(/\s+/g, "-"),
-                      {
-                        dontUpdateMeta: true,
-                      }
-                    );
-                    form.validateField("slug", "change");
-                  }
-                },
-              }}
-              name="name"
-            >
-              {(field) => (
-                <form.FieldContainer errors={field.state.meta.errors}>
-                  <Label.Root>
-                    Name
-                    <Label.Asterisk />
-                  </Label.Root>
-                  <Input.Root
-                    className="w-full"
-                    isInvalid={field.state.meta.errors.length > 0}
-                  >
-                    <Input.Wrapper>
-                      <Input.Field
-                        id={field.name}
-                        name={field.name}
-                        onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        placeholder="Acme Inc."
-                        value={field.state.value}
-                      />
-                    </Input.Wrapper>
-                  </Input.Root>
-                </form.FieldContainer>
-              )}
-            </form.Field>
-
-            <form.Field
-              asyncDebounceMs={500}
-              name="slug"
-              validators={{
-                onChangeAsync: async ({ value }) => {
-                  let isSlugAvailable = false;
-
-                  try {
-                    const data = await checkSlugMutation.mutateAsync(value);
-                    isSlugAvailable = data.available;
-                  } catch {
-                    isSlugAvailable = false;
-                  }
-
-                  if (isSlugAvailable) {
-                    return;
-                  }
-
-                  return { message: "Slug is already taken" };
-                },
-              }}
-            >
-              {(field) => (
-                <form.FieldContainer errors={field.state.meta.errors}>
-                  <Label.Root>
-                    Slug
-                    <Label.Asterisk />
-                  </Label.Root>
-                  <Input.Root
-                    className="w-full"
-                    isInvalid={field.state.meta.errors.length > 0}
-                  >
-                    <Input.Wrapper>
-                      <Input.Field
-                        id={field.name}
-                        name={field.name}
-                        onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        placeholder="acme-inc"
-                        value={field.state.value}
-                      />
-                      {field.state.meta.isValidating &&
-                        !field.form.state.isSubmitting && (
-                          <Input.Icon>
-                            <Loader2Icon className="animate-spin" />
-                          </Input.Icon>
-                        )}
-                    </Input.Wrapper>
-                  </Input.Root>
-                </form.FieldContainer>
-              )}
-            </form.Field>
+    <Page.Wrapper>
+      <Page.Content className="items-center justify-center">
+        <div className="flex w-full flex-col gap-6 sm:max-w-96">
+          <div className="flex w-full flex-col gap-2">
+            <Text.Root size="lg" weight="medium">
+              Workspace
+            </Text.Root>
+            <Text.Root color="muted">
+              Create your organization to get started.
+            </Text.Root>
           </div>
-          <form.Subscribe
-            selector={({ isSubmitting, isDirty, isFieldsValid }) => ({
-              isSubmitting,
-              isDirty,
-              isFieldsValid,
-            })}
+          <form
+            className="flex w-full flex-1 flex-col gap-11"
+            onSubmit={(e) => {
+              e.preventDefault();
+              form.handleSubmit();
+            }}
           >
-            {({ isSubmitting, isDirty, isFieldsValid }) => (
-              <div className="flex justify-end gap-2">
+            <div className="flex flex-col gap-4">
+              <form.Field
+                listeners={{
+                  onChange: ({ value }) => {
+                    const slugState = form.getFieldMeta("slug");
+
+                    if (slugState?.isPristine) {
+                      form.setFieldValue(
+                        "slug",
+                        // TODO: unify slug rules
+                        value
+                          .toLowerCase()
+                          .replace(/\s+/g, "-"),
+                        {
+                          dontUpdateMeta: true,
+                        }
+                      );
+                      form.validateField("slug", "change");
+                    }
+                  },
+                }}
+                name="name"
+              >
+                {(field) => (
+                  <form.FieldContainer errors={field.state.meta.errors}>
+                    <Label.Root>
+                      Name
+                      <Label.Asterisk />
+                    </Label.Root>
+                    <Input.Root
+                      className="w-full"
+                      isInvalid={field.state.meta.errors.length > 0}
+                    >
+                      <Input.Wrapper>
+                        <Input.Field
+                          id={field.name}
+                          name={field.name}
+                          onBlur={field.handleBlur}
+                          onChange={(e) => field.handleChange(e.target.value)}
+                          placeholder="Acme Inc."
+                          value={field.state.value}
+                        />
+                      </Input.Wrapper>
+                    </Input.Root>
+                  </form.FieldContainer>
+                )}
+              </form.Field>
+
+              <form.Field
+                asyncDebounceMs={500}
+                name="slug"
+                validators={{
+                  onChangeAsync: async ({ value }) => {
+                    let isSlugAvailable = false;
+
+                    try {
+                      const data = await checkSlugMutation.mutateAsync(value);
+                      isSlugAvailable = data.available;
+                    } catch {
+                      isSlugAvailable = false;
+                    }
+
+                    if (isSlugAvailable) {
+                      return;
+                    }
+
+                    return { message: "Slug is already taken" };
+                  },
+                }}
+              >
+                {(field) => (
+                  <form.FieldContainer errors={field.state.meta.errors}>
+                    <Label.Root>
+                      Slug
+                      <Label.Asterisk />
+                    </Label.Root>
+                    <Input.Root
+                      className="w-full"
+                      isInvalid={field.state.meta.errors.length > 0}
+                    >
+                      <Input.Wrapper>
+                        <Input.Field
+                          id={field.name}
+                          name={field.name}
+                          onBlur={field.handleBlur}
+                          onChange={(e) => field.handleChange(e.target.value)}
+                          placeholder="acme-inc"
+                          value={field.state.value}
+                        />
+                        {field.state.meta.isValidating &&
+                          !field.form.state.isSubmitting && (
+                            <Input.Icon>
+                              <Loader2Icon className="animate-spin" />
+                            </Input.Icon>
+                          )}
+                      </Input.Wrapper>
+                    </Input.Root>
+                  </form.FieldContainer>
+                )}
+              </form.Field>
+            </div>
+            <form.Subscribe
+              selector={({ isSubmitting, isDirty, isFieldsValid }) => ({
+                isSubmitting,
+                isDirty,
+                isFieldsValid,
+              })}
+            >
+              {({ isSubmitting, isDirty, isFieldsValid }) => (
                 <Button.Root
                   color="accent"
                   isDisabled={!(isDirty && isFieldsValid)}
@@ -177,16 +194,13 @@ function RouteComponent() {
                   type="submit"
                 >
                   Save & Continue
-                  <Button.Icon>
-                    <ArrowRightIcon />
-                  </Button.Icon>
+                  <Button.Icon render={<ArrowRightIcon />} />
                 </Button.Root>
-              </div>
-            )}
-          </form.Subscribe>
-        </form>
-        <div className="flex-1" />
-      </div>
-    </div>
+              )}
+            </form.Subscribe>
+          </form>
+        </div>
+      </Page.Content>
+    </Page.Wrapper>
   );
 }

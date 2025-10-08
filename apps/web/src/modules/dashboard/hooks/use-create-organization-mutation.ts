@@ -1,6 +1,5 @@
 import { api } from "@lib/api";
 import { organizationsQuery } from "@lib/api/queries";
-import { Toaster } from "@mono/ui";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouteContext } from "@tanstack/react-router";
 
@@ -25,17 +24,8 @@ export const useCreateOrganizationMutation = () => {
 
       return json.data;
     },
-    onSuccess: async () => {
+    onSettled: async () => {
       await queryClient.refetchQueries(organizationsQuery(user.id));
-
-      Toaster.success("Organization created successfully!");
-    },
-    onError: (error, __, context) => {
-      if (context) {
-        Toaster.error("Failed to create organization", {
-          description: error.message,
-        });
-      }
     },
   });
 };
