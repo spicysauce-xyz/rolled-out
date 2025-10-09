@@ -80,18 +80,19 @@ function RouteComponent() {
 
   return (
     <div className="flex flex-col">
-      <div className="flex flex-col items-center gap-2 border-neutral-100 border-b px-6">
-        <div className="flex w-full max-w-180 items-center justify-between py-4">
-          <Avatar.Root size="lg">
-            <Avatar.Image 
-              src={organization.logo || undefined} 
-              alt={organization.name}
-            />
-            <Avatar.Fallback>
-              {organization.name.charAt(0).toUpperCase()}
-            </Avatar.Fallback>
-          </Avatar.Root>
-        </div>
+      <div className="flex items-center gap-4 w-full max-w-180 mx-auto border-neutral-100 border-b px-6 py-4">
+        <Avatar.Root size="lg">
+          <Avatar.Image 
+            src={organization.logo || undefined} 
+            alt={organization.name}
+          />
+          <Avatar.Fallback>
+            {organization.name.charAt(0).toUpperCase()}
+          </Avatar.Fallback>
+        </Avatar.Root>
+        <Text.Root size="lg" weight="semibold">
+          {organization.name}'s Changelog
+        </Text.Root>
       </div>
 
       <div className="flex flex-col divide-y divide-neutral-100">
