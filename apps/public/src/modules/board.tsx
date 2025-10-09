@@ -1,6 +1,6 @@
 import { api } from "@lib/api";
 import { editorContentClassName, generateHtml } from "@mono/editor";
-import { Button, Tag, Text } from "@mono/ui";
+import { Avatar, Button, Tag, Text } from "@mono/ui";
 import { cn } from "@mono/ui/utils";
 import { createFileRoute } from "@tanstack/react-router";
 import { format } from "date-fns";
@@ -8,7 +8,6 @@ import hljs from "highlight.js";
 import {
   CircleIcon,
   GlobeIcon,
-  ScrollTextIcon,
   ServerIcon,
   TabletSmartphoneIcon,
 } from "lucide-react";
@@ -32,7 +31,8 @@ export const Route = createFileRoute("/")({
     }
 
     return {
-      posts: json.data.map((post) => {
+      organization: json.data.organization,
+      posts: json.data.posts.map((post) => {
         const htmlContent = generateHtml(post.contentJSON.default);
 
         const codeBlockRegex =
@@ -68,15 +68,21 @@ export const Route = createFileRoute("/")({
 });
 
 function RouteComponent() {
-  const { posts } = Route.useLoaderData();
+  const { organization, posts } = Route.useLoaderData();
 
   return (
     <div className="flex flex-col">
       <div className="flex flex-col items-center gap-2 border-neutral-100 border-b px-6">
         <div className="flex w-full max-w-180 items-center justify-between py-4">
-          <div className="flex size-10 items-center justify-center rounded-md bg-neutral-50">
-            <ScrollTextIcon className="size-4 text-neutral-900" />
-          </div>
+          <Avatar.Root size="lg">
+            <Avatar.Image 
+              src={organization.logo || undefined} 
+              alt={organization.name}
+            />
+            <Avatar.Fallback>
+              {organization.name.charAt(0).toUpperCase()}
+            </Avatar.Fallback>
+          </Avatar.Root>
           <div className="flex items-center gap-2">
             <Button.Root variant="tertiary">
               <Button.Icon render={() => <CircleIcon />} />
