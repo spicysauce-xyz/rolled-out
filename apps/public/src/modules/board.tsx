@@ -82,7 +82,7 @@ function RouteComponent() {
   return (
     <div className="flex flex-col">
       <div className="sticky top-0 z-10 flex justify-center border-neutral-100 border-b bg-white">
-        <div className="flex w-full items-center justify-between gap-4 px-6 py-4 md:max-w-192">
+        <div className="flex w-full items-center justify-between gap-4 px-6 py-4 md:max-w-192 lg:max-w-204">
           <div className="flex items-center gap-4">
             <Avatar.Root size="lg">
               <Avatar.Image
