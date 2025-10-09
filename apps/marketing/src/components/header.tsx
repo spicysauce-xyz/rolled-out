@@ -2,12 +2,13 @@ import { LandingSection } from "@components/section";
 import { Button, Text } from "@mono/ui";
 
 interface NavItemProps {
+  href: string;
   children: React.ReactNode;
 }
 
-const NavItem = ({ children }: NavItemProps) => {
+const NavItem = ({ children, href }: NavItemProps) => {
   return (
-    <Button.Root size="sm" variant="tertiary">
+    <Button.Root render={<a href={href} />} size="sm" variant="tertiary">
       <span className="text-lg">{children}</span>
     </Button.Root>
   );
@@ -23,14 +24,14 @@ export const MarketingHeader = () => {
               rolledout.xyz
             </Text.Root>
           </div>
-          <div className="flex gap-2">
+          {/* <div className="flex gap-2">
             <NavItem>Pricing</NavItem>
             <NavItem>FAQ</NavItem>
             <NavItem>Docs</NavItem>
             <NavItem>GitHub</NavItem>
-          </div>
+          </div> */}
           <div className="flex flex-1 justify-end gap-2">
-            <NavItem>Sign In</NavItem>
+            <NavItem href="https://app.rolledout.xyz">Sign In</NavItem>
           </div>
         </div>
       </LandingSection.Content>

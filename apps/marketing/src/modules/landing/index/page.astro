@@ -1,19 +1,15 @@
 ---
 /** biome-ignore-all lint/correctness/noUnusedImports: astro */
 import MarketingLayout from "@layouts/marketing.astro";
-import { BoardsSection } from "./components/boards-section";
-import { EditorSection } from "./components/editor-section";
 import { JumbotronSection } from "./components/jumbotron-section";
-import { PricingSection } from "./components/pricing-section";
-import { WidgetsSection } from "./components/widgets-section";
 ---
 
 <MarketingLayout>
   <JumbotronSection client:load />
-  <div class="flex w-full flex-col gap-6 bg-neutral-50 py-6">
+  <!-- <div class="flex w-full flex-col gap-6 bg-neutral-50 py-6">
     <EditorSection client:load />
     <BoardsSection client:load />
     <WidgetsSection client:load />
   </div>
-  <PricingSection />
+  <PricingSection /> -->
 </MarketingLayout>

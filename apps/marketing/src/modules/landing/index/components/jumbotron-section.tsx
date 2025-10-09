@@ -74,7 +74,10 @@ export const JumbotronSection = () => {
             </LandingSection.Subtitle>
           </div>
           <div className="flex gap-2 opacity-0" ref={buttons}>
-            <Button.Root size="lg">
+            <Button.Root
+              render={<a href="https://app.rolledout.xyz" />}
+              size="lg"
+            >
               <span className="text-lg">Get Started</span>
               <Button.Icon render={<ArrowRightIcon />} />
             </Button.Root>
@@ -112,7 +115,7 @@ export const JumbotronSection = () => {
             />
           </div>
         </div>
-        <div className="flex w-full flex-col gap-6">
+        {/* <div className="flex w-full flex-col gap-6">
           <Text.Root
             className="text-balance"
             size="xs"
@@ -213,7 +216,7 @@ export const JumbotronSection = () => {
               />
             </div>
           </div>
-        </div>
+        </div> */}
       </LandingSection.Content>
     </LandingSection.Root>
   );

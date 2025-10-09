@@ -10,7 +10,7 @@ export const MarketingFooter = () => {
             <Text.Root size="lg" weight="medium">
               rolledout.xyz
             </Text.Root>
-            <div className="flex gap-4">
+            {/* <div className="flex gap-4">
               <Text.Root color="muted" size="lg">
                 Get Started
               </Text.Root>
@@ -29,7 +29,7 @@ export const MarketingFooter = () => {
               <Text.Root color="muted" size="lg">
                 Status
               </Text.Root>
-            </div>
+            </div> */}
           </div>
           <div className="h-px w-full bg-neutral-100" />
           <div className="flex w-full items-center justify-between">
