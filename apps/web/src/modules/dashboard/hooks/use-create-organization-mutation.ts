@@ -8,11 +8,12 @@ export const useCreateOrganizationMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: { name: string; slug: string }) => {
+    mutationFn: async (data: { name: string; slug: string; logo?: string }) => {
       const response = await api.organizations.$post({
         json: {
           slug: data.slug,
           name: data.name,
+          logo: data.logo,
         },
       });
 

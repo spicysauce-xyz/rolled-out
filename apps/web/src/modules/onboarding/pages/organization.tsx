@@ -2,9 +2,11 @@ import { Page } from "@components/page";
 import useAppForm from "@lib/form";
 import { useCreateOrganizationMutation } from "@modules/dashboard/hooks/use-create-organization-mutation";
 import { useCheckSlugMutation } from "@modules/settings/pages/details/hooks/use-check-slug-mutation";
-import { Button, Input, Label, Text, Toaster } from "@mono/ui";
+import { FileUpload } from "@modules/shared/components/file-upload";
+import { Avatar, Button, Input, Label, Text, Toaster } from "@mono/ui";
 import { createFileRoute } from "@tanstack/react-router";
-import { ArrowRightIcon, Loader2Icon } from "lucide-react";
+import { ArrowRightIcon, ImageIcon, Loader2Icon } from "lucide-react";
+import { match } from "ts-pattern";
 import { z } from "zod";
 
 export const Route = createFileRoute("/_authorized/onboarding/workspace")({
@@ -20,11 +22,13 @@ function RouteComponent() {
 
   const form = useAppForm({
     defaultValues: {
+      logo: null as string | null,
       name: "",
       slug: "",
     },
     validators: {
       onSubmit: z.object({
+        logo: z.string().nullable(),
         name: z.string().trim().min(1),
         slug: z.string().trim().min(1),
       }),
@@ -34,6 +38,7 @@ function RouteComponent() {
         {
           name: value.name,
           slug: value.slug,
+          logo: value.logo || undefined,
         },
         {
           onSuccess: () => {
@@ -79,6 +84,57 @@ function RouteComponent() {
             }}
           >
             <div className="flex flex-col gap-4">
+              <form.Field name="logo">
+                {(field) => (
+                  <form.FieldContainer>
+                    <Label.Root>Logo</Label.Root>
+                    <FileUpload
+                      id={field.name}
+                      onUploadComplete={(url) => {
+                        field.setValue(url);
+                      }}
+                      type="logo"
+                    >
+                      {({ id }, state) => (
+                        <label htmlFor={id}>
+                          <Avatar.Root className="group size-12">
+                            {match(state)
+                              .with(
+                                { state: "uploading" },
+                                ({ preview, progress }) => (
+                                  <div className="relative overflow-hidden rounded-md">
+                                    <Avatar.Image src={preview} />
+                                    <div
+                                      className="absolute inset-x-0 bottom-0 bg-white/10 backdrop-blur-sm transition-all"
+                                      style={{ top: `${progress}%` }}
+                                    />
+                                  </div>
+                                )
+                              )
+                              .otherwise(() => (
+                                <>
+                                  <Avatar.Image src={field.state.value || ""} />
+                                  <div className="absolute inset-0 flex items-center justify-center bg-white/10 opacity-0 backdrop-blur-sm transition-all group-hover:opacity-100">
+                                    <ImageIcon className="size-4 text-white" />
+                                  </div>
+                                </>
+                              ))}
+                            <form.Subscribe
+                              selector={({ values }) => ({ name: values.name })}
+                            >
+                              {({ name }) => (
+                                <Avatar.Fallback>
+                                  {name.charAt(0) || "?"}
+                                </Avatar.Fallback>
+                              )}
+                            </form.Subscribe>
+                          </Avatar.Root>
+                        </label>
+                      )}
+                    </FileUpload>
+                  </form.FieldContainer>
+                )}
+              </form.Field>
               <form.Field
                 listeners={{
                   onChange: ({ value }) => {

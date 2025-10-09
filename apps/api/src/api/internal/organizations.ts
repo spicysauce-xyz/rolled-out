@@ -25,7 +25,14 @@ export const OrganizationsRouter = new Hono<{ Variables: Variables }>()
   )
   .post(
     "/",
-    validate("json", z.object({ name: z.string(), slug: z.string() })),
+    validate(
+      "json",
+      z.object({
+        name: z.string(),
+        slug: z.string(),
+        logo: z.string().optional(),
+      })
+    ),
     (c) => {
       const data = c.req.valid("json");
       const user = c.get("user");

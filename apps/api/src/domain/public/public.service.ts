@@ -5,13 +5,12 @@ import { PublicRepository } from "./public.repository";
 
 export const PublicService = {
   getOrganizationBySlug: (slug: string) => {
-    return PublicRepository.getOrganizationBySlug(slug)
-      .map((organization) => ({
-        id: organization.id,
-        name: organization.name,
-        slug: organization.slug,
-        logo: organization.logo,
-      }));
+    return PublicRepository.getOrganizationBySlug(slug).map((organization) => ({
+      id: organization.id,
+      name: organization.name,
+      slug: organization.slug,
+      logo: organization.logo,
+    }));
   },
 
   getPublishedPostsFromOrganization: (slug: string) => {
