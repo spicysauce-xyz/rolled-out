@@ -11,8 +11,6 @@ import {
   ScrollTextIcon,
   ServerIcon,
   TabletSmartphoneIcon,
-  ThumbsDownIcon,
-  ThumbsUpIcon,
 } from "lucide-react";
 
 export const Route = createFileRoute("/")({
@@ -128,7 +126,7 @@ function RouteComponent() {
               <div className="flex w-full items-center justify-between border-neutral-100 border-t p-6">
                 <div className="flex flex-col gap-0.5">
                   <Text.Root color="muted" size="sm">
-                    Published by:
+                    Author(s):
                   </Text.Root>
                   <div className="flex items-center gap-2">
                     {post.editors.map((editor) => (
@@ -137,15 +135,6 @@ function RouteComponent() {
                       </Text.Root>
                     ))}
                   </div>
-                </div>
-                <div className="flex gap-2">
-                  <Button.Root variant="tertiary">
-                    <Button.Icon render={() => <ThumbsUpIcon />} />
-                    12
-                  </Button.Root>
-                  <Button.Root variant="tertiary">
-                    <Button.Icon render={() => <ThumbsDownIcon />} />3
-                  </Button.Root>
                 </div>
               </div>
             </div>
