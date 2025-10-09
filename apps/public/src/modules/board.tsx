@@ -1,13 +1,10 @@
 import { api } from "@lib/api";
 import { editorContentClassName, generateHtml } from "@mono/editor";
-import { Tag, Text } from "@mono/ui";
+import { Avatar, Tag, Text } from "@mono/ui";
 import { cn } from "@mono/ui/utils";
 import { createFileRoute } from "@tanstack/react-router";
 import { format } from "date-fns";
 import hljs from "highlight.js";
-import {
-  ScrollTextIcon,
-} from "lucide-react";
 
 export const Route = createFileRoute("/")({
   loader: async ({ context }) => {
@@ -15,20 +12,35 @@ export const Route = createFileRoute("/")({
       throw new Error("No subdomain found");
     }
 
-    const posts = await api.public[":organizationSlug"].posts.$get({
-      param: {
-        organizationSlug: context.subdomain,
-      },
-    });
+    const [organizationResponse, postsResponse] = await Promise.all([
+      api.public[":organizationSlug"].$get({
+        param: {
+          organizationSlug: context.subdomain,
+        },
+      }),
+      api.public[":organizationSlug"].posts.$get({
+        param: {
+          organizationSlug: context.subdomain,
+        },
+      }),
+    ]);
 
-    const json = await posts.json();
+    const [organizationJson, postsJson] = await Promise.all([
+      organizationResponse.json(),
+      postsResponse.json(),
+    ]);
 
-    if (!json.success) {
-      throw json.error;
+    if (!organizationJson.success) {
+      throw organizationJson.error;
+    }
+
+    if (!postsJson.success) {
+      throw postsJson.error;
     }
 
     return {
-      posts: json.data.map((post) => {
+      organization: organizationJson.data,
+      posts: postsJson.data.map((post) => {
         const htmlContent = generateHtml(post.contentJSON.default);
 
         const codeBlockRegex =
@@ -64,15 +76,21 @@ export const Route = createFileRoute("/")({
 });
 
 function RouteComponent() {
-  const { posts } = Route.useLoaderData();
+  const { organization, posts } = Route.useLoaderData();
 
   return (
     <div className="flex flex-col">
       <div className="flex flex-col items-center gap-2 border-neutral-100 border-b px-6">
         <div className="flex w-full max-w-180 items-center justify-between py-4">
-          <div className="flex size-10 items-center justify-center rounded-md bg-neutral-50">
-            <ScrollTextIcon className="size-4 text-neutral-900" />
-          </div>
+          <Avatar.Root size="lg">
+            <Avatar.Image 
+              src={organization.logo || undefined} 
+              alt={organization.name}
+            />
+            <Avatar.Fallback>
+              {organization.name.charAt(0).toUpperCase()}
+            </Avatar.Fallback>
+          </Avatar.Root>
         </div>
       </div>
 
