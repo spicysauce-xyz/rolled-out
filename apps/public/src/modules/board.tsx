@@ -18,21 +18,35 @@ export const Route = createFileRoute("/")({
       throw new Error("No subdomain found");
     }
 
-    const posts = await api.public[":organizationSlug"].posts.$get({
-      param: {
-        organizationSlug: context.subdomain,
-      },
-    });
+    const [organizationResponse, postsResponse] = await Promise.all([
+      api.public[":organizationSlug"].$get({
+        param: {
+          organizationSlug: context.subdomain,
+        },
+      }),
+      api.public[":organizationSlug"].posts.$get({
+        param: {
+          organizationSlug: context.subdomain,
+        },
+      }),
+    ]);
 
-    const json = await posts.json();
+    const [organizationJson, postsJson] = await Promise.all([
+      organizationResponse.json(),
+      postsResponse.json(),
+    ]);
 
-    if (!json.success) {
-      throw json.error;
+    if (!organizationJson.success) {
+      throw organizationJson.error;
+    }
+
+    if (!postsJson.success) {
+      throw postsJson.error;
     }
 
     return {
-      organization: json.data.organization,
-      posts: json.data.posts.map((post) => {
+      organization: organizationJson.data,
+      posts: postsJson.data.map((post) => {
         const htmlContent = generateHtml(post.contentJSON.default);
 
         const codeBlockRegex =

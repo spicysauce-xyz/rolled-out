@@ -7,6 +7,18 @@ import { PublicService } from "../../domain/public/public.service";
 export const PublicRouter = new Hono()
   .basePath("/public")
   .get(
+    "/:organizationSlug",
+    validate("param", z.object({ organizationSlug: z.string().min(1) })),
+    (c) => {
+      return PublicService.getOrganizationBySlug(
+        c.req.param("organizationSlug")
+      ).match(
+        (organization) => ok(c, organization),
+        (error) => notOk(c, { message: (error as Error).message }, 500)
+      );
+    }
+  )
+  .get(
     "/:organizationSlug/posts",
     validate("param", z.object({ organizationSlug: z.string().min(1) })),
     (c) => {
@@ -14,7 +26,7 @@ export const PublicRouter = new Hono()
         c.req.param("organizationSlug")
       ).match(
         (posts) => ok(c, posts),
-        (error) => notOk(c, { message: error.message }, 500)
+        (error) => notOk(c, { message: (error as Error).message }, 500)
       );
     }
   );
