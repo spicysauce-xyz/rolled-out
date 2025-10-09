@@ -1,16 +1,10 @@
 import { api } from "@lib/api";
 import { editorContentClassName, generateHtml } from "@mono/editor";
-import { Avatar, Button, Tag, Text } from "@mono/ui";
+import { Avatar, Tag, Text } from "@mono/ui";
 import { cn } from "@mono/ui/utils";
 import { createFileRoute } from "@tanstack/react-router";
 import { format } from "date-fns";
 import hljs from "highlight.js";
-import {
-  CircleIcon,
-  GlobeIcon,
-  ServerIcon,
-  TabletSmartphoneIcon,
-} from "lucide-react";
 
 export const Route = createFileRoute("/")({
   loader: async ({ context }) => {
@@ -97,24 +91,6 @@ function RouteComponent() {
               {organization.name.charAt(0).toUpperCase()}
             </Avatar.Fallback>
           </Avatar.Root>
-          <div className="flex items-center gap-2">
-            <Button.Root variant="tertiary">
-              <Button.Icon render={() => <CircleIcon />} />
-              Main
-            </Button.Root>
-            <Button.Root variant="tertiary">
-              <Button.Icon render={() => <TabletSmartphoneIcon />} />
-              Mobile
-            </Button.Root>
-            <Button.Root variant="tertiary">
-              <Button.Icon render={() => <GlobeIcon />} />
-              Web
-            </Button.Root>
-            <Button.Root variant="tertiary">
-              <Button.Icon render={() => <ServerIcon />} />
-              Self-hosted
-            </Button.Root>
-          </div>
         </div>
       </div>
 
