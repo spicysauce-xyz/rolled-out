@@ -1,10 +1,11 @@
 import { api } from "@lib/api";
 import { editorContentClassName, generateHtml } from "@mono/editor";
-import { Avatar, Tag, Text } from "@mono/ui";
+import { Avatar, Button, Tag, Text } from "@mono/ui";
 import { cn } from "@mono/ui/utils";
 import { createFileRoute } from "@tanstack/react-router";
 import { format } from "date-fns";
 import hljs from "highlight.js";
+import { GlobeIcon } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   loader: async ({ context }) => {
@@ -80,26 +81,34 @@ function RouteComponent() {
 
   return (
     <div className="flex flex-col">
-      <div className="flex items-center gap-4 w-full max-w-180 mx-auto border-neutral-100 border-b px-6 py-4">
-        <Avatar.Root size="lg">
-          <Avatar.Image 
-            src={organization.logo || undefined} 
-            alt={organization.name}
-          />
-          <Avatar.Fallback>
-            {organization.name.charAt(0).toUpperCase()}
-          </Avatar.Fallback>
-        </Avatar.Root>
-        <Text.Root size="lg" weight="semibold">
-          {organization.name}'s Changelog
-        </Text.Root>
+      <div className="sticky top-0 z-10 flex justify-center border-neutral-100 border-b bg-white">
+        <div className="flex w-full items-center justify-between gap-4 px-6 py-4 md:max-w-192">
+          <div className="flex items-center gap-4">
+            <Avatar.Root size="lg">
+              <Avatar.Image
+                alt={organization.name}
+                src={organization.logo || undefined}
+              />
+              <Avatar.Fallback>
+                {organization.name.charAt(0).toUpperCase()}
+              </Avatar.Fallback>
+            </Avatar.Root>
+            <Text.Root size="lg" weight="medium">
+              {organization.name}'s Changelog
+            </Text.Root>
+          </div>
+          <Button.Root variant="tertiary">
+            <Button.Icon render={<GlobeIcon />} />
+            Website
+          </Button.Root>
+        </div>
       </div>
 
       <div className="flex flex-col divide-y divide-neutral-100">
         {posts.map((post) => (
-          <div className="mx-auto flex w-full" key={post.id}>
-            <div className="relative flex flex-1 items-start justify-end gap-4 p-6">
-              <div className="sticky top-6 flex flex-col items-end gap-4">
+          <div className="mx-auto flex w-full justify-center" key={post.id}>
+            <div className="relative hidden flex-1 items-start justify-end gap-4 p-6 lg:flex">
+              <div className="sticky top-24 flex flex-col items-end gap-4">
                 {post.publishedAt && (
                   <Text.Root color="muted" size="sm">
                     {format(post.publishedAt, "MMM d, h:mm a")}
@@ -114,13 +123,20 @@ function RouteComponent() {
                 </div>
               </div>
             </div>
-            <div className="w-full max-w-180 border-neutral-100 border-x">
+            <div className="w-full border-neutral-100 md:max-w-192 lg:border-x">
+              <div className="flex p-6 pb-0 lg:hidden">
+                {post.publishedAt && (
+                  <Text.Root color="muted" size="sm">
+                    {format(post.publishedAt, "MMM d, h:mm a")}
+                  </Text.Root>
+                )}
+              </div>
               <div
                 className={cn(editorContentClassName, "p-6")}
                 // biome-ignore lint/security/noDangerouslySetInnerHtml: ok this is bad, will think about it
                 dangerouslySetInnerHTML={{ __html: post.contentHTML }}
               />
-              <div className="flex w-full items-center justify-between border-neutral-100 border-t p-6">
+              <div className="flex w-full items-center justify-between border-neutral-100 px-6 pb-6 lg:border-t lg:pt-6">
                 <div className="flex flex-col gap-0.5">
                   <Text.Root color="muted" size="sm">
                     Author(s):
@@ -135,7 +151,7 @@ function RouteComponent() {
                 </div>
               </div>
             </div>
-            <div className="flex-1 p-6" />
+            <div className="hidden flex-1 p-6 lg:flex" />
           </div>
         ))}
       </div>

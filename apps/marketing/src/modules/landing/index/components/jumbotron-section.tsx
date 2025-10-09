@@ -1,6 +1,6 @@
 import { LandingSection } from "@components/section";
 import { useGSAP } from "@gsap/react";
-import { Button, Text } from "@mono/ui";
+import { Button } from "@mono/ui";
 import { gsap } from "gsap";
 import { ArrowRightIcon } from "lucide-react";
 import { useRef } from "react";
