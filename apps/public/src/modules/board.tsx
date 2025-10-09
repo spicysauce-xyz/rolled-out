@@ -73,6 +73,15 @@ export const Route = createFileRoute("/")({
       }),
     };
   },
+  head: ({ loaderData }) => ({
+    meta: [
+      {
+        title: loaderData?.organization?.name
+          ? `${loaderData.organization.name}'s Changelog | rolledout.xyz`
+          : "Changelog | rolledout.xyz",
+      },
+    ],
+  }),
   component: RouteComponent,
 });
 
