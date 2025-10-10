@@ -9,7 +9,7 @@ export const JumbotronSection = () => {
   const title = useRef<HTMLParagraphElement>(null);
   const subtitle = useRef<HTMLParagraphElement>(null);
   const buttons = useRef<HTMLDivElement>(null);
-  const screenshot = useRef<HTMLDivElement>(null);
+  const screenshot = useRef<HTMLImageElement>(null);
 
   useGSAP(() => {
     const TITLE_ANIMATION_DURATION = 1;
@@ -104,14 +104,13 @@ export const JumbotronSection = () => {
               <div className="size-3 rounded-full bg-success-500" />
             </div>
           </div>
-          <div className="flex aspect-[16/9] flex-1 overflow-hidden rounded-sm border border-neutral-100 bg-neutral-50">
-            <div
+          <div className="flex-1 overflow-hidden rounded-sm border border-neutral-100 bg-neutral-50">
+            {/** biome-ignore lint/performance/noImgElement: i will */}
+            <img
+              alt="Rolled Out"
               className="flex-1 bg-center bg-cover opacity-0"
               ref={screenshot}
-              style={{
-                backgroundImage:
-                  "url(https://cdn.dribbble.com/userupload/8490108/file/original-d8b02f177cb6bc660f1bf5a4456a92de.png?resize=2048x1536&vertical=center)",
-              }}
+              src="/app.png"
             />
           </div>
         </div>
