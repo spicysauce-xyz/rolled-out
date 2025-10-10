@@ -8,6 +8,13 @@ import { useSocialLoginMutation } from "../hooks/use-social-login-mutation";
 
 export const Route = createFileRoute("/_guest-only/login")({
   component: Login,
+  head: () => ({
+    meta: [
+      {
+        title: "Sign in | rolledout.xyz",
+      },
+    ],
+  }),
 });
 
 function Login() {

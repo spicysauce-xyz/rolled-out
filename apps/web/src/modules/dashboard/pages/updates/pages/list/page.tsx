@@ -19,6 +19,13 @@ export const Route = createFileRoute(
   "/_authorized/_has-organization/$organizationSlug/_layout/updates/"
 )({
   component: RouteComponent,
+  head: (ctx) => ({
+    meta: [
+      {
+        title: `Updates | ${ctx.match.context.organization.name} x rolledout.xyz`,
+      },
+    ],
+  }),
 });
 
 function RouteComponent() {

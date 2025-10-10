@@ -9,6 +9,13 @@ export const Route = createFileRoute("/_authorized/account")({
   validateSearch: z.object({
     organization: z.string().optional(),
   }),
+  head: (ctx) => ({
+    meta: [
+      {
+        title: `Settings | ${ctx.match.context.user.name} x rolledout.xyz`,
+      },
+    ],
+  }),
 });
 
 function RouteComponent() {
