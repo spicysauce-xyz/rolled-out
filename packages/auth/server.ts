@@ -18,6 +18,14 @@ interface Params {
     url: string;
     token: string;
   }) => Promise<void>;
+  google?: {
+    clientId: string;
+    clientSecret: string;
+  };
+  github?: {
+    clientId: string;
+    clientSecret: string;
+  };
 }
 
 export const createServerAuth = (
@@ -45,12 +53,12 @@ export const createServerAuth = (
     },
     socialProviders: {
       google: {
-        clientId: "100000000000000000000",
-        clientSecret: "100000000000000000000",
+        clientId: params.google?.clientId ?? "100000000000000000000",
+        clientSecret: params.google?.clientSecret ?? "100000000000000000000",
       },
       github: {
-        clientId: "100000000000000000000",
-        clientSecret: "100000000000000000000",
+        clientId: params.github?.clientId ?? "100000000000000000000",
+        clientSecret: params.github?.clientSecret ?? "100000000000000000000",
       },
     },
     trustedOrigins: params.trustedOrigins,

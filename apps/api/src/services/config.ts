@@ -19,6 +19,10 @@ export const configSchema = z.object({
   GITHUB_CLIENT_ID: z.string(),
   GITHUB_PRIVATE_KEY: z.string(),
   GITHUB_WEBHOOK_SECRET: z.string(),
+  GITHUB_AUTH_CLIENT_ID: z.string(),
+  GITHUB_AUTH_CLIENT_SECRET: z.string(),
+  GOOGLE_AUTH_CLIENT_ID: z.string(),
+  GOOGLE_AUTH_CLIENT_SECRET: z.string(),
 });
 
 const formatConfig = () => {
@@ -64,6 +68,14 @@ const formatConfig = () => {
       clientId: config.GITHUB_CLIENT_ID,
       privateKey: config.GITHUB_PRIVATE_KEY,
       webhookSecret: config.GITHUB_WEBHOOK_SECRET,
+    },
+    googleAuth: {
+      clientId: config.GOOGLE_AUTH_CLIENT_ID,
+      clientSecret: config.GOOGLE_AUTH_CLIENT_SECRET,
+    },
+    githubAuth: {
+      clientId: config.GITHUB_AUTH_CLIENT_ID,
+      clientSecret: config.GITHUB_AUTH_CLIENT_SECRET,
     },
   };
 };

@@ -120,7 +120,7 @@ function Login() {
           <Button.Root
             className="w-full"
             color="neutral"
-            isDisabled
+            isDisabled={socialLoginMutation.isPending}
             isLoading={
               socialLoginMutation.isPending &&
               socialLoginMutation.variables.provider === "google"
@@ -134,7 +134,7 @@ function Login() {
           <Button.Root
             className="w-full"
             color="neutral"
-            isDisabled
+            isDisabled={socialLoginMutation.isPending}
             isLoading={
               socialLoginMutation.isPending &&
               socialLoginMutation.variables.provider === "github"
