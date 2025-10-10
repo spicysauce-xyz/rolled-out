@@ -36,4 +36,8 @@ export const auth: ReturnType<typeof createServerAuth> = createServerAuth({
       },
     });
   },
+  github: {
+    clientId: Config.githubAuth.clientId,
+    clientSecret: Config.githubAuth.clientSecret,
+  },
 });
