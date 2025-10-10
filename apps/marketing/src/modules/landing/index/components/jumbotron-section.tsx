@@ -108,7 +108,7 @@ export const JumbotronSection = () => {
             {/** biome-ignore lint/performance/noImgElement: i will */}
             <img
               alt="Rolled Out"
-              className="flex-1 bg-center bg-cover opacity-0"
+              className="opacity-0"
               ref={screenshot}
               src="/app.png"
             />
