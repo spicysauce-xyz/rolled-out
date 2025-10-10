@@ -33,7 +33,16 @@ export const Route = createFileRoute(
         params: { organizationSlug: context.organization.slug },
       });
     }
+
+    return { post };
   },
+  head: (ctx) => ({
+    meta: [
+      {
+        title: `${ctx.match.context.post.title} | ${ctx.match.context.organization.name} x rolledout.xyz`,
+      },
+    ],
+  }),
 });
 
 function RouteComponent() {

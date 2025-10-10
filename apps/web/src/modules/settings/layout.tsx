@@ -7,6 +7,13 @@ export const Route = createFileRoute(
   "/_authorized/_has-organization/$organizationSlug/settings"
 )({
   component: RouteComponent,
+  head: (ctx) => ({
+    meta: [
+      {
+        title: `Settings | ${ctx.match.context.organization.name} x rolledout.xyz`,
+      },
+    ],
+  }),
 });
 
 function RouteComponent() {

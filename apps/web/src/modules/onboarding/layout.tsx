@@ -18,6 +18,13 @@ import { useMemo } from "react";
 
 export const Route = createFileRoute("/_authorized/onboarding")({
   component: RouteComponent,
+  head: (ctx) => ({
+    meta: [
+      {
+        title: `Welcome | ${ctx.match.context.user.name} x rolledout.xyz`,
+      },
+    ],
+  }),
 });
 
 function RouteComponent() {
