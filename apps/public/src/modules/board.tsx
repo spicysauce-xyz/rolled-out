@@ -108,13 +108,11 @@ function RouteComponent() {
           </div>
           {organization.websiteUrl && (
             <Button.Root
-              asChild
-              variant="tertiary"
+              render={<a href={organization.websiteUrl} />}
+              variant="secondary"
             >
-              <a href={organization.websiteUrl}>
-                <Button.Icon render={<GlobeIcon />} />
-                Website
-              </a>
+              <Button.Icon render={<GlobeIcon />} />
+              Website
             </Button.Root>
           )}
         </div>
