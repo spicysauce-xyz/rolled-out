@@ -280,7 +280,7 @@ function RouteComponent() {
                     />
                   </Input.Wrapper>
                 </Input.Root>
-                <Text.Root color="muted" size="sm">
+                <Text.Root color="muted">
                   Enter your website URL with http:// or https:// (e.g., https://example.com)
                 </Text.Root>
               </form.FieldContainer>
