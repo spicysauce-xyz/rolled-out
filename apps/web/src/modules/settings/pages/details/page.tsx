@@ -11,23 +11,6 @@ import { z } from "zod";
 import { useCheckSlugMutation } from "./hooks/use-check-slug-mutation";
 import { useUpdateOrganizationMutation } from "./hooks/use-update-organization-mutation";
 
-// Validation for website domain (no http/https, allows www.domain.com or domain.com)
-const websiteUrlSchema = z
-  .string()
-  .trim()
-  .min(1, "Website URL is required")
-  .refine(
-    (val) => {
-      // Ensure no http:// or https://
-      if (val.toLowerCase().startsWith("http://") || val.toLowerCase().startsWith("https://")) {
-        return false;
-      }
-      // Basic domain validation (allows www.domain.com or domain.com)
-      const domainRegex = /^(www\.)?[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
-      return domainRegex.test(val);
-    },
-    { message: "Invalid domain format. Use format: domain.com or www.domain.com (no http/https)" }
-  );
 
 export const Route = createFileRoute(
   "/_authorized/_has-organization/$organizationSlug/settings/details"
@@ -63,7 +46,26 @@ function RouteComponent() {
         name: z.string().trim().min(1),
         slug: z.string().trim().min(1),
         logo: z.string().nullable(),
-        websiteUrl: websiteUrlSchema,
+        websiteUrl: z
+          .string()
+          .trim()
+          .min(1, "Website URL is required")
+          .url("Invalid URL format")
+          .refine(
+            (val) => val.startsWith("http://") || val.startsWith("https://"),
+            { message: "URL must start with http:// or https://" }
+          )
+          .refine(
+            (val) => {
+              try {
+                const url = new URL(val);
+                return url.pathname === "" || url.pathname === "/";
+              } catch {
+                return false;
+              }
+            },
+            { message: "URL must not contain a path (pathname must be empty or '/')" }
+          ),
       }),
     },
     onSubmit: async ({ value, formApi }) =>
@@ -273,13 +275,13 @@ function RouteComponent() {
                       name={field.name}
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
-                      placeholder="example.com"
+                      placeholder="https://example.com"
                       value={field.state.value}
                     />
                   </Input.Wrapper>
                 </Input.Root>
                 <Text.Root className="mt-1.5" color="muted" size="sm">
-                  Enter your domain without http:// (e.g., domain.com or www.domain.com)
+                  Enter your website URL with http:// or https:// (e.g., https://example.com)
                 </Text.Root>
               </form.FieldContainer>
             )}

@@ -24,22 +24,17 @@ const WELL_KNOWN_EMAIL_PROVIDERS = [
   "yandex.com",
 ];
 
-const websiteUrlSchema = z
-  .string()
-  .trim()
-  .min(1, "Website URL is required")
-  .refine(
-    (val) => {
-      // Ensure no http:// or https://
-      if (val.toLowerCase().startsWith("http://") || val.toLowerCase().startsWith("https://")) {
-        return false;
-      }
-      // Basic domain validation (allows www.domain.com or domain.com)
-      const domainRegex = /^(www\.)?[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
-      return domainRegex.test(val);
-    },
-    { message: "Invalid domain format. Use format: domain.com or www.domain.com (no http/https)" }
-  );
+// Extract domain from user email for prefill
+const getDefaultWebsiteUrl = (email?: string) => {
+  if (!email) return "";
+
+  const domain = email.split("@")[1];
+  if (!domain || WELL_KNOWN_EMAIL_PROVIDERS.includes(domain.toLowerCase())) {
+    return "";
+  }
+
+  return `https://${domain}`;
+};
 
 export const Route = createFileRoute("/_authorized/onboarding/workspace")({
   component: RouteComponent,
@@ -53,32 +48,38 @@ function RouteComponent() {
 
   const checkSlugMutation = useCheckSlugMutation();
 
-  // Extract domain from user email for prefill
-  const getDefaultWebsiteUrl = () => {
-    const email = sessionData?.data?.user?.email;
-    if (!email) return "";
-
-    const domain = email.split("@")[1];
-    if (!domain || WELL_KNOWN_EMAIL_PROVIDERS.includes(domain.toLowerCase())) {
-      return "";
-    }
-
-    return domain;
-  };
-
   const form = useAppForm({
     defaultValues: {
       logo: null as string | null,
       name: "",
       slug: "",
-      websiteUrl: getDefaultWebsiteUrl(),
+      websiteUrl: getDefaultWebsiteUrl(sessionData?.data?.user?.email),
     },
     validators: {
       onSubmit: z.object({
         logo: z.string().nullable(),
         name: z.string().trim().min(1),
         slug: z.string().trim().min(1),
-        websiteUrl: websiteUrlSchema,
+        websiteUrl: z
+          .string()
+          .trim()
+          .min(1, "Website URL is required")
+          .url("Invalid URL format")
+          .refine(
+            (val) => val.startsWith("http://") || val.startsWith("https://"),
+            { message: "URL must start with http:// or https://" }
+          )
+          .refine(
+            (val) => {
+              try {
+                const url = new URL(val);
+                return url.pathname === "" || url.pathname === "/";
+              } catch {
+                return false;
+              }
+            },
+            { message: "URL must not contain a path (pathname must be empty or '/')" }
+          ),
       }),
     },
     onSubmit: async ({ value }) => {
@@ -301,13 +302,13 @@ function RouteComponent() {
                           name={field.name}
                           onBlur={field.handleBlur}
                           onChange={(e) => field.handleChange(e.target.value)}
-                          placeholder="example.com"
+                          placeholder="https://example.com"
                           value={field.state.value}
                         />
                       </Input.Wrapper>
                     </Input.Root>
                     <Text.Root className="mt-1.5" color="muted" size="sm">
-                      Enter your domain without http:// (e.g., domain.com or www.domain.com)
+                      Enter your website URL with http:// or https:// (e.g., https://example.com)
                     </Text.Root>
                   </form.FieldContainer>
                 )}
