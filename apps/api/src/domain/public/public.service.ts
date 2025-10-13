@@ -10,6 +10,7 @@ export const PublicService = {
       name: organization.name,
       slug: organization.slug,
       logo: organization.logo,
+      websiteUrl: organization.websiteUrl,
     }));
   },
 

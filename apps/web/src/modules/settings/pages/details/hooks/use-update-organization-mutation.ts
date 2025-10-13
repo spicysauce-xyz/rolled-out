@@ -12,6 +12,7 @@ export const useUpdateOrganizationMutation = () => {
       name: string;
       slug: string;
       logo: string | undefined;
+      websiteUrl: string;
       organizationId: string;
     }) => {
       const response = await api.organizations[":organizationId"].$put({
@@ -22,6 +23,7 @@ export const useUpdateOrganizationMutation = () => {
           name: data.name,
           slug: data.slug,
           logo: data.logo,
+          websiteUrl: data.websiteUrl,
         },
       });
 

@@ -39,7 +39,7 @@ export const OrganizationRepository = {
     id: string,
     data: Pick<
       typeof schema.organization.$inferInsert,
-      "name" | "slug" | "logo"
+      "name" | "slug" | "logo" | "websiteUrl"
     >
   ) => {
     return ResultAsync.fromPromise(

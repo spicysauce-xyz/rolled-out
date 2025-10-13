@@ -8,6 +8,24 @@ import z from "zod";
 import { OrganizationCreatedEvent } from "../../domain/organizaiton/organization.events";
 import { OrganizationService } from "../../domain/organizaiton/organization.service";
 
+// Validation for website domain (no http/https, allows www.domain.com or domain.com)
+const websiteUrlSchema = z
+  .string()
+  .trim()
+  .min(1, "Website URL is required")
+  .refine(
+    (val) => {
+      // Ensure no http:// or https://
+      if (val.toLowerCase().startsWith("http://") || val.toLowerCase().startsWith("https://")) {
+        return false;
+      }
+      // Basic domain validation (allows www.domain.com or domain.com)
+      const domainRegex = /^(www\.)?[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
+      return domainRegex.test(val);
+    },
+    { message: "Invalid domain format. Use format: domain.com or www.domain.com (no http/https)" }
+  );
+
 type Variables = AuthMiddleware<true>["Variables"];
 
 export const OrganizationsRouter = new Hono<{ Variables: Variables }>()
@@ -31,6 +49,7 @@ export const OrganizationsRouter = new Hono<{ Variables: Variables }>()
         name: z.string(),
         slug: z.string(),
         logo: z.string().optional(),
+        websiteUrl: websiteUrlSchema,
       })
     ),
     (c) => {
@@ -68,6 +87,7 @@ export const OrganizationsRouter = new Hono<{ Variables: Variables }>()
         name: z.string(),
         slug: z.string(),
         logo: z.string().optional(),
+        websiteUrl: websiteUrlSchema.optional(),
       })
     ),
     (c) => {

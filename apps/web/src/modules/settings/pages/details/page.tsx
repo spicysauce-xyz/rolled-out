@@ -2,7 +2,7 @@ import { Card } from "@components/card";
 import { organizationQuery, organizationsQuery } from "@lib/api/queries";
 import useAppForm from "@lib/form";
 import { FileUpload } from "@modules/shared/components/file-upload";
-import { Avatar, Button, Input, Label, Toaster } from "@mono/ui";
+import { Avatar, Button, Input, Label, Text, Toaster } from "@mono/ui";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { ImageIcon, Loader2Icon, SaveIcon } from "lucide-react";
@@ -10,6 +10,24 @@ import { match } from "ts-pattern";
 import { z } from "zod";
 import { useCheckSlugMutation } from "./hooks/use-check-slug-mutation";
 import { useUpdateOrganizationMutation } from "./hooks/use-update-organization-mutation";
+
+// Validation for website domain (no http/https, allows www.domain.com or domain.com)
+const websiteUrlSchema = z
+  .string()
+  .trim()
+  .min(1, "Website URL is required")
+  .refine(
+    (val) => {
+      // Ensure no http:// or https://
+      if (val.toLowerCase().startsWith("http://") || val.toLowerCase().startsWith("https://")) {
+        return false;
+      }
+      // Basic domain validation (allows www.domain.com or domain.com)
+      const domainRegex = /^(www\.)?[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
+      return domainRegex.test(val);
+    },
+    { message: "Invalid domain format. Use format: domain.com or www.domain.com (no http/https)" }
+  );
 
 export const Route = createFileRoute(
   "/_authorized/_has-organization/$organizationSlug/settings/details"
@@ -38,12 +56,14 @@ function RouteComponent() {
       name: organizationQueryData?.name || "",
       slug: organizationQueryData?.slug || "",
       logo: organizationQueryData?.logo || null,
+      websiteUrl: organizationQueryData?.websiteUrl || "",
     },
     validators: {
       onSubmit: z.object({
         name: z.string().trim().min(1),
         slug: z.string().trim().min(1),
         logo: z.string().nullable(),
+        websiteUrl: websiteUrlSchema,
       }),
     },
     onSubmit: async ({ value, formApi }) =>
@@ -52,6 +72,7 @@ function RouteComponent() {
           name: value.name,
           slug: value.slug,
           logo: value.logo || undefined,
+          websiteUrl: value.websiteUrl,
           organizationId: organization.id,
         },
         {
@@ -228,6 +249,38 @@ function RouteComponent() {
                       )}
                   </Input.Wrapper>
                 </Input.Root>
+              </form.FieldContainer>
+            )}
+          </form.Field>
+
+          <form.Field name="websiteUrl">
+            {(field) => (
+              <form.FieldContainer errors={field.state.meta.errors}>
+                <Label.Root>
+                  Website
+                  <Label.Asterisk />
+                </Label.Root>
+                <Input.Root
+                  className="w-full"
+                  isDisabled={
+                    isOrganizationQueryPending || form.state.isSubmitting
+                  }
+                  isInvalid={field.state.meta.errors.length > 0}
+                >
+                  <Input.Wrapper>
+                    <Input.Field
+                      id={field.name}
+                      name={field.name}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      placeholder="example.com"
+                      value={field.state.value}
+                    />
+                  </Input.Wrapper>
+                </Input.Root>
+                <Text.Root className="mt-1.5" color="muted" size="sm">
+                  Enter your domain without http:// (e.g., domain.com or www.domain.com)
+                </Text.Root>
               </form.FieldContainer>
             )}
           </form.Field>

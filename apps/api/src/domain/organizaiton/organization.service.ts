@@ -19,7 +19,7 @@ export const OrganizationService = {
     id: string,
     data: Pick<
       typeof schema.organization.$inferInsert,
-      "name" | "slug" | "logo"
+      "name" | "slug" | "logo" | "websiteUrl"
     >
   ) => {
     const ability = Policy.defineAbilityForMember(member);
