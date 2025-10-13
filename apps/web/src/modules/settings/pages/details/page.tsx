@@ -2,7 +2,7 @@ import { Card } from "@components/card";
 import { organizationQuery, organizationsQuery } from "@lib/api/queries";
 import useAppForm from "@lib/form";
 import { FileUpload } from "@modules/shared/components/file-upload";
-import { Avatar, Button, Input, Label, Toaster } from "@mono/ui";
+import { Avatar, Button, Input, Label, Text, Toaster } from "@mono/ui";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { ImageIcon, Loader2Icon, SaveIcon } from "lucide-react";
@@ -10,6 +10,7 @@ import { match } from "ts-pattern";
 import { z } from "zod";
 import { useCheckSlugMutation } from "./hooks/use-check-slug-mutation";
 import { useUpdateOrganizationMutation } from "./hooks/use-update-organization-mutation";
+
 
 export const Route = createFileRoute(
   "/_authorized/_has-organization/$organizationSlug/settings/details"
@@ -38,12 +39,33 @@ function RouteComponent() {
       name: organizationQueryData?.name || "",
       slug: organizationQueryData?.slug || "",
       logo: organizationQueryData?.logo || null,
+      websiteUrl: organizationQueryData?.websiteUrl || "",
     },
     validators: {
       onSubmit: z.object({
         name: z.string().trim().min(1),
         slug: z.string().trim().min(1),
         logo: z.string().nullable(),
+        websiteUrl: z
+          .string()
+          .trim()
+          .min(1, "Website URL is required")
+          .url("Invalid URL format")
+          .refine(
+            (val) => val.startsWith("http://") || val.startsWith("https://"),
+            { message: "URL must start with http:// or https://" }
+          )
+          .refine(
+            (val) => {
+              try {
+                const url = new URL(val);
+                return url.pathname === "" || url.pathname === "/";
+              } catch {
+                return false;
+              }
+            },
+            { message: "URL must not contain a path (pathname must be empty or '/')" }
+          ),
       }),
     },
     onSubmit: async ({ value, formApi }) =>
@@ -52,6 +74,7 @@ function RouteComponent() {
           name: value.name,
           slug: value.slug,
           logo: value.logo || undefined,
+          websiteUrl: value.websiteUrl,
           organizationId: organization.id,
         },
         {
@@ -228,6 +251,38 @@ function RouteComponent() {
                       )}
                   </Input.Wrapper>
                 </Input.Root>
+              </form.FieldContainer>
+            )}
+          </form.Field>
+
+          <form.Field name="websiteUrl">
+            {(field) => (
+              <form.FieldContainer errors={field.state.meta.errors}>
+                <Label.Root>
+                  Website
+                  <Label.Asterisk />
+                </Label.Root>
+                <Input.Root
+                  className="w-full"
+                  isDisabled={
+                    isOrganizationQueryPending || form.state.isSubmitting
+                  }
+                  isInvalid={field.state.meta.errors.length > 0}
+                >
+                  <Input.Wrapper>
+                    <Input.Field
+                      id={field.name}
+                      name={field.name}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      placeholder="https://example.com"
+                      value={field.state.value}
+                    />
+                  </Input.Wrapper>
+                </Input.Root>
+                <Text.Root color="muted">
+                  Enter your website URL with http:// or https:// (e.g., https://example.com)
+                </Text.Root>
               </form.FieldContainer>
             )}
           </form.Field>

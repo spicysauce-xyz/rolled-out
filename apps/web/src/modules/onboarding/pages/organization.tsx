@@ -1,5 +1,6 @@
 import { Page } from "@components/page";
 import useAppForm from "@lib/form";
+import { useSession } from "@modules/auth/hooks/use-session";
 import { useCreateOrganizationMutation } from "@modules/dashboard/hooks/use-create-organization-mutation";
 import { useCheckSlugMutation } from "@modules/settings/pages/details/hooks/use-check-slug-mutation";
 import { FileUpload } from "@modules/shared/components/file-upload";
@@ -9,12 +10,39 @@ import { ArrowRightIcon, ImageIcon, Loader2Icon } from "lucide-react";
 import { match } from "ts-pattern";
 import { z } from "zod";
 
+// Common email providers to exclude from prefill
+const WELL_KNOWN_EMAIL_PROVIDERS = [
+  "gmail.com",
+  "yahoo.com",
+  "hotmail.com",
+  "outlook.com",
+  "icloud.com",
+  "aol.com",
+  "mail.com",
+  "protonmail.com",
+  "zoho.com",
+  "yandex.com",
+];
+
+// Extract domain from user email for prefill
+const getDefaultWebsiteUrl = (email?: string) => {
+  if (!email) return "";
+
+  const domain = email.split("@")[1];
+  if (!domain || WELL_KNOWN_EMAIL_PROVIDERS.includes(domain.toLowerCase())) {
+    return "";
+  }
+
+  return `https://${domain}`;
+};
+
 export const Route = createFileRoute("/_authorized/onboarding/workspace")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
   const navigate = Route.useNavigate();
+  const { data: sessionData } = useSession();
 
   const createOrganizationMutation = useCreateOrganizationMutation();
 
@@ -25,12 +53,33 @@ function RouteComponent() {
       logo: null as string | null,
       name: "",
       slug: "",
+      websiteUrl: getDefaultWebsiteUrl(sessionData?.data?.user?.email),
     },
     validators: {
       onSubmit: z.object({
         logo: z.string().nullable(),
         name: z.string().trim().min(1),
         slug: z.string().trim().min(1),
+        websiteUrl: z
+          .string()
+          .trim()
+          .min(1, "Website URL is required")
+          .url("Invalid URL format")
+          .refine(
+            (val) => val.startsWith("http://") || val.startsWith("https://"),
+            { message: "URL must start with http:// or https://" }
+          )
+          .refine(
+            (val) => {
+              try {
+                const url = new URL(val);
+                return url.pathname === "" || url.pathname === "/";
+              } catch {
+                return false;
+              }
+            },
+            { message: "URL must not contain a path (pathname must be empty or '/')" }
+          ),
       }),
     },
     onSubmit: async ({ value }) => {
@@ -39,6 +88,7 @@ function RouteComponent() {
           name: value.name,
           slug: value.slug,
           logo: value.logo || undefined,
+          websiteUrl: value.websiteUrl,
         },
         {
           onSuccess: () => {
@@ -231,6 +281,35 @@ function RouteComponent() {
                           )}
                       </Input.Wrapper>
                     </Input.Root>
+                  </form.FieldContainer>
+                )}
+              </form.Field>
+
+              <form.Field name="websiteUrl">
+                {(field) => (
+                  <form.FieldContainer errors={field.state.meta.errors}>
+                    <Label.Root>
+                      Website
+                      <Label.Asterisk />
+                    </Label.Root>
+                    <Input.Root
+                      className="w-full"
+                      isInvalid={field.state.meta.errors.length > 0}
+                    >
+                      <Input.Wrapper>
+                        <Input.Field
+                          id={field.name}
+                          name={field.name}
+                          onBlur={field.handleBlur}
+                          onChange={(e) => field.handleChange(e.target.value)}
+                          placeholder="https://example.com"
+                          value={field.state.value}
+                        />
+                      </Input.Wrapper>
+                    </Input.Root>
+                    <Text.Root color="muted">
+                      Enter your website URL with http:// or https:// (e.g., https://example.com)
+                    </Text.Root>
                   </form.FieldContainer>
                 )}
               </form.Field>

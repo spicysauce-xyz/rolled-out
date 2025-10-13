@@ -106,10 +106,15 @@ function RouteComponent() {
               {organization.name}'s Changelog
             </Text.Root>
           </div>
-          <Button.Root variant="tertiary">
-            <Button.Icon render={<GlobeIcon />} />
-            Website
-          </Button.Root>
+          {organization.websiteUrl && (
+            <Button.Root
+              render={<a href={organization.websiteUrl} />}
+              variant="secondary"
+            >
+              <Button.Icon render={<GlobeIcon />} />
+              Website
+            </Button.Root>
+          )}
         </div>
       </div>
 

@@ -16,6 +16,7 @@ export const UserRepository = {
             columns: {
               id: true,
               name: true,
+              websiteUrl: true,
               slug: true,
               logo: true,
               createdAt: true,
@@ -31,6 +32,7 @@ export const UserRepository = {
         name: membership.organization.name,
         slug: membership.organization.slug ?? "",
         logo: membership.organization.logo,
+        websiteUrl: membership.organization.websiteUrl,
         role: membership.role,
         createdAt: membership.organization.createdAt,
         updatedAt: membership.organization.updatedAt,

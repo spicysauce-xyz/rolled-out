@@ -8,6 +8,28 @@ import z from "zod";
 import { OrganizationCreatedEvent } from "../../domain/organizaiton/organization.events";
 import { OrganizationService } from "../../domain/organizaiton/organization.service";
 
+// Validation for website URL (must start with http/https and have no pathname)
+const websiteUrlSchema = z
+  .string()
+  .trim()
+  .min(1, "Website URL is required")
+  .url("Invalid URL format")
+  .refine(
+    (val) => val.startsWith("http://") || val.startsWith("https://"),
+    { message: "URL must start with http:// or https://" }
+  )
+  .refine(
+    (val) => {
+      try {
+        const url = new URL(val);
+        return url.pathname === "" || url.pathname === "/";
+      } catch {
+        return false;
+      }
+    },
+    { message: "URL must not contain a path (pathname must be empty or '/')" }
+  );
+
 type Variables = AuthMiddleware<true>["Variables"];
 
 export const OrganizationsRouter = new Hono<{ Variables: Variables }>()
@@ -31,6 +53,7 @@ export const OrganizationsRouter = new Hono<{ Variables: Variables }>()
         name: z.string(),
         slug: z.string(),
         logo: z.string().optional(),
+        websiteUrl: websiteUrlSchema,
       })
     ),
     (c) => {
@@ -68,6 +91,7 @@ export const OrganizationsRouter = new Hono<{ Variables: Variables }>()
         name: z.string(),
         slug: z.string(),
         logo: z.string().optional(),
+        websiteUrl: websiteUrlSchema.optional(),
       })
     ),
     (c) => {
