@@ -111,7 +111,7 @@ function RouteComponent() {
               asChild
               variant="tertiary"
             >
-              <a href={`https://${organization.websiteUrl}`}>
+              <a href={organization.websiteUrl}>
                 <Button.Icon render={<GlobeIcon />} />
                 Website
               </a>
