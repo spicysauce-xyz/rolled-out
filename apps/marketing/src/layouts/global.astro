@@ -1,4 +1,6 @@
 ---
+// biome-ignore lint/correctness/noUnusedImports: its used
+import Posthog from "@components/libs/posthog.astro";
 import "../styles/global.css";
 ---
 
@@ -21,6 +23,7 @@ import "../styles/global.css";
       All-in-one toolkit for writing, organizing, and publishing your app’s
       changelog | Rolled Out
     </title>
+    <Posthog />
   </head>
   <body>
     <slot />
