@@ -2,8 +2,9 @@ import type { api, SuccessResponse } from "@lib/api";
 import { ScrollArea } from "@mono/ui";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import type { InferResponseType } from "hono";
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { Item } from "./item";
+import { getCommitId } from "./utils";
 
 type Commit = SuccessResponse<
   InferResponseType<
@@ -16,8 +17,8 @@ type ListProps = {
   hasNextPage: boolean;
   isFetchingNextPage: boolean;
   fetchNextPage: () => void;
-  onCommitClick: (sha: string) => void;
-  selectedCommits: string[];
+  onCommitClick: (sha: Commit) => void;
+  selectedCommits: Commit[];
 };
 
 export const List: React.FC<ListProps> = ({
@@ -66,17 +67,6 @@ export const List: React.FC<ListProps> = ({
     virtualizedItems,
   ]);
 
-  const getItemId = useCallback(
-    (commit: { commitId: string } | { prId: string }) => {
-      if ("commitId" in commit) {
-        return commit.commitId;
-      }
-
-      return commit.prId;
-    },
-    []
-  );
-
   return (
     <ScrollArea.Root className="flex flex-1 flex-col overflow-hidden">
       <ScrollArea.Scrollbar orientation="vertical">
@@ -109,8 +99,9 @@ export const List: React.FC<ListProps> = ({
                 ) : (
                   <Item
                     commit={commit}
-                    id={getItemId(commit)}
-                    isSelected={selectedCommits.includes(getItemId(commit))}
+                    isSelected={selectedCommits.some(
+                      (c) => getCommitId(c) === getCommitId(commit)
+                    )}
                     onClick={onCommitClick}
                   />
                 )}

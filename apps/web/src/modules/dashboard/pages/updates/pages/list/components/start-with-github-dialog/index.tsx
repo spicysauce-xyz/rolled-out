@@ -1,9 +1,18 @@
+import type { api, SuccessResponse } from "@lib/api";
 import { useCreateUpdateMutation } from "@modules/dashboard/hooks/use-create-update-mutation";
 import { Dialog, Toaster } from "@mono/ui";
 import { useNavigate } from "@tanstack/react-router";
+import type { InferResponseType } from "hono";
 import { useState } from "react";
 import { Content } from "./content";
 import { RepositorySelector } from "./repository-selector";
+import { getCommitId } from "./utils";
+
+type Commit = SuccessResponse<
+  InferResponseType<
+    (typeof api.organizations)[":organizationId"]["repositories"][":repositoryId"]["commits"]["$get"]
+  >
+>[number];
 
 type StartWithGithubDialogProps = {
   organizationSlug: string;
@@ -21,27 +30,32 @@ export const StartWithGithubDialog: React.FC<StartWithGithubDialogProps> = ({
   const navigate = useNavigate();
 
   const [repositoryId, setRepositoryId] = useState<string | undefined>();
-  const [selectedCommits, setSelectedCommits] = useState<string[]>([]);
+  const [selectedCommits, setSelectedCommits] = useState<Commit[]>([]);
 
   const { mutateAsync: createPost, isPending: isCreatingPost } =
     useCreateUpdateMutation();
 
-  const handleCommitClick = (sha: string) => {
+  const handleCommitClick = (commit: Commit) => {
     if (isCreatingPost) {
       return;
     }
 
     setSelectedCommits((prev) => {
-      if (prev.includes(sha)) {
-        return prev.filter((s) => s !== sha);
+      const index = prev.findIndex(
+        (c) => getCommitId(c) === getCommitId(commit)
+      );
+
+      if (index !== -1) {
+        return [...prev.slice(0, index), ...prev.slice(index + 1)];
       }
-      return [...prev, sha];
+
+      return [...prev, commit];
     });
   };
 
   const handleCreate = () => {
     createPost(
-      { organizationId, githubIds: selectedCommits },
+      { organizationId, githubIds: selectedCommits.map(getCommitId) },
       {
         onSuccess: (post) => {
           navigate({

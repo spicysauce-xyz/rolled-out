@@ -1,16 +1,27 @@
 import { Transition } from "@components/transition";
+import type { api, SuccessResponse } from "@lib/api";
 import { githubCommitsQuery } from "@lib/api/queries";
-import { ScrollArea } from "@mono/ui";
+import { IconButton, ScrollArea, Text } from "@mono/ui";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import type { InferResponseType } from "hono";
+import { GitCommitVerticalIcon, GitPullRequestIcon, XIcon } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import { match, P } from "ts-pattern";
 import { Item } from "./item";
 import { List } from "./list";
+import { getCommitId } from "./utils";
+
+type Commit = SuccessResponse<
+  InferResponseType<
+    (typeof api.organizations)[":organizationId"]["repositories"][":repositoryId"]["commits"]["$get"]
+  >
+>[number];
 
 type ContentProps = {
   organizationId: string;
   repositoryId?: string;
-  selectedCommits: string[];
-  onCommitClick: (sha: string) => void;
+  selectedCommits: Commit[];
+  onCommitClick: (commit: Commit) => void;
 };
 
 export const Content: React.FC<ContentProps> = ({
@@ -59,7 +70,63 @@ export const Content: React.FC<ContentProps> = ({
           )
         )
         .otherwise(({ data }) => (
-          <Transition.Item className="flex flex-1 overflow-hidden" key="list">
+          <Transition.Item
+            className="flex flex-1 flex-col overflow-hidden"
+            key="list"
+          >
+            <AnimatePresence initial={false}>
+              {selectedCommits.length > 0 && (
+                <ScrollArea.Root>
+                  <ScrollArea.Viewport
+                    render={
+                      <motion.div
+                        animate={{ height: 59 }}
+                        className="flex w-full overflow-hidden border-neutral-100 border-b bg-neutral-50"
+                        exit={{ height: 0 }}
+                        initial={{ height: 0 }}
+                      />
+                    }
+                  >
+                    <div className="flex w-full items-start gap-2 px-6 py-2">
+                      <AnimatePresence>
+                        {selectedCommits.map((commit) => (
+                          <motion.div
+                            animate={{ opacity: 1 }}
+                            className="flex max-w-50 shrink-0 items-center gap-2 rounded-md border border-neutral-100 bg-white p-1 pl-2"
+                            exit={{ opacity: 0 }}
+                            initial={{ opacity: 0 }}
+                            key={getCommitId(commit)}
+                            layout
+                            transition={{ duration: 0.075 }}
+                          >
+                            {"prId" in commit && (
+                              <GitPullRequestIcon className="size-4 shrink-0 stroke-neutral-500" />
+                            )}
+                            {"commitId" in commit && (
+                              <GitCommitVerticalIcon className="size-4 shrink-0 stroke-neutral-500" />
+                            )}
+                            <Text.Root className="truncate" weight="medium">
+                              {commit.title}
+                            </Text.Root>
+                            <IconButton.Root
+                              className="shrink-0"
+                              onClick={() => onCommitClick(commit)}
+                              size="sm"
+                              variant="tertiary"
+                            >
+                              <IconButton.Icon render={<XIcon />} />
+                            </IconButton.Root>
+                          </motion.div>
+                        ))}
+                      </AnimatePresence>
+                    </div>
+                  </ScrollArea.Viewport>
+                  <ScrollArea.Scrollbar orientation="horizontal" size="sm">
+                    <ScrollArea.Thumb />
+                  </ScrollArea.Scrollbar>
+                </ScrollArea.Root>
+              )}
+            </AnimatePresence>
             <List
               fetchNextPage={commitsQuery.fetchNextPage}
               hasNextPage={commitsQuery.hasNextPage}
