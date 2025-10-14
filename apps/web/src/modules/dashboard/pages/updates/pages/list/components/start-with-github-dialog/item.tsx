@@ -12,14 +12,12 @@ type Commit = SuccessResponse<
 >[number];
 
 type ItemProps = {
-  id: string;
   commit: Commit;
   isSelected: boolean;
-  onClick: (commitId: string) => void;
+  onClick: (commit: Commit) => void;
 };
 
 export const Item: React.FC<ItemProps> & { Skeleton: React.FC } = ({
-  id,
   commit,
   isSelected,
   onClick,
@@ -30,11 +28,14 @@ export const Item: React.FC<ItemProps> & { Skeleton: React.FC } = ({
         "flex w-full items-center gap-4 rounded-md border border-neutral-100 bg-white p-4 transition-colors hover:bg-neutral-50",
         isSelected && "bg-neutral-100 hover:bg-neutral-100"
       )}
-      onClick={() => onClick(id)}
+      onClick={() => onClick(commit)}
       tabIndex={-1}
       type="button"
     >
-      <Checkbox.Root checked={isSelected} onCheckedChange={() => onClick(id)} />
+      <Checkbox.Root
+        checked={isSelected}
+        onCheckedChange={() => onClick(commit)}
+      />
       <div className="flex flex-1 items-center gap-2 overflow-hidden">
         {"prId" in commit && (
           <GitPullRequestIcon className="size-4 stroke-neutral-500" />
