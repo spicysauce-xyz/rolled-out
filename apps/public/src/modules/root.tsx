@@ -1,3 +1,4 @@
+import { useInitializePosthog } from "@lib/posthog";
 import styles from "@styles/global.css?url";
 import type { QueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -9,7 +10,8 @@ import {
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { getHost, getSubdomainFromHost } from "@utils/domain";
-import type { ReactNode } from "react";
+import { PostHogProvider } from "posthog-js/react";
+import { useEffect } from "react";
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
@@ -83,14 +85,12 @@ export const Route = createRootRouteWithContext<{
 });
 
 function RootComponent() {
-  return (
-    <RootDocument>
-      <Outlet />
-    </RootDocument>
-  );
-}
+  const posthog = useInitializePosthog();
 
-function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
+  useEffect(() => {
+    posthog.captureException(new Error("Test error"));
+  }, [posthog]);
+
   return (
     <html lang="en">
       {/** biome-ignore lint/style/noHeadElement: actually needed */}
@@ -98,7 +98,9 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
         <HeadContent />
       </head>
       <body>
-        {children}
+        <PostHogProvider client={posthog}>
+          <Outlet />
+        </PostHogProvider>
         <TanStackRouterDevtools position="bottom-right" />
         <ReactQueryDevtools buttonPosition="bottom-left" />
         <Scripts />

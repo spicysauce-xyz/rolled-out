@@ -1,5 +1,6 @@
 import { Confirmer } from "@components/confirmer";
 import { Transition } from "@components/transition";
+import { useInitializePosthog } from "@lib/posthog";
 import { Toaster } from "@mono/ui";
 import styles from "@styles/global.css?url";
 import type { QueryClient } from "@tanstack/react-query";
@@ -10,7 +11,7 @@ import {
   Scripts,
   useRouterState,
 } from "@tanstack/react-router";
-import type { ReactNode } from "react";
+import { PostHogProvider } from "posthog-js/react";
 import { useEffect, useState } from "react";
 
 export const Route = createRootRouteWithContext<{
@@ -74,34 +75,14 @@ export const Route = createRootRouteWithContext<{
 function RootComponent() {
   const [isLoading, setIsLoading] = useState(true);
   const route = useRouterState();
+  const posthog = useInitializePosthog();
 
   useEffect(() => {
-    if (route.status === "idle") {
+    if (route.status === "idle" && posthog) {
       setIsLoading(false);
     }
-  }, [route.status]);
+  }, [route.status, posthog]);
 
-  return (
-    <RootDocument>
-      <Transition.Root>
-        {isLoading && (
-          <Transition.Item
-            className="fixed inset-0 z-50 h-svh w-screen bg-white"
-            key="loader"
-            transition={{
-              duration: 0.3,
-            }}
-          />
-        )}
-      </Transition.Root>
-      <Outlet />
-      <Confirmer.Root />
-      <Toaster.Root />
-    </RootDocument>
-  );
-}
-
-function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
   return (
     <html lang="en">
       {/** biome-ignore lint/style/noHeadElement: head is required */}
@@ -109,7 +90,22 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
         <HeadContent />
       </head>
       <body>
-        {children}
+        <Transition.Root>
+          {isLoading && (
+            <Transition.Item
+              className="fixed inset-0 z-50 h-svh w-screen bg-white"
+              key="loader"
+              transition={{
+                duration: 0.3,
+              }}
+            />
+          )}
+        </Transition.Root>
+        <PostHogProvider client={posthog}>
+          <Outlet />
+        </PostHogProvider>
+        <Confirmer.Root />
+        <Toaster.Root />
         <Scripts />
       </body>
     </html>

@@ -1,3 +1,4 @@
+import { GlobalError } from "@components/error";
 import { QueryClient } from "@tanstack/react-query";
 import { createRouter as createTanStackRouter } from "@tanstack/react-router";
 import { routerWithQueryClient } from "@tanstack/react-router-with-query";
@@ -14,6 +15,7 @@ export const createRouter = () => {
       defaultPreload: "viewport",
       defaultPendingMinMs: 0,
       defaultPendingMs: 0,
+      defaultErrorComponent: GlobalError,
     }),
     queryClient
   );

@@ -1,5 +1,7 @@
 interface RawConfig {
   api: string;
+  posthogKey: string;
+  posthogHost: string;
 }
 
 declare global {
@@ -11,6 +13,8 @@ declare global {
 export const getServerConfig = (): RawConfig => {
   return {
     api: process.env.API ?? "",
+    posthogKey: process.env.POSTHOG_KEY ?? "",
+    posthogHost: process.env.POSTHOG_HOST ?? "",
   };
 };
 
@@ -25,6 +29,10 @@ const formatConfig = (
 ) => {
   return {
     apiUrl: rawConfig.api,
+    posthog: {
+      key: rawConfig.posthogKey,
+      host: rawConfig.posthogHost,
+    },
   };
 };
 

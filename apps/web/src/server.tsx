@@ -5,7 +5,6 @@ import {
 } from "@tanstack/react-start/server";
 import { createRouter } from "./router";
 
-// Create a custom stream handler that injects the config
 const customStreamHandler = async (
   context: Parameters<typeof defaultStreamHandler>[0]
 ) => {

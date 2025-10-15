@@ -1,9 +1,11 @@
 import { sessionQuery } from "@lib/api/queries";
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { tryCatch } from "@utils/promise";
+import { usePostHog } from "posthog-js/react";
+import { useEffect } from "react";
 
 export const Route = createFileRoute("/_authorized")({
-  component: Outlet,
+  component: AuthorizedComponent,
   beforeLoad: async ({ context, location }) => {
     const { data: session } = await tryCatch(
       context.queryClient.ensureQueryData(sessionQuery())
@@ -24,3 +26,22 @@ export const Route = createFileRoute("/_authorized")({
     };
   },
 });
+
+function AuthorizedComponent() {
+  const { user } = Route.useRouteContext();
+  const posthog = usePostHog();
+
+  useEffect(() => {
+    if (!posthog.__loaded) {
+      return;
+    }
+
+    posthog.identify(user.id, {
+      email: user.email,
+      name: user.name,
+      avatar: user.image,
+    });
+  }, [posthog, posthog.__loaded, user]);
+
+  return <Outlet />;
+}
