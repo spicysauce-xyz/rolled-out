@@ -5,7 +5,9 @@
 <p align="center"><b>Rolled Out</b> - the open-source release notes platform</p>
 
 <div align="center">
-  <a href="https://rolledout.xyz">Website</a>
+  <a href="https://rolledout.xyz">Website</a> |
+  <a href="https://changelog.rolledout.xyz">Live Demo</a> |
+  <a href="https://app.rolledout.xyz">Sign up</a>
 </div>
 
 ___
