@@ -3,6 +3,7 @@ import {
   type BetterAuthOptions,
   betterAuth,
   type SecondaryStorage,
+  type User,
 } from "better-auth";
 import { magicLink } from "better-auth/plugins";
 
@@ -25,6 +26,9 @@ interface Params {
   github?: {
     clientId: string;
     clientSecret: string;
+  };
+  hooks?: {
+    onCreateUser?: (user: User) => Promise<void> | void;
   };
 }
 
@@ -49,6 +53,17 @@ export const createServerAuth = (
       accountLinking: {
         enabled: true,
         trustedProviders: ["google", "github"],
+      },
+    },
+    databaseHooks: {
+      user: {
+        create: {
+          after: async (user) => {
+            if (params.hooks?.onCreateUser) {
+              await params.hooks.onCreateUser(user);
+            }
+          },
+        },
       },
     },
     socialProviders: {

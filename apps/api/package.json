@@ -46,6 +46,7 @@
     "neverthrow": "^8.2.0",
     "octokit": "^5.0.3",
     "pg": "^8.13.3",
+    "posthog-node": "^5.10.3",
     "react": "catalog:",
     "react-dom": "catalog:",
     "resend": "^4.5.1",

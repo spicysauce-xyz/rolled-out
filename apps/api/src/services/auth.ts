@@ -3,6 +3,7 @@ import { createServerAuth, drizzleAdapter } from "@mono/auth/server";
 import { Config } from "@services/config";
 import { Database } from "@services/db";
 import { KV } from "@services/kv";
+import { Posthog } from "./posthog";
 
 export const auth: ReturnType<typeof createServerAuth> = createServerAuth({
   baseURL: Config.self.base,
@@ -43,5 +44,14 @@ export const auth: ReturnType<typeof createServerAuth> = createServerAuth({
   google: {
     clientId: Config.googleAuth.clientId,
     clientSecret: Config.googleAuth.clientSecret,
+  },
+  hooks: {
+    onCreateUser: (user) => {
+      Posthog.capture(user.id, {
+        module: "auth",
+        entity: "user",
+        action: "signed_up",
+      });
+    },
   },
 });

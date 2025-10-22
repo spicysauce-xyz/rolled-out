@@ -23,6 +23,8 @@ export const configSchema = z.object({
   GITHUB_AUTH_CLIENT_SECRET: z.string(),
   GOOGLE_AUTH_CLIENT_ID: z.string(),
   GOOGLE_AUTH_CLIENT_SECRET: z.string(),
+  POSTHOG_KEY: z.string(),
+  POSTHOG_HOST: z.string(),
 });
 
 const formatConfig = () => {
@@ -76,6 +78,10 @@ const formatConfig = () => {
     githubAuth: {
       clientId: config.GITHUB_AUTH_CLIENT_ID,
       clientSecret: config.GITHUB_AUTH_CLIENT_SECRET,
+    },
+    posthog: {
+      apiKey: config.POSTHOG_KEY,
+      host: config.POSTHOG_HOST,
     },
   };
 };
