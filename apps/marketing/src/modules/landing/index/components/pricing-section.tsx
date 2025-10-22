@@ -2,10 +2,16 @@ import { LandingSection } from "@components/section";
 import { Button, ButtonGroup, Text } from "@mono/ui";
 import {
   ArrowLeftIcon,
-  CheckIcon,
   CircleIcon,
   DiamondIcon,
+  EyeOffIcon,
+  GithubIcon,
+  GlobeIcon,
+  InfinityIcon,
+  MessageCircleIcon,
   SquareIcon,
+  UserIcon,
+  UsersIcon,
 } from "lucide-react";
 
 export const PricingSection = () => {
@@ -53,32 +59,24 @@ export const PricingSection = () => {
 
             <div className="flex flex-col gap-2 border-neutral-100 border-t p-4">
               <div className="flex items-center gap-2">
-                <CheckIcon className="size-4" />
+                <UserIcon className="size-4" />
                 <Text.Root size="lg" weight="medium">
-                  Up to 3 boards
+                  1 member
                 </Text.Root>
               </div>
               <div className="flex items-center gap-2">
-                <CheckIcon className="size-4" />
+                <InfinityIcon className="size-4" />
                 <Text.Root size="lg" weight="medium">
-                  Up to 3 boards
-                </Text.Root>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckIcon className="size-4" />
-                <Text.Root size="lg" weight="medium">
-                  Up to 3 boards
-                </Text.Root>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckIcon className="size-4" />
-                <Text.Root size="lg" weight="medium">
-                  Up to 3 boards
+                  Unlimited updates
                 </Text.Root>
               </div>
             </div>
             <div className="flex flex-col border-neutral-100 border-t p-4">
-              <Button.Root size="lg" variant="tertiary">
+              <Button.Root
+                render={<a href="https://app.rolledout.xyz?plan=free" />}
+                size="lg"
+                variant="tertiary"
+              >
                 <span className="w-full text-center text-lg">
                   Start with Free
                 </span>
@@ -107,32 +105,35 @@ export const PricingSection = () => {
                 Everything from Free, plus:
               </Text.Root>
               <div className="flex items-center gap-2">
-                <CheckIcon className="size-4" />
+                <UsersIcon className="size-4" />
                 <Text.Root size="lg" weight="medium">
-                  Up to 3 boards
+                  Up to 3 members
                 </Text.Root>
               </div>
               <div className="flex items-center gap-2">
-                <CheckIcon className="size-4" />
+                <GlobeIcon className="size-4" />
                 <Text.Root size="lg" weight="medium">
-                  Up to 3 boards
+                  Custom domain
                 </Text.Root>
               </div>
               <div className="flex items-center gap-2">
-                <CheckIcon className="size-4" />
+                <GithubIcon className="size-4" />
                 <Text.Root size="lg" weight="medium">
-                  Up to 3 boards
+                  GitHub integration
                 </Text.Root>
               </div>
               <div className="flex items-center gap-2">
-                <CheckIcon className="size-4" />
+                <EyeOffIcon className="size-4" />
                 <Text.Root size="lg" weight="medium">
-                  Up to 3 boards
+                  Removed branding
                 </Text.Root>
               </div>
             </div>
             <div className="flex flex-col border-neutral-100 border-t p-4">
-              <Button.Root size="lg">
+              <Button.Root
+                render={<a href="https://app.rolledout.xyz?plan=starter" />}
+                size="lg"
+              >
                 <span className="w-full text-center text-lg">
                   Start with Starter
                 </span>
@@ -161,32 +162,24 @@ export const PricingSection = () => {
                 Everything from Starter, plus:
               </Text.Root>
               <div className="flex items-center gap-2">
-                <CheckIcon className="size-4" />
+                <UsersIcon className="size-4" />
                 <Text.Root size="lg" weight="medium">
-                  Up to 3 boards
+                  Unlimited members
                 </Text.Root>
               </div>
               <div className="flex items-center gap-2">
-                <CheckIcon className="size-4" />
+                <MessageCircleIcon className="size-4" />
                 <Text.Root size="lg" weight="medium">
-                  Up to 3 boards
-                </Text.Root>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckIcon className="size-4" />
-                <Text.Root size="lg" weight="medium">
-                  Up to 3 boards
-                </Text.Root>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckIcon className="size-4" />
-                <Text.Root size="lg" weight="medium">
-                  Up to 3 boards
+                  Priority support
                 </Text.Root>
               </div>
             </div>
             <div className="flex flex-col border-neutral-100 border-t p-4">
-              <Button.Root size="lg" variant="tertiary">
+              <Button.Root
+                render={<a href="https://app.rolledout.xyz?plan=pro" />}
+                size="lg"
+                variant="tertiary"
+              >
                 <span className="w-full text-center text-lg">
                   Start with Pro
                 </span>
