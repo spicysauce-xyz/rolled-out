@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const configSchema = z.object({
+  PORT: z.string().optional(),
   SELF: z.string(),
   CLIENT: z.string(),
   DATABASE_URL: z.string(),
@@ -31,6 +32,7 @@ const formatConfig = () => {
   const config = configSchema.parse(process.env);
 
   return {
+    port: Number.parseInt(config.PORT ?? "4000", 10),
     self: {
       raw: config.SELF,
       base: new URL(config.SELF || "").origin,
