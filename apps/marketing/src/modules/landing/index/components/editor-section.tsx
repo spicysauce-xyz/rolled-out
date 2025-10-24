@@ -14,8 +14,8 @@ export const EditorSection = () => {
               Production-ready release notes in minutes, together.
             </LandingSection.Title>
             <LandingSection.Subtitle>
-              Write side-by-side with your team - rough changes turn into
-              polished, on-brand copy in minutes.
+              Work with your team in real time and shape rough notes into clean
+              copy.
             </LandingSection.Subtitle>
           </div>
         </LandingSection.Header>
