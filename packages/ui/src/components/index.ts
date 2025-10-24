@@ -20,3 +20,4 @@ export * from "./text";
 export * from "./textarea";
 export * from "./toast";
 export * from "./tooltip";
+export * from "./transition";

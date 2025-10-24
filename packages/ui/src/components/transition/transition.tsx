@@ -25,7 +25,4 @@ const TransitionItem = forwardRef<
   );
 });
 
-export const Transition = {
-  Root: TransitionRoot,
-  Item: TransitionItem,
-};
+export { TransitionRoot as Root, TransitionItem as Item };

@@ -4,7 +4,7 @@ import { Loader2 } from "lucide-react";
 import React from "react";
 import type { VariantProps } from "tailwind-variants";
 import { tv } from "../../utils";
-import { Transition } from "../transition/transition";
+import { Transition } from "../transition";
 
 export const buttonVariants = tv({
   slots: {
