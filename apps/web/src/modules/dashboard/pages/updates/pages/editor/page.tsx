@@ -1,6 +1,13 @@
 import { Confirmer } from "@components/confirmer";
 import { Page } from "@components/page";
 import { Transition } from "@components/transition";
+import {
+  Calendar01Icon,
+  Sent02Icon,
+  Tick02Icon,
+  TickDouble02Icon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { updateQuery } from "@lib/api/queries";
 import { Breadcrumbs } from "@modules/dashboard/components/breadcrumbs";
 import { SchedulePostDialog } from "@modules/dashboard/components/schedule-post-dialog";
@@ -11,7 +18,6 @@ import { Button, Skeleton, Toaster } from "@mono/ui";
 import { useDisclosure } from "@mono/ui/hooks";
 import { createFileRoute, redirect, useParams } from "@tanstack/react-router";
 import { tryCatch } from "@utils/promise";
-import { CheckCheckIcon, CheckIcon, ClockIcon, SendIcon } from "lucide-react";
 import { ConnectedPeers } from "./components/connected-peers";
 import { useHocuspocusProvider } from "./hooks/use-hocuspocus-provider";
 import { useUploadAssetMutation } from "./hooks/use-upload-asset-mutation";
@@ -66,7 +72,7 @@ function RouteComponent() {
       action: {
         label: "Yes, publish",
         color: "success",
-        icon: SendIcon,
+        icon: Sent02Icon,
         run: () =>
           publishPost(
             { organizationId: organization.id, id },
@@ -122,12 +128,20 @@ function RouteComponent() {
           <Transition.Root>
             {hocuspocus.isReady && hocuspocus.hasUnsyncedChanges && (
               <Transition.Item key="sync-status">
-                <CheckIcon className="size-4 animate-pulse text-neutral-500" />
+                <HugeiconsIcon
+                  className="size-4 animate-pulse text-neutral-500"
+                  icon={Tick02Icon}
+                  strokeWidth={2}
+                />
               </Transition.Item>
             )}
             {hocuspocus.isReady && !hocuspocus.hasUnsyncedChanges && (
               <Transition.Item key="synced">
-                <CheckCheckIcon className="size-4 text-success-500" />
+                <HugeiconsIcon
+                  className="size-4 text-success-500"
+                  icon={TickDouble02Icon}
+                  strokeWidth={2}
+                />
               </Transition.Item>
             )}
             {!hocuspocus.isReady && (
@@ -151,14 +165,18 @@ function RouteComponent() {
               onClick={schedulePostDialog.open}
               variant="secondary"
             >
-              <Button.Icon render={<ClockIcon />} />
+              <Button.Icon
+                render={<HugeiconsIcon icon={Calendar01Icon} strokeWidth={2} />}
+              />
               Schedule
             </Button.Root>
             <Button.Root
               isDisabled={!hocuspocus.isReady}
               onClick={handlePublish}
             >
-              <Button.Icon render={<SendIcon />} />
+              <Button.Icon
+                render={<HugeiconsIcon icon={Sent02Icon} strokeWidth={2} />}
+              />
               Publish
             </Button.Root>
           </div>
