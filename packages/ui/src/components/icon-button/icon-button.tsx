@@ -51,10 +51,10 @@ export const iconButtonVariants = tv({
         root: ["size-8 rounded-md"],
       },
       md: {
-        root: ["size-9 rounded-md"],
+        root: ["size-9 rounded-lg"],
       },
       lg: {
-        root: ["size-10 rounded-md"],
+        root: ["size-10 rounded-xl"],
       },
     },
     disabled: {

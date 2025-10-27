@@ -27,10 +27,10 @@ export const buttonVariants = tv({
   variants: {
     variant: {
       filled: {
-        root: "inset-shadow-default border text-white shadow-xs",
+        root: "border text-white shadow-xs",
       },
       secondary: {
-        root: "inset-shadow-default border border-neutral-200 bg-white text-neutral-900 shadow-xs",
+        root: "border border-neutral-200 bg-white text-neutral-900 shadow-xs",
         icon: "text-neutral-600",
       },
       tertiary: {
@@ -50,10 +50,10 @@ export const buttonVariants = tv({
         root: ["h-8 rounded-md px-2"],
       },
       md: {
-        root: ["h-9 rounded-md px-2.5"],
+        root: ["h-9 rounded-lg px-2.5"],
       },
       lg: {
-        root: ["h-10 rounded-md px-3"],
+        root: ["h-10 rounded-xl px-3"],
       },
     },
     disabled: {

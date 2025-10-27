@@ -8,7 +8,7 @@ const inputVariants = tv({
   slots: {
     root: [
       // base
-      "group/input-root flex rounded-md border border-neutral-200 bg-white shadow-xs",
+      "group/input-root flex border border-neutral-200 bg-white shadow-xs",
       // transition
       "transition-all",
       // hover
@@ -48,15 +48,15 @@ const inputVariants = tv({
   variants: {
     size: {
       sm: {
-        root: ["h-8"],
+        root: ["h-8 rounded-md"],
         wrapper: ["gap-2 px-2"],
       },
       md: {
-        root: ["h-9"],
+        root: ["h-9 rounded-lg"],
         wrapper: ["gap-2.5 px-2.5"],
       },
       lg: {
-        root: ["h-10"],
+        root: ["h-10 rounded-xl"],
         wrapper: ["gap-3 px-3"],
       },
     },

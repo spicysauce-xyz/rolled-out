@@ -6,18 +6,18 @@ import { Text } from "../text";
 
 const avatarVariants = tv({
   slots: {
-    root: "relative flex shrink-0 overflow-clip rounded-md bg-neutral-100",
+    root: "relative flex shrink-0 overflow-clip bg-neutral-100",
   },
   variants: {
     size: {
       sm: {
-        root: "size-8",
+        root: "size-8 rounded-md",
       },
       md: {
-        root: "size-9",
+        root: "size-9 rounded-lg",
       },
       lg: {
-        root: "size-10",
+        root: "size-10 rounded-xl",
       },
     },
   },
