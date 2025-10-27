@@ -1,6 +1,14 @@
 import { Card } from "@components/card";
 import { Confirmer } from "@components/confirmer";
 import { Transition } from "@components/transition";
+import {
+  ComputerIcon,
+  LogoutSquare02Icon,
+  SmartPhone01Icon,
+  Tablet01Icon,
+  UnavailableIcon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { sessionsQuery } from "@lib/api/queries";
 import type { authClient } from "@lib/auth";
 import { useLogoutMutation } from "@modules/auth/hooks/use-logout-mutation";
@@ -9,13 +17,6 @@ import { Button, Skeleton, Text, Toaster } from "@mono/ui";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { format } from "date-fns";
-import {
-  BanIcon,
-  LogOutIcon,
-  MonitorIcon,
-  SmartphoneIcon,
-  TabletIcon,
-} from "lucide-react";
 import { match } from "ts-pattern";
 import { UAParser } from "ua-parser-js";
 import { useTerminateOtherSessionsMutation } from "./hooks/use-terminate-other-sessions-mutation";
@@ -51,7 +52,7 @@ function RouteComponent() {
         </>
       ),
       action: {
-        icon: BanIcon,
+        icon: UnavailableIcon,
         label: "Yes, terminate",
         color: "danger",
         run: () =>
@@ -85,7 +86,7 @@ function RouteComponent() {
       description:
         "Are you sure you want to terminate all other active sessions? You’ll stay signed in on this one.",
       action: {
-        icon: BanIcon,
+        icon: UnavailableIcon,
         label: "Yes, terminate",
         color: "danger",
         run: () =>
@@ -112,7 +113,7 @@ function RouteComponent() {
       title: "Log out",
       description: "Are you sure you want to log out?",
       action: {
-        icon: LogOutIcon,
+        icon: LogoutSquare02Icon,
         label: "Yes, log out",
         color: "danger",
         run: () =>
@@ -183,13 +184,25 @@ function RouteComponent() {
                           <div className="flex size-full items-center justify-center">
                             {match(device)
                               .with({ type: "mobile" }, () => (
-                                <SmartphoneIcon className="size-4" />
+                                <HugeiconsIcon
+                                  className="size-4"
+                                  icon={SmartPhone01Icon}
+                                  strokeWidth={2}
+                                />
                               ))
                               .with({ type: "tablet" }, () => (
-                                <TabletIcon className="size-4" />
+                                <HugeiconsIcon
+                                  className="size-4"
+                                  icon={Tablet01Icon}
+                                  strokeWidth={2}
+                                />
                               ))
                               .otherwise(() => (
-                                <MonitorIcon className="size-4" />
+                                <HugeiconsIcon
+                                  className="size-4"
+                                  icon={ComputerIcon}
+                                  strokeWidth={2}
+                                />
                               ))}
                           </div>
                           {isCurrentSession && (
@@ -213,7 +226,14 @@ function RouteComponent() {
                           onClick={handleLogout}
                           variant="tertiary"
                         >
-                          <Button.Icon render={<LogOutIcon />} />
+                          <Button.Icon
+                            render={
+                              <HugeiconsIcon
+                                icon={LogoutSquare02Icon}
+                                strokeWidth={2}
+                              />
+                            }
+                          />
                           Logout
                         </Button.Root>
                       ) : (
@@ -222,7 +242,14 @@ function RouteComponent() {
                           onClick={() => handleTerminateSession(session)}
                           variant="tertiary"
                         >
-                          <Button.Icon render={<BanIcon />} />
+                          <Button.Icon
+                            render={
+                              <HugeiconsIcon
+                                icon={UnavailableIcon}
+                                strokeWidth={2}
+                              />
+                            }
+                          />
                           Terminate
                         </Button.Root>
                       )}
@@ -240,7 +267,9 @@ function RouteComponent() {
             onClick={handleTerminateOtherSessions}
             variant="secondary"
           >
-            <Button.Icon render={<BanIcon />} />
+            <Button.Icon
+              render={<HugeiconsIcon icon={UnavailableIcon} strokeWidth={2} />}
+            />
             Terminate Other Sessions
           </Button.Root>
         </Card.Footer>

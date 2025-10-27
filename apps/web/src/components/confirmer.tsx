@@ -1,6 +1,6 @@
+import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
 import { AlertDialog, Button, Input, Text } from "@mono/ui";
 import { produce } from "immer";
-import type { LucideIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { create } from "zustand";
 
@@ -10,7 +10,7 @@ interface Confirm {
   description: React.ReactNode;
   phrase?: string;
   action: {
-    icon?: LucideIcon;
+    icon?: IconSvgElement;
     label?: string;
     color?: "accent" | "danger" | "success" | "warning";
     run: () => Promise<unknown> | unknown;
@@ -132,7 +132,11 @@ const ConfirmAlert: React.FC<Confirm> = ({
               onClick={handleConfirm}
               type="submit"
             >
-              {action?.icon && <Button.Icon render={<action.icon />} />}
+              {action?.icon && (
+                <Button.Icon
+                  render={<HugeiconsIcon icon={action.icon} strokeWidth={2} />}
+                />
+              )}
               {action?.label || "Confirm"}
             </AlertDialog.Action>
           </AlertDialog.Footer>

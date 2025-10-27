@@ -1,11 +1,12 @@
 import { Card } from "@components/card";
+import { Image01Icon, Mail01Icon, UserIcon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { sessionQuery } from "@lib/api/queries";
 import useAppForm from "@lib/form";
 import { FileUpload } from "@modules/shared/components/file-upload";
 import { Avatar, Button, Input, Label, Toaster } from "@mono/ui";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { ImageIcon, MailIcon, UserIcon } from "lucide-react";
 import { match } from "ts-pattern";
 import { z } from "zod";
 import { useUpdateUserMutation } from "./hooks/use-update-user-mutation";
@@ -119,7 +120,11 @@ function RouteComponent() {
                             <>
                               <Avatar.Image src={field.state.value || ""} />
                               <div className="absolute inset-0 flex items-center justify-center bg-white/10 opacity-0 backdrop-blur-sm transition-all group-hover:opacity-100">
-                                <ImageIcon className="size-4 text-white" />
+                                <HugeiconsIcon
+                                  className="size-4 text-white"
+                                  icon={Image01Icon}
+                                  strokeWidth={2}
+                                />
                               </div>
                             </>
                           ))}
@@ -147,7 +152,7 @@ function RouteComponent() {
                 >
                   <Input.Wrapper>
                     <Input.Icon>
-                      <UserIcon />
+                      <HugeiconsIcon icon={UserIcon} strokeWidth={2} />
                     </Input.Icon>
                     <Input.Field
                       id={field.name}
@@ -171,7 +176,7 @@ function RouteComponent() {
             <Input.Root className="w-full" isDisabled>
               <Input.Wrapper>
                 <Input.Icon>
-                  <MailIcon />
+                  <HugeiconsIcon icon={Mail01Icon} strokeWidth={2} />
                 </Input.Icon>
                 <Input.Field placeholder="john@doe.com" value={user?.email} />
               </Input.Wrapper>

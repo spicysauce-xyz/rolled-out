@@ -1,4 +1,13 @@
 import { Confirmer } from "@components/confirmer";
+import {
+  Calendar01Icon,
+  Copy01Icon,
+  Delete02Icon,
+  Edit02Icon,
+  MoreVerticalCircle01Icon,
+  Sent02Icon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { SchedulePostDialog } from "@modules/dashboard/components/schedule-post-dialog";
 import { UpdateEntry } from "@modules/dashboard/components/update-list";
 import { useDeleteUpdateMutation } from "@modules/dashboard/hooks/use-delete-update-mutation";
@@ -7,14 +16,6 @@ import { usePublishUpdateMutation } from "@modules/dashboard/hooks/use-publish-u
 import { DropdownMenu, IconButton, Toaster } from "@mono/ui";
 import { useDisclosure } from "@mono/ui/hooks";
 import { Link } from "@tanstack/react-router";
-import {
-  CalendarIcon,
-  CopyIcon,
-  EllipsisVerticalIcon,
-  PencilLineIcon,
-  SendIcon,
-  Trash2Icon,
-} from "lucide-react";
 import type React from "react";
 
 interface DraftUpdateProps {
@@ -55,7 +56,7 @@ export const DraftUpdate: React.FC<DraftUpdateProps> = ({
       action: {
         label: "Yes, publish",
         color: "success",
-        icon: SendIcon,
+        icon: Sent02Icon,
         run: () =>
           publishPost(
             { organizationId, id },
@@ -84,7 +85,7 @@ export const DraftUpdate: React.FC<DraftUpdateProps> = ({
       description:
         "Are you sure you want to delete this update? This can’t be undone.",
       action: {
-        icon: Trash2Icon,
+        icon: Delete02Icon,
         label: "Yes, delete",
         color: "danger",
         run: () =>
@@ -115,7 +116,7 @@ export const DraftUpdate: React.FC<DraftUpdateProps> = ({
       description: "Are you sure you want to duplicate this update?",
       action: {
         label: "Yes, duplicate",
-        icon: CopyIcon,
+        icon: Copy01Icon,
         run: () =>
           duplicatePost(
             { organizationId, id },
@@ -165,7 +166,7 @@ export const DraftUpdate: React.FC<DraftUpdateProps> = ({
             render={<IconButton.Root className="-my-2" variant="tertiary" />}
           >
             <IconButton.Icon>
-              <EllipsisVerticalIcon />
+              <HugeiconsIcon icon={MoreVerticalCircle01Icon} strokeWidth={2} />
             </IconButton.Icon>
           </DropdownMenu.Trigger>
           <DropdownMenu.Content
@@ -184,25 +185,35 @@ export const DraftUpdate: React.FC<DraftUpdateProps> = ({
                 />
               }
             >
-              <DropdownMenu.ItemIcon render={<PencilLineIcon />} />
+              <DropdownMenu.ItemIcon
+                render={<HugeiconsIcon icon={Edit02Icon} strokeWidth={2} />}
+              />
               Edit
             </DropdownMenu.Item>
             <DropdownMenu.Separator />
             <DropdownMenu.Item onClick={schedulePostDialog.open}>
-              <DropdownMenu.ItemIcon render={<CalendarIcon />} />
+              <DropdownMenu.ItemIcon
+                render={<HugeiconsIcon icon={Calendar01Icon} strokeWidth={2} />}
+              />
               Schedule
             </DropdownMenu.Item>
             <DropdownMenu.Item onClick={handlePublishPost}>
-              <DropdownMenu.ItemIcon render={<SendIcon />} />
-              Publish now
+              <DropdownMenu.ItemIcon
+                render={<HugeiconsIcon icon={Sent02Icon} strokeWidth={2} />}
+              />
+              Publish
             </DropdownMenu.Item>
             <DropdownMenu.Separator />
             <DropdownMenu.Item onClick={handleDuplicatePost}>
-              <DropdownMenu.ItemIcon render={<CopyIcon />} />
+              <DropdownMenu.ItemIcon
+                render={<HugeiconsIcon icon={Copy01Icon} strokeWidth={2} />}
+              />
               Duplicate
             </DropdownMenu.Item>
             <DropdownMenu.Item onClick={handleDeletePost}>
-              <DropdownMenu.ItemIcon render={<Trash2Icon />} />
+              <DropdownMenu.ItemIcon
+                render={<HugeiconsIcon icon={Delete02Icon} strokeWidth={2} />}
+              />
               Delete
             </DropdownMenu.Item>
           </DropdownMenu.Content>

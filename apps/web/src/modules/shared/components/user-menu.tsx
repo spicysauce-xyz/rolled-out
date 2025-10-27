@@ -1,14 +1,16 @@
 import { Confirmer } from "@components/confirmer";
+import {
+  AccountSetting02Icon,
+  Logout02Icon,
+  LogoutSquare02Icon,
+  MoreVerticalCircle01Icon,
+  UserIcon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import type { authClient } from "@lib/auth";
 import { useLogoutMutation } from "@modules/auth/hooks/use-logout-mutation";
 import { Avatar, Button, DropdownMenu, Text, Toaster } from "@mono/ui";
 import { Link } from "@tanstack/react-router";
-import {
-  EllipsisVerticalIcon,
-  LogOutIcon,
-  SettingsIcon,
-  User2Icon,
-} from "lucide-react";
 
 interface UserMenuProps {
   user: (typeof authClient.$Infer.Session)["user"];
@@ -26,7 +28,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({
       title: "Log out",
       description: "Are you sure you want to log out?",
       action: {
-        icon: LogOutIcon,
+        icon: Logout02Icon,
         label: "Yes, log out",
         color: "danger",
         run: () =>
@@ -51,9 +53,16 @@ export const UserMenu: React.FC<UserMenuProps> = ({
       <DropdownMenu.Trigger
         render={<Button.Root className="flex-1 px-2" variant="tertiary" />}
       >
-        <Button.Icon render={<User2Icon />} />
+        <Button.Icon
+          render={<HugeiconsIcon icon={UserIcon} strokeWidth={2} />}
+        />
         <span className="truncate">{user.name}</span>
-        <Button.Icon className="ml-auto" render={<EllipsisVerticalIcon />} />
+        <Button.Icon
+          className="ml-auto"
+          render={
+            <HugeiconsIcon icon={MoreVerticalCircle01Icon} strokeWidth={2} />
+          }
+        />
       </DropdownMenu.Trigger>
       <DropdownMenu.Content>
         <div className="flex items-center gap-2 px-4 py-2">
@@ -85,11 +94,19 @@ export const UserMenu: React.FC<UserMenuProps> = ({
               />
             }
           >
-            <DropdownMenu.ItemIcon render={<SettingsIcon />} />
+            <DropdownMenu.ItemIcon
+              render={
+                <HugeiconsIcon icon={AccountSetting02Icon} strokeWidth={2} />
+              }
+            />
             Settings
           </DropdownMenu.Item>
           <DropdownMenu.Item onClick={handleLogout}>
-            <DropdownMenu.ItemIcon render={<LogOutIcon />} />
+            <DropdownMenu.ItemIcon
+              render={
+                <HugeiconsIcon icon={LogoutSquare02Icon} strokeWidth={2} />
+              }
+            />
             Logout
           </DropdownMenu.Item>
         </DropdownMenu.Group>

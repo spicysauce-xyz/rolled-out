@@ -1,7 +1,8 @@
+import { Sent02Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import useAppForm from "@lib/form";
 import { Button, Dialog, Input, Label, Select, Text, Toaster } from "@mono/ui";
 import _ from "lodash";
-import { SendIcon } from "lucide-react";
 import { useEffect } from "react";
 import { z } from "zod";
 import { useInviteMemberMutation } from "../../settings/pages/members/hooks/use-invite-member-mutation";
@@ -169,7 +170,9 @@ export const InviteMemberDialog: React.FC<InviteMemberDialogProps> = ({
                   isLoading={isSubmitting}
                   type="submit"
                 >
-                  <Button.Icon render={<SendIcon />} />
+                  <Button.Icon
+                    render={<HugeiconsIcon icon={Sent02Icon} strokeWidth={2} />}
+                  />
                   Send Invite
                 </Button.Root>
               )}

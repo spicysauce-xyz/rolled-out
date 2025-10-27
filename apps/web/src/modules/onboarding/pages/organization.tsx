@@ -1,4 +1,6 @@
 import { Page } from "@components/page";
+import { ArrowRight02Icon, Image01Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import useAppForm from "@lib/form";
 import { useSession } from "@modules/auth/hooks/use-session";
 import { useCreateOrganizationMutation } from "@modules/dashboard/hooks/use-create-organization-mutation";
@@ -6,11 +8,10 @@ import { useCheckSlugMutation } from "@modules/settings/pages/details/hooks/use-
 import { FileUpload } from "@modules/shared/components/file-upload";
 import { Avatar, Button, Input, Label, Text, Toaster } from "@mono/ui";
 import { createFileRoute } from "@tanstack/react-router";
-import { ArrowRightIcon, ImageIcon, Loader2Icon } from "lucide-react";
+import { Loader2Icon } from "lucide-react";
 import { match } from "ts-pattern";
 import { z } from "zod";
 
-// Common email providers to exclude from prefill
 const WELL_KNOWN_EMAIL_PROVIDERS = [
   "gmail.com",
   "yahoo.com",
@@ -24,9 +25,10 @@ const WELL_KNOWN_EMAIL_PROVIDERS = [
   "yandex.com",
 ];
 
-// Extract domain from user email for prefill
 const getDefaultWebsiteUrl = (email?: string) => {
-  if (!email) return "";
+  if (!email) {
+    return "";
+  }
 
   const domain = email.split("@")[1];
   if (!domain || WELL_KNOWN_EMAIL_PROVIDERS.includes(domain.toLowerCase())) {
@@ -78,7 +80,10 @@ function RouteComponent() {
                 return false;
               }
             },
-            { message: "URL must not contain a path (pathname must be empty or '/')" }
+            {
+              message:
+                "URL must not contain a path (pathname must be empty or '/')",
+            }
           ),
       }),
     },
@@ -165,7 +170,11 @@ function RouteComponent() {
                                 <>
                                   <Avatar.Image src={field.state.value || ""} />
                                   <div className="absolute inset-0 flex items-center justify-center bg-white/10 opacity-0 backdrop-blur-sm transition-all group-hover:opacity-100">
-                                    <ImageIcon className="size-4 text-white" />
+                                    <HugeiconsIcon
+                                      className="size-4 text-white"
+                                      icon={Image01Icon}
+                                      strokeWidth={2}
+                                    />
                                   </div>
                                 </>
                               ))}
@@ -308,7 +317,8 @@ function RouteComponent() {
                       </Input.Wrapper>
                     </Input.Root>
                     <Text.Root color="muted">
-                      Enter your website URL with http:// or https:// (e.g., https://example.com)
+                      Enter your website URL with http:// or https:// (e.g.,
+                      https://example.com)
                     </Text.Root>
                   </form.FieldContainer>
                 )}
@@ -329,7 +339,11 @@ function RouteComponent() {
                   type="submit"
                 >
                   Save & Continue
-                  <Button.Icon render={<ArrowRightIcon />} />
+                  <Button.Icon
+                    render={
+                      <HugeiconsIcon icon={ArrowRight02Icon} strokeWidth={2} />
+                    }
+                  />
                 </Button.Root>
               )}
             </form.Subscribe>

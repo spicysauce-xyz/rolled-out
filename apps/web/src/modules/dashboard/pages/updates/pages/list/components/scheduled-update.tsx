@@ -1,4 +1,13 @@
 import { Confirmer } from "@components/confirmer";
+import {
+  Calendar01Icon,
+  CalendarRemove02Icon,
+  Copy01Icon,
+  Delete02Icon,
+  MoreVerticalCircle01Icon,
+  Sent02Icon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { SchedulePostDialog } from "@modules/dashboard/components/schedule-post-dialog";
 import { UpdateEntry } from "@modules/dashboard/components/update-list";
 import { useDeleteUpdateMutation } from "@modules/dashboard/hooks/use-delete-update-mutation";
@@ -7,14 +16,6 @@ import { usePublishUpdateMutation } from "@modules/dashboard/hooks/use-publish-u
 import { useUnschedulePostMutation } from "@modules/dashboard/hooks/use-unschedule-update-mutation";
 import { DropdownMenu, IconButton, Toaster } from "@mono/ui";
 import { useDisclosure } from "@mono/ui/hooks";
-import {
-  CopyIcon,
-  EllipsisVerticalIcon,
-  SendIcon,
-  TimerOffIcon,
-  TimerResetIcon,
-  Trash2Icon,
-} from "lucide-react";
 import type React from "react";
 
 interface ScheduledUpdateProps {
@@ -51,7 +52,7 @@ export const ScheduledUpdate: React.FC<ScheduledUpdateProps> = ({
       action: {
         label: "Yes, unschedule",
         color: "danger",
-        icon: TimerOffIcon,
+        icon: CalendarRemove02Icon,
         run: () =>
           unschedulePost(
             { organizationId, id },
@@ -82,7 +83,7 @@ export const ScheduledUpdate: React.FC<ScheduledUpdateProps> = ({
       action: {
         label: "Yes, publish",
         color: "success",
-        icon: SendIcon,
+        icon: Sent02Icon,
         run: () =>
           publishPost(
             { organizationId, id },
@@ -112,7 +113,7 @@ export const ScheduledUpdate: React.FC<ScheduledUpdateProps> = ({
         "Are you sure you want to delete this update? This can’t be undone.",
       action: {
         label: "Yes, delete",
-        icon: Trash2Icon,
+        icon: Delete02Icon,
         color: "danger",
         run: () =>
           deletePost(
@@ -142,7 +143,7 @@ export const ScheduledUpdate: React.FC<ScheduledUpdateProps> = ({
       description: "Are you sure you want to duplicate this update?",
       action: {
         label: "Yes, duplicate",
-        icon: CopyIcon,
+        icon: Copy01Icon,
         run: () =>
           duplicatePost(
             { organizationId, id },
@@ -186,7 +187,7 @@ export const ScheduledUpdate: React.FC<ScheduledUpdateProps> = ({
             render={<IconButton.Root className="-my-2" variant="tertiary" />}
           >
             <IconButton.Icon>
-              <EllipsisVerticalIcon />
+              <HugeiconsIcon icon={MoreVerticalCircle01Icon} strokeWidth={2} />
             </IconButton.Icon>
           </DropdownMenu.Trigger>
           <DropdownMenu.Content
@@ -198,25 +199,37 @@ export const ScheduledUpdate: React.FC<ScheduledUpdateProps> = ({
             side="bottom"
           >
             <DropdownMenu.Item onClick={handlePublishPost}>
-              <DropdownMenu.ItemIcon render={<SendIcon />} />
+              <DropdownMenu.ItemIcon
+                render={<HugeiconsIcon icon={Sent02Icon} strokeWidth={2} />}
+              />
               Publish now
             </DropdownMenu.Item>
             <DropdownMenu.Separator />
             <DropdownMenu.Item onClick={schedulePostDialog.open}>
-              <DropdownMenu.ItemIcon render={<TimerResetIcon />} />
+              <DropdownMenu.ItemIcon
+                render={<HugeiconsIcon icon={Calendar01Icon} strokeWidth={2} />}
+              />
               Reschedule
             </DropdownMenu.Item>
             <DropdownMenu.Item onClick={handleUnschedulePost}>
-              <DropdownMenu.ItemIcon render={<TimerOffIcon />} />
+              <DropdownMenu.ItemIcon
+                render={
+                  <HugeiconsIcon icon={CalendarRemove02Icon} strokeWidth={2} />
+                }
+              />
               Cancel scheduling
             </DropdownMenu.Item>
             <DropdownMenu.Separator />
             <DropdownMenu.Item onClick={handleDuplicatePost}>
-              <DropdownMenu.ItemIcon render={<CopyIcon />} />
+              <DropdownMenu.ItemIcon
+                render={<HugeiconsIcon icon={Copy01Icon} strokeWidth={2} />}
+              />
               Duplicate
             </DropdownMenu.Item>
             <DropdownMenu.Item onClick={handleDeletePost}>
-              <DropdownMenu.ItemIcon render={<Trash2Icon />} />
+              <DropdownMenu.ItemIcon
+                render={<HugeiconsIcon icon={Delete02Icon} strokeWidth={2} />}
+              />
               Delete
             </DropdownMenu.Item>
           </DropdownMenu.Content>

@@ -1,14 +1,15 @@
 import { Sidebar } from "@components/sidebar";
+import {
+  ArrowLeft02Icon,
+  Building05Icon,
+  UserGroupIcon,
+  UserSquareIcon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import type { authClient } from "@lib/auth";
 import { UserMenu } from "@modules/shared/components/user-menu";
 import { Button } from "@mono/ui";
 import { Link, useSearch } from "@tanstack/react-router";
-import {
-  ArrowLeftIcon,
-  Building2Icon,
-  NotebookTextIcon,
-  Users2,
-} from "lucide-react";
 
 interface AccountNavigationProps {
   user: (typeof authClient.$Infer.Session)["user"];
@@ -32,40 +33,42 @@ export const AccountNavigation: React.FC<AccountNavigationProps> = ({
           }
           variant="tertiary"
         >
-          <Button.Icon render={<ArrowLeftIcon />} />
+          <Button.Icon
+            render={<HugeiconsIcon icon={ArrowLeft02Icon} strokeWidth={2} />}
+          />
           Back
         </Button.Root>
       </Sidebar.Header>
       <Sidebar.ScrollArea>
         <Sidebar.Group>
           <Sidebar.Button
-            icon={NotebookTextIcon}
+            icon={UserSquareIcon}
             label="Profile"
             render={
               <Link
-                className="data-[status=active]:border data-[status=active]:border-neutral-100 data-[status=active]:bg-white data-[status=active]:[&>svg]:stroke-neutral-900"
+                className="data-[status=active]:border data-[status=active]:border-neutral-100 data-[status=active]:bg-white data-[status=active]:[&>svg]:text-neutral-900"
                 search={{ organization }}
                 to="/account/profile"
               />
             }
           />
           <Sidebar.Button
-            icon={Users2}
+            icon={UserGroupIcon}
             label="Sessions"
             render={
               <Link
-                className="data-[status=active]:border data-[status=active]:border-neutral-100 data-[status=active]:bg-white data-[status=active]:[&>svg]:stroke-neutral-900"
+                className="data-[status=active]:border data-[status=active]:border-neutral-100 data-[status=active]:bg-white data-[status=active]:[&>svg]:text-neutral-900"
                 search={{ organization }}
                 to="/account/sessions"
               />
             }
           />
           <Sidebar.Button
-            icon={Building2Icon}
+            icon={Building05Icon}
             label="Organizations"
             render={
               <Link
-                className="data-[status=active]:border data-[status=active]:border-neutral-100 data-[status=active]:bg-white data-[status=active]:[&>svg]:stroke-neutral-900"
+                className="data-[status=active]:border data-[status=active]:border-neutral-100 data-[status=active]:bg-white data-[status=active]:[&>svg]:text-neutral-900"
                 search={{ organization }}
                 to="/account/organizations"
               />

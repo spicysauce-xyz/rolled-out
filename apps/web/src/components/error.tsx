@@ -1,7 +1,8 @@
+import { AlertSquareIcon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { useInitializePosthog } from "@lib/posthog";
 import { Text } from "@mono/ui";
 import type { ErrorComponentProps } from "@tanstack/react-router";
-import { AlertOctagonIcon } from "lucide-react";
 import { useEffect } from "react";
 
 export const GlobalError: React.FC<ErrorComponentProps> = ({ error, info }) => {
@@ -13,7 +14,10 @@ export const GlobalError: React.FC<ErrorComponentProps> = ({ error, info }) => {
 
   return (
     <div className="flex h-[100vh] w-screen flex-col items-center justify-center gap-4">
-      <AlertOctagonIcon className="size-10 text-danger-500" />
+      <HugeiconsIcon
+        className="size-10 text-danger-500"
+        icon={AlertSquareIcon}
+      />
       <div className="flex flex-col gap-1 text-center">
         <Text.Root weight="medium">Oops, something went wrong</Text.Root>
         <Text.Root color="muted" size="sm">

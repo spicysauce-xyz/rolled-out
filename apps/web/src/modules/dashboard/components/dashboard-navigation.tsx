@@ -1,5 +1,19 @@
 import { Sidebar } from "@components/sidebar";
 import { Transition } from "@components/transition";
+import {
+  Analytics01Icon,
+  FavouriteIcon,
+  Files02Icon,
+  LinkForwardIcon,
+  LinkSquare01Icon,
+  Mail01Icon,
+  Message02Icon,
+  NewsIcon,
+  Notification01Icon,
+  Settings01Icon,
+  UserAdd01Icon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import type { authClient } from "@lib/auth";
 import { NotificationsList } from "@modules/dashboard/components/notifications-list";
 import { OrganizationSwitch } from "@modules/dashboard/components/organization-switch";
@@ -7,18 +21,6 @@ import { InviteMemberDialog } from "@modules/shared/components/invite-member-dia
 import { UserMenu } from "@modules/shared/components/user-menu";
 import { useDisclosure } from "@mono/ui/hooks";
 import { Link } from "@tanstack/react-router";
-import {
-  BellIcon,
-  ExternalLinkIcon,
-  FileTextIcon,
-  HelpCircleIcon,
-  LineChartIcon,
-  ListIcon,
-  MailIcon,
-  MessageCircleIcon,
-  SettingsIcon,
-  UserPlus2Icon,
-} from "lucide-react";
 import { getPublicUrl } from "../utils";
 
 interface DashboardNavigationProps {
@@ -47,11 +49,11 @@ export const DashboardNavigation: React.FC<DashboardNavigationProps> = ({
           <div className="flex flex-col gap-4">
             <Sidebar.Group>
               <Sidebar.Button
-                icon={FileTextIcon}
+                icon={Files02Icon}
                 label="Updates"
                 render={
                   <Link
-                    className="data-[status=active]:border data-[status=active]:border-neutral-100 data-[status=active]:bg-white data-[status=active]:[&>svg]:stroke-neutral-900"
+                    className="data-[status=active]:border data-[status=active]:border-neutral-100 data-[status=active]:bg-white data-[status=active]:[&>svg]:text-neutral-900"
                     params={{ organizationSlug: organization.slug }}
                     to="/$organizationSlug/updates"
                   />
@@ -59,12 +61,11 @@ export const DashboardNavigation: React.FC<DashboardNavigationProps> = ({
               />
               <Sidebar.Button
                 disabled
-                icon={MailIcon}
+                icon={Mail01Icon}
                 label="Subscribers"
                 render={
                   <Link
                     activeOptions={{ exact: true }}
-                    className="data-[status=active]:text-accent-500 data-[status=active]:[&>svg]:stroke-accent-500"
                     params={{ organizationSlug: organization.slug }}
                     to="/$organizationSlug/contacts"
                   />
@@ -72,7 +73,7 @@ export const DashboardNavigation: React.FC<DashboardNavigationProps> = ({
               />
               <Sidebar.Button
                 disabled
-                icon={LineChartIcon}
+                icon={Analytics01Icon}
                 label="Analytics"
                 render={
                   <Link
@@ -87,7 +88,10 @@ export const DashboardNavigation: React.FC<DashboardNavigationProps> = ({
               <NotificationsList
                 organizationId={organization.id}
                 render={(_, { unreadNotificationsCount }) => (
-                  <Sidebar.Button icon={BellIcon} label="Notifications">
+                  <Sidebar.Button
+                    icon={Notification01Icon}
+                    label="Notifications"
+                  >
                     <Transition.Root>
                       {unreadNotificationsCount > 0 && (
                         <Transition.Item
@@ -102,12 +106,12 @@ export const DashboardNavigation: React.FC<DashboardNavigationProps> = ({
                 )}
               />
               <Sidebar.Button
-                icon={UserPlus2Icon}
+                icon={UserAdd01Icon}
                 label="Invite Member"
                 onClick={inviteMemberDialog.toggle}
               />
               <Sidebar.Button
-                icon={ExternalLinkIcon}
+                icon={LinkSquare01Icon}
                 label="My Board"
                 render={
                   <a
@@ -118,7 +122,7 @@ export const DashboardNavigation: React.FC<DashboardNavigationProps> = ({
                 }
               />
               <Sidebar.Button
-                icon={SettingsIcon}
+                icon={Settings01Icon}
                 label="Settings"
                 render={
                   <Link
@@ -207,25 +211,37 @@ export const DashboardNavigation: React.FC<DashboardNavigationProps> = ({
           <Sidebar.Fill />
           <Sidebar.Group>
             <Sidebar.Button
-              icon={MessageCircleIcon}
+              icon={FavouriteIcon}
               label="Feedback"
               render={<a href="/" />}
             >
-              <ExternalLinkIcon className="ml-auto" />
+              <HugeiconsIcon
+                className="ml-auto"
+                icon={LinkForwardIcon}
+                strokeWidth={2}
+              />
             </Sidebar.Button>
             <Sidebar.Button
-              icon={ListIcon}
+              icon={NewsIcon}
               label="Changelog"
               render={<a href="/" />}
             >
-              <ExternalLinkIcon className="ml-auto" />
+              <HugeiconsIcon
+                className="ml-auto"
+                icon={LinkForwardIcon}
+                strokeWidth={2}
+              />
             </Sidebar.Button>
             <Sidebar.Button
-              icon={HelpCircleIcon}
+              icon={Message02Icon}
               label="Support"
               render={<a href="/" />}
             >
-              <ExternalLinkIcon className="ml-auto" />
+              <HugeiconsIcon
+                className="ml-auto"
+                icon={LinkForwardIcon}
+                strokeWidth={2}
+              />
             </Sidebar.Button>
           </Sidebar.Group>
         </Sidebar.ScrollArea>

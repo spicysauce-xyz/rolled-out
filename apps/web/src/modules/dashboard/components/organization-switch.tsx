@@ -1,4 +1,6 @@
 import { Transition } from "@components/transition";
+import { ArrowUpDownIcon, Building02Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { organizationsQuery } from "@lib/api/queries";
 import { NewOrganizationDialog } from "@modules/dashboard/components/new-organization-dialog";
 import { Avatar, Button, DropdownMenu, Skeleton, Text } from "@mono/ui";
@@ -11,7 +13,6 @@ import {
   useRouter,
 } from "@tanstack/react-router";
 import _ from "lodash";
-import { BuildingIcon, ChevronsUpDownIcon } from "lucide-react";
 import { match } from "ts-pattern";
 
 export const OrganizationSwitch = () => {
@@ -47,9 +48,14 @@ export const OrganizationSwitch = () => {
         <DropdownMenu.Trigger
           render={<Button.Root className="flex-1 px-2" variant="tertiary" />}
         >
-          <Button.Icon render={<BuildingIcon />} />
+          <Button.Icon
+            render={<HugeiconsIcon icon={Building02Icon} strokeWidth={2} />}
+          />
           <span className="truncate">{organization.name}</span>
-          <Button.Icon className="ml-auto" render={<ChevronsUpDownIcon />} />
+          <Button.Icon
+            className="ml-auto"
+            render={<HugeiconsIcon icon={ArrowUpDownIcon} strokeWidth={2} />}
+          />
         </DropdownMenu.Trigger>
         <DropdownMenu.Content>
           <Transition.Root>

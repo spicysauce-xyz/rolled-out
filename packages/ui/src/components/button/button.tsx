@@ -31,11 +31,11 @@ export const buttonVariants = tv({
       },
       secondary: {
         root: "inset-shadow-default border border-neutral-200 bg-white text-neutral-900 shadow-xs",
-        icon: "stroke-neutral-600",
+        icon: "text-neutral-600",
       },
       tertiary: {
         root: "border border-transparent text-neutral-900",
-        icon: "stroke-neutral-600",
+        icon: "text-neutral-600",
       },
     },
     color: {
@@ -79,9 +79,9 @@ export const buttonVariants = tv({
           "hover:border-neutral-950 hover:bg-neutral-950",
         ],
         icon: [
-          "stroke-neutral-200",
+          "text-neutral-200",
           // hover
-          "group-hover/button-root:stroke-neutral-100",
+          "group-hover/button-root:text-neutral-100",
         ],
       },
     },
@@ -95,9 +95,9 @@ export const buttonVariants = tv({
           "hover:border-accent-600 hover:bg-accent-600",
         ],
         icon: [
-          "stroke-accent-200",
+          "text-accent-200",
           // hover
-          "group-hover/button-root:stroke-accent-100",
+          "group-hover/button-root:text-accent-100",
         ],
       },
     },
@@ -111,9 +111,9 @@ export const buttonVariants = tv({
           "hover:border-danger-600 hover:bg-danger-600",
         ],
         icon: [
-          "stroke-danger-200",
+          "text-danger-200",
           // hover
-          "group-hover/button-root:stroke-danger-100",
+          "group-hover/button-root:text-danger-100",
         ],
       },
     },
@@ -127,9 +127,9 @@ export const buttonVariants = tv({
           "hover:border-warning-600 hover:bg-warning-600",
         ],
         icon: [
-          "stroke-warning-200",
+          "text-warning-200",
           // hover
-          "group-hover/button-root:stroke-warning-100",
+          "group-hover/button-root:text-warning-100",
         ],
       },
     },
@@ -143,9 +143,9 @@ export const buttonVariants = tv({
           "hover:border-success-600 hover:bg-success-600",
         ],
         icon: [
-          "stroke-success-200",
+          "text-success-200",
           // hover
-          "group-hover/button-root:stroke-success-100",
+          "group-hover/button-root:text-success-100",
         ],
       },
     },
@@ -159,7 +159,7 @@ export const buttonVariants = tv({
         ],
         icon: [
           // hover
-          "group-hover/button-root:stroke-neutral-900",
+          "group-hover/button-root:text-neutral-900",
         ],
       },
     },
@@ -180,7 +180,7 @@ export const buttonVariants = tv({
         ],
         icon: [
           // hover
-          "group-hover/button-root:stroke-danger-500",
+          "group-hover/button-root:text-danger-500",
         ],
       },
     },
@@ -208,7 +208,7 @@ export const buttonVariants = tv({
         ],
         icon: [
           // hover
-          "group-hover/button-root:stroke-neutral-900",
+          "group-hover/button-root:text-neutral-900",
         ],
       },
     },
@@ -245,7 +245,7 @@ export const buttonVariants = tv({
       loading: false,
       class: {
         content: ["text-neutral-400 group-hover/button-root:text-neutral-400"],
-        icon: ["stroke-neutral-400 group-hover/button-root:stroke-neutral-400"],
+        icon: ["text-neutral-400 group-hover/button-root:text-neutral-400"],
       },
     },
     {

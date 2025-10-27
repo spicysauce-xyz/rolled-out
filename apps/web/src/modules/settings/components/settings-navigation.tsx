@@ -1,14 +1,15 @@
 import { Sidebar } from "@components/sidebar";
+import {
+  ArrowLeft02Icon,
+  ConnectIcon,
+  Task01Icon,
+  UserMultipleIcon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import type { authClient } from "@lib/auth";
 import { UserMenu } from "@modules/shared/components/user-menu";
 import { Button } from "@mono/ui";
 import { Link } from "@tanstack/react-router";
-import {
-  ArrowLeftIcon,
-  BlocksIcon,
-  NotebookTextIcon,
-  Users2,
-} from "lucide-react";
 
 interface SettingsNavigationProps {
   organization: {
@@ -36,40 +37,42 @@ export const SettingsNavigation: React.FC<SettingsNavigationProps> = ({
           }
           variant="tertiary"
         >
-          <Button.Icon render={<ArrowLeftIcon />} />
+          <Button.Icon
+            render={<HugeiconsIcon icon={ArrowLeft02Icon} strokeWidth={2} />}
+          />
           Back
         </Button.Root>
       </Sidebar.Header>
       <Sidebar.ScrollArea>
         <Sidebar.Group>
           <Sidebar.Button
-            icon={NotebookTextIcon}
+            icon={Task01Icon}
             label="Details"
             render={
               <Link
-                className="data-[status=active]:border data-[status=active]:border-neutral-100 data-[status=active]:bg-white data-[status=active]:[&>svg]:stroke-neutral-900"
+                className="data-[status=active]:border data-[status=active]:border-neutral-100 data-[status=active]:bg-white data-[status=active]:[&>svg]:text-neutral-900"
                 params={{ organizationSlug: organization.slug }}
                 to="/$organizationSlug/settings/details"
               />
             }
           />
           <Sidebar.Button
-            icon={Users2}
+            icon={UserMultipleIcon}
             label="Members"
             render={
               <Link
-                className="data-[status=active]:border data-[status=active]:border-neutral-100 data-[status=active]:bg-white data-[status=active]:[&>svg]:stroke-neutral-900"
+                className="data-[status=active]:border data-[status=active]:border-neutral-100 data-[status=active]:bg-white data-[status=active]:[&>svg]:text-neutral-900"
                 params={{ organizationSlug: organization.slug }}
                 to="/$organizationSlug/settings/members"
               />
             }
           />
           <Sidebar.Button
-            icon={BlocksIcon}
+            icon={ConnectIcon}
             label="Integrations"
             render={
               <Link
-                className="data-[status=active]:border data-[status=active]:border-neutral-100 data-[status=active]:bg-white data-[status=active]:[&>svg]:stroke-neutral-900"
+                className="data-[status=active]:border data-[status=active]:border-neutral-100 data-[status=active]:bg-white data-[status=active]:[&>svg]:text-neutral-900"
                 params={{ organizationSlug: organization.slug }}
                 to="/$organizationSlug/settings/integrations"
               />

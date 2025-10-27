@@ -1,5 +1,11 @@
 import { Page } from "@components/page";
 import { Transition } from "@components/transition";
+import {
+  Add01Icon,
+  FileEmpty02Icon,
+  GithubIcon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { githubIntegrationQuery, updatesQuery } from "@lib/api/queries";
 import { Breadcrumbs } from "@modules/dashboard/components/breadcrumbs";
 import { useCreateUpdateMutation } from "@modules/dashboard/hooks/use-create-update-mutation";
@@ -7,7 +13,6 @@ import { Button, DropdownMenu, Text, Toaster } from "@mono/ui";
 import { useDisclosure } from "@mono/ui/hooks";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { ChevronDownIcon, FileIcon, GithubIcon } from "lucide-react";
 import { match, P } from "ts-pattern";
 import { PendingCommitsCallout } from "./components/pending-commits-callout";
 import { StartWithGithubDialog } from "./components/start-with-github-dialog";
@@ -85,15 +90,30 @@ function RouteComponent() {
                       render={<Button.Root variant="tertiary" />}
                     >
                       New Draft
-                      <Button.Icon render={<ChevronDownIcon />} />
+                      <Button.Icon
+                        render={
+                          <HugeiconsIcon icon={Add01Icon} strokeWidth={2} />
+                        }
+                      />
                     </DropdownMenu.Trigger>
                     <DropdownMenu.Content>
                       <DropdownMenu.Item onClick={handleCreateBlankDraft}>
-                        <DropdownMenu.ItemIcon render={<FileIcon />} />
+                        <DropdownMenu.ItemIcon
+                          render={
+                            <HugeiconsIcon
+                              icon={FileEmpty02Icon}
+                              strokeWidth={2}
+                            />
+                          }
+                        />
                         Blank
                       </DropdownMenu.Item>
                       <DropdownMenu.Item onClick={startWithGithubDialog.open}>
-                        <DropdownMenu.ItemIcon render={<GithubIcon />} />
+                        <DropdownMenu.ItemIcon
+                          render={
+                            <HugeiconsIcon icon={GithubIcon} strokeWidth={2} />
+                          }
+                        />
                         From Commits
                       </DropdownMenu.Item>
                     </DropdownMenu.Content>
@@ -111,6 +131,11 @@ function RouteComponent() {
                     variant="tertiary"
                   >
                     New Draft
+                    <Button.Icon
+                      render={
+                        <HugeiconsIcon icon={Add01Icon} strokeWidth={2} />
+                      }
+                    />
                   </Button.Root>
                 </Transition.Item>
               )

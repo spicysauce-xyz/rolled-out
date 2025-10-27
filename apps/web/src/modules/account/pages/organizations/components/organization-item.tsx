@@ -1,12 +1,13 @@
 import { Confirmer } from "@components/confirmer";
+import { LogoutSquare02Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import type { api, SuccessResponse } from "@lib/api";
 import { Avatar, Button, Text, Toaster } from "@mono/ui";
 import type { InferResponseType } from "hono";
-import { DoorClosedIcon } from "lucide-react";
 import { useLeaveOrganizationMutation } from "../hooks/use-leave-organization";
 
 type Organization = SuccessResponse<
-  InferResponseType<(typeof api.users)[":id"]["organizations"]["$get"]>
+  InferResponseType<(typeof api.me)["organizations"]["$get"]>
 >[number];
 
 interface OrganizationItemProps {
@@ -26,7 +27,7 @@ export const OrganizationItem: React.FC<OrganizationItemProps> = ({
       description: `Are you sure you want to leave ${data.name}?`,
       phrase: data.slug,
       action: {
-        icon: DoorClosedIcon,
+        icon: LogoutSquare02Icon,
         label: "Yes, leave",
         color: "danger",
         run: () =>
@@ -77,7 +78,9 @@ export const OrganizationItem: React.FC<OrganizationItemProps> = ({
         onClick={handleLeave}
         variant="tertiary"
       >
-        <Button.Icon render={<DoorClosedIcon />} />
+        <Button.Icon
+          render={<HugeiconsIcon icon={LogoutSquare02Icon} strokeWidth={2} />}
+        />
         Leave
       </Button.Root>
     </div>

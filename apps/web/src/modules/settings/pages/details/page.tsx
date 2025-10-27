@@ -1,16 +1,17 @@
 import { Card } from "@components/card";
+import { Image01Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { organizationQuery, organizationsQuery } from "@lib/api/queries";
 import useAppForm from "@lib/form";
 import { FileUpload } from "@modules/shared/components/file-upload";
 import { Avatar, Button, Input, Label, Text, Toaster } from "@mono/ui";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { ImageIcon, Loader2Icon, SaveIcon } from "lucide-react";
+import { Loader2Icon } from "lucide-react";
 import { match } from "ts-pattern";
 import { z } from "zod";
 import { useCheckSlugMutation } from "./hooks/use-check-slug-mutation";
 import { useUpdateOrganizationMutation } from "./hooks/use-update-organization-mutation";
-
 
 export const Route = createFileRoute(
   "/_authorized/_has-organization/$organizationSlug/settings/details"
@@ -64,7 +65,10 @@ function RouteComponent() {
                 return false;
               }
             },
-            { message: "URL must not contain a path (pathname must be empty or '/')" }
+            {
+              message:
+                "URL must not contain a path (pathname must be empty or '/')",
+            }
           ),
       }),
     },
@@ -152,7 +156,11 @@ function RouteComponent() {
                             <>
                               <Avatar.Image src={field.state.value || ""} />
                               <div className="absolute inset-0 flex items-center justify-center bg-white/10 opacity-0 backdrop-blur-sm transition-all group-hover:opacity-100">
-                                <ImageIcon className="size-4 text-white" />
+                                <HugeiconsIcon
+                                  className="size-4 text-white"
+                                  icon={Image01Icon}
+                                  strokeWidth={2}
+                                />
                               </div>
                             </>
                           ))}
@@ -281,7 +289,8 @@ function RouteComponent() {
                   </Input.Wrapper>
                 </Input.Root>
                 <Text.Root color="muted">
-                  Enter your website URL with http:// or https:// (e.g., https://example.com)
+                  Enter your website URL with http:// or https:// (e.g.,
+                  https://example.com)
                 </Text.Root>
               </form.FieldContainer>
             )}
@@ -302,7 +311,6 @@ function RouteComponent() {
                   isLoading={isSubmitting}
                   type="submit"
                 >
-                  <Button.Icon render={<SaveIcon />} />
                   Save
                 </Button.Root>
                 <Button.Root

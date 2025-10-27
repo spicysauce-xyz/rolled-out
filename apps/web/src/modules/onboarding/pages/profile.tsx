@@ -1,4 +1,11 @@
 import { Page } from "@components/page";
+import {
+  ArrowRight02Icon,
+  Image01Icon,
+  Mail01Icon,
+  UserIcon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { authClient } from "@lib/auth";
 import useAppForm from "@lib/form";
 import { useSession } from "@modules/auth/hooks/use-session";
@@ -6,7 +13,6 @@ import { FileUpload } from "@modules/shared/components/file-upload";
 import { Avatar, Button, Input, Label, Text, Toaster } from "@mono/ui";
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { ArrowRightIcon, ImageIcon, MailIcon, UserIcon } from "lucide-react";
 import { match } from "ts-pattern";
 import { z } from "zod";
 
@@ -112,7 +118,11 @@ function RouteComponent() {
                                 <>
                                   <Avatar.Image src={field.state.value || ""} />
                                   <div className="absolute inset-0 flex items-center justify-center bg-white/10 opacity-0 backdrop-blur-sm transition-all group-hover:opacity-100">
-                                    <ImageIcon className="size-4 text-white" />
+                                    <HugeiconsIcon
+                                      className="size-4 text-white"
+                                      icon={Image01Icon}
+                                      strokeWidth={2}
+                                    />
                                   </div>
                                 </>
                               ))}
@@ -145,7 +155,7 @@ function RouteComponent() {
                     >
                       <Input.Wrapper>
                         <Input.Icon>
-                          <UserIcon />
+                          <HugeiconsIcon icon={UserIcon} strokeWidth={2} />
                         </Input.Icon>
                         <Input.Field
                           id={field.name}
@@ -174,7 +184,7 @@ function RouteComponent() {
                     >
                       <Input.Wrapper>
                         <Input.Icon>
-                          <MailIcon />
+                          <HugeiconsIcon icon={Mail01Icon} strokeWidth={2} />
                         </Input.Icon>
                         <Input.Field
                           id={field.name}
@@ -201,7 +211,11 @@ function RouteComponent() {
                   type="submit"
                 >
                   Save & Continue
-                  <Button.Icon render={<ArrowRightIcon />} />
+                  <Button.Icon
+                    render={
+                      <HugeiconsIcon icon={ArrowRight02Icon} strokeWidth={2} />
+                    }
+                  />
                 </Button.Root>
               )}
             </form.Subscribe>

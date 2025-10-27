@@ -1,5 +1,10 @@
+import {
+  CheckmarkCircle02Icon,
+  Clock01Icon,
+  DashedLineCircleIcon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { Skeleton, Text } from "@mono/ui";
-import { CircleCheckIcon, CircleDashedIcon, ClockIcon } from "lucide-react";
 
 export const GroupDivider: React.FC<{
   status: "draft" | "scheduled" | "published";
@@ -8,15 +13,33 @@ export const GroupDivider: React.FC<{
 } = ({ status }) => {
   const variants = {
     draft: {
-      icon: <CircleDashedIcon className="size-4 text-neutral-500" />,
+      icon: (
+        <HugeiconsIcon
+          className="size-4 text-neutral-500"
+          icon={DashedLineCircleIcon}
+          strokeWidth={2}
+        />
+      ),
       label: "Drafts",
     },
     scheduled: {
-      icon: <ClockIcon className="size-4 text-warning-500" />,
+      icon: (
+        <HugeiconsIcon
+          className="size-4 text-warning-500"
+          icon={Clock01Icon}
+          strokeWidth={2}
+        />
+      ),
       label: "Scheduled",
     },
     published: {
-      icon: <CircleCheckIcon className="size-4 text-success-500" />,
+      icon: (
+        <HugeiconsIcon
+          className="size-4 text-success-500"
+          icon={CheckmarkCircle02Icon}
+          strokeWidth={2}
+        />
+      ),
       label: "Published",
     },
   };

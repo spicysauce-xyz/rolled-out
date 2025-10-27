@@ -1,12 +1,13 @@
 import { Card } from "@components/card";
 import { Transition } from "@components/transition";
+import { Add01Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { organizationsQuery, userInvitationsQuery } from "@lib/api/queries";
 import { NewOrganizationDialog } from "@modules/dashboard/components/new-organization-dialog";
 import { Button, Skeleton } from "@mono/ui";
 import { useDisclosure } from "@mono/ui/hooks";
 import { useQueries } from "@tanstack/react-query";
 import { createFileRoute, useSearch } from "@tanstack/react-router";
-import { PlusIcon } from "lucide-react";
 import { match } from "ts-pattern";
 import { InvitationItem } from "./components/invitation-item";
 import { OrganizationItem } from "./components/organization-item";
@@ -58,7 +59,9 @@ function RouteComponent() {
           size="sm"
           variant="secondary"
         >
-          <Button.Icon render={<PlusIcon />} />
+          <Button.Icon
+            render={<HugeiconsIcon icon={Add01Icon} strokeWidth={2} />}
+          />
           Create
         </Button.Root>
       </Card.Header>

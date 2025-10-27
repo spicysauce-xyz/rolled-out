@@ -1,9 +1,10 @@
+import { GitCommitIcon, GitPullRequestIcon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import type { api, SuccessResponse } from "@lib/api";
 import { Avatar, Checkbox, Skeleton, Text } from "@mono/ui";
 import { cn } from "@mono/ui/utils";
 import { format } from "date-fns";
 import type { InferResponseType } from "hono";
-import { GitCommitVerticalIcon, GitPullRequestIcon } from "lucide-react";
 
 type Commit = SuccessResponse<
   InferResponseType<
@@ -38,10 +39,18 @@ export const Item: React.FC<ItemProps> & { Skeleton: React.FC } = ({
       />
       <div className="flex flex-1 items-center gap-2 overflow-hidden">
         {"prId" in commit && (
-          <GitPullRequestIcon className="size-4 stroke-neutral-500" />
+          <HugeiconsIcon
+            className="size-4 text-neutral-500"
+            icon={GitPullRequestIcon}
+            strokeWidth={2}
+          />
         )}
         {"commitId" in commit && (
-          <GitCommitVerticalIcon className="size-4 stroke-neutral-500" />
+          <HugeiconsIcon
+            className="size-4 text-neutral-500"
+            icon={GitCommitIcon}
+            strokeWidth={2}
+          />
         )}
         <Text.Root className="flex-1 truncate text-left" weight="medium">
           {commit.title}

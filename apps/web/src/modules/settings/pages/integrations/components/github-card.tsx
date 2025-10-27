@@ -1,7 +1,8 @@
+import { GithubIcon, UnavailableIcon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { githubIntegrationQuery } from "@lib/api/queries";
 import { Avatar, Button, Text } from "@mono/ui";
 import { useQuery } from "@tanstack/react-query";
-import { BanIcon, CableIcon, GithubIcon } from "lucide-react";
 import { useGetSetupGithubLink } from "../hooks/use-get-setup-github-link";
 
 type GithubCardProps = {
@@ -28,7 +29,11 @@ export const GithubCard: React.FC<GithubCardProps> = ({ organizationId }) => {
       <div className="flex items-start justify-between">
         <Avatar.Root>
           <Avatar.Fallback>
-            <GithubIcon className="size-4" />
+            <HugeiconsIcon
+              className="size-4"
+              icon={GithubIcon}
+              strokeWidth={2}
+            />
           </Avatar.Fallback>
         </Avatar.Root>
         {isConnected ? (
@@ -71,7 +76,9 @@ export const GithubCard: React.FC<GithubCardProps> = ({ organizationId }) => {
           variant="secondary"
         >
           <div className="flex w-full items-center justify-center gap-2">
-            <Button.Icon render={<BanIcon />} />
+            <Button.Icon
+              render={<HugeiconsIcon icon={UnavailableIcon} strokeWidth={2} />}
+            />
             Disconnect
           </div>
         </Button.Root>
@@ -82,7 +89,6 @@ export const GithubCard: React.FC<GithubCardProps> = ({ organizationId }) => {
           variant="secondary"
         >
           <div className="flex w-full items-center justify-center gap-2">
-            <Button.Icon render={<CableIcon />} />
             Connect
           </div>
         </Button.Root>

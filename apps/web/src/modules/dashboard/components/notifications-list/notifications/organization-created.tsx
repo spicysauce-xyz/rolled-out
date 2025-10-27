@@ -1,6 +1,7 @@
+import { Building02Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { Text } from "@mono/ui";
 import { formatDistanceToNow } from "date-fns";
-import { BuildingIcon } from "lucide-react";
 
 interface OrganizationCreatedNotificationProps {
   organization: {
@@ -17,7 +18,11 @@ export const OrganizationCreatedNotification: React.FC<
   return (
     <div className="flex w-full gap-2 p-2">
       <div className="flex size-10 shrink-0 items-center justify-center rounded-md bg-accent-50">
-        <BuildingIcon className="size-4 text-accent-500" />
+        <HugeiconsIcon
+          className="size-5 text-accent-500"
+          icon={Building02Icon}
+          strokeWidth={2}
+        />
       </div>
       <div className="flex flex-1 flex-col gap-0.5 overflow-hidden">
         <div className="flex items-center gap-4 overflow-hidden">

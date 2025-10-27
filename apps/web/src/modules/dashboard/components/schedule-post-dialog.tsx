@@ -1,4 +1,10 @@
 import { DatePicker } from "@components/date-picker";
+import {
+  Calendar01Icon,
+  Calendar04Icon,
+  Clock01Icon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import useAppForm from "@lib/form";
 import { Button, Dialog, Label, Select, Text, Toaster } from "@mono/ui";
 import {
@@ -12,7 +18,6 @@ import {
   set,
   startOfDay,
 } from "date-fns";
-import { CalendarIcon, ClockIcon } from "lucide-react";
 import z from "zod";
 import { useSchedulePostMutation } from "../hooks/use-schedule-update-mutation";
 
@@ -127,7 +132,14 @@ export const SchedulePostDialog: React.FC<SchedulePostDialogProps> = ({
                       }
                       value={field.state.value}
                     >
-                      <Button.Icon render={<CalendarIcon />} />
+                      <Button.Icon
+                        render={
+                          <HugeiconsIcon
+                            icon={Calendar04Icon}
+                            strokeWidth={2}
+                          />
+                        }
+                      />
                       {format(field.state.value, "iii, d LLL")}
                     </DatePicker>
                     <Select.Root
@@ -145,7 +157,11 @@ export const SchedulePostDialog: React.FC<SchedulePostDialogProps> = ({
                           />
                         }
                       >
-                        <Button.Icon render={<ClockIcon />} />
+                        <Button.Icon
+                          render={
+                            <HugeiconsIcon icon={Clock01Icon} strokeWidth={2} />
+                          }
+                        />
                         {format(field.state.value, "hh:mm a")}
                       </Select.Trigger>
                       <Select.Content align="start" className="max-h-40">
@@ -182,7 +198,11 @@ export const SchedulePostDialog: React.FC<SchedulePostDialogProps> = ({
                     isDisabled={!canSubmit}
                     isLoading={isSubmitting}
                   >
-                    <Button.Icon render={<CalendarIcon />} />
+                    <Button.Icon
+                      render={
+                        <HugeiconsIcon icon={Calendar01Icon} strokeWidth={2} />
+                      }
+                    />
                     {mode === "schedule" ? "Schedule post" : "Update Schedule"}
                   </Dialog.Action>
                 </>

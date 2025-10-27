@@ -1,5 +1,13 @@
 import { Page } from "@components/page";
 import { Sidebar } from "@components/sidebar";
+import {
+  Building02Icon,
+  CheckmarkCircle02Icon,
+  LinkForwardIcon,
+  Shield01Icon,
+  UserIcon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { Text } from "@mono/ui";
 import { cn } from "@mono/ui/utils";
 import {
@@ -7,13 +15,6 @@ import {
   Outlet,
   useRouterState,
 } from "@tanstack/react-router";
-import {
-  BuildingIcon,
-  CheckCircle2,
-  ExternalLinkIcon,
-  ShieldIcon,
-  UserIcon,
-} from "lucide-react";
 import { useMemo } from "react";
 
 export const Route = createFileRoute("/_authorized/onboarding")({
@@ -39,7 +40,7 @@ function RouteComponent() {
         isCompleted: match.location.pathname === "/onboarding/workspace",
       },
       {
-        icon: BuildingIcon,
+        icon: Building02Icon,
         label: "Workspace",
         href: "/onboarding/workspace",
       },
@@ -62,9 +63,17 @@ function RouteComponent() {
                 key={item.label}
               >
                 {item.isCompleted ? (
-                  <CheckCircle2 className="size-4 stroke-success-500" />
+                  <HugeiconsIcon
+                    className="size-4 text-success-500"
+                    icon={CheckmarkCircle02Icon}
+                    strokeWidth={2}
+                  />
                 ) : (
-                  <item.icon className="size-4 stroke-neutral-600" />
+                  <HugeiconsIcon
+                    className="size-4 text-neutral-600"
+                    icon={item.icon}
+                    strokeWidth={2}
+                  />
                 )}
                 <Text.Root
                   className={cn(
@@ -81,18 +90,26 @@ function RouteComponent() {
           <Sidebar.Fill />
           <Sidebar.Group>
             <Sidebar.Button
-              icon={ShieldIcon}
+              icon={Shield01Icon}
               label="Privacy Policy"
               render={<a href="/" />}
             >
-              <ExternalLinkIcon className="ml-auto" />
+              <HugeiconsIcon
+                className="ml-auto"
+                icon={LinkForwardIcon}
+                strokeWidth={2}
+              />
             </Sidebar.Button>
             <Sidebar.Button
-              icon={ShieldIcon}
+              icon={Shield01Icon}
               label="Terms of Service"
               render={<a href="/" />}
             >
-              <ExternalLinkIcon className="ml-auto" />
+              <HugeiconsIcon
+                className="ml-auto"
+                icon={LinkForwardIcon}
+                strokeWidth={2}
+              />
             </Sidebar.Button>
           </Sidebar.Group>
         </Sidebar.ScrollArea>

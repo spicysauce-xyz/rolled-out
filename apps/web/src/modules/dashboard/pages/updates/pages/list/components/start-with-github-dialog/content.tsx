@@ -1,10 +1,15 @@
 import { Transition } from "@components/transition";
+import {
+  Cancel01Icon,
+  GitCommitIcon,
+  GitPullRequestIcon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import type { api, SuccessResponse } from "@lib/api";
 import { githubCommitsQuery } from "@lib/api/queries";
 import { IconButton, ScrollArea, Text } from "@mono/ui";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import type { InferResponseType } from "hono";
-import { GitCommitVerticalIcon, GitPullRequestIcon, XIcon } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { match, P } from "ts-pattern";
 import { Item } from "./item";
@@ -100,10 +105,18 @@ export const Content: React.FC<ContentProps> = ({
                             transition={{ duration: 0.075 }}
                           >
                             {"prId" in commit && (
-                              <GitPullRequestIcon className="size-4 shrink-0 stroke-neutral-500" />
+                              <HugeiconsIcon
+                                className="size-4 shrink-0 text-neutral-500"
+                                icon={GitPullRequestIcon}
+                                strokeWidth={2}
+                              />
                             )}
                             {"commitId" in commit && (
-                              <GitCommitVerticalIcon className="size-4 shrink-0 stroke-neutral-500" />
+                              <HugeiconsIcon
+                                className="size-4 shrink-0 text-neutral-500"
+                                icon={GitCommitIcon}
+                                strokeWidth={2}
+                              />
                             )}
                             <Text.Root className="truncate" weight="medium">
                               {commit.title}
@@ -114,7 +127,14 @@ export const Content: React.FC<ContentProps> = ({
                               size="sm"
                               variant="tertiary"
                             >
-                              <IconButton.Icon render={<XIcon />} />
+                              <IconButton.Icon
+                                render={
+                                  <HugeiconsIcon
+                                    icon={Cancel01Icon}
+                                    strokeWidth={2}
+                                  />
+                                }
+                              />
                             </IconButton.Root>
                           </motion.div>
                         ))}

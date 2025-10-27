@@ -1,12 +1,13 @@
 import { Card } from "@components/card";
 import { Transition } from "@components/transition";
+import { UserAdd02Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { invitationsQuery, membersQuery } from "@lib/api/queries";
 import { useHasPermission } from "@modules/shared/hooks/use-has-permission";
 import { Button } from "@mono/ui";
 import { useDisclosure } from "@mono/ui/hooks";
 import { useQueries } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { UserPlus2Icon } from "lucide-react";
 import { match } from "ts-pattern";
 import { InviteMemberDialog } from "../../../shared/components/invite-member-dialog";
 import { MembersList } from "./components/members-list";
@@ -89,7 +90,9 @@ function RouteComponent() {
             onClick={inviteMemberDialog.open}
             variant="secondary"
           >
-            <Button.Icon render={<UserPlus2Icon />} />
+            <Button.Icon
+              render={<HugeiconsIcon icon={UserAdd02Icon} strokeWidth={2} />}
+            />
             Invite Member
           </Button.Root>
           <InviteMemberDialog

@@ -1,8 +1,13 @@
 import { Confirmer } from "@components/confirmer";
+import {
+  Delete02Icon,
+  MoreVerticalCircle01Icon,
+  UserSettings02Icon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { useHasPermission } from "@modules/shared/hooks/use-has-permission";
 import { DropdownMenu, IconButton, Toaster } from "@mono/ui";
 import _ from "lodash";
-import { EllipsisVerticalIcon, Trash2Icon, UserCog2Icon } from "lucide-react";
 import { useRemoveMemberMutation } from "../hooks/use-remove-member-mutation";
 import { useUpdateMemberRoleMutation } from "../hooks/use-update-member-role-mutation";
 
@@ -25,7 +30,7 @@ export const MemberMenu = ({ member, organizationId }: MemberMenuProps) => {
       description: `Are you sure you want to remove ${member.user.name} from the organization?`,
       phrase: member.user.name.toLowerCase().replaceAll(" ", "-").trim(),
       action: {
-        icon: Trash2Icon,
+        icon: Delete02Icon,
         label: "Remove",
         color: "danger",
         run: () =>
@@ -65,7 +70,7 @@ export const MemberMenu = ({ member, organizationId }: MemberMenuProps) => {
       action: {
         label: "Yes, update",
         color: "success",
-        icon: UserCog2Icon,
+        icon: UserSettings02Icon,
         run: () =>
           updateMemberRole(
             {
@@ -106,13 +111,21 @@ export const MemberMenu = ({ member, organizationId }: MemberMenuProps) => {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger render={<IconButton.Root variant="tertiary" />}>
-        <IconButton.Icon render={<EllipsisVerticalIcon />} />
+        <IconButton.Icon
+          render={
+            <HugeiconsIcon icon={MoreVerticalCircle01Icon} strokeWidth={2} />
+          }
+        />
       </DropdownMenu.Trigger>
       <DropdownMenu.Content align="end">
         {updateMemberPermission.hasPermission && (
           <DropdownMenu.Sub>
             <DropdownMenu.SubTrigger>
-              <DropdownMenu.ItemIcon render={<UserCog2Icon />} />
+              <DropdownMenu.ItemIcon
+                render={
+                  <HugeiconsIcon icon={UserSettings02Icon} strokeWidth={2} />
+                }
+              />
               {_.capitalize(member.role)}
             </DropdownMenu.SubTrigger>
             <DropdownMenu.Content alignOffset={-8} side="right" sideOffset={12}>
@@ -134,7 +147,9 @@ export const MemberMenu = ({ member, organizationId }: MemberMenuProps) => {
         <DropdownMenu.Separator />
         {deleteMemberPermission.hasPermission && (
           <DropdownMenu.Item onClick={handleRemoveMember}>
-            <DropdownMenu.ItemIcon render={<Trash2Icon />} />
+            <DropdownMenu.ItemIcon
+              render={<HugeiconsIcon icon={Delete02Icon} strokeWidth={2} />}
+            />
             Remove Member
           </DropdownMenu.Item>
         )}

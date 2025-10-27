@@ -1,7 +1,11 @@
 import { Confirmer } from "@components/confirmer";
+import {
+  Delete02Icon,
+  MoreVerticalCircle01Icon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { useHasPermission } from "@modules/shared/hooks/use-has-permission";
 import { Button, DropdownMenu, Toaster } from "@mono/ui";
-import { EllipsisVerticalIcon, Trash2Icon } from "lucide-react";
 import { useCancelInvitationMutation } from "../hooks/use-cancel-invitation-mutation";
 
 interface InvitationMenuProps {
@@ -26,7 +30,7 @@ export const InvitationMenu = ({
       description: `Are you sure you want to cancel the invitation for ${invitation.email}?`,
       phrase: invitation.email.toLowerCase().trim(),
       action: {
-        icon: Trash2Icon,
+        icon: Delete02Icon,
         label: "Yes, cancel",
         color: "danger",
         run: () =>
@@ -63,12 +67,18 @@ export const InvitationMenu = ({
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger render={<Button.Root variant="tertiary" />}>
-        <Button.Icon render={<EllipsisVerticalIcon />} />
+        <Button.Icon
+          render={
+            <HugeiconsIcon icon={MoreVerticalCircle01Icon} strokeWidth={2} />
+          }
+        />
       </DropdownMenu.Trigger>
       <DropdownMenu.Content>
         {cancelInvitationPermission.hasPermission && (
           <DropdownMenu.Item onClick={handleCancelInvitation}>
-            <DropdownMenu.ItemIcon render={<Trash2Icon />} />
+            <DropdownMenu.ItemIcon
+              render={<HugeiconsIcon icon={Delete02Icon} strokeWidth={2} />}
+            />
             Cancel Invitation
           </DropdownMenu.Item>
         )}

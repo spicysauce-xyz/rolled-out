@@ -120,7 +120,7 @@ const DropdownMenuItemIcon: React.FC<DropdownMenuIconProps> = ({
 }) => {
   const defaultProps: useRender.ElementProps<"svg"> = {
     className:
-      "size-4 transition-colors stroke-neutral-600 group-data-[highlighted]/dropdown-button:stroke-neutral-900",
+      "size-4 transition-colors text-neutral-600 group-data-[highlighted]/dropdown-button:text-neutral-900",
   };
 
   const element = useRender({

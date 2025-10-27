@@ -1,15 +1,16 @@
 import { Confirmer } from "@components/confirmer";
+import { Cancel01Icon, Tick01Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import type { api, SuccessResponse } from "@lib/api";
 import { Avatar, IconButton, Text, Toaster } from "@mono/ui";
 import { useNavigate } from "@tanstack/react-router";
 import { formatDistance } from "date-fns";
 import type { InferResponseType } from "hono";
-import { CheckIcon, XIcon } from "lucide-react";
 import { useAcceptInvitationMutation } from "../hooks/use-accept-invitation";
 import { useRejectInvitationMutation } from "../hooks/use-reject-invitation";
 
 type Invitation = SuccessResponse<
-  InferResponseType<(typeof api.users)[":id"]["invitations"]["$get"]>
+  InferResponseType<(typeof api.me)["invitations"]["$get"]>
 >[number];
 
 interface InvitationItemProps {
@@ -26,7 +27,6 @@ export const InvitationItem: React.FC<InvitationItemProps> = ({ data }) => {
       title: "Accept invitation",
       description: `Are you sure you want to accept the invitation to join ${data.organization.name}?`,
       action: {
-        icon: CheckIcon,
         label: "Yes, accept",
         color: "success",
         run: () =>
@@ -70,7 +70,6 @@ export const InvitationItem: React.FC<InvitationItemProps> = ({ data }) => {
       description: `Are you sure you want to reject the invitation to join ${data.organization.name}?`,
       phrase: data.organization.name.toLowerCase().trim(),
       action: {
-        icon: XIcon,
         label: "Yes, reject",
         color: "danger",
         run: () =>
@@ -110,8 +109,8 @@ export const InvitationItem: React.FC<InvitationItemProps> = ({ data }) => {
         <div className="flex flex-col gap-0.5">
           <Text.Root weight="medium">{data?.organization?.name}</Text.Root>
           <Text.Root color="muted" size="sm">
-            {data.inviter.name} invited you to join {data.organization.name},
-            expires{" "}
+            {data.inviter.user.name} invited you to join{" "}
+            {data.organization.name}, expires{" "}
             {formatDistance(data.expiresAt, new Date(), {
               addSuffix: true,
             })}
@@ -120,10 +119,14 @@ export const InvitationItem: React.FC<InvitationItemProps> = ({ data }) => {
       </div>
       <div className="flex items-center gap-2">
         <IconButton.Root onClick={handleAcceptInvitation} variant="tertiary">
-          <IconButton.Icon render={<CheckIcon />} />
+          <IconButton.Icon
+            render={<HugeiconsIcon icon={Tick01Icon} strokeWidth={2} />}
+          />
         </IconButton.Root>
         <IconButton.Root onClick={handleRejectInvitation} variant="tertiary">
-          <IconButton.Icon render={<XIcon />} />
+          <IconButton.Icon
+            render={<HugeiconsIcon icon={Cancel01Icon} strokeWidth={2} />}
+          />
         </IconButton.Root>
       </div>
     </div>

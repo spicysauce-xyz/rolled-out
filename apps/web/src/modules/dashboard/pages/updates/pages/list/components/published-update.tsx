@@ -1,15 +1,16 @@
 import { Confirmer } from "@components/confirmer";
+import {
+  Copy01Icon,
+  Delete02Icon,
+  MoreVerticalCircle01Icon,
+  UnavailableIcon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { UpdateEntry } from "@modules/dashboard/components/update-list";
 import { useDeleteUpdateMutation } from "@modules/dashboard/hooks/use-delete-update-mutation";
 import { useDuplicatePostMutation } from "@modules/dashboard/hooks/use-duplicate-update-mutation";
 import { useUnpublishPostMutation } from "@modules/dashboard/hooks/use-unpublish-update-mutation";
 import { DropdownMenu, IconButton, Toaster } from "@mono/ui";
-import {
-  BanIcon,
-  CopyIcon,
-  EllipsisVerticalIcon,
-  Trash2Icon,
-} from "lucide-react";
 import type React from "react";
 
 interface PublishedUpdateProps {
@@ -44,7 +45,7 @@ export const PublishedUpdate: React.FC<PublishedUpdateProps> = ({
         "Are you sure you want to unpublish this update? It’ll be hidden from everyone and moved to Drafts. You can publish it again anytime.",
       action: {
         label: "Yes, unpublish",
-        icon: BanIcon,
+        icon: UnavailableIcon,
         color: "danger",
         run: () =>
           unpublishPost(
@@ -75,7 +76,7 @@ export const PublishedUpdate: React.FC<PublishedUpdateProps> = ({
         "Are you sure you want to delete this update? This can’t be undone.",
       action: {
         label: "Yes, delete",
-        icon: Trash2Icon,
+        icon: Delete02Icon,
         color: "danger",
         run: () =>
           deletePost(
@@ -105,7 +106,7 @@ export const PublishedUpdate: React.FC<PublishedUpdateProps> = ({
       description: "Are you sure you want to duplicate this update?",
       action: {
         label: "Yes, duplicate",
-        icon: CopyIcon,
+        icon: Copy01Icon,
         run: () =>
           duplicatePost(
             { organizationId, id },
@@ -204,7 +205,7 @@ export const PublishedUpdate: React.FC<PublishedUpdateProps> = ({
           render={<IconButton.Root className="-my-2" variant="tertiary" />}
         >
           <IconButton.Icon>
-            <EllipsisVerticalIcon />
+            <HugeiconsIcon icon={MoreVerticalCircle01Icon} strokeWidth={2} />
           </IconButton.Icon>
         </DropdownMenu.Trigger>
         <DropdownMenu.Content
@@ -216,16 +217,22 @@ export const PublishedUpdate: React.FC<PublishedUpdateProps> = ({
           side="bottom"
         >
           <DropdownMenu.Item onClick={handleUnpublishPost}>
-            <DropdownMenu.ItemIcon render={<BanIcon />} />
+            <DropdownMenu.ItemIcon
+              render={<HugeiconsIcon icon={UnavailableIcon} strokeWidth={2} />}
+            />
             Unpublish
           </DropdownMenu.Item>
           <DropdownMenu.Separator />
           <DropdownMenu.Item onClick={handleDuplicatePost}>
-            <DropdownMenu.ItemIcon render={<CopyIcon />} />
+            <DropdownMenu.ItemIcon
+              render={<HugeiconsIcon icon={Copy01Icon} strokeWidth={2} />}
+            />
             Duplicate
           </DropdownMenu.Item>
           <DropdownMenu.Item onClick={handleDeletePost}>
-            <DropdownMenu.ItemIcon render={<Trash2Icon />} />
+            <DropdownMenu.ItemIcon
+              render={<HugeiconsIcon icon={Delete02Icon} strokeWidth={2} />}
+            />
             Delete
           </DropdownMenu.Item>
         </DropdownMenu.Content>

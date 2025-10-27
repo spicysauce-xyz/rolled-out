@@ -1,7 +1,8 @@
+import { Mail01Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import useAppForm from "@lib/form";
 import { Button, Input, Text } from "@mono/ui";
 import { createFileRoute } from "@tanstack/react-router";
-import { MailIcon } from "lucide-react";
 import { z } from "zod";
 import { useSendMagicLinkMutation } from "../hooks/use-send-magic-link-mutation";
 import { useSocialLoginMutation } from "../hooks/use-social-login-mutation";
@@ -73,7 +74,7 @@ function Login() {
                 >
                   <Input.Wrapper>
                     <Input.Icon>
-                      <MailIcon />
+                      <HugeiconsIcon icon={Mail01Icon} strokeWidth={2} />
                     </Input.Icon>
                     <Input.Field
                       id={field.name}
