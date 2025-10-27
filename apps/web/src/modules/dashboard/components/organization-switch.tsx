@@ -1,5 +1,5 @@
 import { Transition } from "@components/transition";
-import { ArrowUpDownIcon, Building02Icon } from "@hugeicons/core-free-icons";
+import { Building02Icon, UnfoldMoreIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { organizationsQuery } from "@lib/api/queries";
 import { NewOrganizationDialog } from "@modules/dashboard/components/new-organization-dialog";
@@ -54,7 +54,7 @@ export const OrganizationSwitch = () => {
           <span className="truncate">{organization.name}</span>
           <Button.Icon
             className="ml-auto"
-            render={<HugeiconsIcon icon={ArrowUpDownIcon} strokeWidth={2} />}
+            render={<HugeiconsIcon icon={UnfoldMoreIcon} strokeWidth={2} />}
           />
         </DropdownMenu.Trigger>
         <DropdownMenu.Content>
